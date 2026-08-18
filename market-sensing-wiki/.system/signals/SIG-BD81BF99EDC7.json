@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "signal_id": "SIG-BD81BF99EDC7",
-  "sentence": "POSCO의 글로벌 리튬 자원 1.1조원 투자는 Mineral Resources·Lithium South를 통한 비중국 공급망을 넓히지만 37kt LiOH 환산능력의 가동·가격·회수 검증이 필요합니다.",
+  "sentence": "포스코홀딩스가 호주·아르헨티나 리튬 자원에 약 1.1조원을 투자하고 연 27만 톤의 정광과 수산화리튬 환산 3만7,000톤을 제시했으므로, 생산·정제·가격·배당 조건을 확인해 실제 회수 가능액을 따로 계산해야 합니다.",
   "insight_id": "INS-04887600C6CD",
   "company_ids": [
     "COM-POSCO-HOLDINGS"
@@ -37,6 +37,7 @@
   ],
   "status": "active",
   "created_at": "2026-08-19T00:54:29+09:00",
-  "updated_at": "2026-08-19T00:54:29+09:00",
-  "run_id": "lithium-backfill-20240819-20260819"
+  "updated_at": "2026-08-19T07:13:54+09:00",
+  "run_id": "lithium-backfill-20240819-20260819",
+  "signal_type": "투자·프로젝트"
 }

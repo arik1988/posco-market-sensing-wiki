@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "signal_id": "SIG-C477DD938B51",
-  "sentence": "중국이 2024년 8월 23일부터 신규 철강 생산능력 치환 공시를 중단하고 제도 개정에 착수해, 단기 증설 억제와 향후 공급 재편의 불확실성이 POSCO의 가격·수출 전략 변수로 전환됨.",
+  "sentence": "중국 공업정보화부가 2024년 8월 23일부터 신규 철강 생산능력 치환안의 공시·공고를 중단했지만, 포스코는 실제 조강·수출 감소가 확인되기 전에는 동북아 가격 회복을 판매계획에 반영하지 않아야 합니다.",
   "insight_id": "INS-2E84D35BF6EF",
   "company_ids": [
     "COM-POSCO"
@@ -37,6 +37,7 @@
   ],
   "status": "active",
   "created_at": "2026-08-19T00:53:52+09:00",
-  "updated_at": "2026-08-19T00:53:52+09:00",
-  "run_id": "steel-backfill-20240819-20260819"
+  "updated_at": "2026-08-19T07:13:54+09:00",
+  "run_id": "steel-backfill-20240819-20260819",
+  "signal_type": "정책·규제"
 }

@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "signal_id": "SIG-4FC6F602ABF5",
-  "sentence": "Codelco-SQM NovaAndino 출범과 규제 심사 완료는 칠레 리튬의 국가 지배·물 균형·공급 조건을 바꿔 POSCO 원료계약 가정을 재검증하게 합니다.",
+  "sentence": "Codelco와 SQM의 합작사 NovaAndino가 규제심사를 마치고 출범했으므로, 포스코홀딩스는 칠레발 물량 증가만 보지 말고 남미 원료계약의 국가 수익배분·물 관리·환경비용 조건을 다시 계산해야 합니다.",
   "insight_id": "INS-C171E8C4067E",
   "company_ids": [
     "COM-POSCO-HOLDINGS"
@@ -37,6 +37,7 @@
   ],
   "status": "active",
   "created_at": "2026-08-19T00:54:32+09:00",
-  "updated_at": "2026-08-19T00:54:32+09:00",
-  "run_id": "lithium-backfill-20240819-20260819"
+  "updated_at": "2026-08-19T07:13:54+09:00",
+  "run_id": "lithium-backfill-20240819-20260819",
+  "signal_type": "경쟁사"
 }

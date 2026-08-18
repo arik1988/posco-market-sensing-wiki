@@ -44,6 +44,7 @@ extra_javascript:
   - javascripts/mermaid-viewer.js
   - javascripts/footnote-tooltips.js
   - javascripts/contextual-navigation.js
+  - javascripts/signal-list.js
   - javascripts/impact-simulator.js
 
 markdown_extensions:

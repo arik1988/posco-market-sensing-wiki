@@ -1,8 +1,8 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "run_id": "initial-signal-sample-20260818",
   "signal_id": "SIG-5C3D01947FFB",
-  "sentence": "EU의 철강 무관세 쿼터 축소와 초과분 50% 관세 시행으로 포스코의 제품별 유럽 판매 마진과 현지 생산 대안을 즉시 재산정해야 합니다.",
+  "sentence": "EU가 2026년 7월 1일부터 철강 무관세 수입을 연 1,830만 톤으로 제한하고 초과 물량에 50% 관세를 부과하므로, 포스코는 한국·품목별 쿼터와 탄소·물류비를 반영해 고객별 도착원가를 다시 계산해야 합니다.",
   "insight_id": "INS-2FA41C98BE41",
   "company_ids": [
     "COM-POSCO"
@@ -28,13 +28,14 @@
     "CLM-D9D4FCFC7F92",
     "CLM-AE0AFEBA51EA",
     "CLM-82C6DC5F87D8",
-    "CLM-AB02C3AC1CD0"
-    ,"CLM-F325F00FD3A0"
+    "CLM-AB02C3AC1CD0",
+    "CLM-F325F00FD3A0"
   ],
   "source_ids": [
     "SRC-20260818-5C2CEB19"
   ],
   "status": "active",
   "created_at": "2026-08-18T22:19:03+09:00",
-  "updated_at": "2026-08-18T22:19:03+09:00"
+  "updated_at": "2026-08-19T07:13:54+09:00",
+  "signal_type": "정책·규제"
 }

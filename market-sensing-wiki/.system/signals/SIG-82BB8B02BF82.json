@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "signal_id": "SIG-82BB8B02BF82",
-  "sentence": "POSCO-Anson의 미국 DLE MOU와 2026년 데모 건설 목표는 북미 비중국 리튬 옵션을 열지만 상업적 회수율·원가·수자원 성능은 검증 전입니다.",
+  "sentence": "포스코홀딩스와 Anson이 미국 유타주 직접리튬추출(DLE) 실증을 추진하고 2026년 착공을 목표로 하지만, 포스코홀딩스는 회수율·원가·물 사용량이 검증될 때까지 이를 상업 생산능력에 포함하지 않아야 합니다.",
   "insight_id": "INS-7D56007819D5",
   "company_ids": [
     "COM-POSCO-HOLDINGS"
@@ -37,6 +37,7 @@
   ],
   "status": "active",
   "created_at": "2026-08-19T00:54:26+09:00",
-  "updated_at": "2026-08-19T00:54:26+09:00",
-  "run_id": "lithium-backfill-20240819-20260819"
+  "updated_at": "2026-08-19T07:13:54+09:00",
+  "run_id": "lithium-backfill-20240819-20260819",
+  "signal_type": "기술·운영"
 }

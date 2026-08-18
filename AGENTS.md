@@ -11,10 +11,24 @@
 1. `WIKI-SETTINGS.md`
 2. `skills/market-sensing-intelligence/SKILL.md`
 3. 작업에 해당하는 `skills/market-sensing-intelligence/references/workflows.md` 절
+   - 신규 조사·정기 감시는
+     `skills/market-sensing-intelligence/references/adaptive-research.md`도 함께 읽음
 4. 데이터를 쓸 때 `skills/market-sensing-intelligence/references/data-contract.md`
 5. Signal을 만들 때 `skills/market-sensing-intelligence/references/signal-analysis-template.md`
+6. Signal 제목·사업 시사점·문단을 쓸 때
+   `skills/market-sensing-intelligence/references/editorial-style.md`
 
 설정을 수정했다면 `sync-settings`를 실행해 JSON 캐시를 갱신하세요.
+
+## 조사 요청의 기본 해석
+
+사용자가 별도 방법을 지정하지 않고 `조사해`, `최근 변화 찾아봐`, `자료를 더 쌓아봐`라고
+요청하면 누락 관리형 적응 탐색을 기본 적용합니다. 인터넷 전체 확인이나 고정된 LLM 호출
+횟수를 목표로 하지 말고, 사업축×영향 경로×변화 유형×지역×시간의 커버리지 셀을 세운 뒤
+고위험 빈칸에 조사 예산을 집중하세요. 발견→커버리지 점검→원문 검증→반증 탐색을 수행하고,
+수확 체감에 따른 중단 근거, 미확인 범위, 접근 실패, 출처·언어 편중, 다음 재탐색 트리거를
+`.system/runs/`에 기록합니다. 상세 계약은
+`skills/market-sensing-intelligence/references/adaptive-research.md`를 따릅니다.
 
 ## 작업 완료의 기본 정의
 
@@ -24,7 +38,8 @@
 1. 시작 전에 `audit`을 실행해 기존 `unpublished_claims` 기준값을 기록합니다.
 2. 공개 원문을 확인하고 Source와 보관 원문을 등록합니다.
 3. 수치·날짜·정책·사건과 평가 근거를 원자적 Claim으로 등록합니다.
-4. 한 문장 Signal, 문단 Insight, 문서급 상세 분석을 `add-signal`로 연결합니다.
+4. 관측 변화 제목, 사업 시사점, 문단 Insight, 문서급 상세 분석을 `add-signal`로
+   연결합니다.
 5. `sync-obsidian`으로 MkDocs Markdown을 생성합니다.
 6. `audit`을 다시 실행해 이번 작업이 `unpublished_claims`를 늘리지 않았고,
    `signal_schema`, `signal_integrity`, `signal_quality`가 0인지 확인합니다.
@@ -38,7 +53,8 @@ Source·Claim만 만들거나, 별도 보고서 파일·채팅 답변만 작성�
 
 ## 사람 화면의 4단계 정보 구조
 
-- 1단계: 목록에서 읽는 한 문장 Signal, 회사·사업축, 사업영향도·긴급도, 평가일
+- 1단계: 목록에서 읽는 관측 변화 제목, 사업 시사점 한 문장, 회사, 사업축·변화 유형,
+  사업영향도·긴급도, 평가일
 - 2단계: 같은 Signal 페이지의 문단 Insight와 점수 근거·대응 시한
 - 3단계: 같은 페이지의 문서급 상세 분석
 - 4단계: 원문 URL과 링크 장애에 대비한 보관 원문
@@ -72,6 +88,11 @@ What-if와 자체 계산은 정답 예측이 아니라 결론을 뒤집는 지�
 
 MkDocs에는 Signal·Insight·Claim ID, predicate, 해시, raw 경로를 노출하지 않습니다.
 점수만 제시하지 말고 점수를 만든 영향 경로와 조건을 함께 보여주세요.
+Signal 제목은 신문 헤드라인이 아니라 관측된 외부 변화 자체를 짧고 평이하게 적습니다.
+회사명·말줄임표·사업영향을 매번 제목에 함께 넣지 말고, 사업영향은 완전문장인
+`사업 시사점`에 분리합니다. 화면에는 사업축 pill 1개와 변화 유형 pill 1개를 표시하며,
+변화 유형은 `정책·규제`, `수급·가격`, `경쟁사`, `투자·프로젝트`, `공급망·물류`,
+`고객·계약`, `기술·운영`, `재무·실적` 중 하나를 사용합니다.
 상단·좌측 탐색에는 프로젝트별 문서를 독립 메뉴로 노출하지 않습니다. `최근 변화`에는
 원자 Claim·프로젝트 ID·predicate의 등록 이력을 나열하지 말고, 발행된 Signal만 평가일,
 정보 발표일, 회사·사업축, 사업영향도, 긴급도와 함께 보여주세요. 프로젝트·Claim 문서는

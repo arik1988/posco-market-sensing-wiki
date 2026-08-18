@@ -158,6 +158,15 @@ def validate_plans(paths: list[Path], wiki_root: Path) -> tuple[list[dict[str, A
             company_id = str(signal.get("company_id") or "")
             if COMPANY_AXES.get(company_id) != signal.get("business_axis"):
                 errors.append(f"{label}: invalid company/business-axis pair")
+            try:
+                market_sensing.validate_signal_type(signal.get("signal_type"))
+                market_sensing.validate_signal_copy(
+                    str(signal.get("title") or ""),
+                    str(signal.get("sentence") or ""),
+                    str(signal.get("paragraph") or ""),
+                )
+            except ValueError as exc:
+                errors.append(f"{label}: signal contract: {exc}")
             if str(signal.get("sentence") or "") in existing_sentences:
                 errors.append(f"{label}: signal sentence already exists")
 
@@ -306,6 +315,7 @@ def publish_plan(plan: dict[str, Any], wiki_root: Path) -> dict[str, Any]:
                 run_id=run_id,
                 title=signal["title"],
                 sentence=signal["sentence"],
+                signal_type=signal["signal_type"],
                 paragraph=signal["paragraph"],
                 document_path=None,
                 analysis_file=str(base / item["analysis_file"]),

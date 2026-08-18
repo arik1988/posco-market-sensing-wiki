@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "signal_id": "SIG-B3D99438BE40",
-  "sentence": "2025년 3분기 Senex 신규 처리시설 증산이 판매량·영업이익으로 확인됐지만 미얀마 Cost Recovery 하락이 병존해 에너지 성장률을 Senex 증산과 Myanmar 회수율로 분리 관리해야 하는 후속 검증 신호.",
+  "sentence": "2025년 3분기 Senex 판매량과 영업이익은 늘고 미얀마 가스전 영업이익은 줄었으므로, 포스코인터내셔널은 2026년 예산에서 증산 효과와 비용 회수 위험을 자산별로 나눠 검증해야 합니다.",
   "insight_id": "INS-BAAECEA6AA0D",
   "company_ids": [
     "COM-POSCO-INTERNATIONAL"
@@ -39,6 +39,7 @@
   ],
   "status": "active",
   "created_at": "2026-08-19T00:55:24+09:00",
-  "updated_at": "2026-08-19T00:55:24+09:00",
-  "run_id": "energy-backfill-20240819-20260819"
+  "updated_at": "2026-08-19T07:13:54+09:00",
+  "run_id": "energy-backfill-20240819-20260819",
+  "signal_type": "재무·실적"
 }

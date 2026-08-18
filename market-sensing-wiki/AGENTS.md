@@ -1,11 +1,19 @@
 # Market Sensing Intelligence 저장소 지침
 
 - 조사·검색·보고 전에 상위 `WIKI-SETTINGS.md`를 읽으세요.
-- 조사 결과를 저장하는 작업은 Source·Claim에서 끝내지 말고 `add-signal`로 한 문장,
-  문단 Insight, 문서급 상세 분석을 연결한 뒤 MkDocs 화면까지 검증하세요.
+- 조사 결과를 저장하는 작업은 Source·Claim에서 끝내지 말고 `add-signal`로 관측 변화
+  제목, 변화 유형, 사업 시사점, 문단 Insight, 문서급 상세 분석을 연결한 뒤 MkDocs
+  화면까지 검증하세요.
 - Signal 상세 분석은 같은 페이지에 인라인 표시하며 별도 보고서 링크로 대신하지 마세요.
 - Signal 작성 전 `../skills/market-sensing-intelligence/references/signal-analysis-template.md`를
   읽으세요.
+- Signal 제목·사업 시사점·문단 작성 전
+  `../skills/market-sensing-intelligence/references/editorial-style.md`를 읽고 평이한
+  한국어를 사용하세요. 제목은 관측된 변화만 짧게 적고 사업영향은 완전문장인
+  `사업 시사점`으로 분리하세요.
+- Signal에는 `정책·규제`, `수급·가격`, `경쟁사`, `투자·프로젝트`, `공급망·물류`,
+  `고객·계약`, `기술·운영`, `재무·실적` 중 하나의 변화 유형을 저장하세요. 사람 화면에는
+  사업축 pill 1개와 변화 유형 pill 1개만 표시하세요.
 - 정량화 가능한 Signal은 공개정보와 합리적 대용변수를 사용해 영향액을 숫자로 먼저
   제시하고 방어·기준·압박 시나리오를 만드세요. 핵심 가정 3~8개는 근거·단위·범위를
   가진 슬라이더와 직접입력으로 조정되게 하고 `set-impact-estimate`로 연결하세요.

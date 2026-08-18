@@ -1,8 +1,8 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "run_id": "initial-signal-sample-20260818",
   "signal_id": "SIG-E424C4E087DE",
-  "sentence": "호주의 LNG 내수공급 의무는 Senex의 직접 규제 여부보다 동부 가스 가격과 계약 갱신 조건을 통해 포스코인터내셔널에 영향을 줄 가능성이 큽니다.",
+  "sentence": "호주 정부가 2027년 7월부터 LNG 수출량의 20% 상당을 내수에 공급하는 제도를 추진하므로, 포스코인터내셔널은 Senex의 직접 적용 여부와 별개로 지역 가격·계약 만기·증산 수익률을 조건별로 다시 계산해야 합니다.",
   "insight_id": "INS-38FB400C6EF1",
   "company_ids": [
     "COM-POSCO-INTERNATIONAL"
@@ -36,5 +36,6 @@
   ],
   "status": "active",
   "created_at": "2026-08-18T22:19:03+09:00",
-  "updated_at": "2026-08-18T22:19:03+09:00"
+  "updated_at": "2026-08-19T07:13:54+09:00",
+  "signal_type": "정책·규제"
 }

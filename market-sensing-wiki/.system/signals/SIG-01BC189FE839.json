@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "signal_id": "SIG-01BC189FE839",
-  "sentence": "Atlas 증산은 시설 준공·시운전 단계를 넘어 2025년 2월 실제 시장 유입과 고객 인도로 전환되어 Senex의 물량·계약 매출 회수 위험을 낮춘 실행 신호.",
+  "sentence": "Senex가 2025년 2월 Atlas 확장 가스의 첫 생산과 Orora 10년 계약의 공급 개시를 발표했으므로, 포스코인터내셔널은 연 60페타줄(PJ) 목표를 미리 실적으로 잡지 말고 분기 판매량·단가·운영비·현금 회수를 확인해야 합니다.",
   "insight_id": "INS-68CE85A21EEB",
   "company_ids": [
     "COM-POSCO-INTERNATIONAL"
@@ -39,6 +39,7 @@
   ],
   "status": "active",
   "created_at": "2026-08-19T00:54:59+09:00",
-  "updated_at": "2026-08-19T00:54:59+09:00",
-  "run_id": "energy-backfill-20240819-20260819"
+  "updated_at": "2026-08-19T07:13:54+09:00",
+  "run_id": "energy-backfill-20240819-20260819",
+  "signal_type": "고객·계약"
 }

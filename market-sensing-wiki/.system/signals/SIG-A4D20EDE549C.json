@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "signal_id": "SIG-A4D20EDE549C",
-  "sentence": "Rio Tinto의 리튬 생산 20% 증가와 일부 프로젝트 조기생산은 2028 공급압력을 앞당길 수 있어 포스코홀딩스의 증설 게이트를 원가·품질·오프테이크 기준으로 재정의해야 합니다.",
+  "sentence": "Rio Tinto의 2026년 2분기 리튬 생산이 전년보다 20% 늘고 일부 프로젝트가 첫 생산에 들어갔으므로, 포스코홀딩스는 경쟁사의 실제 배터리급 출하를 반영해 증설 원가·품질·장기계약 기준을 다시 세워야 합니다.",
   "insight_id": "INS-6BC559400743",
   "company_ids": [
     "COM-POSCO-HOLDINGS"
@@ -37,6 +37,7 @@
   ],
   "status": "active",
   "created_at": "2026-08-18T23:36:30+09:00",
-  "updated_at": "2026-08-18T23:36:30+09:00",
-  "run_id": "topic-scan-20260818"
+  "updated_at": "2026-08-19T07:13:54+09:00",
+  "run_id": "topic-scan-20260818",
+  "signal_type": "경쟁사"
 }

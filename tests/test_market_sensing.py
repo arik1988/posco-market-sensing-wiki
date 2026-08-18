@@ -5,6 +5,7 @@ import tempfile
 import unittest
 from argparse import Namespace
 from pathlib import Path
+from unittest import mock
 
 
 SCRIPT_DIR = (
@@ -21,6 +22,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 PROJECT_TOOLS = PROJECT_ROOT / "tools" / "project"
 sys.path.insert(0, str(PROJECT_TOOLS))
 import mkdocs_hooks  # noqa: E402
+import apply_editorial_rewrite  # noqa: E402
 
 
 class MarketSensingTests(unittest.TestCase):
@@ -45,6 +47,7 @@ class MarketSensingTests(unittest.TestCase):
             / "references"
             / "signal-analysis-template.md"
         ).read_text(encoding="utf-8")
+        scaffold_agents = (self.root / "AGENTS.md").read_text(encoding="utf-8")
         self.assertIn("Source·Claim만 만들거나", agents)
         self.assertIn("add-signal", agents)
         self.assertIn("Codex 앱 브라우저", agents)
@@ -72,8 +75,14 @@ class MarketSensingTests(unittest.TestCase):
             "담당, 기한, 감지 트리거",
             "같은 의사결정 하나로 수렴",
             "회사 실제 원가·계약",
+            "관측된 외부 변화",
+            "사업 시사점",
+            "정책·규제",
+            "사업축 pill 1개",
         ):
             self.assertIn(contract, agents)
+        self.assertIn("사업 시사점", scaffold_agents)
+        self.assertIn("재무·실적", scaffold_agents)
 
     def source_args(self, content_file, title, url, force=False):
         return Namespace(
@@ -136,6 +145,31 @@ class MarketSensingTests(unittest.TestCase):
             reason="Official project update",
         )
 
+    def valid_signal_analysis(self) -> str:
+        return (
+            "## 확인된 변화\n정책 시행으로 비용 조건이 바뀌었습니다. "
+            + "확인된 사실과 시점을 구분합니다. " * 20
+            + "\n## 사업 영향 경로\n가격과 계약을 거쳐 판매 마진에 전달됩니다. "
+            + "전달 조건과 영향을 설명합니다. " * 20
+            + "\n## 조건부 시나리오\n\n"
+            + "| 시나리오 | 관찰 조건 | 사업 의미 | 우선 대응 |\n"
+            + "| --- | --- | --- | --- |\n"
+            + "| 방어 | 조건 A | 의미 A | 대응 A |\n"
+            + "| 압박 | 조건 B | 의미 B | 대응 B |\n"
+            + "| 재배치 | 조건 C | 의미 C | 대응 C |\n\n"
+            + "각 조건과 대응을 구분합니다. " * 15
+            + "\n## 지금 확인할 지표\n"
+            + "- 가격 — 마진 판단 변경\n- 물량 — 판매 판단 변경\n"
+            + "- 계약 만기 — 대응시점 변경\n"
+            + "판단을 바꾸는 지표를 설명합니다. " * 15
+            + "\n## 의사결정에 필요한 다음 산출물\n"
+            + "1. 고객별 민감도\n2. 선택지 비교표\n3. 대응 조건표\n"
+            + "실행 가능한 산출물을 정의합니다. " * 15
+            + '\n!!! warning "판단의 한계"\n\n'
+            + "    내부 원가와 계약정보가 필요합니다. "
+            + "공개정보의 한계를 명시합니다. " * 15
+        )
+
     def test_signal_graph_has_four_progressive_depths_and_reader_projection(self):
         content = self.root.parent / "signal-source.md"
         content.write_text(
@@ -176,36 +210,21 @@ class MarketSensingTests(unittest.TestCase):
         document.write_text("# 의사결정 분석\n\n상세 영향 경로", encoding="utf-8")
         analysis = self.root.parent / "signal-analysis.md"
         analysis.write_text(
-            "## 확인된 변화\n정책 시행으로 비용 조건이 바뀌었습니다. "
-            + "확인된 사실과 시점을 구분합니다. " * 20
-            + "\n## 사업 영향 경로\n가격과 계약을 거쳐 판매 마진에 전달됩니다. "
-            + "전달 조건과 영향을 설명합니다. " * 20
-            + "\n## 조건부 시나리오\n\n"
-            + "| 시나리오 | 관찰 조건 | 사업 의미 | 우선 대응 |\n"
-            + "| --- | --- | --- | --- |\n"
-            + "| 방어 | 조건 A | 의미 A | 대응 A |\n"
-            + "| 압박 | 조건 B | 의미 B | 대응 B |\n"
-            + "| 재배치 | 조건 C | 의미 C | 대응 C |\n\n"
-            + "각 조건과 대응을 구분합니다. " * 15
-            + "\n## 지금 확인할 지표\n"
-            + "- 가격 — 마진 판단 변경\n- 물량 — 판매 판단 변경\n"
-            + "- 계약 만기 — 대응시점 변경\n"
-            + "판단을 바꾸는 지표를 설명합니다. " * 15
-            + "\n## 의사결정에 필요한 다음 산출물\n"
-            + "1. 고객별 민감도\n2. 선택지 비교표\n3. 대응 트리거\n"
-            + "실행 가능한 산출물을 정의합니다. " * 15
-            + "\n!!! warning \"판단의 한계\"\n\n"
-            + "    내부 원가와 계약정보가 필요합니다. "
-            + "공개정보의 한계를 명시합니다. " * 15,
+            self.valid_signal_analysis(),
             encoding="utf-8",
         )
         created = market_sensing.add_signal(
             Namespace(
                 root=str(self.root),
                 run_id="test-run",
-                title="정책 시행에 따른 원가 재산정",
-                sentence="시행 전 고객별 원가를 재산정해야 합니다.",
-                paragraph="정책이 도착원가와 계약 조건을 직접 바꿉니다.",
+                title="EU 철강 수입쿼터 축소",
+                sentence="EU 조치로 고객별 계약 갱신일과 가격 전가 범위를 다시 확인해야 합니다.",
+                signal_type="정책·규제",
+                paragraph=(
+                    "정부가 2027년부터 적용할 새 정책을 발표해 수입 철강의 도착원가가 "
+                    "달라집니다. 포스코는 고객별 계약 갱신일과 가격 전가 가능 범위를 "
+                    "확인해 판매 마진을 다시 계산해야 합니다."
+                ),
                 document_path="reports/briefs/decision-note.md",
                 analysis_file=str(analysis),
                 company_id=["COM-POSCO"],
@@ -252,6 +271,13 @@ class MarketSensingTests(unittest.TestCase):
         run = market_sensing.run_record_by_id(self.root, "test-run")[1]
         self.assertEqual(run["results"]["new_signals"], 1)
         self.assertIn(created["signal_id"], run["signal_ids"])
+        signal_record = market_sensing.read_json(
+            self.root / ".system" / "signals" / f"{created['signal_id']}.json"
+        )
+        self.assertEqual(
+            signal_record["schema_version"], market_sensing.SIGNAL_SCHEMA_VERSION
+        )
+        self.assertEqual(signal_record["signal_type"], "정책·규제")
         audit = market_sensing.audit_store(
             Namespace(root=str(self.root), stale_days=180)
         )
@@ -273,6 +299,7 @@ class MarketSensingTests(unittest.TestCase):
                 Namespace(
                     root=str(self.root), title="t", sentence="s", paragraph="p",
                     run_id="test-run",
+                    signal_type="정책·규제",
                     document_path="reports/briefs/decision-note.md",
                     company_id=["COM-POSCO"], business_axis="철강",
                     claim_id=["missing"], business_impact_score=6,
@@ -291,6 +318,176 @@ class MarketSensingTests(unittest.TestCase):
         )
         with self.assertRaisesRegex(ValueError, "at least 1200 characters"):
             market_sensing.validate_signal_analysis(thin)
+
+    def test_signal_copy_rejects_opaque_translated_headline(self):
+        with self.assertRaisesRegex(ValueError, "jargon"):
+            market_sensing.validate_signal_copy(
+                "Atlas first gas의 상업화 전환",
+                "Atlas 가스전이 첫 생산을 시작해 증산 일정이 다음 단계로 넘어갔습니다.",
+                "Atlas 가스전이 첫 생산을 시작했습니다. Senex는 생산량과 판매계약 반영 "
+                "시점을 확인해 증산 물량이 실제 매출로 이어지는 시기를 판단해야 합니다.",
+            )
+
+    def test_signal_copy_accepts_plain_observed_change_title(self):
+        market_sensing.validate_signal_copy(
+            "Atlas 가스전 첫 생산 시작",
+            "Atlas 가스전이 첫 생산을 시작해 Senex의 증산 계획이 실행 단계에 들어갔습니다.",
+            "Atlas 가스전이 첫 생산을 시작했습니다. Senex는 생산량과 판매계약 반영 "
+            "시점을 확인해 증산 물량이 실제 매출로 이어지는 시기를 판단해야 합니다.",
+        )
+
+    def test_signal_copy_rejects_headline_style_ellipsis(self):
+        with self.assertRaisesRegex(ValueError, "headline-style ellipsis"):
+            market_sensing.validate_signal_copy(
+                "Atlas 가스전 첫 생산…Senex 증산 본격화",
+                "Atlas 가스전이 첫 생산을 시작해 Senex의 증산 계획이 실행 단계에 들어갔습니다.",
+                "Atlas 가스전이 첫 생산을 시작했습니다. Senex는 생산량과 판매계약 반영 "
+                "시점을 확인해 증산 물량이 실제 매출로 이어지는 시기를 판단해야 합니다.",
+            )
+
+    def test_signal_copy_rejects_recommendation_in_observed_change_title(self):
+        with self.assertRaisesRegex(ValueError, "not a business implication"):
+            market_sensing.validate_signal_copy(
+                "EU 철강 수입규제로 판매 경제성 재산정 필요",
+                "EU 조치로 고객별 계약 갱신일과 가격 전가 범위를 다시 확인해야 합니다.",
+                "EU가 철강 수입쿼터를 줄였습니다. 포스코는 고객별 계약 갱신일과 "
+                "가격 전가 범위를 확인해 유럽 판매 판단을 다시 해야 합니다.",
+            )
+
+    def test_signal_copy_rejects_opaque_lead_even_with_plain_title(self):
+        with self.assertRaisesRegex(ValueError, "lead contains"):
+            market_sensing.validate_signal_copy(
+                "Atlas 가스전 첫 생산 시작",
+                "Atlas first gas가 확인돼 상업화 게이트를 통과했습니다.",
+                "Atlas 가스전에서 첫 생산이 시작됐습니다. Senex는 실제 생산량과 "
+                "판매계약 반영 시점을 확인해 매출 인식 시기를 판단해야 합니다.",
+            )
+
+    def test_signal_type_requires_the_governed_enum(self):
+        self.assertEqual(
+            market_sensing.SIGNAL_TYPES,
+            (
+                "정책·규제",
+                "수급·가격",
+                "경쟁사",
+                "투자·프로젝트",
+                "공급망·물류",
+                "고객·계약",
+                "기술·운영",
+                "재무·실적",
+            ),
+        )
+        self.assertEqual(market_sensing.validate_signal_type("수급·가격"), "수급·가격")
+        with self.assertRaisesRegex(ValueError, "signal_type must be one of"):
+            market_sensing.validate_signal_type("시장 동향")
+
+    def test_signal_analysis_rejects_opaque_intro_without_reducing_depth(self):
+        opaque = self.valid_signal_analysis().replace(
+            "정책 시행으로 비용 조건이 바뀌었습니다.",
+            "램프업 게이트와 트리거가 바뀌었습니다.",
+            1,
+        )
+        with self.assertRaisesRegex(ValueError, "analysis lead contains"):
+            market_sensing.validate_signal_analysis(opaque)
+
+    def test_editorial_migration_applies_schema_v2_and_type_atomically(self):
+        signal_id = "SIG-LEGACY"
+        insight_id = "INS-LEGACY"
+        signal_path = self.root / ".system" / "signals" / f"{signal_id}.json"
+        insight_path = self.root / ".system" / "insights" / f"{insight_id}.json"
+        original_signal = {
+            "schema_version": 1,
+            "signal_id": signal_id,
+            "sentence": "기존 사업 판단 문장입니다.",
+            "insight_id": insight_id,
+            "company_ids": ["COM-POSCO"],
+            "business_axis": "철강",
+            "claim_ids": ["CLM-KEEP"],
+            "source_ids": ["SRC-KEEP"],
+        }
+        original_insight = {
+            "schema_version": 1,
+            "insight_id": insight_id,
+            "title": "기존 관측 변화 제목",
+            "summary": "기존 요약입니다.",
+            "analysis_markdown": self.valid_signal_analysis(),
+            "claim_ids": ["CLM-KEEP"],
+            "source_ids": ["SRC-KEEP"],
+        }
+        market_sensing.write_json(signal_path, original_signal)
+        market_sensing.write_json(insight_path, original_insight)
+        legacy_audit = market_sensing.audit_store(
+            Namespace(root=str(self.root), stale_days=180)
+        )
+        legacy_report = (self.root / legacy_audit["report"]).read_text(encoding="utf-8")
+        self.assertIn("schema_version must be 2", legacy_report)
+        self.assertIn("signal_type must be one of", legacy_report)
+        with self.assertRaisesRegex(ValueError, "complete current Signal set"):
+            apply_editorial_rewrite.apply_proposals(
+                [], self.root, self.root.parent / "partial-backup.json"
+            )
+        proposal_path = self.root.parent / "migration.json"
+        market_sensing.write_json(
+            proposal_path,
+            {
+                "items": [
+                    {
+                        "signal_id": signal_id,
+                        "old_title": "기존 관측 변화 제목",
+                        "title": "EU 철강 수입쿼터 축소",
+                        "sentence": "EU 조치로 고객별 계약 갱신일과 가격 전가 범위를 다시 확인해야 합니다.",
+                        "signal_type": "정책·규제",
+                        "summary": (
+                            "EU가 철강 수입쿼터를 줄였습니다. 포스코는 고객별 계약 갱신일과 "
+                            "가격 전가 범위를 확인해 유럽 판매 판단을 다시 해야 합니다."
+                        ),
+                        "analysis_markdown": self.valid_signal_analysis(),
+                    }
+                ]
+            },
+        )
+        proposals, errors = apply_editorial_rewrite.validate_proposals(
+            [proposal_path], self.root
+        )
+        self.assertEqual(errors, [])
+        backup = self.root.parent / "before-migration.json"
+        apply_editorial_rewrite.apply_proposals(proposals, self.root, backup)
+
+        migrated_signal = market_sensing.read_json(signal_path)
+        migrated_insight = market_sensing.read_json(insight_path)
+        self.assertEqual(migrated_signal["schema_version"], 2)
+        self.assertEqual(migrated_signal["signal_type"], "정책·규제")
+        self.assertEqual(migrated_signal["claim_ids"], ["CLM-KEEP"])
+        self.assertEqual(migrated_insight["title"], "EU 철강 수입쿼터 축소")
+        self.assertEqual(migrated_insight["source_ids"], ["SRC-KEEP"])
+
+        before_signal = signal_path.read_text(encoding="utf-8")
+        before_insight = insight_path.read_text(encoding="utf-8")
+        retry_proposals = [
+            {**proposal, "old_title": migrated_insight["title"]}
+            for proposal in proposals
+        ]
+        call_count = 0
+        original_write_json = market_sensing.write_json
+
+        def fail_second_write(path, value):
+            nonlocal call_count
+            call_count += 1
+            if call_count == 2:
+                raise OSError("simulated migration write failure")
+            return original_write_json(path, value)
+
+        with mock.patch.object(
+            apply_editorial_rewrite.market_sensing,
+            "write_json",
+            side_effect=fail_second_write,
+        ):
+            with self.assertRaisesRegex(OSError, "simulated"):
+                apply_editorial_rewrite.apply_proposals(
+                    retry_proposals, self.root, backup
+                )
+        self.assertEqual(signal_path.read_text(encoding="utf-8"), before_signal)
+        self.assertEqual(insight_path.read_text(encoding="utf-8"), before_insight)
 
     def test_audit_reports_active_claims_not_published_as_signals(self):
         content = self.root.parent / "orphan-source.md"

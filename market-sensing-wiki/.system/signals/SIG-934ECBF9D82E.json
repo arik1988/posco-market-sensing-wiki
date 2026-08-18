@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "signal_id": "SIG-934ECBF9D82E",
-  "sentence": "AEMO는 Atlas first gas를 반영해 단기 부족 시점을 2028년으로 늦췄지만 2029년 구조적 공백은 남겨 Senex 증산을 단기 판매가 아니라 장기 공급·저장·전송 투자 판단으로 연결해야 한다는 기준선을 제시.",
+  "sentence": "AEMO가 Atlas와 Roma North의 추가 처리능력을 반영하고도 2029년부터 호주 남부의 공급 부족이 이어질 수 있다고 전망했으므로, 포스코인터내셔널은 Senex 물량을 장기계약·저장·운송 투자와 묶어 평가해야 합니다.",
   "insight_id": "INS-A3018166C4A9",
   "company_ids": [
     "COM-POSCO-INTERNATIONAL"
@@ -39,6 +39,7 @@
   ],
   "status": "active",
   "created_at": "2026-08-19T00:55:04+09:00",
-  "updated_at": "2026-08-19T00:55:04+09:00",
-  "run_id": "energy-backfill-20240819-20260819"
+  "updated_at": "2026-08-19T07:13:54+09:00",
+  "run_id": "energy-backfill-20240819-20260819",
+  "signal_type": "수급·가격"
 }

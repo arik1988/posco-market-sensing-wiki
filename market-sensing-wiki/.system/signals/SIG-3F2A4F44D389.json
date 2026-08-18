@@ -1,8 +1,8 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "run_id": "initial-signal-sample-20260818",
   "signal_id": "SIG-3F2A4F44D389",
-  "sentence": "리튬 가격 반등과 경쟁사 투자 급감이 동시에 나타나 포스코홀딩스의 기존 프로젝트 램프업과 선별 투자 조건을 재평가할 시점입니다.",
+  "sentence": "IEA가 리튬 가격 반등과 2025년 업계 투자·탐사 지출 감소를 함께 제시했으므로, 포스코홀딩스는 기존 프로젝트의 생산 안정화는 앞당기되 신규 투자는 원가와 장기계약을 기준으로 선별해야 합니다.",
   "insight_id": "INS-8D7C6A92B2E1",
   "company_ids": [
     "COM-POSCO-HOLDINGS"
@@ -35,5 +35,6 @@
   ],
   "status": "active",
   "created_at": "2026-08-18T22:19:03+09:00",
-  "updated_at": "2026-08-18T22:19:03+09:00"
+  "updated_at": "2026-08-19T07:13:54+09:00",
+  "signal_type": "수급·가격"
 }

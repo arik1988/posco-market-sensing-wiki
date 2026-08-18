@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "signal_id": "SIG-87F0A3C81E23",
-  "sentence": "CBAM 본과세가 시작돼 포스코는 EU향 제품별 내재배출량과 ETS 연동 탄소비용을 계약가격·고객별 마진에 즉시 결합해야 합니다.",
+  "sentence": "EU 탄소국경조정제도(CBAM)가 2026년 1월 1일 본제도에 들어갔으므로, 포스코는 제품별 검증 배출량과 고객별 비용 부담을 연결해 EU 판매이익을 다시 계산해야 합니다.",
   "insight_id": "INS-6495E12E3CF3",
   "company_ids": [
     "COM-POSCO"
@@ -37,6 +37,7 @@
   ],
   "status": "active",
   "created_at": "2026-08-18T23:35:39+09:00",
-  "updated_at": "2026-08-18T23:35:39+09:00",
-  "run_id": "topic-scan-20260818"
+  "updated_at": "2026-08-19T07:13:54+09:00",
+  "run_id": "topic-scan-20260818",
+  "signal_type": "정책·규제"
 }

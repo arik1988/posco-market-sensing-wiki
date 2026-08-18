@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "signal_id": "SIG-50D67D94CE68",
-  "sentence": "미국이 2025년 6월 4일부터 철강 Section 232 추가관세를 25%에서 50%로 인상해 POSCO의 미국향 수출 접근성과 계약 마진을 동시에 압박하는 구조적 무역장벽이 발효됨.",
+  "sentence": "미국이 2025년 6월 4일부터 철강과 파생제품의 추가관세를 25%에서 50%로 높였으므로, 포스코는 품목별 관세 전가율과 주문 변화를 기준으로 미국 출하 유지와 대체시장 전환을 결정해야 합니다.",
   "insight_id": "INS-45F1C31469F4",
   "company_ids": [
     "COM-POSCO"
@@ -37,6 +37,7 @@
   ],
   "status": "active",
   "created_at": "2026-08-19T00:53:54+09:00",
-  "updated_at": "2026-08-19T00:53:54+09:00",
-  "run_id": "steel-backfill-20240819-20260819"
+  "updated_at": "2026-08-19T07:13:54+09:00",
+  "run_id": "steel-backfill-20240819-20260819",
+  "signal_type": "정책·규제"
 }

@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "signal_id": "SIG-029E3B2DAA47",
-  "sentence": "Senex의 A$1bn Atlas·Roma North 증산은 개장·처리시설 가동 단계로 진입했지만 60 PJ/년 전량 판매와 2025년 현금화는 후속 가동·계약 이행을 조건으로 하는 실행 신호.",
+  "sentence": "Senex가 10억 호주달러 규모의 Atlas·Roma North 1단계 확장시설과 160개가 넘는 생산정을 공개했으므로, 포스코인터내셔널은 연 60페타줄(PJ) 목표보다 후속 시설 가동·고객 인도·현금 회수를 순서대로 확인해야 합니다.",
   "insight_id": "INS-4F2DD61C177F",
   "company_ids": [
     "COM-POSCO-INTERNATIONAL"
@@ -39,6 +39,7 @@
   ],
   "status": "active",
   "created_at": "2026-08-19T00:54:46+09:00",
-  "updated_at": "2026-08-19T00:54:46+09:00",
-  "run_id": "energy-backfill-20240819-20260819"
+  "updated_at": "2026-08-19T07:13:54+09:00",
+  "run_id": "energy-backfill-20240819-20260819",
+  "signal_type": "투자·프로젝트"
 }

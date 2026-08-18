@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "signal_id": "SIG-C5958F0A0B3B",
-  "sentence": "가스 가격은 하락했지만 2025년 4분기~2026년 공급은 미계약 LNG와 퀸즐랜드 의존으로 악화되어 Senex 증산의 계약기간·현금회수 안정성을 가격 하락과 분리해 판단해야 하는 규제 신호.",
+  "sentence": "ACCC가 단기 가스가격 하락과 함께 2026년 미계약 가스가 모두 수출될 경우의 공급 부족 위험을 제시했으므로, 포스코인터내셔널은 Senex 판매계약의 기간·인도권·현금 회수를 가격 변화와 분리해 점검해야 합니다.",
   "insight_id": "INS-F39866D84BE8",
   "company_ids": [
     "COM-POSCO-INTERNATIONAL"
@@ -39,6 +39,7 @@
   ],
   "status": "active",
   "created_at": "2026-08-19T00:55:14+09:00",
-  "updated_at": "2026-08-19T00:55:14+09:00",
-  "run_id": "energy-backfill-20240819-20260819"
+  "updated_at": "2026-08-19T07:13:54+09:00",
+  "run_id": "energy-backfill-20240819-20260819",
+  "signal_type": "수급·가격"
 }

@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "signal_id": "SIG-CC38306D8ADB",
-  "sentence": "중동 분쟁으로 완화되던 LNG 수급이 재차 왜곡돼 포스코인터내셔널은 장기조달·전용선·터미널·트레이딩의 옵션가치를 단일 가격전망보다 우선 점검해야 합니다.",
+  "sentence": "IEA가 호르무즈 해협의 LNG 흐름이 분쟁 이전 수준을 크게 밑돈다고 평가했으므로, 포스코인터내셔널은 장기계약·전용선·터미널에서 목적지를 바꿀 수 있는 물량과 실제 선박 여력을 확인해 조달 안정성을 다시 계산해야 합니다.",
   "insight_id": "INS-72768BA0AB05",
   "company_ids": [
     "COM-POSCO-INTERNATIONAL"
@@ -37,6 +37,7 @@
   ],
   "status": "active",
   "created_at": "2026-08-18T23:36:36+09:00",
-  "updated_at": "2026-08-18T23:36:36+09:00",
-  "run_id": "topic-scan-20260818"
+  "updated_at": "2026-08-19T07:13:54+09:00",
+  "run_id": "topic-scan-20260818",
+  "signal_type": "공급망·물류"
 }

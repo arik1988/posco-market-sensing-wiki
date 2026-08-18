@@ -48,6 +48,18 @@ ACADEMIC_KINDS = {
 PEER_REVIEW_STATUSES = {"peer_reviewed", "not_peer_reviewed", "unknown"}
 CLAIM_STATUS = {"active", "superseded", "disputed", "cancelled", "stale"}
 CLAIM_CONFIDENCE = {"high", "medium", "low"}
+SIGNAL_SCHEMA_VERSION = 2
+INSIGHT_SCHEMA_VERSION = 1
+SIGNAL_TYPES = (
+    "정책·규제",
+    "수급·가격",
+    "경쟁사",
+    "투자·프로젝트",
+    "공급망·물류",
+    "고객·계약",
+    "기술·운영",
+    "재무·실적",
+)
 MARKET_SENSING_AXES = {
     "COM-POSCO": "철강",
     "COM-POSCO-HOLDINGS": "리튬",
@@ -3161,10 +3173,18 @@ def show_settings(args: argparse.Namespace) -> dict[str, Any]:
 STORE_AGENTS = """# Market Sensing Intelligence 저장소 지침
 
 - 조사·검색·보고 전에 상위 `WIKI-SETTINGS.md`를 읽으세요.
-- 조사 결과를 저장하는 작업은 Source·Claim에서 끝내지 말고 `add-signal`로 한 문장,
-  문단 Insight, 문서급 상세 분석을 연결한 뒤 MkDocs 화면까지 검증하세요.
+- 조사 결과를 저장하는 작업은 Source·Claim에서 끝내지 말고 `add-signal`로 관측 변화
+  제목, 변화 유형, 사업 시사점, 문단 Insight, 문서급 상세 분석을 연결한 뒤 MkDocs
+  화면까지 검증하세요.
 - Signal 상세 분석은 같은 페이지에 인라인 표시하며 별도 보고서 링크로 대신하지 마세요.
 - Signal 작성 전 `../skills/market-sensing-intelligence/references/signal-analysis-template.md`를 읽으세요.
+- Signal 제목·사업 시사점·문단 작성 전
+  `../skills/market-sensing-intelligence/references/editorial-style.md`를 읽고 평이한
+  한국어를 사용하세요. 제목은 관측된 변화만 짧게 적고 사업영향은 완전문장인
+  `사업 시사점`으로 분리하세요.
+- Signal에는 `정책·규제`, `수급·가격`, `경쟁사`, `투자·프로젝트`, `공급망·물류`,
+  `고객·계약`, `기술·운영`, `재무·실적` 중 하나의 변화 유형을 저장하세요. 사람 화면에는
+  사업축 pill 1개와 변화 유형 pill 1개만 표시하세요.
 - 정량화 가능한 Signal은 공개정보와 합리적 대용변수를 사용해 영향액을 숫자로 먼저
   제시하고 방어·기준·압박 시나리오를 만드세요. 핵심 가정 3~8개는 근거·단위·범위를
   가진 슬라이더와 직접입력으로 조정되게 하고 `set-impact-estimate`로 연결하세요.
@@ -3775,6 +3795,17 @@ def _records_by_id(
 def validate_signal_analysis(markdown: str) -> None:
     """Reject thin summaries that cannot serve as the document-level layer."""
     text = markdown.strip()
+    lead = first_markdown_prose_paragraph(text)
+    if not lead or not re.search(r"[가-힣]", lead):
+        raise ValueError("analysis Markdown must begin with a plain Korean explanation")
+    opaque_lead = sorted(
+        term for term in OPAQUE_SIGNAL_TITLE_TERMS if term in lead.casefold()
+    )
+    if opaque_lead:
+        raise ValueError(
+            "analysis lead contains unexplained internal or translated jargon: "
+            + ", ".join(opaque_lead)
+        )
     required_concepts = {
         "확인된 변화": ("확인된 변화", "무엇이 바뀌"),
         "사업 영향 경로": ("사업 영향", "전달되는", "영향 경로"),
@@ -3824,6 +3855,114 @@ def validate_signal_analysis(markdown: str) -> None:
         raise ValueError("analysis Markdown must include at least three decision outputs")
     if "!!! warning" not in text:
         raise ValueError("analysis Markdown must mark the judgment boundary with a warning")
+
+
+OPAQUE_SIGNAL_TITLE_TERMS = {
+    "램프업",
+    "게이트",
+    "트리거",
+    "자본규율",
+    "공급곡선",
+    "구조적 공백",
+    "first gas",
+    "phase 2",
+    "capex 기준",
+    "의 교차",
+}
+NON_FACTUAL_SIGNAL_TITLE_TERMS = {
+    "재산정 필요",
+    "재검토 필요",
+    "대응 필요",
+    "검토 필요",
+    "해야",
+    "관건",
+    "우려",
+}
+POLITE_SIGNAL_TITLE_ENDING = re.compile(
+    r"(?:합니다|됩니다|입니다|필요합니다|강화합니다|앞당깁니다)[.!?]?\s*$"
+)
+
+
+def first_markdown_prose_paragraph(markdown: str) -> str:
+    """Return the first reader-facing prose paragraph, skipping Markdown chrome."""
+    paragraph: list[str] = []
+    in_fence = False
+    for raw_line in markdown.splitlines():
+        line = raw_line.strip()
+        if line.startswith("```"):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            continue
+        if not line:
+            if paragraph:
+                break
+            continue
+        if re.match(r"^#{1,6}\s+", line):
+            continue
+        if line.startswith(("|", "!!!", "???", ">")):
+            continue
+        if re.match(r"^(?:[-*+]\s+|\d+\.\s+)", line):
+            continue
+        paragraph.append(line)
+    return re.sub(r"\s+", " ", " ".join(paragraph)).strip()
+
+
+def validate_signal_type(value: Any) -> str:
+    signal_type = re.sub(r"\s+", " ", str(value or "")).strip()
+    if signal_type not in SIGNAL_TYPES:
+        raise ValueError("signal_type must be one of: " + ", ".join(SIGNAL_TYPES))
+    return signal_type
+
+
+def validate_signal_copy(title: str, sentence: str, summary: str) -> None:
+    """Reject reader-facing copy that is opaque or too thin for the Signal surface."""
+    raw_title = str(title or "")
+    title = re.sub(r"\s+", " ", raw_title).strip()
+    sentence = re.sub(r"\s+", " ", str(sentence or "")).strip()
+    summary = re.sub(r"\s+", " ", str(summary or "")).strip()
+    if not 8 <= len(title) <= 45:
+        raise ValueError("signal title must be between 8 and 45 characters")
+    if "\n" in raw_title or "\r" in raw_title or POLITE_SIGNAL_TITLE_ENDING.search(title):
+        raise ValueError("signal title must use a concise observed-change style")
+    if "…" in title or "..." in title:
+        raise ValueError(
+            "signal title must describe one observed change without headline-style ellipsis"
+        )
+    lowered_title = title.casefold()
+    opaque = sorted(term for term in OPAQUE_SIGNAL_TITLE_TERMS if term in lowered_title)
+    if opaque:
+        raise ValueError(
+            "signal title contains unexplained internal or translated jargon: "
+            + ", ".join(opaque)
+        )
+    non_factual = sorted(
+        term for term in NON_FACTUAL_SIGNAL_TITLE_TERMS if term in title
+    )
+    if non_factual:
+        raise ValueError(
+            "signal title must name the observed change, not a business implication "
+            "or recommendation: "
+            + ", ".join(non_factual)
+        )
+    if not re.search(r"[가-힣]", title):
+        raise ValueError("signal title must contain a clear Korean explanation")
+    if not 20 <= len(sentence) <= 180:
+        raise ValueError("signal sentence must be between 20 and 180 characters")
+    if not re.search(r"[.!?]\s*$", sentence):
+        raise ValueError("signal sentence must end as a complete sentence")
+    if not 70 <= len(summary) <= 500:
+        raise ValueError("signal summary must be between 70 and 500 characters")
+    summary_sentence_count = len(re.findall(r"[.!?](?:\s|$)", summary))
+    if summary_sentence_count not in range(2, 5):
+        raise ValueError("signal summary must use between two and four clear sentences")
+    lead_text = f"{sentence} {summary}".casefold()
+    opaque_lead = sorted(term for term in OPAQUE_SIGNAL_TITLE_TERMS if term in lead_text)
+    if opaque_lead:
+        raise ValueError(
+            "signal lead contains unexplained internal or translated jargon: "
+            + ", ".join(opaque_lead)
+        )
 
 
 IMPACT_EXPRESSION_OPERATIONS = {"add", "subtract", "multiply", "divide", "negate"}
@@ -3965,7 +4104,7 @@ def read_impact_estimate(path_value: str | None) -> dict[str, Any] | None:
 
 
 def add_signal(args: argparse.Namespace) -> dict[str, Any]:
-    """Create the Signal and Insight nodes that connect claims to a reader page."""
+    """Create schema v2 Signal and Insight nodes linked to governed evidence."""
     root = require_store(Path(args.root))
     run_id = str(getattr(args, "run_id", "") or "").strip()
     if not run_id:
@@ -3977,6 +4116,8 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
         raise ValueError("business impact and urgency scores must be between 1 and 5")
     if args.assessment_confidence not in CLAIM_CONFIDENCE:
         raise ValueError(f"Invalid assessment confidence: {args.assessment_confidence}")
+    validate_signal_copy(args.title, args.sentence, args.paragraph)
+    signal_type = validate_signal_type(getattr(args, "signal_type", None))
 
     claim_ids = list(dict.fromkeys(args.claim_id))
     claims_by_id = _records_by_id(claim_records(root), "claim_id")
@@ -4058,7 +4199,7 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
     )
     now = timestamp()
     insight = {
-        "schema_version": 1,
+        "schema_version": INSIGHT_SCHEMA_VERSION,
         "insight_id": insight_id,
         "title": args.title.strip(),
         "summary": args.paragraph.strip(),
@@ -4074,9 +4215,10 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
         "run_id": run_id,
     }
     signal = {
-        "schema_version": 1,
+        "schema_version": SIGNAL_SCHEMA_VERSION,
         "signal_id": signal_id,
         "sentence": args.sentence.strip(),
+        "signal_type": signal_type,
         "insight_id": insight_id,
         "company_ids": company_ids,
         "business_axis": args.business_axis.strip(),
@@ -8173,6 +8315,15 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
     analysis_by_insight: dict[str, str] = {}
     for path, signal in signal_records(root):
         signal_id = str(signal.get("signal_id") or path.stem)
+        if signal.get("schema_version") != SIGNAL_SCHEMA_VERSION:
+            findings["signal_schema"].append(
+                f"{signal_id}: schema_version must be {SIGNAL_SCHEMA_VERSION}; "
+                "run the full Signal migration"
+            )
+        try:
+            validate_signal_type(signal.get("signal_type"))
+        except ValueError as exc:
+            findings["signal_schema"].append(f"{signal_id}: {exc}")
         insight_id = str(signal.get("insight_id") or "")
         if not insight_id or insight_id not in insights:
             findings["signal_integrity"].append(
@@ -8181,6 +8332,10 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
             continue
         referenced_insights.add(insight_id)
         insight = insights[insight_id]
+        if insight.get("schema_version") != INSIGHT_SCHEMA_VERSION:
+            findings["signal_schema"].append(
+                f"{insight_id}: schema_version must be {INSIGHT_SCHEMA_VERSION}"
+            )
         run_id = str(signal.get("run_id") or "")
         if not run_id or run_id not in audit_runs_by_id:
             findings["signal_integrity"].append(
@@ -8286,6 +8441,14 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
                 + ", ".join(invalid_pairs)
             )
         analysis = str(insight.get("analysis_markdown") or "")
+        try:
+            validate_signal_copy(
+                str(insight.get("title") or ""),
+                str(signal.get("sentence") or ""),
+                str(insight.get("summary") or ""),
+            )
+        except ValueError as exc:
+            findings["signal_quality"].append(f"{signal_id}: {exc}")
         try:
             validate_signal_analysis(analysis)
         except ValueError as exc:
@@ -8738,8 +8901,18 @@ def build_parser() -> argparse.ArgumentParser:
     )
     signal_parser.add_argument("root")
     signal_parser.add_argument("--run-id", required=True)
-    signal_parser.add_argument("--title", required=True)
-    signal_parser.add_argument("--sentence", required=True)
+    signal_parser.add_argument(
+        "--title", required=True,
+        help="Short factual title naming the observed external change.",
+    )
+    signal_parser.add_argument(
+        "--sentence", required=True,
+        help="Complete sentence stating the separate business implication.",
+    )
+    signal_parser.add_argument(
+        "--signal-type", choices=SIGNAL_TYPES, required=True,
+        help="Governed change-type classification shown separately from business axis.",
+    )
     signal_parser.add_argument("--paragraph", required=True)
     signal_parser.add_argument(
         "--document-path",

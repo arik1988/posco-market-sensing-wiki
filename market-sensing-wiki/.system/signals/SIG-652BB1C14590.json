@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "signal_id": "SIG-652BB1C14590",
-  "sentence": "한국 정부가 2025년 11월 2026~2030년 배출권거래제 4차 할당계획을 확정하고 수출비중이 높은 철강에 100% 무상할당을 유지해 POSCO의 단기 탄소비용은 방어하지만 감축투자 압력은 지속시킴.",
+  "sentence": "한국 정부가 2026~2030년 철강업종의 배출권 무상할당 100%를 유지했지만, 포스코는 개별 할당량과 EU 탄소비용이 별도로 남는 만큼 배출감축 투자 순서를 늦추지 않아야 합니다.",
   "insight_id": "INS-ACDD253AA99C",
   "company_ids": [
     "COM-POSCO"
@@ -38,6 +38,7 @@
   ],
   "status": "active",
   "created_at": "2026-08-19T00:54:01+09:00",
-  "updated_at": "2026-08-19T00:54:01+09:00",
-  "run_id": "steel-backfill-20240819-20260819"
+  "updated_at": "2026-08-19T07:13:54+09:00",
+  "run_id": "steel-backfill-20240819-20260819",
+  "signal_type": "정책·규제"
 }

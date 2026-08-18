@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "signal_id": "SIG-EEE1E86FA129",
-  "sentence": "제11차 전기본은 LNG를 기저 확대가 아닌 열병합·백업·용량시장으로 재배치하므로 광양터미널·발전의 조달·가동률 가정을 전력수요와 용량시장 기준으로 다시 짜야 하는 정책 신호.",
+  "sentence": "정부가 2038년 LNG 발전 비중을 10.6%로 제시하면서 열병합 용량시장과 에너지저장장치·무탄소 입찰을 함께 추진하므로, 포스코인터내셔널은 광양터미널과 발전의 물량·가동률·용량요금 가정을 다시 계산해야 합니다.",
   "insight_id": "INS-67EBDEF2E3B2",
   "company_ids": [
     "COM-POSCO-INTERNATIONAL"
@@ -39,6 +39,7 @@
   ],
   "status": "active",
   "created_at": "2026-08-19T00:54:55+09:00",
-  "updated_at": "2026-08-19T00:54:55+09:00",
-  "run_id": "energy-backfill-20240819-20260819"
+  "updated_at": "2026-08-19T07:13:54+09:00",
+  "run_id": "energy-backfill-20240819-20260819",
+  "signal_type": "정책·규제"
 }

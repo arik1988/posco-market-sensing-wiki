@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "signal_id": "SIG-DC54DC18D74A",
-  "sentence": "2024년 3분기 에너지는 미얀마 유지보수·Cost Recovery 하락을 Senex 단가 상승과 터미널·발전 이익이 보완한 구조.",
+  "sentence": "2024년 3분기 미얀마 가스전 이익은 유지보수와 비용 회수 감소로 줄고 Senex는 판매단가 상승의 수혜를 봤으므로, 포스코인터내셔널은 에너지 전체 이익이 아니라 자산별 생산·가격·현금 회수 조건을 나눠 관리해야 합니다.",
   "insight_id": "INS-64EF044EF45F",
   "company_ids": [
     "COM-POSCO-INTERNATIONAL"
@@ -39,6 +39,7 @@
   ],
   "status": "active",
   "created_at": "2026-08-19T00:54:42+09:00",
-  "updated_at": "2026-08-19T00:54:42+09:00",
-  "run_id": "energy-backfill-20240819-20260819"
+  "updated_at": "2026-08-19T07:13:54+09:00",
+  "run_id": "energy-backfill-20240819-20260819",
+  "signal_type": "재무·실적"
 }

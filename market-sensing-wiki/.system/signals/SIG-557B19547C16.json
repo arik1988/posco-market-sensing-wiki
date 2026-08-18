@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "signal_id": "SIG-557B19547C16",
-  "sentence": "Arcadium의 75kt LCE 현 생산능력과 2028년 말 두 배 이상 증설 계획은 POSCO 리튬의 가격·고객계약 방어 기준을 낮출 수 있습니다.",
+  "sentence": "Rio Tinto가 연 7만5,000톤의 탄산리튬환산 생산능력을 보유한 Arcadium 인수를 마치고 2028년 말까지 두 배 이상 증설할 계획이므로, 포스코홀딩스는 경쟁사의 실제 배터리급 출하를 반영해 원가와 장기계약 조건을 다시 계산해야 합니다.",
   "insight_id": "INS-83254D6A0DCC",
   "company_ids": [
     "COM-POSCO-HOLDINGS"
@@ -37,6 +37,7 @@
   ],
   "status": "active",
   "created_at": "2026-08-19T00:54:07+09:00",
-  "updated_at": "2026-08-19T00:54:07+09:00",
-  "run_id": "lithium-backfill-20240819-20260819"
+  "updated_at": "2026-08-19T07:13:54+09:00",
+  "run_id": "lithium-backfill-20240819-20260819",
+  "signal_type": "경쟁사"
 }

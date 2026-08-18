@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "signal_id": "SIG-B8FE09C65A92",
-  "sentence": "2025년 겨울 동부 호주는 남부 40 PJ 부족을 퀸즐랜드 전송·저장·LNG 미계약 가스에 의존하므로 Senex 물량의 가격·인도지점·전송권을 단순 생산량이 아닌 겨울 조달 안전성으로 평가해야 하는 단기 트리거.",
+  "sentence": "ACCC가 2025년 7~9월 호주 동부 전체 9페타줄(PJ), 남부 40페타줄의 공급 부족을 전망했으므로, 포스코인터내셔널은 Senex 생산량보다 남부 인도계약·운송권·저장 여력을 먼저 확인해야 합니다.",
   "insight_id": "INS-7008B0B01776",
   "company_ids": [
     "COM-POSCO-INTERNATIONAL"
@@ -39,6 +39,7 @@
   ],
   "status": "active",
   "created_at": "2026-08-19T00:55:09+09:00",
-  "updated_at": "2026-08-19T00:55:09+09:00",
-  "run_id": "energy-backfill-20240819-20260819"
+  "updated_at": "2026-08-19T07:13:54+09:00",
+  "run_id": "energy-backfill-20240819-20260819",
+  "signal_type": "수급·가격"
 }

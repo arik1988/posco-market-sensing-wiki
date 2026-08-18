@@ -45,10 +45,11 @@ AI 분석, 사람의 결정을 함께 나타내야 할 때는 색만으로 구�
 3. `show-settings`를 실행해 Markdown 설정을 JSON 캐시에 동기화하고 유효성을 확인한다.
 4. `market-sensing-wiki/AGENTS.md`, `index.md`, `REVIEW.md`, 최근 `log.md`를 읽는다.
 5. 작업에 맞는 상세 절차를 `references/workflows.md`에서 읽는다.
+   신규 조사·정기 감시라면 `references/adaptive-research.md`도 반드시 읽는다.
 6. 데이터 파일을 쓰기 전에 `references/data-contract.md`를 읽는다.
 7. 출처 선정·중복·충돌 판단 전 `references/source-policy.md`를 읽는다.
 8. Signal을 생성하거나 MkDocs에 반영할 때는
-   `references/signal-analysis-template.md`를 읽는다.
+   `references/signal-analysis-template.md`와 `references/editorial-style.md`를 읽는다.
 
 사용자 언어로 응답하고, 한국어 보고서에서는 기업·프로젝트의 공식 영문명을 함께 보존한다.
 
@@ -66,6 +67,11 @@ AI 분석, 사람의 결정을 함께 나타내야 할 때는 색만으로 구�
 사용자가 조사·수집·정리·위키 반영을 요청하고 읽기 전용으로 제한하지 않았다면
 `scout → ingest → reconcile → publish-signal → audit → MkDocs 브라우저 검증`까지가
 하나의 기본 작업이다. `brief` 파일이나 채팅 답변만 만들고 끝내지 않는다.
+
+사용자가 방법을 지정하지 않고 `조사해`, `최근 변화 찾아봐`, `자료를 더 쌓아봐`라고
+요청하면 `references/adaptive-research.md`의 누락 관리형 적응 탐색을 기본 적용한다.
+고정된 검색·LLM 호출 횟수나 인터넷 전체 탐색을 목표로 하지 않고, 중요한 커버리지
+빈칸과 결론 변경 가능성에 따라 조사 예산을 늘리거나 줄인다.
 
 ## 불변 규칙
 
@@ -94,7 +100,8 @@ python skills/market-sensing-intelligence/scripts/market_sensing.py --help
   원문 확인 후 보강
 - `add-image`: 필요한 설비 사진·공정도·특허 도면을 기존 source에 선택적으로 연결
 - `add-claim`: 주장 생성, 재검증 또는 충돌 검토 생성
-- `add-signal`: 검증된 Claim을 한 문장 Signal, 문단 Insight, 상세 문서, Source 원문으로 연결
+- `add-signal`: 검증된 Claim을 관측 변화 제목, 변화 유형, 사업 시사점, 문단 Insight,
+  상세 문서, Source 원문으로 연결
 - `set-impact-estimate`: 기존 Signal에 검증된 정량 영향 What-if JSON을 연결하거나 교체
 - `trace-signal`: 지정한 Signal에서 질문 수준에 맞춰 1~4단계 근거 그래프를 읽기 전용 순회
 - `resolve-review`: 사람의 결정으로 주장 충돌 처리
@@ -111,7 +118,17 @@ python skills/market-sensing-intelligence/scripts/market_sensing.py --help
 
 마켓센싱의 기본 연결은 `Signal → Insight → Claim → Source → Archive`이다.
 
-1. MkDocs 목록에는 한 문장 Signal, 회사·사업축, 사업영향도·긴급도, 평가일만 보여준다.
+사람이 보는 Signal 제목·사업 시사점·문단은 `references/editorial-style.md`를 따른다.
+제목은 신문 헤드라인이 아니라 관측된 외부 변화 자체를 짧고 평이한 사실형으로 쓴다.
+회사명·말줄임표·핵심 사업결과를 매번 제목에 함께 넣지 않고, 사업영향과 달라지는 판단은
+별도 완전문장인 `사업 시사점`에 둔다. 설명 없는 번역투·내부 메모 용어·영문 약어를
+전문성으로 대신하지 않는다. 분석의 깊이는 상세 본문에 유지하되 문단과 각 절의
+도입부는 비전문 독자도 한 번에 이해할 수 있게 쓴다.
+
+1. MkDocs 목록에는 관측 변화 제목, 사업 시사점, 회사, 사업축 pill 1개, 변화 유형 pill
+   1개, 사업영향도·긴급도, 평가일을 보여준다. 변화 유형은 `정책·규제`, `수급·가격`,
+   `경쟁사`, `투자·프로젝트`, `공급망·물류`, `고객·계약`, `기술·운영`, `재무·실적`
+   중 하나다.
 2. Signal 상세에는 문단 Insight와 점수의 판단 근거·대응 시한을 보여준다.
 3. 상세 분석은 Signal 상세 페이지 안에서 끊김 없이 읽히게 인라인 투영하고, 그
    결론을 뒷받침하는 Claim을 유지한다. 다른 보고서로 이동해야만 본문을 읽을 수
@@ -178,6 +195,12 @@ MkDocs에는 `impact_estimate`를 기준으로 기준 추정액과 구성효과�
 
 ## Scout 기준
 
+Scout를 시작하기 전에 `references/adaptive-research.md`를 읽고, 조사 범위를
+`사업축 × 영향 경로 × 변화 유형 × 지역·시장 × 시간 구간`의 coverage cell로 표현한다.
+발견→커버리지 점검→원문 검증→반증 탐색 순서로 수행하며, 고위험 미확인 셀과 수확
+체감에 따라 예산을 이동한다. 사용자가 명시적으로 범위를 제한한 경우에도 그 제한으로
+남은 고위험 빈칸을 결과와 run에 기록한다.
+
 - `WIKI-SETTINGS.md`의 분석 관점·기업·기술·프로젝트·국가·출처 우선순위를
   기준으로 검색 범위를 명시한다.
 - 마지막 성공 실행일 이후의 기간을 우선 검색하되, 검색 누락을 줄이기 위해 며칠 겹쳐 검색한다.
@@ -227,6 +250,8 @@ MkDocs에는 `impact_estimate`를 기준으로 기준 추정액과 구성효과�
   구성도·특허·학술 그림·공정도처럼 세부 판독이 중요한 자료만 약 90%까지 넓게
   표시한다. 모바일에서는 본문 폭을 사용한다.
 - 실행 범위, 쿼리, 기간, 실패한 출처를 `.system/runs/`에 기록한다. “인터넷 전체를 확인했다”고 표현하지 않는다.
+- run에는 확인한 coverage cell, 독립 탐지 채널, 쿼리별 신규 정보 수확, 고위험 미확인
+  셀, 중단 근거, 한계와 다음 재탐색 트리거를 함께 기록한다.
 
 ## Reconcile 기준
 
@@ -335,6 +360,8 @@ Markdown 각주를 붙인다. 각주는 출처명, 발행자, 게시일, 원문 
 ## 완료 조건
 
 - 검색 범위와 기준일이 기록되어 있다.
+- 조사 작업이면 고위험 coverage cell, 독립 탐지 채널, 미확인 범위, 수확 체감에 따른
+  중단 근거와 다음 재탐색 트리거가 run에 기록되어 있다.
 - 신규 source와 claim이 스키마를 통과한다.
 - 작업 시작 시 `audit`의 `unpublished_claims` 기준값을 기록했고, 이번 작업에서 만든
   active Claim은 모두 하나 이상의 Signal에 연결되어 그 수를 증가시키지 않았다.

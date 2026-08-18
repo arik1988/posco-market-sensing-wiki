@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "signal_id": "SIG-62DB257CEA16",
-  "sentence": "IEA는 리튬 가격이 2023년 이후 80% 넘게 하락하고 단기 공급은 충분하지만 2030년대 부족 가능성을 제시해 POSCO 투자속도의 양면 리스크를 만들었습니다.",
+  "sentence": "IEA가 2023년 이후 리튬 가격 80% 이상 하락과 단기 공급 여유, 2030년대 공급 부족 가능성을 함께 제시했으므로, 포스코홀딩스는 단기 증설 투자를 엄격히 심사하되 장기 저원가 자원 선택지는 유지해야 합니다.",
   "insight_id": "INS-6FCFE292FA13",
   "company_ids": [
     "COM-POSCO-HOLDINGS"
@@ -37,6 +37,7 @@
   ],
   "status": "active",
   "created_at": "2026-08-19T00:54:23+09:00",
-  "updated_at": "2026-08-19T00:54:23+09:00",
-  "run_id": "lithium-backfill-20240819-20260819"
+  "updated_at": "2026-08-19T07:13:54+09:00",
+  "run_id": "lithium-backfill-20240819-20260819",
+  "signal_type": "수급·가격"
 }

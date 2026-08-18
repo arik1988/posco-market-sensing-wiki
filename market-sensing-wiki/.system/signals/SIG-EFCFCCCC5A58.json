@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "signal_id": "SIG-EFCFCCCC5A58",
-  "sentence": "POSCO의 2026년 신년 메시지는 EV 둔화와 원료 변동성에 대응해 호주·아르헨티나 비중국 공급망과 선택적 투자를 강조하며 리튬 CAPEX 기준을 재설정합니다.",
+  "sentence": "포스코홀딩스가 2026년 신년사에서 호주·아르헨티나 공급망 활용과 선택적 투자를 강조했으므로, 리튬 투자는 선언된 생산능력보다 고객 인증·가격 가산분·현금 원가가 확인되는 사업부터 집행해야 합니다.",
   "insight_id": "INS-783A7CFD6326",
   "company_ids": [
     "COM-POSCO-HOLDINGS"
@@ -37,6 +37,7 @@
   ],
   "status": "active",
   "created_at": "2026-08-19T00:54:35+09:00",
-  "updated_at": "2026-08-19T00:54:35+09:00",
-  "run_id": "lithium-backfill-20240819-20260819"
+  "updated_at": "2026-08-19T07:13:54+09:00",
+  "run_id": "lithium-backfill-20240819-20260819",
+  "signal_type": "투자·프로젝트"
 }

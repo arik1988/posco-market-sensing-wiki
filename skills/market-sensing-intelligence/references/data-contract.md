@@ -2,12 +2,51 @@
 
 ## Signal과 Insight
 
-`.system/signals/SIG-*.json`은 한 문장 판단과 점수·평가시점을, `.system/insights/INS-*.json`은
-문단 해석과 문서급 분석을 보존한다. `insight_id`로 연결하며 Insight는 다시 `claim_ids`,
-`source_ids`, `document_path`를 통해 Claim·Source·Archive로 이어진다.
+`.system/signals/SIG-*.json` schema v2는 변화 유형, 사업 시사점, 점수·평가시점을,
+`.system/insights/INS-*.json` schema v1은 관측 변화 제목, 문단 해석과 문서급 분석을 보존한다.
+`insight_id`로 연결하며 Insight는 다시 `claim_ids`, `source_ids`, `document_path`를 통해
+Claim·Source·Archive로 이어진다.
+
+Signal의 `signal_type`은 다음 8개 값 중 정확히 하나다.
+
+- `정책·규제`
+- `수급·가격`
+- `경쟁사`
+- `투자·프로젝트`
+- `공급망·물류`
+- `고객·계약`
+- `기술·운영`
+- `재무·실적`
+
+```json
+{
+  "schema_version": 2,
+  "signal_type": "정책·규제",
+  "sentence": "EU 조치로 고객별 계약 갱신일과 가격 전가 범위를 다시 확인해야 합니다.",
+  "business_axis": "철강",
+  "insight_id": "INS-..."
+}
+```
+
+사람 화면에서는 `business_axis`와 `signal_type`을 각각 하나의 pill로 표시한다. 회사명,
+점수, 평가일은 pill 분류에 섞지 않는다. 기존 schema v1 Signal은 새 필드를 추정해 조용히
+통과시키지 않고 전체 제안 집합을 검증하는 마이그레이션 도구로 v2로 전환한다.
+
+사람용 필드는 다음 편집 계약을 함께 만족해야 한다.
+
+- `Insight.title`: 8~45자, 관측된 변화 중심의 짧고 평이한 사실형 제목, 서술형 존댓말
+  종결과 헤드라인식 말줄임표 금지
+- `Signal.sentence`: 20~180자, 제목과 분리해 회사의 사업영향과 달라지는 판단을 설명하는
+  완전문장형 `사업 시사점`
+- `Insight.summary`: 70~500자, 마침표로 구분된 2~4문장으로 무슨 일·회사 영향·지금
+  판단을 평이한 한국어로 설명
+- 제목에는 설명 없는 램프업·게이트·트리거·자본규율·공급곡선 같은 번역투나 내부
+  메모 용어를 쓰지 않는다. 회사명·사업축·변화 유형·사업영향을 제목 하나에 반복해
+  넣지 않는다. 구체 기준은 `editorial-style.md`를 따른다.
 
 Insight의 `analysis_markdown`은 MkDocs Signal 상세 페이지에 인라인 투영되는 3단계
-본문이다. 다음 의미 단위를 포함해야 한다.
+본문이다. 첫 도입 문단은 결론과 뜻을 평이한 한국어로 설명하고, 다음 의미 단위와
+근거·수치·시나리오의 깊이는 그대로 유지해야 한다.
 
 - 확인된 변화와 시점
 - 회사에 전달되는 사업 영향 경로

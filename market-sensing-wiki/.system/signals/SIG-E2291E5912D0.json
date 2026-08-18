@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "signal_id": "SIG-E2291E5912D0",
-  "sentence": "PPLS 3280억원 증자와 POSCO 82% 지분은 리튬 정제 램프업을 지지하지만 추가 자본이 출하·가동률로 전환되는지 검증해야 합니다.",
+  "sentence": "포스코홀딩스가 지분 82%를 보유한 PPLS에 3,280억원을 증자했으므로, 자금이 정제 안정화·고객 인증·계약출하로 이어지는지를 확인해 리튬 투자금의 회수 가능성을 판단해야 합니다.",
   "insight_id": "INS-A7081205776D",
   "company_ids": [
     "COM-POSCO-HOLDINGS"
@@ -37,6 +37,7 @@
   ],
   "status": "active",
   "created_at": "2026-08-19T00:54:20+09:00",
-  "updated_at": "2026-08-19T00:54:20+09:00",
-  "run_id": "lithium-backfill-20240819-20260819"
+  "updated_at": "2026-08-19T07:13:54+09:00",
+  "run_id": "lithium-backfill-20240819-20260819",
+  "signal_type": "재무·실적"
 }
