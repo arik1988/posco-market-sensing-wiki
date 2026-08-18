@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-CF5612A0AB27",
+  "subject_id": "MKT-ENERGY-ACCC-2026-OUTLOOK",
+  "predicate": "recommended_follow_up",
+  "value": "2026년 GSA 만기·가격·물량·전송권과 ACCC 생산전망·저장충전을 대조",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-4F098D9C"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "후속 확인",
+      "source_ids": [
+        "SRC-20260819-4F098D9C"
+      ]
+    }
+  ]
+}

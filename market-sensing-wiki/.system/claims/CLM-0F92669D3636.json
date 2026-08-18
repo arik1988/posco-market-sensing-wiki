@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-0F92669D3636",
+  "subject_id": "MKT-ENERGY-ACCC-Q1-2025-SUPPLY",
+  "predicate": "response_deadline",
+  "value": "2025-01-15",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-C117952B"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "2025 Q1 계약 전",
+      "source_ids": [
+        "SRC-20260819-C117952B"
+      ]
+    }
+  ]
+}

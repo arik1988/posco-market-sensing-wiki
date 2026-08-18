@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "title": "비중국 공급망 프리미엄 민감도",
+  "description": "비중국 공급량과 톤당 프리미엄에서 추가 대응비용을 뺀 연간 잠재력.",
+  "as_of": "2026-08-19",
+  "confidence": "low",
+  "notice": "공개자료 기반 민감도 초안이며 POSCO 실제 원가·계약·물량이 아닙니다.",
+  "variables": [
+    {
+      "id": "volume",
+      "label": "비중국 공급량",
+      "unit": "kt",
+      "min": 1,
+      "max": 100,
+      "step": 1,
+      "default": 30,
+      "kind": "verified",
+      "basis": "POSCO 공급망 방향 대용값",
+      "source_ids": [
+        "SRC-20260819-A3487743"
+      ]
+    },
+    {
+      "id": "premium",
+      "label": "톤당 프리미엄",
+      "unit": "USD/t",
+      "min": 0,
+      "max": 3000,
+      "step": 100,
+      "default": 500,
+      "kind": "assumption",
+      "basis": "비중국 조달 프리미엄",
+      "source_ids": []
+    },
+    {
+      "id": "cost",
+      "label": "추가 대응비용",
+      "unit": "USD m",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 20,
+      "kind": "assumption",
+      "basis": "검증·운송·계약 비용",
+      "source_ids": []
+    }
+  ],
+  "outputs": [
+    {
+      "id": "net_supply_chain_premium",
+      "label": "순 공급망 프리미엄",
+      "unit": "USD m",
+      "decimals": 1,
+      "primary": true,
+      "expression": {
+        "op": "subtract",
+        "args": [
+          {
+            "op": "divide",
+            "args": [
+              {
+                "op": "multiply",
+                "args": [
+                  {
+                    "var": "volume"
+                  },
+                  {
+                    "var": "premium"
+                  }
+                ]
+              },
+              1000
+            ]
+          },
+          {
+            "var": "cost"
+          }
+        ]
+      }
+    }
+  ],
+  "presets": [
+    {
+      "id": "downside",
+      "label": "하방",
+      "values": {
+        "volume": 15,
+        "premium": 200,
+        "cost": 30
+      }
+    },
+    {
+      "id": "base",
+      "label": "기준",
+      "values": {
+        "volume": 30,
+        "premium": 500,
+        "cost": 20
+      }
+    },
+    {
+      "id": "upside",
+      "label": "상방",
+      "values": {
+        "volume": 50,
+        "premium": 1000,
+        "cost": 15
+      }
+    }
+  ]
+}

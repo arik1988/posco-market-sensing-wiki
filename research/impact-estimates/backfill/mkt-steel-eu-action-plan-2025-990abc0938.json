@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "title": "EU 저탄소 철강 정책의 POSCO EBITDA 예비 영향",
+  "description": "정책이 저탄소 제품의 가격전가와 판매량에 미치는 범위형 모델입니다.",
+  "as_of": "2026-08-19",
+  "confidence": "low",
+  "notice": "EU 정책의 실제 고객 프리미엄과 POSCO 원가는 비공개입니다.",
+  "formula_display": "순영향 = 저탄소 판매물량 × (프리미엄 - 추가원가)",
+  "variables": [
+    {
+      "id": "green_tonnes",
+      "label": "저탄소 판매물량",
+      "unit": "t/year",
+      "min": 0,
+      "max": 3000000,
+      "step": 50000,
+      "default": 500000,
+      "kind": "assumption",
+      "basis": "POSCO 유럽 판매·생산계획 미공개",
+      "source_ids": []
+    },
+    {
+      "id": "premium",
+      "label": "고객 프리미엄",
+      "unit": "EUR/t",
+      "min": 0,
+      "max": 200,
+      "step": 10,
+      "default": 60,
+      "kind": "assumption",
+      "basis": "정책 후 프리미엄 가정",
+      "source_ids": []
+    },
+    {
+      "id": "incremental_cost",
+      "label": "추가원가",
+      "unit": "EUR/t",
+      "min": 0,
+      "max": 250,
+      "step": 10,
+      "default": 100,
+      "kind": "assumption",
+      "basis": "전력·스크랩·인증 가정",
+      "source_ids": []
+    }
+  ],
+  "outputs": [
+    {
+      "id": "ebitda_impact",
+      "label": "연간 EBITDA 영향",
+      "unit": "EUR",
+      "decimals": 0,
+      "primary": true,
+      "expression": {
+        "op": "multiply",
+        "args": [
+          {
+            "var": "green_tonnes"
+          },
+          {
+            "op": "subtract",
+            "args": [
+              {
+                "var": "premium"
+              },
+              {
+                "var": "incremental_cost"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "presets": [
+    {
+      "id": "defense",
+      "label": "방어 시나리오",
+      "values": {
+        "green_tonnes": 500000,
+        "premium": 120,
+        "incremental_cost": 80
+      }
+    },
+    {
+      "id": "base",
+      "label": "기준 시나리오",
+      "values": {
+        "green_tonnes": 500000,
+        "premium": 60,
+        "incremental_cost": 100
+      }
+    },
+    {
+      "id": "pressure",
+      "label": "압박 시나리오",
+      "values": {
+        "green_tonnes": 300000,
+        "premium": 0,
+        "incremental_cost": 130
+      }
+    }
+  ]
+}

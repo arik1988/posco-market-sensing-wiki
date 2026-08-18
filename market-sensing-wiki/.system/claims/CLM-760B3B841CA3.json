@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-760B3B841CA3",
+  "subject_id": "MKT-LITHIUM-RIO-20241009",
+  "predicate": "capacity_target",
+  "value": "2028년 말까지 150 kt LCE/year 초과로 두 배 이상 확대 계획",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-10D122AB"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다.",
+      "source_ids": [
+        "SRC-20260819-10D122AB"
+      ]
+    }
+  ]
+}

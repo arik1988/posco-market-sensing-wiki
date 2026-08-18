@@ -1,0 +1,20 @@
+# 한국 배출권거래제 4차 계획기간 할당계획 확정
+
+## 원문 보존
+
+- 원문: https://www.mcee.go.kr/eng/web/board/read.do?boardCategoryId=&boardId=1820110&boardMasterId=522&decorator=&maxIndexPages=10&maxPageItems=10&menuId=461&orgCd=&pagerOffset=0&searchKey=&searchValue=
+- 확정일: 2025-11-11, 적용기간: 2026~2030
+
+> The Phase 4 allocation plan includes the total emissions cap for the 4th planning period (2026-2030), the introduction and designation of the Market Stability Reserve, and the sector-specific paid allocation ratios.
+>
+> Most industries with a high export share, accounting for 95% of the industrial sector, including steel, will maintain 100% free allocation in consideration of international competitiveness.
+>
+> The total emissions cap is set at 2.5373 billion tons.
+
+## 교차검증
+
+2025-09 정부 공개청문회 자료도 철강·석유화학 등 탄소누출 위험 업종은 4차 기간에도 무상할당을 유지하는 초안을 설명했다: https://m.me.go.kr/eng/web/board/read.do;jsessionid=6yw-Co2G733qM5jIyJHTZRZmGFzGI13pFH7Oh1py?boardCategoryId=&boardId=1766430&boardMasterId=522&decorator=&maxIndexPages=10&maxPageItems=10&menuId=461&orgCd=&pagerOffset=10&searchKey=&searchValue=
+
+## 사실/해석
+
+철강의 100% 무상할당 유지와 전체 총량은 정부 발표 사실이다. POSCO 개별 할당량·유상비용·감축투자 효과는 공개되지 않는다.

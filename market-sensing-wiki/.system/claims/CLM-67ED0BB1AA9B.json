@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-67ED0BB1AA9B",
+  "subject_id": "MKT-LITHIUM-RESOURCE-20251114",
+  "predicate": "impact_path",
+  "value": "자원 지분 투자 → 원료 보안·환산 생산능력 → 가동률·가격·현금회수 검증",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-47D73CC5"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다.",
+      "source_ids": [
+        "SRC-20260819-47D73CC5"
+      ]
+    }
+  ]
+}

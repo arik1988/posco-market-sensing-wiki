@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "title": "DLE 원가절감 잠재력",
+  "description": "DLE 상업화 시 생산량과 톤당 절감액을 적용한 연간 절감 잠재력.",
+  "as_of": "2026-08-19",
+  "confidence": "low",
+  "notice": "공개자료 기반 민감도 초안이며 POSCO 실제 원가·계약·물량이 아닙니다.",
+  "variables": [
+    {
+      "id": "volume",
+      "label": "생산량",
+      "unit": "kt/년",
+      "min": 1,
+      "max": 100,
+      "step": 1,
+      "default": 25,
+      "kind": "verified",
+      "basis": "POSCO-Anson DLE 목표 대용값",
+      "source_ids": [
+        "$SOURCE_ID"
+      ]
+    },
+    {
+      "id": "saving",
+      "label": "톤당 절감액",
+      "unit": "USD/t",
+      "min": 100,
+      "max": 10000,
+      "step": 100,
+      "default": 3000,
+      "kind": "assumption",
+      "basis": "기술 상업화 절감액",
+      "source_ids": []
+    },
+    {
+      "id": "water",
+      "label": "물 사용량",
+      "unit": "m3/t",
+      "min": 1,
+      "max": 100,
+      "step": 1,
+      "default": 20,
+      "kind": "verified",
+      "basis": "DLE 물 사용량 확인 지표",
+      "source_ids": [
+        "$SOURCE_ID"
+      ]
+    }
+  ],
+  "outputs": [
+    {
+      "id": "annual_cost_saving",
+      "label": "연간 원가절감 잠재력",
+      "unit": "USD m/년",
+      "decimals": 1,
+      "primary": true,
+      "expression": {
+        "op": "divide",
+        "args": [
+          {
+            "op": "multiply",
+            "args": [
+              {
+                "var": "volume"
+              },
+              {
+                "var": "saving"
+              }
+            ]
+          },
+          1000
+        ]
+      }
+    }
+  ],
+  "presets": [
+    {
+      "id": "downside",
+      "label": "하방",
+      "values": {
+        "volume": 10,
+        "saving": 1000,
+        "water": 40
+      }
+    },
+    {
+      "id": "base",
+      "label": "기준",
+      "values": {
+        "volume": 25,
+        "saving": 3000,
+        "water": 20
+      }
+    },
+    {
+      "id": "upside",
+      "label": "상방",
+      "values": {
+        "volume": 50,
+        "saving": 5000,
+        "water": 10
+      }
+    }
+  ]
+}

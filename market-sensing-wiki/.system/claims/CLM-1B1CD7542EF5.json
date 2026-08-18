@@ -1,0 +1,33 @@
+{
+  "claim_id": "CLM-1B1CD7542EF5",
+  "subject_id": "POL-EU-CBAM-2026",
+  "predicate": "certificate_price_basis_2026",
+  "value": "quarterly average EU ETS auction price",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-D363136D"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "2026년 인증서 가격 산식",
+      "source_ids": [
+        "SRC-20260818-D363136D"
+      ]
+    },
+    {
+      "date": "2026-08-18",
+      "action": "verified",
+      "reason": "2026년 인증서 가격 산식",
+      "source_ids": [
+        "SRC-20260818-D363136D"
+      ]
+    }
+  ]
+}

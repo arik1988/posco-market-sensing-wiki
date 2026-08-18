@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-A1AEFFF6B60B",
+  "subject_id": "MKT-ENERGY-AEMO-GSOO-2025",
+  "predicate": "southern_peak_shortfall_start",
+  "value": "2028",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-B694DC74"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "AEMO GSOO executive summary",
+      "source_ids": [
+        "SRC-20260819-B694DC74"
+      ]
+    }
+  ]
+}

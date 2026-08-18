@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-839765411947",
+  "subject_id": "MKT-AUSTRALIA-EAST-COAST-GAS-2030",
+  "predicate": "urgency_score_1_to_5",
+  "value": "4",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-0C29491C"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "공개 근거 기반 AI 긴급도 평가",
+      "source_ids": [
+        "SRC-20260818-0C29491C"
+      ]
+    }
+  ]
+}

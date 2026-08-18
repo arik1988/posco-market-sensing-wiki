@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-FD76E2AB09BF",
+  "subject_id": "COM-POSCO-HOLDINGS",
+  "predicate": "impact_path",
+  "value": "리튬 수요 증가·가격 반등 + 업계 투자 급감 → 단기 판매가격 개선과 2030년대 공급부족 가능성 → 기존 프로젝트 램프업·신규 투자·오프테이크 조건의 가치 상승",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-F3E8E66B"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "AI 분석",
+      "source_ids": [
+        "SRC-20260818-F3E8E66B"
+      ]
+    }
+  ]
+}

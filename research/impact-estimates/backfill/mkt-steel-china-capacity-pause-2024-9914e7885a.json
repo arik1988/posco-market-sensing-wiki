@@ -1,0 +1,104 @@
+{
+  "title": "중국 증설 억제의 POSCO 철강 EBITDA 민감도(예비)",
+  "description": "공개가격과 POSCO 노출량을 대용한 방향성 모델이며 회사 실제 전망이 아닙니다.",
+  "as_of": "2026-08-19",
+  "confidence": "low",
+  "notice": "중국 생산·수출 감소가 POSCO 가격에 전가된다는 가정의 예비 What-if입니다.",
+  "formula_display": "순영향 = 노출물량 × 가격변화 × 실현비율",
+  "variables": [
+    {
+      "id": "exposed_tonnes",
+      "label": "중국 경쟁 노출 물량",
+      "unit": "t/year",
+      "min": 1000000,
+      "max": 5000000,
+      "step": 100000,
+      "default": 3000000,
+      "kind": "assumption",
+      "basis": "POSCO 실제 제품·지역 노출 미공개",
+      "source_ids": []
+    },
+    {
+      "id": "price_change",
+      "label": "가격 변화",
+      "unit": "USD/t",
+      "min": -30,
+      "max": 60,
+      "step": 5,
+      "default": 15,
+      "kind": "assumption",
+      "basis": "중국 생산·수출 변화에 대한 시나리오",
+      "source_ids": []
+    },
+    {
+      "id": "realization",
+      "label": "가격 실현비율",
+      "unit": "ratio",
+      "min": 0,
+      "max": 1,
+      "step": 0.05,
+      "default": 0.5,
+      "kind": "assumption",
+      "basis": "계약·제품 믹스 미공개",
+      "source_ids": []
+    }
+  ],
+  "outputs": [
+    {
+      "id": "ebitda_impact",
+      "label": "연간 EBITDA 방향성",
+      "unit": "USD",
+      "decimals": 0,
+      "primary": true,
+      "expression": {
+        "op": "multiply",
+        "args": [
+          {
+            "op": "multiply",
+            "args": [
+              {
+                "var": "exposed_tonnes"
+              },
+              {
+                "var": "price_change"
+              }
+            ]
+          },
+          {
+            "var": "realization"
+          }
+        ]
+      }
+    }
+  ],
+  "presets": [
+    {
+      "id": "defense",
+      "label": "방어 시나리오",
+      "values": {
+        "exposed_tonnes": 3000000,
+        "price_change": 30,
+        "realization": 0.6
+      }
+    },
+    {
+      "id": "base",
+      "label": "기준 시나리오",
+      "values": {
+        "exposed_tonnes": 3000000,
+        "price_change": 15,
+        "realization": 0.5
+      }
+    },
+    {
+      "id": "pressure",
+      "label": "압박 시나리오",
+      "values": {
+        "exposed_tonnes": 3000000,
+        "price_change": -20,
+        "realization": 0.4
+      }
+    }
+  ],
+  "schema_version": 1
+}

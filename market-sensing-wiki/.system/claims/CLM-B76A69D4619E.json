@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-B76A69D4619E",
+  "subject_id": "MKT-ENERGY-POSCO-FY2025-SENEX",
+  "predicate": "business_impact_score_1_to_5",
+  "value": "5",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-207A826E"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "그룹 자본배분·연결이익 직접성",
+      "source_ids": [
+        "SRC-20260819-207A826E"
+      ]
+    }
+  ]
+}

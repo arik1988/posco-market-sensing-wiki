@@ -1,0 +1,33 @@
+{
+  "claim_id": "CLM-1ECE8E036990",
+  "subject_id": "POL-EU-CBAM-2026",
+  "predicate": "impact_path",
+  "value": "내재배출량→CBAM 인증서 비용→고객 도착원가→판매믹스·마진",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-D363136D"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "공개 사실에서 사업 의사결정으로 이어지는 영향 경로",
+      "source_ids": [
+        "SRC-20260818-D363136D"
+      ]
+    },
+    {
+      "date": "2026-08-18",
+      "action": "verified",
+      "reason": "공개 사실에서 사업 의사결정으로 이어지는 영향 경로",
+      "source_ids": [
+        "SRC-20260818-D363136D"
+      ]
+    }
+  ]
+}

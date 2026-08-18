@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-5FFF26ABA260",
+  "subject_id": "MKT-LITHIUM-RESOURCE-20251114",
+  "predicate": "assessment_confidence",
+  "value": "medium",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-47D73CC5"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다.",
+      "source_ids": [
+        "SRC-20260819-47D73CC5"
+      ]
+    }
+  ]
+}

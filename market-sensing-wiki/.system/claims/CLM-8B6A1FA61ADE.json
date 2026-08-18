@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-8B6A1FA61ADE",
+  "subject_id": "MKT-LITHIUM-PERFORMANCE-20250214",
+  "predicate": "business_impact_rationale",
+  "value": "손상·비현금 손실은 리튬 자산 회수가능성, 추가 CAPEX 승인, 현금흐름 기대를 동시에 압박합니다.",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-7E5123E2"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다.",
+      "source_ids": [
+        "SRC-20260819-7E5123E2"
+      ]
+    }
+  ]
+}

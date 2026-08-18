@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "title": "리튬 손익 회복 민감도",
+  "description": "판매량과 가격·원가 차이를 적용한 매출총이익 민감도.",
+  "as_of": "2026-08-19",
+  "confidence": "low",
+  "notice": "공개자료 기반 민감도 초안이며 POSCO 실제 원가·계약·물량이 아닙니다.",
+  "variables": [
+    {
+      "id": "sales",
+      "label": "판매량",
+      "unit": "kt",
+      "min": 1,
+      "max": 100,
+      "step": 1,
+      "default": 20,
+      "kind": "verified",
+      "basis": "POSCO 사업 규모 대용값",
+      "source_ids": [
+        "SRC-20260819-7E5123E2"
+      ]
+    },
+    {
+      "id": "price",
+      "label": "판매가격",
+      "unit": "USD/t",
+      "min": 3000,
+      "max": 30000,
+      "step": 500,
+      "default": 12000,
+      "kind": "assumption",
+      "basis": "시장 가격 시나리오",
+      "source_ids": []
+    },
+    {
+      "id": "cost",
+      "label": "현금원가",
+      "unit": "USD/t",
+      "min": 3000,
+      "max": 30000,
+      "step": 500,
+      "default": 14000,
+      "kind": "assumption",
+      "basis": "회사 실제 원가 미공개",
+      "source_ids": []
+    }
+  ],
+  "outputs": [
+    {
+      "id": "gross_margin_sensitivity",
+      "label": "매출총이익 민감도",
+      "unit": "USD m",
+      "decimals": 1,
+      "primary": true,
+      "expression": {
+        "op": "divide",
+        "args": [
+          {
+            "op": "multiply",
+            "args": [
+              {
+                "var": "sales"
+              },
+              {
+                "op": "subtract",
+                "args": [
+                  {
+                    "var": "price"
+                  },
+                  {
+                    "var": "cost"
+                  }
+                ]
+              }
+            ]
+          },
+          1000
+        ]
+      }
+    }
+  ],
+  "presets": [
+    {
+      "id": "downside",
+      "label": "하방",
+      "values": {
+        "sales": 10,
+        "price": 8000,
+        "cost": 16000
+      }
+    },
+    {
+      "id": "base",
+      "label": "기준",
+      "values": {
+        "sales": 20,
+        "price": 12000,
+        "cost": 14000
+      }
+    },
+    {
+      "id": "upside",
+      "label": "상방",
+      "values": {
+        "sales": 30,
+        "price": 18000,
+        "cost": 12000
+      }
+    }
+  ]
+}

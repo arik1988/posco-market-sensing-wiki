@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-8B0FEC5DA853",
+  "subject_id": "MKT-STEEL-KR-CARBON-PLANT-SUPPORT-2025",
+  "predicate": "business_impact_rationale",
+  "value": "탈탄소 실증 CAPEX를 낮출 선택지이나 POSCO 선정·금액은 미확인입니다.",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-057B0417"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "지원사업에서 CAPEX·실증으로 이어지는 경로",
+      "source_ids": [
+        "SRC-20260819-057B0417"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-3CC01AEBB90E",
+  "subject_id": "MKT-LITHIUM-HANCOCK-20241216",
+  "predicate": "existing_capacity",
+  "value": "염수 25 kt/year 및 광석 43 kt/year, 합계 68 kt/year",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-55D6ECBF"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다.",
+      "source_ids": [
+        "SRC-20260819-55D6ECBF"
+      ]
+    }
+  ]
+}

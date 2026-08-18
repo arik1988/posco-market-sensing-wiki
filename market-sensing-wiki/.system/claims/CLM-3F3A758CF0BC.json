@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-3F3A758CF0BC",
+  "subject_id": "MKT-ENERGY-SENEX-ATLAS-UNIT1",
+  "predicate": "response_deadline",
+  "value": "2025-04-15",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-21B1AAAB"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "Q2 테스트 전",
+      "source_ids": [
+        "SRC-20260819-21B1AAAB"
+      ]
+    }
+  ]
+}

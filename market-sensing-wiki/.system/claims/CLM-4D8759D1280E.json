@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-4D8759D1280E",
+  "subject_id": "MKT-LITHIUM-CAPITAL-20250516",
+  "predicate": "recommended_follow_up",
+  "value": "PPLS 증자금 사용·Plant 1/2 인증·출하·가동률을 자본효율 대시보드로 연결",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-BC2C7DDE"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다.",
+      "source_ids": [
+        "SRC-20260819-BC2C7DDE"
+      ]
+    }
+  ]
+}

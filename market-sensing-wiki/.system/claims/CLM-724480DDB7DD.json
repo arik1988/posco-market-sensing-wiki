@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-724480DDB7DD",
+  "subject_id": "OPS-POSCO-ARGENTINA-Q2-2026",
+  "predicate": "stated_profitability_path",
+  "value": "phased production increases and expanded sales",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-A26B22EF"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "회사 제시 개선 경로",
+      "source_ids": [
+        "SRC-20260818-A26B22EF"
+      ]
+    }
+  ]
+}

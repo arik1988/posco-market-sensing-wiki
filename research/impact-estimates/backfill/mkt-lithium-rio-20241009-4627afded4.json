@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "title": "경쟁 공급 확대 매출 노출",
+  "description": "Arcadium 증설이 시장 가격과 POSCO 노출 물량에 미치는 연간 매출 민감도.",
+  "as_of": "2026-08-19",
+  "confidence": "medium",
+  "notice": "공개자료 기반 민감도 초안이며 POSCO 실제 원가·계약·물량이 아닙니다.",
+  "variables": [
+    {
+      "id": "volume",
+      "label": "노출 물량",
+      "unit": "kt/년",
+      "min": 1,
+      "max": 100,
+      "step": 1,
+      "default": 25,
+      "kind": "verified",
+      "basis": "Arcadium 발표 생산능력 대용값",
+      "source_ids": [
+        "SRC-20260819-10D122AB"
+      ]
+    },
+    {
+      "id": "price",
+      "label": "탄산리튬 가격",
+      "unit": "USD/t",
+      "min": 1000,
+      "max": 30000,
+      "step": 500,
+      "default": 12000,
+      "kind": "assumption",
+      "basis": "시장 가격 시나리오",
+      "source_ids": []
+    },
+    {
+      "id": "exposure",
+      "label": "POSCO 노출률",
+      "unit": "fraction",
+      "min": 0.05,
+      "max": 1,
+      "step": 0.05,
+      "default": 0.2,
+      "kind": "assumption",
+      "basis": "회사 실제 계약 미공개",
+      "source_ids": []
+    }
+  ],
+  "outputs": [
+    {
+      "id": "annual_revenue_exposure",
+      "label": "연간 매출 노출",
+      "unit": "USD m/년",
+      "decimals": 1,
+      "primary": true,
+      "expression": {
+        "op": "divide",
+        "args": [
+          {
+            "op": "multiply",
+            "args": [
+              {
+                "var": "volume"
+              },
+              {
+                "var": "price"
+              }
+            ]
+          },
+          1000
+        ]
+      }
+    }
+  ],
+  "presets": [
+    {
+      "id": "downside",
+      "label": "하방",
+      "values": {
+        "volume": 10,
+        "price": 8000,
+        "exposure": 0.1
+      }
+    },
+    {
+      "id": "base",
+      "label": "기준",
+      "values": {
+        "volume": 25,
+        "price": 12000,
+        "exposure": 0.2
+      }
+    },
+    {
+      "id": "upside",
+      "label": "상방",
+      "values": {
+        "volume": 60,
+        "price": 18000,
+        "exposure": 0.3
+      }
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "claim_id": "CLM-580EFD39543A",
+  "subject_id": "POL-EU-CBAM-2026",
+  "predicate": "urgency_score_1_to_5",
+  "value": "5",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-D363136D"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "공개 근거 기반 AI 긴급도 평가",
+      "source_ids": [
+        "SRC-20260818-D363136D"
+      ]
+    },
+    {
+      "date": "2026-08-18",
+      "action": "verified",
+      "reason": "공개 근거 기반 AI 긴급도 평가",
+      "source_ids": [
+        "SRC-20260818-D363136D"
+      ]
+    }
+  ]
+}

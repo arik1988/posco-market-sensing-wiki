@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-51DCC6964800",
+  "subject_id": "MKT-STEEL-KR-ETS-PHASE4-2025",
+  "predicate": "total_emissions_cap",
+  "value": "2.5373 billion tCO2eq",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-D1248F53"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "4차 계획기간 총량",
+      "source_ids": [
+        "SRC-20260819-D1248F53"
+      ]
+    }
+  ]
+}

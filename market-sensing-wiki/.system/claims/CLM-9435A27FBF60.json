@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-9435A27FBF60",
+  "subject_id": "MKT-ENERGY-ACCC-Q3-2025-SHORTFALL",
+  "predicate": "recommended_follow_up",
+  "value": "ACCC 7~9월 업데이트·남부 저장률·LNG 국내공급량·Senex 고객별 인도량 확인",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-0270DC5A"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "후속 확인",
+      "source_ids": [
+        "SRC-20260819-0270DC5A"
+      ]
+    }
+  ]
+}

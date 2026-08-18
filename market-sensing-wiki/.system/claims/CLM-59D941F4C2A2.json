@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-59D941F4C2A2",
+  "subject_id": "MKT-ENERGY-KOREA-11TH-POWER-PLAN",
+  "predicate": "korea_2038_lng_generation_share",
+  "value": "10.6%",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-FE4320CB"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "정부 확정계획·IEA 정책 페이지",
+      "source_ids": [
+        "SRC-20260819-FE4320CB"
+      ]
+    }
+  ]
+}

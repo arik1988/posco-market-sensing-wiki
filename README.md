@@ -1,0 +1,329 @@
+# Market Sensing Intelligence LLM Wiki
+
+포스코 철강, 포스코홀딩스 리튬, 포스코인터내셔널 에너지의 3대 사업축에 영향을 주는
+외부 변화를 선별하고 사업영향도와 긴급도로 평가하는 Codex용 로컬 스킬입니다.
+
+지식은 Markdown과 JSON 파일로 보관됩니다. 별도의 데이터베이스나 서버는 필요하지
+않습니다. Obsidian은 선택 사항이며, 사용하면 위키링크와 Knowledge Graph를 볼 수
+있습니다.
+
+## 준비 사항
+
+- Codex
+- Python 3
+- 선택 사항: Obsidian
+
+조사·축적 기능은 Python 외부 패키지 없이 작동합니다. 사람이 보는 MkDocs 사이트는
+최초 한 번 최상위 `installer.bat`을 더블클릭해 준비합니다. 명령으로 설치하려면
+다음을 실행합니다.
+
+```powershell
+python -m pip install -r tools/project/requirements-docs.txt
+```
+
+## 가장 빠른 사용법
+
+1. 이 최상위 폴더를 Codex의 작업 폴더로 엽니다.
+2. 최상위 `WIKI-SETTINGS.md`에서 분석 관점과 조사할 기업·기술·프로젝트를
+   확인하거나 수정합니다.
+3. Codex에 자연어로 작업을 요청합니다.
+
+예:
+
+- `설정된 3대 사업축에서 사업영향도와 긴급도가 높은 변화를 조사해줘.`
+- `포스코홀딩스 리튬사업에 직접 영향을 주는 최근 사건을 영향 경로와 함께 정리해줘.`
+- `포스코인터내셔널 에너지사업 관련 긴급 대응 후보를 근거와 함께 보여줘.`
+- `지난 보고 이후 변경사항을 Markdown과 HTML 보고서로 만들어줘.`
+- `중복 출처와 충돌 Claim을 감사해줘.`
+- `설비 형태를 이해하는 데 필요한 공식 사진이나 공정도를 출처와 함께 넣어줘.`
+
+최상위 `AGENTS.md`가 Codex에 `skills/market-sensing-intelligence/SKILL.md`를 읽고 따르도록
+지시합니다. 일반적인 사용자는 Python 명령을 직접 실행하지 않아도 됩니다.
+
+## 사람이 실제로 보는 화면
+
+평소에는 내부 JSON을 찾아다닐 필요가 없습니다.
+
+1. 최초 한 번 최상위 `installer.bat`을 더블클릭합니다.
+2. 이후에는 최상위 `wiki_run.bat`을 더블클릭합니다.
+3. 브라우저의 `http://127.0.0.1:8000/`에서 기업·기술·출처를 검색하고 문서로
+   이동합니다.
+   같은 사내망의 다른 사용자는 실행 창에 표시되는
+   `http://실행PC의-IP주소:8000/`로 접속합니다. Windows 방화벽 확인 창이 나타나면
+   Python의 **사설 네트워크** 접근을 허용해야 합니다.
+4. 좌측 탐색과 문서 목차를 사용하고 본문의 출처 링크를 누르면 근거 문서로
+   바로 이동합니다.
+5. 조사 운영자는 `market-sensing-wiki/index.md`와 `REVIEW.md`에서 전체 현황과 검토 대기
+   항목을 확인합니다.
+6. Obsidian을 쓰는 경우 `market-sensing-wiki`를 Vault로 열어 Markdown 위키링크와 그래프를
+   함께 사용합니다.
+
+Claim·원문 스냅샷·검토 JSON처럼 잘게 나뉜 내부 데이터는 정확한 중복 판정과 이력
+추적을 위해 `.system/`에 유지하되, Codex가 사람용 통합 문서로 자동 투영합니다.
+MkDocs는 기존 Markdown을 직접 읽으며, `[[위키링크]]`는 빌드할 때 표준 웹 링크로
+변환됩니다. 따라서 Obsidian과 MkDocs가 같은 지식 문서를 공유합니다.
+
+## 동작 흐름
+
+```text
+웹 조사
+  → 원문 저장 및 중복 검사
+  → 검증 가능한 Claim 생성
+  → 기존 Claim과 비교
+  → 충돌 시 사람 검토
+  → 한 문장 Signal·문단 Insight·문서급 상세 분석 생성
+  → MkDocs Signal 페이지와 원문 연결 자동 생성
+  → 감사·빌드·실제 브라우저 검증
+```
+
+조사 요청의 기본 완료 지점은 보고서 파일이나 채팅 요약이 아니라 MkDocs의 Signal
+페이지입니다. 사용자가 읽기 전용 조사로 제한하지 않았다면 Source·Claim 등록 후
+`add-signal --analysis-file ...`과 `sync-obsidian`까지 실행해야 합니다.
+
+저장된 지식을 검색할 때는 다음 순서를 사용합니다.
+
+```text
+키워드 점수화
+  → 관련 Markdown을 진입점으로 선택
+  → [[위키링크]] 한 단계 순회
+  → Claim 상태와 최신성 확인
+  → Source 원문 재확인
+  → Claim ID와 Source ID를 붙여 답변
+```
+
+검색 결과는 후보 목록입니다. 최종 답변은 반드시 Claim JSON과 보관 원문을 다시
+확인한 뒤 작성합니다.
+
+## 최상위 폴더
+
+| 경로 | 역할 | 사용자가 직접 수정 |
+|---|---|---|
+| `AGENTS.md` | 이 프로젝트에서 Codex가 지켜야 할 공통 규칙 | 운영 규칙을 바꿀 때만 |
+| `WIKI-SETTINGS.md` | 사람이 편집하는 관심사·검색·보고 중점 설정 | 자유롭게 목록 수정 |
+| `skills/market-sensing-intelligence/` | Codex 스킬, 데이터 계약, 실행 스크립트 | 보통 수정하지 않음 |
+| `market-sensing-wiki/` | 실제 조사 자료가 누적되는 지식 저장소 | 아래 기준에 따름 |
+| `tests/` | 저장·검토·검색·보고서 기능의 자동 테스트 | 개발할 때만 |
+| `tools/project/` | MkDocs·CodeGraph·PowerShell 실행 지원 파일 | 보통 열지 않음 |
+| `.examples/` | 참고용 외부 GitHub 저장소 | 배포본에서 제외 가능 |
+
+최상위 폴더 이름은 바꿔도 됩니다. `skills/market-sensing-intelligence`와 `market-sensing-wiki`의
+내부 이름은 문서와 명령에서 사용하므로 가급적 유지합니다.
+평소 루트에서 직접 볼 파일은 `AGENTS.md`, `installer.bat`, `README.md`,
+`wiki_run.bat`, `WIKI-SETTINGS.md` 다섯 개이며, 빌드·실행 지원 파일은
+`tools/project/`에 모아 둡니다.
+
+## `market-sensing-wiki` 폴더별 역할
+
+### 루트 파일
+
+| 경로 | 역할 | 주의 사항 |
+|---|---|---|
+| `market-sensing-wiki/AGENTS.md` | 지식 저장소 내부에서 지켜야 할 불변 규칙 | 원문 불변·Claim 이력 보존 |
+| `market-sensing-wiki/index.md` | 사업영향도·긴급도 순 Signal과 3대 사업축을 보여주는 시작 화면 | 자동 생성, 직접 수정 금지 |
+| `market-sensing-wiki/REVIEW.md` | 사람이 판단해야 할 충돌·중복 검토 대기열 | 결론은 Codex에 전달 |
+| `market-sensing-wiki/log.md` | 등록·검토·감사·보고서 작업 이력 | 도구가 추가 기록 |
+
+### `config/`
+
+| 경로 | 역할 |
+|---|---|
+| `config/watchlist.json` | `WIKI-SETTINGS.md`를 반영한 기계용 JSON 캐시 |
+
+JSON은 직접 수정하지 않습니다. 사람은 최상위 `WIKI-SETTINGS.md`만 수정합니다.
+다음 `market_sensing.py` 명령이 실행될 때 자동으로 JSON에 반영되며, 즉시 반영하려면
+`sync-settings`를 실행합니다.
+
+### 최상위 `WIKI-SETTINGS.md`
+
+목록 항목을 추가·삭제하여 다음을 설정합니다.
+
+- 분석 관점
+- 우선 기업·기술·프로젝트·국가
+- 중점 관찰 Claim 항목
+- 우선 출처 유형
+- 리스크 신호
+- 보고서 중점
+- 검색 겹침 일수와 Claim 재검증 일수
+
+`##` 제목은 파서가 구역을 식별할 때 사용하므로 바꾸지 않습니다. 중점 관찰 항목은
+위에서부터 우선순위가 높으며, Wiki Claim 표시 순서·검색 점수·브리프 순서에
+반영됩니다.
+
+### `sources/`
+
+| 경로 | 역할 | 주의 사항 |
+|---|---|---|
+| `sources/SRC-....md` | 출처 메타데이터, 연결된 지식, 보관 원문을 한 페이지로 통합 | 자동 생성, 직접 수정 금지 |
+
+웹페이지는 본문을 Markdown 또는 UTF-8 텍스트로 저장한 뒤 등록합니다. URL만
+저장하는 것이 아니라 수집 당시의 본문과 해시값을 함께 보존합니다. 사람은
+`sources/SRC-....md` 하나에서 출처 정보와 원문을 함께 볼 수 있습니다.
+
+### 사람용 지식 문서
+
+| 경로 | 역할 | 주의 사항 |
+|---|---|---|
+| `companies/` | 회사별 기술 설명·현황·단계 판단·관찰 포인트·사람용 출처 | 자동 생성, 시스템 ID는 본문에 표시하지 않음 |
+| `technologies/` | 기술별 현재 핵심 현황·변경 이력·관련 출처 | 자동 생성 |
+| `projects/` | 프로젝트별 현재 핵심 현황·변경 이력·관련 출처 | 자동 생성 |
+| `entities/` | 설비·정책 등 기타 주체의 통합 문서 | 자동 생성 |
+| `events/` | 발표·투자·허가·연기·취소 등 사람이 보강하는 사건 노트 | 필요할 때 작성 |
+| `assets/media/` | 권리 조건을 확인하고 Source에 연결한 설비 사진·공정도 | `add-image`로 관리 |
+
+Claim에는 한 가지 주어, 속성, 값만 둡니다. 예:
+
+```text
+PRJ-HAMBURG-DRI / target_start_date / 2029 이후
+```
+
+오래된 Claim은 삭제하지 않고 `superseded`, `disputed`, `cancelled`, `stale`
+상태로 남깁니다.
+
+자동 생성 Markdown의 첫 줄에는 다음 표시가 있습니다.
+
+```html
+<!-- AUTO-GENERATED BY market-sensing-intelligence. DO NOT EDIT. -->
+```
+
+이 파일들은 Obsidian 탐색용 투영본이며, JSON에서 다시 생성되므로 직접 편집하지
+않습니다.
+
+### `.system/`
+
+`.system/`은 Codex가 정확한 상태와 이력을 관리하는 내부 저장소입니다. 사람은
+평소 열어볼 필요가 없습니다.
+
+| 경로 | 역할 |
+|---|---|
+| `.system/raw/` | 수정 불가능한 원문 스냅샷 |
+| `.system/source-records/` | Source 메타데이터 JSON |
+| `.system/source-candidates/` | 유사 중복 검토 후보 |
+| `.system/claims/` | 검증 가능한 원자적 Claim JSON |
+| `.system/reviews/pending/` | 사람 판단을 기다리는 충돌·중복 |
+| `.system/reviews/resolved/` | 해결된 검토와 판단 근거 |
+| `.system/runs/` | 웹 탐색 범위·검색어·성공·실패 기록 |
+
+일정, 투자비, 생산능력, 프로젝트 상태가 기존 정보와 충돌하면 자동으로 덮어쓰지
+않고 내부 검토 항목을 만들며, 사람이 볼 내용은 `REVIEW.md`에 모아 표시합니다.
+
+### `reports/`
+
+| 경로 | 역할 |
+|---|---|
+| `reports/briefs/` | 기준일 이후 변경사항을 정리한 Markdown·HTML 보고서 |
+| `reports/audits/` | 원문 변조, 끊긴 출처, 오래된 Claim, 미해결 충돌 감사 결과 |
+
+Markdown이 보고서 원본이고 HTML은 사람이 읽고 공유하기 위한 파생본입니다.
+HTML 하단에는 보고서에서 사용한 Source ID의 출처 정보가 자동으로 붙습니다.
+
+## 수동 명령
+
+모든 명령은 최상위 폴더에서 PowerShell로 실행합니다.
+
+전체 명령 확인:
+
+```powershell
+python skills/market-sensing-intelligence/scripts/market_sensing.py --help
+```
+
+Markdown 설정을 JSON에 즉시 반영:
+
+```powershell
+python skills/market-sensing-intelligence/scripts/market_sensing.py sync-settings market-sensing-wiki
+```
+
+현재 적용된 설정 확인:
+
+```powershell
+python skills/market-sensing-intelligence/scripts/market_sensing.py show-settings market-sensing-wiki
+```
+
+저장된 지식 검색:
+
+```powershell
+python skills/market-sensing-intelligence/scripts/market_sensing.py search market-sensing-wiki `
+  --query "SSAB 수소환원제철 상용화 일정" `
+  --limit 10
+```
+
+전체 무결성 감사:
+
+```powershell
+python skills/market-sensing-intelligence/scripts/market_sensing.py audit market-sensing-wiki
+```
+
+기준일 이후 변경 브리프와 HTML 생성:
+
+```powershell
+python skills/market-sensing-intelligence/scripts/market_sensing.py brief market-sensing-wiki `
+  --since 2026-01-01 `
+  --html
+```
+
+Obsidian용 Markdown과 위키링크 재생성:
+
+```powershell
+python skills/market-sensing-intelligence/scripts/market_sensing.py sync-obsidian market-sensing-wiki
+```
+
+전체 테스트:
+
+```powershell
+python -m unittest discover -s tests -v
+```
+
+출처 등록, Claim 생성, 사람 검토 처리의 상세 명령은
+`skills/market-sensing-intelligence/references/workflows.md`를 참고합니다.
+
+기존 Source에 필요한 기술 이미지를 연결:
+
+```powershell
+python skills/market-sensing-intelligence/scripts/market_sensing.py add-image market-sensing-wiki `
+  --source-id SRC-20260725-A1B2C3D4 `
+  --image-file .\incoming\pilot-plant.jpg `
+  --origin-url "https://example.com/project-update" `
+  --caption "실증 설비 전경" `
+  --kind facility_photo `
+  --rights-status permitted `
+  --rights-note "공식 원문의 이미지 사용 조건 확인"
+```
+
+이미지는 필수가 아닙니다. 설비 형태나 공정 구성을 이해하는 데 도움이 될 때만
+추가하며, 복제 권리가 불명확하면 `link_only`로 원문 링크만 보존합니다.
+
+## Obsidian 사용
+
+1. Obsidian에서 `market-sensing-wiki` 폴더를 Vault로 엽니다.
+2. `index.md`에서 Signal을 선택하고 한 문장부터 상세 분석·원문까지 탐색합니다.
+3. Graph View에서 Claim이 공유하는 주체와 출처 연결을 확인합니다.
+
+Obsidian은 보기와 탐색을 위한 선택 도구입니다. Codex 검색에는 Obsidian CLI가
+필수적이지 않습니다.
+
+## 운영 원칙
+
+- 검색 결과 제목이나 스니펫만으로 Claim을 만들지 않습니다.
+- 모든 중요한 수치·날짜·일정에 Source ID를 연결합니다.
+- 같은 보도자료를 재인용한 기사는 독립 근거로 세지 않습니다.
+- 신규 값이 기존 값과 다르면 조용히 덮어쓰지 않습니다.
+- 원문과 과거 Claim을 삭제하지 않고 상태와 변경 이력을 보존합니다.
+- 사실, 회사의 주장, AI 분석, 사람의 결정을 구분합니다.
+- 중요한 결론은 가능한 한 독립 출처로 교차 확인합니다.
+- 접근 실패는 원인을 분류하고 일반 HTTP → 공개 API·피드·문서 → 브라우저 순으로
+  수집 방식을 승격합니다. 제한된 재시도와 세션 일관성을 유지하고, 접근 통제는
+  우회하지 않으며 모든 방식 승격과 최종 실패를 run에 남깁니다.
+
+## 다른 사람에게 전달할 때
+
+다음 항목을 포함한 최상위 폴더 전체를 전달합니다.
+
+- `AGENTS.md`
+- `README.md`
+- `WIKI-SETTINGS.md`
+- `skills/`
+- `market-sensing-wiki/`
+- 선택 사항: `tests/`
+
+`.examples/`, `__pycache__/`, 테스트 중 생성된 임시 파일은 제외해도 됩니다.
+누적된 조사 내용까지 공유하려면 `market-sensing-wiki`를 그대로 포함하고, 빈 템플릿만
+배포하려면 Source·Claim·Review·Report의 기존 데이터를 정리한 사본을 사용합니다.

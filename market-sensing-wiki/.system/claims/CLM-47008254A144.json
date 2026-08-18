@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-47008254A144",
+  "subject_id": "MKT-ENERGY-ACCC-Q1-2025-SUPPLY",
+  "predicate": "business_impact_score_1_to_5",
+  "value": "4",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-C117952B"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "계약·운송·가격 경로 직접성",
+      "source_ids": [
+        "SRC-20260819-C117952B"
+      ]
+    }
+  ]
+}

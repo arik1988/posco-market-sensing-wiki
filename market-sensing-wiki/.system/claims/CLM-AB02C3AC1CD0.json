@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-AB02C3AC1CD0",
+  "subject_id": "COM-POSCO",
+  "predicate": "assessed_at",
+  "value": "2026-08-18",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-5C2CEB19"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "평가일",
+      "source_ids": [
+        "SRC-20260818-5C2CEB19"
+      ]
+    }
+  ]
+}

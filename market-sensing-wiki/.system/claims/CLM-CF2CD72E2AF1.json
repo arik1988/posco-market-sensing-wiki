@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-CF2CD72E2AF1",
+  "subject_id": "MKT-LITHIUM-INVESTMENT-20250509",
+  "predicate": "business_impact_rationale",
+  "value": "대규모 투자계획은 가격·가동률 회복이 늦어질 때 현금흐름과 회수기간을 압박합니다.",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-499F2B05"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다.",
+      "source_ids": [
+        "SRC-20260819-499F2B05"
+      ]
+    }
+  ]
+}

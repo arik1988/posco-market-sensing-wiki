@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-0D0FF8BA277A",
+  "subject_id": "MKT-ENERGY-POSCO-FY2025-SENEX",
+  "predicate": "posco_holdings_2025_operating_profit",
+  "value": "KRW 1.827 trillion",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-207A826E"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "POSCO Holdings official results",
+      "source_ids": [
+        "SRC-20260819-207A826E"
+      ]
+    }
+  ]
+}

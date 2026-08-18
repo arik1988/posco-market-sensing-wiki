@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-A9F14ECF842B",
+  "subject_id": "COM-POSCO-INTERNATIONAL",
+  "predicate": "recommended_follow_up",
+  "value": "Senex가 직접 의무 대상인지보다 LNG 수출업자 추가공급이 지역 가격곡선과 Senex 계약 갱신에 미치는 효과를 시나리오별로 계산하고 호주 협의안 진행을 월간 추적",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-38019D54"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "AI 제안",
+      "source_ids": [
+        "SRC-20260818-38019D54"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-5323C02D6C0D",
+  "subject_id": "MKT-ENERGY-SENEX-ATLAS-UNIT1",
+  "predicate": "business_impact_rationale",
+  "value": "처리시설과 가스관의 실제 가동이 생산·판매·현금회수의 병목입니다.",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-21B1AAAB"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "AI 분석",
+      "source_ids": [
+        "SRC-20260819-21B1AAAB"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-34C594FBAF2C",
+  "subject_id": "MKT-ENERGY-SENEX-ATLAS-FIRST-GAS",
+  "predicate": "business_impact_rationale",
+  "value": "실제 고객 인도가 Senex 물량과 계약 현금회수로 연결됩니다.",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-72A89CB9"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "AI 분석",
+      "source_ids": [
+        "SRC-20260819-72A89CB9"
+      ]
+    }
+  ]
+}

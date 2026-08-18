@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-8E0AFED0F7B8",
+  "subject_id": "MKT-ENERGY-ACCC-Q3-2025-SHORTFALL",
+  "predicate": "q3_2025_2025_producer_gas_price",
+  "value": "13.58 AUD/GJ",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-0270DC5A"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "ACCC 원문",
+      "source_ids": [
+        "SRC-20260819-0270DC5A"
+      ]
+    }
+  ]
+}

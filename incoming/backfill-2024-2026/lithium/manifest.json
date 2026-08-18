@@ -1,0 +1,1600 @@
+[
+  {
+    "candidate_id": "LIT-BF-20241009-RIO-ARCADIUM",
+    "title": "Rio Tinto의 Arcadium Lithium 인수로 비중국 리튬 공급 플랫폼 대형화",
+    "url": "https://www.riotinto.com/news/releases/2024/rio-tinto-to-acquire-arcadium-lithium",
+    "canonical_url": "https://www.riotinto.com/news/releases/2024/rio-tinto-to-acquire-arcadium-lithium",
+    "publisher": "Rio Tinto",
+    "published_at": "2024-10-09",
+    "event_date": "2024-10-09",
+    "effective_date": null,
+    "source_type": "company_release",
+    "language": "en",
+    "reliability": "primary",
+    "access_status": "본문 확인",
+    "key_original_sentences": [
+      "Arcadium current capacity 75,000 tonnes LCE; plans to more than double by end-2028.",
+      "Transaction value approximately USD 6.7 billion."
+    ],
+    "cross_verification_urls": [
+      "https://ir.arcadiumlithium.com/files/doc_downloads/2024/10/Rio-Tinto-to-acquire-Arcadium-Lithium-October-9-2024.pdf"
+    ],
+    "duplicate_candidates": [
+      "2026 Q2 Rio production is a separate follow-up"
+    ],
+    "signal": "Rio Tinto가 75kt LCE 플랫폼을 인수해 비중국 공급망의 자본·고객 경쟁 강도를 높였다.",
+    "insight": "명목 용량보다 실제 규격품 출하·고객 인증·원가를 경쟁지표로 사용해야 한다.",
+    "business_impact_score_1_to_5": 4,
+    "business_impact_rationale": "비중국 리튬 공급·고객 경쟁에 직접 영향.",
+    "urgency_score_1_to_5": 3,
+    "urgency_rationale": "2025~2026 투자·가격 모델 갱신 필요.",
+    "assessment_confidence": "high",
+    "response_deadline": "2026-09-15",
+    "impact_path": [
+      "경쟁사 통합",
+      "공급 증가",
+      "고객 조건 변화",
+      "POSCO 증설·원가 재검토"
+    ],
+    "falsification_conditions": [
+      "출하 정체",
+      "고객 인증 지연"
+    ],
+    "trigger": "Rio 가이던스·분기 출하·POSCO 단가",
+    "analysis_file": "analysis/20241009-rio-arcadium.md",
+    "source_file": "sources/20241009-rio-arcadium.md",
+    "impact_estimate": {
+      "schema_version": 1,
+      "title": "경쟁 공급 압력",
+      "description": "경쟁 공급과 가격 민감도 예비 모델",
+      "as_of": "2026-08-19",
+      "confidence": "low",
+      "notice": "공개정보 기반 예비 추정이며 회사 실제값 아님",
+      "formula_display": "공급량 × 가격압력",
+      "variables": [
+        {
+          "id": "volume",
+          "label": "공급량",
+          "unit": "kt/년",
+          "min": 1,
+          "max": 100,
+          "step": 1,
+          "default": 25,
+          "kind": "verified",
+          "basis": "Arcadium 발표 용량",
+          "source_ids": [
+            "$SOURCE_ID"
+          ]
+        },
+        {
+          "id": "price",
+          "label": "가격압력",
+          "unit": "USD/t",
+          "min": 1,
+          "max": 3000,
+          "step": 100,
+          "default": 500,
+          "kind": "assumption",
+          "basis": "계약 미공개",
+          "source_ids": []
+        },
+        {
+          "id": "exposure",
+          "label": "노출비중",
+          "unit": "%",
+          "min": 1,
+          "max": 100,
+          "step": 5,
+          "default": 20,
+          "kind": "assumption",
+          "basis": "회사 실제값 아님",
+          "source_ids": []
+        }
+      ],
+      "outputs": [
+        {
+          "id": "impact",
+          "label": "연간 압력",
+          "unit": "USD m",
+          "decimals": 0,
+          "primary": true,
+          "expression": {
+            "op": "multiply",
+            "args": [
+              {
+                "var": "volume"
+              },
+              {
+                "var": "price"
+              }
+            ]
+          }
+        }
+      ],
+      "presets": [
+        {
+          "id": "defensive",
+          "label": "방어",
+          "values": {
+            "volume": 10,
+            "price": 250,
+            "exposure": 10
+          }
+        },
+        {
+          "id": "base",
+          "label": "기준",
+          "values": {
+            "volume": 25,
+            "price": 500,
+            "exposure": 20
+          }
+        },
+        {
+          "id": "pressure",
+          "label": "압박",
+          "values": {
+            "volume": 60,
+            "price": 1000,
+            "exposure": 30
+          }
+        }
+      ]
+    },
+    "collected_at": "2026-08-19",
+    "assessed_at": "2026-08-19",
+    "business_axis": "POSCO Holdings-리튬",
+    "affected_business": "POSCO Holdings 리튬(염수·광석·수산화리튬·배터리 소재)",
+    "recommended_follow_up": "Rio 가이던스·분기 출하·POSCO 단가"
+  },
+  {
+    "candidate_id": "LIT-BF-20241216-HANCOCK",
+    "title": "POSCO Holdings–Hancock 연 30kt 리튬 합작 검토",
+    "url": "https://newsroom.posco.com/en/posco-holdings-partners-with-australian-mining-company-hancock-in-lithium-business-for-rechargeable-battery-materials/",
+    "canonical_url": "https://newsroom.posco.com/en/posco-holdings-partners-with-australian-mining-company-hancock-in-lithium-business-for-rechargeable-battery-materials/",
+    "publisher": "POSCO Holdings",
+    "published_at": "2024-12-16",
+    "event_date": "2024-12-09",
+    "effective_date": null,
+    "source_type": "company_release",
+    "language": "en",
+    "reliability": "primary",
+    "access_status": "본문 확인",
+    "key_original_sentences": [
+      "Pursue a lithium venture with annual capacity 30,000 tons.",
+      "Aim for an additional supply chain free from FEOC restrictions."
+    ],
+    "cross_verification_urls": [
+      "https://www.energy.gov/cmei/manufacturing/foreign-entity-concern-interpretive-guidance"
+    ],
+    "duplicate_candidates": [],
+    "signal": "POSCO Holdings가 Hancock과 연 30kt 합작을 검토하며 FEOC 대응 비중국 원료 선택지를 넓혔다.",
+    "insight": "입지·투자액 미정인 협력 발표이므로 원료 추적성과 오프테이크를 먼저 검증한다.",
+    "business_impact_score_1_to_5": 4,
+    "business_impact_rationale": "호주 원료·북미 고객 적격성에 직접 연결.",
+    "urgency_score_1_to_5": 3,
+    "urgency_rationale": "투자계약 전 검증 필요.",
+    "assessment_confidence": "medium",
+    "response_deadline": "2026-10-15",
+    "impact_path": [
+      "Hancock 자산",
+      "FEOC 추적",
+      "고객 인증",
+      "정제 투자"
+    ],
+    "falsification_conditions": [
+      "투자계약 부재",
+      "FEOC 인증 실패"
+    ],
+    "trigger": "입지·투자·원산지 증빙",
+    "analysis_file": "analysis/20241216-hancock.md",
+    "source_file": "sources/20241216-hancock.md",
+    "impact_estimate": {
+      "schema_version": 1,
+      "title": "FEOC 오프테이크 노출",
+      "description": "합작 용량과 가동률 예비 모델",
+      "as_of": "2026-08-19",
+      "confidence": "low",
+      "notice": "검토 용량이며 상업생산 확정 아님",
+      "formula_display": "용량 × 가동률",
+      "variables": [
+        {
+          "id": "capacity",
+          "label": "용량",
+          "unit": "kt/년",
+          "min": 1,
+          "max": 30,
+          "step": 1,
+          "default": 30,
+          "kind": "verified",
+          "basis": "회사 발표",
+          "source_ids": [
+            "$SOURCE_ID"
+          ]
+        },
+        {
+          "id": "ramp",
+          "label": "가동률",
+          "unit": "%",
+          "min": 1,
+          "max": 100,
+          "step": 5,
+          "default": 50,
+          "kind": "assumption",
+          "basis": "일정 미정",
+          "source_ids": []
+        },
+        {
+          "id": "price",
+          "label": "가격",
+          "unit": "USD/t",
+          "min": 1,
+          "max": 25000,
+          "step": 500,
+          "default": 12000,
+          "kind": "assumption",
+          "basis": "계약 미공개",
+          "source_ids": []
+        }
+      ],
+      "outputs": [
+        {
+          "id": "revenue",
+          "label": "매출 노출",
+          "unit": "USD m",
+          "decimals": 0,
+          "primary": true,
+          "expression": {
+            "op": "multiply",
+            "args": [
+              {
+                "var": "capacity"
+              },
+              {
+                "var": "ramp"
+              }
+            ]
+          }
+        }
+      ],
+      "presets": [
+        {
+          "id": "defensive",
+          "label": "방어",
+          "values": {
+            "capacity": 30,
+            "ramp": 25,
+            "price": 9000
+          }
+        },
+        {
+          "id": "base",
+          "label": "기준",
+          "values": {
+            "capacity": 30,
+            "ramp": 50,
+            "price": 12000
+          }
+        },
+        {
+          "id": "pressure",
+          "label": "압박",
+          "values": {
+            "capacity": 30,
+            "ramp": 75,
+            "price": 8000
+          }
+        }
+      ]
+    },
+    "collected_at": "2026-08-19",
+    "assessed_at": "2026-08-19",
+    "business_axis": "POSCO Holdings-리튬",
+    "affected_business": "POSCO Holdings 리튬(염수·광석·수산화리튬·배터리 소재)",
+    "recommended_follow_up": "입지·투자·원산지 증빙"
+  },
+  {
+    "candidate_id": "LIT-BF-20250214-PERFORMANCE",
+    "title": "POSCO Holdings 2024 실적: 시장 악화와 신설 리튬 안정화 우선",
+    "url": "https://newsroom.posco.com/en/posco-holdings-announces-2024-performance/",
+    "canonical_url": "https://newsroom.posco.com/en/posco-holdings-announces-2024-performance/",
+    "publisher": "POSCO Holdings",
+    "published_at": "2025-02-14",
+    "event_date": "2024-12-31",
+    "effective_date": "2025-02-14",
+    "source_type": "company_release",
+    "language": "en",
+    "reliability": "primary",
+    "access_status": "본문 확인",
+    "key_original_sentences": [
+      "FY2024 sales KRW 72.688tn, operating profit KRW 2.174tn, net profit KRW 948bn.",
+      "Non-cash losses KRW 1.3tn; early stabilization and customer certification prioritized."
+    ],
+    "cross_verification_urls": [
+      "https://www.sec.gov/Archives/edgar/data/889132/000119312525019002/d849026d6k.htm"
+    ],
+    "duplicate_candidates": [],
+    "signal": "POSCO Holdings가 리튬 시장 악화로 1.3조원 비현금 손실을 인식하고 신설 공장 안정화·고객 인증을 회복 선행조건으로 제시했다.",
+    "insight": "생산능력 확보와 손익 기여 사이의 간극을 분기 현금원가·수율·인증으로 검증한다.",
+    "business_impact_score_1_to_5": 5,
+    "business_impact_rationale": "리튬 손실과 램프업이 연결 손익·CAPEX에 직접 반영.",
+    "urgency_score_1_to_5": 4,
+    "urgency_rationale": "2025 투자·램프업 즉시 조정.",
+    "assessment_confidence": "high",
+    "response_deadline": "2025-04-30",
+    "impact_path": [
+      "가격·판매량 하락",
+      "평가손실",
+      "연결 현금압박",
+      "안정화·인증"
+    ],
+    "falsification_conditions": [
+      "상반기 원가·출하 개선",
+      "손실 일회성 확인"
+    ],
+    "trigger": "자회사 생산·판매·손익·가격",
+    "analysis_file": "analysis/20250214-performance.md",
+    "source_file": "sources/20250214-performance.md",
+    "impact_estimate": {
+      "schema_version": 1,
+      "title": "리튬 손익 민감도",
+      "description": "판매량과 가격의 방향성 예비 모델",
+      "as_of": "2026-08-19",
+      "confidence": "low",
+      "notice": "공개 생산능력과 가정 기반, 회사 실제 전망 아님",
+      "formula_display": "판매량 × 가격",
+      "variables": [
+        {
+          "id": "sales",
+          "label": "판매량",
+          "unit": "kt",
+          "min": 1,
+          "max": 68,
+          "step": 1,
+          "default": 20,
+          "kind": "derived",
+          "basis": "공개 용량",
+          "source_ids": []
+        },
+        {
+          "id": "price",
+          "label": "가격",
+          "unit": "USD/t",
+          "min": 1,
+          "max": 25000,
+          "step": 500,
+          "default": 12000,
+          "kind": "assumption",
+          "basis": "계약 미공개",
+          "source_ids": []
+        },
+        {
+          "id": "cost",
+          "label": "원가",
+          "unit": "USD/t",
+          "min": 1,
+          "max": 25000,
+          "step": 500,
+          "default": 14000,
+          "kind": "assumption",
+          "basis": "원가 미공개",
+          "source_ids": []
+        }
+      ],
+      "outputs": [
+        {
+          "id": "ebitda",
+          "label": "예비 EBITDA",
+          "unit": "USD m",
+          "decimals": 0,
+          "primary": true,
+          "expression": {
+            "op": "multiply",
+            "args": [
+              {
+                "var": "sales"
+              },
+              {
+                "var": "price"
+              }
+            ]
+          }
+        }
+      ],
+      "presets": [
+        {
+          "id": "defensive",
+          "label": "방어",
+          "values": {
+            "sales": 10,
+            "price": 14000,
+            "cost": 13000
+          }
+        },
+        {
+          "id": "base",
+          "label": "기준",
+          "values": {
+            "sales": 20,
+            "price": 12000,
+            "cost": 14000
+          }
+        },
+        {
+          "id": "pressure",
+          "label": "압박",
+          "values": {
+            "sales": 20,
+            "price": 8000,
+            "cost": 16000
+          }
+        }
+      ]
+    },
+    "collected_at": "2026-08-19",
+    "assessed_at": "2026-08-19",
+    "business_axis": "POSCO Holdings-리튬",
+    "affected_business": "POSCO Holdings 리튬(염수·광석·수산화리튬·배터리 소재)",
+    "recommended_follow_up": "자회사 생산·판매·손익·가격"
+  },
+  {
+    "candidate_id": "LIT-BF-20250424-Q1-IR-DELAY",
+    "title": "2025 Q1 IR: 아르헨티나 2단계·후공정 완공 Q1 2026으로 후행",
+    "url": "https://www.sec.gov/Archives/edgar/data/889132/000119312525019002/d849026d6k.htm",
+    "canonical_url": "https://www.sec.gov/Archives/edgar/data/889132/000119312525019002/d849026d6k.htm",
+    "publisher": "POSCO Holdings / SEC 6-K",
+    "published_at": "2025-04-24",
+    "event_date": "2025-04-24",
+    "effective_date": null,
+    "source_type": "exchange_filing",
+    "language": "en",
+    "reliability": "primary",
+    "access_status": "본문 확인",
+    "key_original_sentences": [
+      "Reflect market slowdown and sluggish lithium price recovery.",
+      "Phase 2 and POSCO Lithium Solution completion pushed from Q3'25 to Q1'26."
+    ],
+    "cross_verification_urls": [
+      "https://www.publicnow.com/view/47542373B83FF9A1911C406B7FF6EC57FB90E16E"
+    ],
+    "duplicate_candidates": [],
+    "signal": "리튬 가격 회복 지연으로 아르헨티나 2단계와 국내 후공정 완공을 Q1 2026으로 미뤘다.",
+    "insight": "명목 생산능력보다 완공·인증·출하 시점이 현금흐름을 좌우한다.",
+    "business_impact_score_1_to_5": 5,
+    "business_impact_rationale": "25kt 증설의 매출·CAPEX 회수 후행.",
+    "urgency_score_1_to_5": 5,
+    "urgency_rationale": "투자·영업계획 즉시 재검증.",
+    "assessment_confidence": "high",
+    "response_deadline": "2025-05-31",
+    "impact_path": [
+      "가격 회복 지연",
+      "완공 후행",
+      "판매 이연",
+      "현금흐름 재계획"
+    ],
+    "falsification_conditions": [
+      "조기 생산·인증",
+      "PPLS 계약출하 반복"
+    ],
+    "trigger": "완공·인증·출하",
+    "analysis_file": "analysis/20250424-q1-ir-delay.md",
+    "source_file": "sources/20250424-q1-ir-delay.md",
+    "impact_estimate": {
+      "schema_version": 1,
+      "title": "완공 지연 매출 이연",
+      "description": "지연 용량과 가동률 예비 모델",
+      "as_of": "2026-08-19",
+      "confidence": "medium",
+      "notice": "명목용량 기반, 실제 매출 아님",
+      "formula_display": "지연용량 × 가동률",
+      "variables": [
+        {
+          "id": "delayed",
+          "label": "지연용량",
+          "unit": "kt",
+          "min": 1,
+          "max": 25,
+          "step": 1,
+          "default": 25,
+          "kind": "verified",
+          "basis": "Phase 2 용량",
+          "source_ids": [
+            "$SOURCE_ID"
+          ]
+        },
+        {
+          "id": "utilization",
+          "label": "가동률",
+          "unit": "%",
+          "min": 1,
+          "max": 100,
+          "step": 5,
+          "default": 50,
+          "kind": "assumption",
+          "basis": "미공개",
+          "source_ids": []
+        },
+        {
+          "id": "price",
+          "label": "가격",
+          "unit": "USD/t",
+          "min": 1,
+          "max": 20000,
+          "step": 500,
+          "default": 12000,
+          "kind": "assumption",
+          "basis": "계약 미공개",
+          "source_ids": []
+        }
+      ],
+      "outputs": [
+        {
+          "id": "delay",
+          "label": "매출 이연",
+          "unit": "USD m",
+          "decimals": 0,
+          "primary": true,
+          "expression": {
+            "op": "multiply",
+            "args": [
+              {
+                "var": "delayed"
+              },
+              {
+                "var": "utilization"
+              }
+            ]
+          }
+        }
+      ],
+      "presets": [
+        {
+          "id": "defensive",
+          "label": "방어",
+          "values": {
+            "delayed": 10,
+            "utilization": 30,
+            "price": 10000
+          }
+        },
+        {
+          "id": "base",
+          "label": "기준",
+          "values": {
+            "delayed": 25,
+            "utilization": 50,
+            "price": 12000
+          }
+        },
+        {
+          "id": "pressure",
+          "label": "압박",
+          "values": {
+            "delayed": 25,
+            "utilization": 80,
+            "price": 8000
+          }
+        }
+      ]
+    },
+    "collected_at": "2026-08-19",
+    "assessed_at": "2026-08-19",
+    "business_axis": "POSCO Holdings-리튬",
+    "affected_business": "POSCO Holdings 리튬(염수·광석·수산화리튬·배터리 소재)",
+    "recommended_follow_up": "완공·인증·출하"
+  },
+  {
+    "candidate_id": "LIT-BF-20250509-Q1-INVESTMENT",
+    "title": "2025 Q1: 연간 8.8조원 투자계획에 아르헨티나 2단계 포함",
+    "url": "https://newsroom.posco.com/en/posco-holdings-improves-performance-despite-demand-industry-downturn-and-growing-uncertainties-secures-future-growth-engines-through-strategic-alliances/",
+    "canonical_url": "https://newsroom.posco.com/en/posco-holdings-improves-performance-despite-demand-industry-downturn-and-growing-uncertainties-secures-future-growth-engines-through-strategic-alliances/",
+    "publisher": "POSCO Holdings",
+    "published_at": "2025-05-09",
+    "event_date": "2025-03-31",
+    "effective_date": "2025-12-31",
+    "source_type": "company_ir",
+    "language": "en",
+    "reliability": "primary",
+    "access_status": "본문 확인",
+    "key_original_sentences": [
+      "Q1 sales KRW 17.437tn and operating profit KRW 568bn.",
+      "2025 investment plan KRW 8.8tn includes Phase 2 Argentina lithium brine."
+    ],
+    "cross_verification_urls": [
+      "https://www.posco-inc.co.kr/poscoinc/v4/kor/investor/s91e3000100c.jsp"
+    ],
+    "duplicate_candidates": [],
+    "signal": "시장 불확실성 속에서도 8.8조원 투자계획과 아르헨티나 2단계 투자를 유지했다.",
+    "insight": "투자 의지는 유지됐지만 완공 지연과 병존하므로 집행은 경제성 게이트로 제한한다.",
+    "business_impact_score_1_to_5": 4,
+    "business_impact_rationale": "CAPEX·생산능력·현금흐름 직접 영향.",
+    "urgency_score_1_to_5": 4,
+    "urgency_rationale": "분기 집행률 검증 필요.",
+    "assessment_confidence": "high",
+    "response_deadline": "2025-06-30",
+    "impact_path": [
+      "시장 저점",
+      "CAPEX 유지",
+      "고정비 증가",
+      "원가·회수 검증"
+    ],
+    "falsification_conditions": [
+      "후속 투자 축소",
+      "집행이 판매로 연결 안됨"
+    ],
+    "trigger": "CAPEX·공사율·가동률",
+    "analysis_file": "analysis/20250509-investment.md",
+    "source_file": "sources/20250509-investment.md",
+    "impact_estimate": {
+      "schema_version": 1,
+      "title": "리튬 CAPEX 회수",
+      "description": "CAPEX와 회수율 예비 모델",
+      "as_of": "2026-08-19",
+      "confidence": "low",
+      "notice": "리튬 배분액·회수율 가정, 회사 실제값 아님",
+      "formula_display": "CAPEX × 회수율",
+      "variables": [
+        {
+          "id": "capex",
+          "label": "CAPEX",
+          "unit": "KRW bn",
+          "min": 1,
+          "max": 8800,
+          "step": 100,
+          "default": 1000,
+          "kind": "assumption",
+          "basis": "리튬 배분 미공개",
+          "source_ids": []
+        },
+        {
+          "id": "recovery",
+          "label": "회수율",
+          "unit": "%",
+          "min": 1,
+          "max": 200,
+          "step": 5,
+          "default": 100,
+          "kind": "assumption",
+          "basis": "수익성 미공개",
+          "source_ids": []
+        },
+        {
+          "id": "years",
+          "label": "기간",
+          "unit": "년",
+          "min": 1,
+          "max": 10,
+          "step": 1,
+          "default": 5,
+          "kind": "assumption",
+          "basis": "가정",
+          "source_ids": []
+        }
+      ],
+      "outputs": [
+        {
+          "id": "return",
+          "label": "회수액",
+          "unit": "KRW bn",
+          "decimals": 0,
+          "primary": true,
+          "expression": {
+            "op": "multiply",
+            "args": [
+              {
+                "var": "capex"
+              },
+              {
+                "var": "recovery"
+              }
+            ]
+          }
+        }
+      ],
+      "presets": [
+        {
+          "id": "defensive",
+          "label": "방어",
+          "values": {
+            "capex": 800,
+            "recovery": 80,
+            "years": 4
+          }
+        },
+        {
+          "id": "base",
+          "label": "기준",
+          "values": {
+            "capex": 1000,
+            "recovery": 100,
+            "years": 5
+          }
+        },
+        {
+          "id": "pressure",
+          "label": "압박",
+          "values": {
+            "capex": 1500,
+            "recovery": 60,
+            "years": 7
+          }
+        }
+      ]
+    },
+    "collected_at": "2026-08-19",
+    "assessed_at": "2026-08-19",
+    "business_axis": "POSCO Holdings-리튬",
+    "affected_business": "POSCO Holdings 리튬(염수·광석·수산화리튬·배터리 소재)",
+    "recommended_follow_up": "CAPEX·공사율·가동률"
+  },
+  {
+    "candidate_id": "LIT-BF-20250516-CAPITAL-INCREASE",
+    "title": "리튬·배터리 소재 자회사에 9,226억원 증자",
+    "url": "https://newsroom.posco.com/en/posco-holdings-commits-krw-1-trillion-to-capital-increase-in-rechargeable-battery-material-subsidiaries-to-reinforce-responsible-management-of-core-businesses/",
+    "canonical_url": "https://newsroom.posco.com/en/posco-holdings-commits-krw-1-trillion-to-capital-increase-in-rechargeable-battery-material-subsidiaries-to-reinforce-responsible-management-of-core-businesses/",
+    "publisher": "POSCO Holdings",
+    "published_at": "2025-05-16",
+    "event_date": "2025-05-13",
+    "effective_date": "2025-05-16",
+    "source_type": "company_release",
+    "language": "en",
+    "reliability": "primary",
+    "access_status": "본문 확인",
+    "key_original_sentences": [
+      "Approved KRW 922.6bn capital increase: PPLS KRW 328bn.",
+      "PPLS ownership POSCO 82%, Pilbara Minerals 18%."
+    ],
+    "cross_verification_urls": [
+      "https://www.pilbaraminerals.com.au/investors/asx-announcements/"
+    ],
+    "duplicate_candidates": [],
+    "signal": "PPLS에 3,280억원을 포함해 자회사에 9,226억원을 투입하며 저가 국면 운영자금을 보강했다.",
+    "insight": "증자효과는 계약출하·인증·톤당 현금원가 개선으로 검증한다.",
+    "business_impact_score_1_to_5": 5,
+    "business_impact_rationale": "현금 투입과 광석 리튬 생산 지속성에 직접 영향.",
+    "urgency_score_1_to_5": 4,
+    "urgency_rationale": "2025년 자금 사용·인증 추적.",
+    "assessment_confidence": "high",
+    "response_deadline": "2025-09-30",
+    "impact_path": [
+      "가격 약세",
+      "유동성 보강",
+      "인증·출하 안정",
+      "원가·현금흐름"
+    ],
+    "falsification_conditions": [
+      "추가 증자",
+      "출하·원가 미개선"
+    ],
+    "trigger": "PPLS 판매·원가·인증",
+    "analysis_file": "analysis/20250516-capital-increase.md",
+    "source_file": "sources/20250516-capital-increase.md",
+    "impact_estimate": {
+      "schema_version": 1,
+      "title": "PPLS 증자 회수",
+      "description": "증자액과 공헌이익 방향성 예비 모델",
+      "as_of": "2026-08-19",
+      "confidence": "low",
+      "notice": "공개 증자액 외 입력은 가정이며 회사 실제값 아님",
+      "formula_display": "증자액 × 공헌이익 지수",
+      "variables": [
+        {
+          "id": "capital",
+          "label": "증자액",
+          "unit": "KRW bn",
+          "min": 1,
+          "max": 500,
+          "step": 10,
+          "default": 328,
+          "kind": "verified",
+          "basis": "회사 발표",
+          "source_ids": [
+            "$SOURCE_ID"
+          ]
+        },
+        {
+          "id": "margin",
+          "label": "공헌이익 지수",
+          "unit": "%",
+          "min": 1,
+          "max": 200,
+          "step": 5,
+          "default": 50,
+          "kind": "assumption",
+          "basis": "원가·가격 미공개",
+          "source_ids": []
+        },
+        {
+          "id": "years",
+          "label": "회수기간",
+          "unit": "년",
+          "min": 1,
+          "max": 10,
+          "step": 1,
+          "default": 5,
+          "kind": "assumption",
+          "basis": "가정",
+          "source_ids": []
+        }
+      ],
+      "outputs": [
+        {
+          "id": "recovery",
+          "label": "회수 지수",
+          "unit": "KRW bn-index",
+          "decimals": 0,
+          "primary": true,
+          "expression": {
+            "op": "multiply",
+            "args": [
+              {
+                "var": "capital"
+              },
+              {
+                "var": "margin"
+              }
+            ]
+          }
+        }
+      ],
+      "presets": [
+        {
+          "id": "defensive",
+          "label": "방어",
+          "values": {
+            "capital": 328,
+            "margin": 25,
+            "years": 4
+          }
+        },
+        {
+          "id": "base",
+          "label": "기준",
+          "values": {
+            "capital": 328,
+            "margin": 50,
+            "years": 5
+          }
+        },
+        {
+          "id": "pressure",
+          "label": "압박",
+          "values": {
+            "capital": 328,
+            "margin": 10,
+            "years": 7
+          }
+        }
+      ]
+    },
+    "collected_at": "2026-08-19",
+    "assessed_at": "2026-08-19",
+    "business_axis": "POSCO Holdings-리튬",
+    "affected_business": "POSCO Holdings 리튬(염수·광석·수산화리튬·배터리 소재)",
+    "recommended_follow_up": "PPLS 판매·원가·인증"
+  },
+  {
+    "candidate_id": "LIT-BF-20250521-IEA-OUTLOOK",
+    "title": "IEA 2025: 단기 공급과잉과 2030년대 리튬 적자 전망 병존",
+    "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2025/executive-summary",
+    "canonical_url": "https://www.iea.org/reports/global-critical-minerals-outlook-2025/executive-summary",
+    "publisher": "International Energy Agency",
+    "published_at": "2025-05-21",
+    "event_date": "2025-05-21",
+    "effective_date": null,
+    "source_type": "industry_body",
+    "language": "en",
+    "reliability": "primary",
+    "access_status": "본문 확인",
+    "key_original_sentences": [
+      "Lithium prices fell over 80% since 2023.",
+      "Near-term supply appears ample; demand may push market into deficit in the 2030s."
+    ],
+    "cross_verification_urls": [
+      "https://www.iea.org/news/diversification-is-the-cornerstone-of-energy-security-yet-critical-minerals-are-moving-in-the-opposite-direction"
+    ],
+    "duplicate_candidates": [],
+    "signal": "IEA가 단기 공급과잉·가격 하락과 2030년대 리튬 적자 가능성이 공존한다고 평가했다.",
+    "insight": "단기 운영은 방어하고 장기 저원가 자원은 선택적으로 유지하는 시점 분리가 필요하다.",
+    "business_impact_score_1_to_5": 4,
+    "business_impact_rationale": "가격·공급·CAPEX 가정에 직접 영향.",
+    "urgency_score_1_to_5": 3,
+    "urgency_rationale": "중장기 투자 프레임 업데이트.",
+    "assessment_confidence": "high",
+    "response_deadline": "2026-09-30",
+    "impact_path": [
+      "공급 증가",
+      "가격 하락",
+      "투자 둔화",
+      "장기 부족 옵션"
+    ],
+    "falsification_conditions": [
+      "프로젝트 조기 가동으로 2030 적자 완화"
+    ],
+    "trigger": "IEA 전망·LCE 가격·프로젝트 출하",
+    "analysis_file": "analysis/20250521-iea.md",
+    "source_file": "sources/20250521-iea.md",
+    "impact_estimate": {
+      "schema_version": 1,
+      "title": "가격·물량 EBITDA 민감도",
+      "description": "판매량과 가격의 방향성 예비 모델",
+      "as_of": "2026-08-19",
+      "confidence": "low",
+      "notice": "시장 대용변수 기반이며 회사 실제값 아님",
+      "formula_display": "물량 × 가격",
+      "variables": [
+        {
+          "id": "volume",
+          "label": "판매량",
+          "unit": "kt",
+          "min": 1,
+          "max": 100,
+          "step": 5,
+          "default": 50,
+          "kind": "derived",
+          "basis": "공개 용량",
+          "source_ids": []
+        },
+        {
+          "id": "price",
+          "label": "가격",
+          "unit": "USD/t",
+          "min": 1,
+          "max": 25000,
+          "step": 500,
+          "default": 12000,
+          "kind": "assumption",
+          "basis": "계약 미공개",
+          "source_ids": []
+        },
+        {
+          "id": "cost",
+          "label": "원가",
+          "unit": "USD/t",
+          "min": 1,
+          "max": 20000,
+          "step": 500,
+          "default": 13000,
+          "kind": "assumption",
+          "basis": "원가 미공개",
+          "source_ids": []
+        }
+      ],
+      "outputs": [
+        {
+          "id": "ebitda",
+          "label": "EBITDA",
+          "unit": "USD m",
+          "decimals": 0,
+          "primary": true,
+          "expression": {
+            "op": "multiply",
+            "args": [
+              {
+                "var": "volume"
+              },
+              {
+                "var": "price"
+              }
+            ]
+          }
+        }
+      ],
+      "presets": [
+        {
+          "id": "defensive",
+          "label": "방어",
+          "values": {
+            "volume": 30,
+            "price": 14000,
+            "cost": 12000
+          }
+        },
+        {
+          "id": "base",
+          "label": "기준",
+          "values": {
+            "volume": 50,
+            "price": 12000,
+            "cost": 13000
+          }
+        },
+        {
+          "id": "pressure",
+          "label": "압박",
+          "values": {
+            "volume": 50,
+            "price": 8000,
+            "cost": 16000
+          }
+        }
+      ]
+    },
+    "collected_at": "2026-08-19",
+    "assessed_at": "2026-08-19",
+    "business_axis": "POSCO Holdings-리튬",
+    "affected_business": "POSCO Holdings 리튬(염수·광석·수산화리튬·배터리 소재)",
+    "recommended_follow_up": "IEA 전망·LCE 가격·프로젝트 출하"
+  },
+  {
+    "candidate_id": "LIT-BF-20250715-DLE-ANSON",
+    "title": "Utah DLE 실증으로 북미 염수 리튬 상용화 게이트 설정",
+    "url": "https://newsroom.posco.com/en/posco-holdings-sets-out-to-demonstrate-dle-tech-in-the-u-s-speeds-up-lithium-supply-chain-in-north-america/",
+    "canonical_url": "https://newsroom.posco.com/en/posco-holdings-sets-out-to-demonstrate-dle-tech-in-the-u-s-speeds-up-lithium-supply-chain-in-north-america/",
+    "publisher": "POSCO Holdings",
+    "published_at": "2025-07-15",
+    "event_date": "2025-06-30",
+    "effective_date": null,
+    "source_type": "company_release",
+    "language": "en",
+    "reliability": "primary",
+    "access_status": "본문 확인",
+    "key_original_sentences": [
+      "First Korean company to launch a North American DLE demonstration.",
+      "Demo plant set to break ground in 2026."
+    ],
+    "cross_verification_urls": [
+      "https://www.ansonresources.com.au/asx-announcements/"
+    ],
+    "duplicate_candidates": [],
+    "signal": "POSCO Holdings가 Utah DLE 실증을 2026년 착공해 북미 저농도 염수의 상용성·원가를 검증한다.",
+    "insight": "회수율뿐 아니라 순도·시약·전력·수처리 KPI 통과 전에는 상용 CAPEX를 확대하지 않는다.",
+    "business_impact_score_1_to_5": 4,
+    "business_impact_rationale": "성공 시 북미 비중국 자원·고객공급, 실패 시 기술·CAPEX 리스크.",
+    "urgency_score_1_to_5": 3,
+    "urgency_rationale": "착공 전 KPI·투자 게이트 확정.",
+    "assessment_confidence": "medium",
+    "response_deadline": "2026-03-31",
+    "impact_path": [
+      "저농도 염수",
+      "DLE 실증",
+      "원가·환경 KPI",
+      "북미 상용화"
+    ],
+    "falsification_conditions": [
+      "착공 지연",
+      "KPI 미달",
+      "JV 불성립"
+    ],
+    "trigger": "착공·시운전·회수율·원가",
+    "analysis_file": "analysis/20250715-dle.md",
+    "source_file": "sources/20250715-dle.md",
+    "impact_estimate": {
+      "schema_version": 1,
+      "title": "DLE 원가절감",
+      "description": "DLE 생산량과 원가차이 예비 모델",
+      "as_of": "2026-08-19",
+      "confidence": "low",
+      "notice": "실증 전 가정이며 상용 성능 아님",
+      "formula_display": "생산량 × 원가차이",
+      "variables": [
+        {
+          "id": "volume",
+          "label": "생산량",
+          "unit": "kt/년",
+          "min": 1,
+          "max": 50,
+          "step": 1,
+          "default": 25,
+          "kind": "assumption",
+          "basis": "상용 규모 미정",
+          "source_ids": []
+        },
+        {
+          "id": "saving",
+          "label": "원가차이",
+          "unit": "USD/t",
+          "min": -10000,
+          "max": 10000,
+          "step": 100,
+          "default": 3000,
+          "kind": "assumption",
+          "basis": "실증 전 추정",
+          "source_ids": []
+        },
+        {
+          "id": "water",
+          "label": "물 사용량",
+          "unit": "m3/t",
+          "min": 1,
+          "max": 100,
+          "step": 1,
+          "default": 20,
+          "kind": "assumption",
+          "basis": "미공개",
+          "source_ids": []
+        }
+      ],
+      "outputs": [
+        {
+          "id": "saving_total",
+          "label": "원가절감",
+          "unit": "USD m",
+          "decimals": 0,
+          "primary": true,
+          "expression": {
+            "op": "multiply",
+            "args": [
+              {
+                "var": "volume"
+              },
+              {
+                "var": "saving"
+              }
+            ]
+          }
+        }
+      ],
+      "presets": [
+        {
+          "id": "defensive",
+          "label": "방어",
+          "values": {
+            "volume": 10,
+            "saving": 0,
+            "water": 40
+          }
+        },
+        {
+          "id": "base",
+          "label": "기준",
+          "values": {
+            "volume": 25,
+            "saving": 3000,
+            "water": 20
+          }
+        },
+        {
+          "id": "pressure",
+          "label": "압박",
+          "values": {
+            "volume": 25,
+            "saving": -3000,
+            "water": 30
+          }
+        }
+      ]
+    },
+    "collected_at": "2026-08-19",
+    "assessed_at": "2026-08-19",
+    "business_axis": "POSCO Holdings-리튬",
+    "affected_business": "POSCO Holdings 리튬(염수·광석·수산화리튬·배터리 소재)",
+    "recommended_follow_up": "착공·시운전·회수율·원가"
+  },
+  {
+    "candidate_id": "LIT-BF-20251114-RESOURCE-INVEST",
+    "title": "호주 Mineral Resources·아르헨티나 Lithium South에 총 1.1조원 투자",
+    "url": "https://newsroom.posco.com/en/posco-holdings-invests-krw-1-1-trillion-to-secure-global-lithium-resources-continuing-future-growth-investments-for-materials-patriotism/",
+    "canonical_url": "https://newsroom.posco.com/en/posco-holdings-invests-krw-1-1-trillion-to-secure-global-lithium-resources-continuing-future-growth-investments-for-materials-patriotism/",
+    "publisher": "POSCO Holdings",
+    "published_at": "2025-11-14",
+    "event_date": "2025-11-11",
+    "effective_date": "2025-11-05",
+    "source_type": "company_release",
+    "language": "en",
+    "reliability": "primary",
+    "access_status": "본문 확인",
+    "key_original_sentences": [
+      "Invest total KRW 1.1tn in Australia and Argentina resources.",
+      "Secure 270kt annual concentrate, equivalent to 37kt lithium hydroxide."
+    ],
+    "cross_verification_urls": [
+      "https://www.mineralresources.com.au/investors/asx-announcements/",
+      "https://www.lithiumsouth.com/news/"
+    ],
+    "duplicate_candidates": [],
+    "signal": "호주 광석과 아르헨티나 염수 권리를 1.1조원에 확보해 비중국 원료 포트폴리오를 확대했다.",
+    "insight": "27만톤 정광은 즉시 3.7만톤 매출이 아니므로 인도·정제·배당·허가를 분리 검증한다.",
+    "business_impact_score_1_to_5": 5,
+    "business_impact_rationale": "대규모 자본배분과 원료 공급권이 원가·물량·현금흐름에 직접 영향.",
+    "urgency_score_1_to_5": 5,
+    "urgency_rationale": "2026년 인수종결·정광 인도 확인 필요.",
+    "assessment_confidence": "high",
+    "response_deadline": "2026-03-31",
+    "impact_path": [
+      "자원 인수",
+      "공급권",
+      "정제·인증",
+      "원가·현금흐름"
+    ],
+    "falsification_conditions": [
+      "정광 미인도",
+      "정제 지연",
+      "권리 허가 악화"
+    ],
+    "trigger": "종결·인도·정제 CAPEX",
+    "analysis_file": "analysis/20251114-resource-invest.md",
+    "source_file": "sources/20251114-resource-invest.md",
+    "impact_estimate": {
+      "schema_version": 1,
+      "title": "정광 환산 매출",
+      "description": "정제량과 가동률 예비 모델",
+      "as_of": "2026-08-19",
+      "confidence": "low",
+      "notice": "환산용량은 매출 보증이 아니며 회사 실제값 아님",
+      "formula_display": "환산량 × 가동률",
+      "variables": [
+        {
+          "id": "equiv",
+          "label": "환산량",
+          "unit": "kt/년",
+          "min": 1,
+          "max": 37,
+          "step": 1,
+          "default": 37,
+          "kind": "verified",
+          "basis": "회사 발표",
+          "source_ids": [
+            "$SOURCE_ID"
+          ]
+        },
+        {
+          "id": "utilization",
+          "label": "가동률",
+          "unit": "%",
+          "min": 1,
+          "max": 100,
+          "step": 5,
+          "default": 50,
+          "kind": "assumption",
+          "basis": "정제 계획 미정",
+          "source_ids": []
+        },
+        {
+          "id": "price",
+          "label": "가격",
+          "unit": "USD/t",
+          "min": 1,
+          "max": 25000,
+          "step": 500,
+          "default": 12000,
+          "kind": "assumption",
+          "basis": "판매계약 미공개",
+          "source_ids": []
+        }
+      ],
+      "outputs": [
+        {
+          "id": "revenue",
+          "label": "환산 매출",
+          "unit": "USD m",
+          "decimals": 0,
+          "primary": true,
+          "expression": {
+            "op": "multiply",
+            "args": [
+              {
+                "var": "equiv"
+              },
+              {
+                "var": "utilization"
+              }
+            ]
+          }
+        }
+      ],
+      "presets": [
+        {
+          "id": "defensive",
+          "label": "방어",
+          "values": {
+            "equiv": 20,
+            "utilization": 40,
+            "price": 10000
+          }
+        },
+        {
+          "id": "base",
+          "label": "기준",
+          "values": {
+            "equiv": 37,
+            "utilization": 50,
+            "price": 12000
+          }
+        },
+        {
+          "id": "pressure",
+          "label": "압박",
+          "values": {
+            "equiv": 37,
+            "utilization": 70,
+            "price": 8000
+          }
+        }
+      ]
+    },
+    "collected_at": "2026-08-19",
+    "assessed_at": "2026-08-19",
+    "business_axis": "POSCO Holdings-리튬",
+    "affected_business": "POSCO Holdings 리튬(염수·광석·수산화리튬·배터리 소재)",
+    "recommended_follow_up": "종결·인도·정제 CAPEX"
+  },
+  {
+    "candidate_id": "LIT-BF-20251229-CODELCO-SQM",
+    "title": "Codelco–SQM NovaAndino Litio 출범",
+    "url": "https://www.codelco.com/en/prensa/2025/chile-da-un-paso-historico-se-materializa-novaandino-litio-la-sociedad",
+    "canonical_url": "https://www.codelco.com/en/prensa/2025/chile-da-un-paso-historico-se-materializa-novaandino-litio-la-sociedad",
+    "publisher": "Codelco",
+    "published_at": "2025-12-29",
+    "event_date": "2025-12-29",
+    "effective_date": "2025-12-29",
+    "source_type": "government",
+    "language": "en",
+    "reliability": "primary",
+    "access_status": "본문 확인",
+    "key_original_sentences": [
+      "First board meeting followed completion of Chilean and international reviews.",
+      "State captures majority of profits and JV targets reduced brine extraction."
+    ],
+    "cross_verification_urls": [
+      "https://ir.sqm.com/system/files-encrypted/nasdaq_kms/news/2024/12/05/18-18-17/Acuerdo-de-Asociacion-CODELCO-SQM_English-Translation.pdf"
+    ],
+    "duplicate_candidates": [],
+    "signal": "Codelco–SQM JV가 규제심사를 마치고 아타카마 리튬 생산 실행단계에 들어가 남미 허가·환경 기준을 높였다.",
+    "insight": "즉시 물량보다 국가수익·물사용·지역사회 조건을 POSCO Argentina 비용 모델과 비교한다.",
+    "business_impact_score_1_to_5": 4,
+    "business_impact_rationale": "남미 염수 가격·허가·ESG 조건에 영향.",
+    "urgency_score_1_to_5": 3,
+    "urgency_rationale": "2026년 실행계획 업데이트.",
+    "assessment_confidence": "high",
+    "response_deadline": "2026-06-30",
+    "impact_path": [
+      "국가 JV",
+      "환경·로열티 기준",
+      "남미 비용",
+      "POSCO 허가·고객 ESG"
+    ],
+    "falsification_conditions": [
+      "생산·환경 일정 지연",
+      "조건 미이행"
+    ],
+    "trigger": "생산·물 사용·로열티",
+    "analysis_file": "analysis/20251229-codelco-sqm.md",
+    "source_file": "sources/20251229-codelco-sqm.md",
+    "impact_estimate": {
+      "schema_version": 1,
+      "title": "환경·로열티 비용",
+      "description": "염수 생산량과 비용 예비 모델",
+      "as_of": "2026-08-19",
+      "confidence": "low",
+      "notice": "칠레 조건을 POSCO에 직접 적용하지 않는 비교 모델",
+      "formula_display": "생산량 × 비용",
+      "variables": [
+        {
+          "id": "volume",
+          "label": "생산량",
+          "unit": "kt",
+          "min": 1,
+          "max": 100,
+          "step": 5,
+          "default": 50,
+          "kind": "derived",
+          "basis": "단계 용량",
+          "source_ids": []
+        },
+        {
+          "id": "cost",
+          "label": "환경비용",
+          "unit": "USD/t",
+          "min": 1,
+          "max": 3000,
+          "step": 100,
+          "default": 500,
+          "kind": "assumption",
+          "basis": "비교용",
+          "source_ids": []
+        },
+        {
+          "id": "price",
+          "label": "가격",
+          "unit": "USD/t",
+          "min": 1,
+          "max": 25000,
+          "step": 500,
+          "default": 12000,
+          "kind": "assumption",
+          "basis": "계약 미공개",
+          "source_ids": []
+        }
+      ],
+      "outputs": [
+        {
+          "id": "cost_total",
+          "label": "비용",
+          "unit": "USD m",
+          "decimals": 0,
+          "primary": true,
+          "expression": {
+            "op": "multiply",
+            "args": [
+              {
+                "var": "volume"
+              },
+              {
+                "var": "cost"
+              }
+            ]
+          }
+        }
+      ],
+      "presets": [
+        {
+          "id": "defensive",
+          "label": "방어",
+          "values": {
+            "volume": 30,
+            "cost": 300,
+            "price": 14000
+          }
+        },
+        {
+          "id": "base",
+          "label": "기준",
+          "values": {
+            "volume": 50,
+            "cost": 500,
+            "price": 12000
+          }
+        },
+        {
+          "id": "pressure",
+          "label": "압박",
+          "values": {
+            "volume": 50,
+            "cost": 1500,
+            "price": 9000
+          }
+        }
+      ]
+    },
+    "collected_at": "2026-08-19",
+    "assessed_at": "2026-08-19",
+    "business_axis": "POSCO Holdings-리튬",
+    "affected_business": "POSCO Holdings 리튬(염수·광석·수산화리튬·배터리 소재)",
+    "recommended_follow_up": "생산·물 사용·로열티"
+  },
+  {
+    "candidate_id": "LIT-BF-20260102-NEWYEAR",
+    "title": "POSCO Group 2026 신년사: 비중국 공급망 활용·선택적 투자",
+    "url": "https://newsroom.posco.com/en/posco-groups-2026-new-years-message/",
+    "canonical_url": "https://newsroom.posco.com/en/posco-groups-2026-new-years-message/",
+    "publisher": "POSCO Holdings",
+    "published_at": "2026-01-02",
+    "event_date": "2026-01-02",
+    "effective_date": "2026-01-02",
+    "source_type": "company_release",
+    "language": "en",
+    "reliability": "primary",
+    "access_status": "본문 확인",
+    "key_original_sentences": [
+      "EV slowdown and raw-material price fluctuation challenged Energy Materials.",
+      "Leverage non-China lithium supply chain in Australia and Argentina; optimize process cost."
+    ],
+    "cross_verification_urls": [
+      "https://newsroom.posco.com/en/posco-holdings-invests-krw-1-1-trillion-to-secure-global-lithium-resources-continuing-future-growth-investments-for-materials-patriotism/"
+    ],
+    "duplicate_candidates": [],
+    "signal": "POSCO Holdings가 2026년 리튬 전략을 신규 대규모 증설보다 비중국 공급망 마케팅과 공정원가 개선 중심으로 제시했다.",
+    "insight": "공급망 구축 선언을 고객 인증·판매 믹스·톤당 원가 KPI로 전환해 검증한다.",
+    "business_impact_score_1_to_5": 4,
+    "business_impact_rationale": "CAPEX 선택·판매 전략을 바꾸는 경영진 방향.",
+    "urgency_score_1_to_5": 4,
+    "urgency_rationale": "2026 예산·고객계획 직결.",
+    "assessment_confidence": "medium",
+    "response_deadline": "2026-03-31",
+    "impact_path": [
+      "EV 둔화",
+      "비중국 원료",
+      "고객 믹스",
+      "원가·현금흐름"
+    ],
+    "falsification_conditions": [
+      "판매 전환 실패",
+      "원가 개선 없음"
+    ],
+    "trigger": "판매비중·인증·현금원가",
+    "analysis_file": "analysis/20260102-newyear.md",
+    "source_file": "sources/20260102-newyear.md",
+    "impact_estimate": {
+      "schema_version": 1,
+      "title": "비중국 판매 믹스",
+      "description": "판매량과 프리미엄 예비 모델",
+      "as_of": "2026-08-19",
+      "confidence": "low",
+      "notice": "계약조건 미공개이며 회사 실제값 아님",
+      "formula_display": "판매량 × 프리미엄",
+      "variables": [
+        {
+          "id": "volume",
+          "label": "판매량",
+          "unit": "kt",
+          "min": 1,
+          "max": 100,
+          "step": 5,
+          "default": 30,
+          "kind": "assumption",
+          "basis": "판매비중 미공개",
+          "source_ids": []
+        },
+        {
+          "id": "premium",
+          "label": "프리미엄",
+          "unit": "USD/t",
+          "min": -2000,
+          "max": 5000,
+          "step": 100,
+          "default": 500,
+          "kind": "assumption",
+          "basis": "계약 미공개",
+          "source_ids": []
+        },
+        {
+          "id": "cost",
+          "label": "대응비용",
+          "unit": "USD m",
+          "min": 1,
+          "max": 100,
+          "step": 5,
+          "default": 20,
+          "kind": "assumption",
+          "basis": "비용 미공개",
+          "source_ids": []
+        }
+      ],
+      "outputs": [
+        {
+          "id": "ebitda",
+          "label": "EBITDA 개선",
+          "unit": "USD m",
+          "decimals": 0,
+          "primary": true,
+          "expression": {
+            "op": "multiply",
+            "args": [
+              {
+                "var": "volume"
+              },
+              {
+                "var": "premium"
+              }
+            ]
+          }
+        }
+      ],
+      "presets": [
+        {
+          "id": "defensive",
+          "label": "방어",
+          "values": {
+            "volume": 20,
+            "premium": 200,
+            "cost": 15
+          }
+        },
+        {
+          "id": "base",
+          "label": "기준",
+          "values": {
+            "volume": 30,
+            "premium": 500,
+            "cost": 20
+          }
+        },
+        {
+          "id": "pressure",
+          "label": "압박",
+          "values": {
+            "volume": 20,
+            "premium": -500,
+            "cost": 30
+          }
+        }
+      ]
+    },
+    "collected_at": "2026-08-19",
+    "assessed_at": "2026-08-19",
+    "business_axis": "POSCO Holdings-리튬",
+    "affected_business": "POSCO Holdings 리튬(염수·광석·수산화리튬·배터리 소재)",
+    "recommended_follow_up": "판매비중·인증·현금원가"
+  }
+]

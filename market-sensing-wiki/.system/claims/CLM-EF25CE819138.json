@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-EF25CE819138",
+  "subject_id": "MKT-ENERGY-ACCC-Q1-2025-SUPPLY",
+  "predicate": "affected_business",
+  "value": "Senex upstream·호주 동부 가스 판매",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-C117952B"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "사업 영향",
+      "source_ids": [
+        "SRC-20260819-C117952B"
+      ]
+    }
+  ]
+}

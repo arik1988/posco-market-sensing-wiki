@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-5FEE8E8E358E",
+  "subject_id": "MKT-ENERGY-POSCO-FY2025-SENEX",
+  "predicate": "assessment_confidence",
+  "value": "medium",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-207A826E"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "그룹 공식 결산이나 세부 사업수치 제한",
+      "source_ids": [
+        "SRC-20260819-207A826E"
+      ]
+    }
+  ]
+}

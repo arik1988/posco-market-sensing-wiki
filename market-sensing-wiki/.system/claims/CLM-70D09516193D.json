@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-70D09516193D",
+  "subject_id": "MKT-ENERGY-ACCC-Q1-2025-SUPPLY",
+  "predicate": "assessment_confidence",
+  "value": "high",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-C117952B"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "ACCC 공식 전망",
+      "source_ids": [
+        "SRC-20260819-C117952B"
+      ]
+    }
+  ]
+}

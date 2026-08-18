@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "run_id": "initial-signal-sample-20260818",
+  "signal_id": "SIG-E424C4E087DE",
+  "sentence": "호주의 LNG 내수공급 의무는 Senex의 직접 규제 여부보다 동부 가스 가격과 계약 갱신 조건을 통해 포스코인터내셔널에 영향을 줄 가능성이 큽니다.",
+  "insight_id": "INS-38FB400C6EF1",
+  "company_ids": [
+    "COM-POSCO-INTERNATIONAL"
+  ],
+  "business_axis": "에너지",
+  "business_impact": {
+    "score": 4,
+    "rationale": "LNG 수출업자의 내수 공급 의무가 호주 동부 내수 공급을 늘리고 가격 하락을 유도하면 내수 생산자인 Senex의 판매가격과 증산 프로젝트 경제성에 하방 압력이 생길 수 있다."
+  },
+  "urgency": {
+    "score": 4,
+    "rationale": "시행은 2027년 7월이지만 세부 제도 협의가 진행 중이어서 지금이 Senex의 국내전용 생산자 처리와 가격영향을 정책에 반영할 시점이다.",
+    "response_deadline": "2026-12-31"
+  },
+  "assessed_at": "2026-08-18",
+  "assessment_confidence": "medium",
+  "claim_ids": [
+    "CLM-5C13AD56BDBA",
+    "CLM-1DA2149EBCDA",
+    "CLM-8A3EB7D27C9B",
+    "CLM-79D5D5698523",
+    "CLM-443A624FE11D",
+    "CLM-A9F14ECF842B",
+    "CLM-8315EB9263C4",
+    "CLM-57F62973ED31",
+    "CLM-8BF00733F00D",
+    "CLM-3E25A3C5F54B"
+  ],
+  "source_ids": [
+    "SRC-20260818-38019D54"
+  ],
+  "status": "active",
+  "created_at": "2026-08-18T22:19:03+09:00",
+  "updated_at": "2026-08-18T22:19:03+09:00"
+}

@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-EE1BADE37EC3",
+  "subject_id": "MKT-STEEL-CHINA-CAPACITY-PAUSE-2024",
+  "predicate": "business_impact_score_1_to_5",
+  "value": "4",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-BCECCDDE"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "중국 신규 공급 승인 경로의 직접 변경",
+      "source_ids": [
+        "SRC-20260819-BCECCDDE"
+      ]
+    }
+  ]
+}

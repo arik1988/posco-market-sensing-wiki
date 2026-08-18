@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-E0864EFA247A",
+  "subject_id": "MKT-ENERGY-ACCC-2026-OUTLOOK",
+  "predicate": "impact_path",
+  "value": "가격 하락·단기계약 → 미계약 LNG 수출·저장 → 2025Q4·2026 부족 → Senex 계약 현금회수",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-4F098D9C"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "AI 분석",
+      "source_ids": [
+        "SRC-20260819-4F098D9C"
+      ]
+    }
+  ]
+}

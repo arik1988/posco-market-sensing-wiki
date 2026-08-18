@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-2675325FEB2B",
+  "subject_id": "MKT-STEEL-CHINA-CAPACITY-PAUSE-2024",
+  "predicate": "effective_date",
+  "value": "2024-08-23",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-BCECCDDE"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "신규 생산능력 치환 공시·공고 중단 시작일",
+      "source_ids": [
+        "SRC-20260819-BCECCDDE"
+      ]
+    }
+  ]
+}

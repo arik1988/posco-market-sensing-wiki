@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-D76E02778055",
+  "subject_id": "MKT-GLOBAL-STEEL-OVERCAPACITY-2026",
+  "predicate": "business_axis",
+  "value": "철강",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-2778E1E7"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "분석 대상 사업축",
+      "source_ids": [
+        "SRC-20260818-2778E1E7"
+      ]
+    }
+  ]
+}

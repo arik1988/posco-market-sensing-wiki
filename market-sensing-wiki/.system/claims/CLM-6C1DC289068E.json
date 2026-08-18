@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-6C1DC289068E",
+  "subject_id": "MKT-GLOBAL-LNG-HORMUZ-2026",
+  "predicate": "impact_path",
+  "value": "중동 LNG·항로 충격→가격차·운임 변동→계약·선박·저장 옵션→조달안정·트레이딩 마진",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-3DD53EA4"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "공개 사실에서 사업 의사결정으로 이어지는 영향 경로",
+      "source_ids": [
+        "SRC-20260818-3DD53EA4"
+      ]
+    }
+  ]
+}

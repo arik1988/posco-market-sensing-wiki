@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-A5D68520EDF2",
+  "subject_id": "MKT-RIO-TINTO-LITHIUM-2026",
+  "predicate": "recommended_follow_up",
+  "value": "경쟁 프로젝트 실행률 공급곡선과 저가격 스트레스 테스트를 2026-09-30까지 완료",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-D7286E4D"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "공개자료 한계를 해소할 후속 확인",
+      "source_ids": [
+        "SRC-20260818-D7286E4D"
+      ]
+    }
+  ]
+}

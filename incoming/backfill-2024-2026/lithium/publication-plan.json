@@ -1,0 +1,1513 @@
+{
+  "run": {
+    "run_id": "lithium-backfill-20240819-20260819",
+    "started_at": "2026-08-19T08:00:00+09:00",
+    "finished_at": "2026-08-19T20:00:00+09:00",
+    "search_since": "2024-08-19",
+    "search_until": "2026-08-19",
+    "scope": {
+      "company": "POSCO Holdings",
+      "business_axis": "리튬",
+      "topics": [
+        "염수·광석 생산",
+        "램프업·원가곡선",
+        "가격·고객계약",
+        "IRA·FEOC·정책",
+        "경쟁 공급",
+        "CAPEX·현금흐름"
+      ]
+    },
+    "queries": [
+      "POSCO Holdings lithium brine ore production ramp up 2024 2025 2026",
+      "POSCO Argentina Phase II POSCO Lithium Solution delay 2025 2026",
+      "POSCO Hancock lithium FEOC Australia 30 kt",
+      "lithium critical minerals outlook 2025 IEA price supply deficit",
+      "Rio Tinto Arcadium lithium acquisition capacity 2028",
+      "POSCO Anson DLE Utah lithium 2026 demo",
+      "POSCO global lithium resources Mineral Resources Lithium South 1.1 trillion",
+      "Codelco SQM NovaAndino lithium 2025 water extraction",
+      "POSCO 2026 New Year non-China lithium supply chain"
+    ],
+    "checked_urls": [
+      "https://www.riotinto.com/news/releases/2024/rio-tinto-to-acquire-arcadium-lithium",
+      "https://ir.arcadiumlithium.com/files/doc_downloads/2024/10/Rio-Tinto-to-acquire-Arcadium-Lithium-October-9-2024.pdf",
+      "https://newsroom.posco.com/en/posco-holdings-partners-with-australian-mining-company-hancock-in-lithium-business-for-rechargeable-battery-materials/",
+      "https://www.energy.gov/cmei/manufacturing/foreign-entity-concern-interpretive-guidance",
+      "https://newsroom.posco.com/en/posco-holdings-announces-2024-performance/",
+      "https://www.sec.gov/Archives/edgar/data/889132/000119312525019002/d849026d6k.htm",
+      "https://www.sec.gov/Archives/edgar/data/889132/000119312525019002/d849026d6k.htm",
+      "https://www.publicnow.com/view/47542373B83FF9A1911C406B7FF6EC57FB90E16E",
+      "https://newsroom.posco.com/en/posco-holdings-improves-performance-despite-demand-industry-downturn-and-growing-uncertainties-secures-future-growth-engines-through-strategic-alliances/",
+      "https://www.posco-inc.co.kr/poscoinc/v4/kor/investor/s91e3000100c.jsp",
+      "https://newsroom.posco.com/en/posco-holdings-commits-krw-1-trillion-to-capital-increase-in-rechargeable-battery-material-subsidiaries-to-reinforce-responsible-management-of-core-businesses/",
+      "https://www.pilbaraminerals.com.au/investors/asx-announcements/",
+      "https://www.iea.org/reports/global-critical-minerals-outlook-2025/executive-summary",
+      "https://www.iea.org/news/diversification-is-the-cornerstone-of-energy-security-yet-critical-minerals-are-moving-in-the-opposite-direction",
+      "https://newsroom.posco.com/en/posco-holdings-sets-out-to-demonstrate-dle-tech-in-the-u-s-speeds-up-lithium-supply-chain-in-north-america/",
+      "https://www.ansonresources.com.au/asx-announcements/",
+      "https://newsroom.posco.com/en/posco-holdings-invests-krw-1-1-trillion-to-secure-global-lithium-resources-continuing-future-growth-investments-for-materials-patriotism/",
+      "https://www.mineralresources.com.au/investors/asx-announcements/",
+      "https://www.lithiumsouth.com/news/",
+      "https://www.codelco.com/en/prensa/2025/chile-da-un-paso-historico-se-materializa-novaandino-litio-la-sociedad",
+      "https://ir.sqm.com/system/files-encrypted/nasdaq_kms/news/2024/12/05/18-18-17/Acuerdo-de-Asociacion-CODELCO-SQM_English-Translation.pdf",
+      "https://newsroom.posco.com/en/posco-groups-2026-new-years-message/",
+      "https://newsroom.posco.com/en/posco-holdings-invests-krw-1-1-trillion-to-secure-global-lithium-resources-continuing-future-growth-investments-for-materials-patriotism/"
+    ],
+    "failed_urls": [
+      "https://www.usgs.gov/centers/national-minerals-information-center/lithium-statistics-and-information",
+      "https://www.riotinto.com/news/releases/2025/rio-tinto-very-resilient-financial-results-as-we-grow-and-diversify-our-portfolio"
+    ],
+    "access_attempts": [
+      {
+        "url": "https://www.riotinto.com/news/releases/2024/rio-tinto-to-acquire-arcadium-lithium",
+        "outcome": "checked",
+        "status": "primary_or_cross_verified",
+        "collected_at": "2026-08-19"
+      },
+      {
+        "url": "https://ir.arcadiumlithium.com/files/doc_downloads/2024/10/Rio-Tinto-to-acquire-Arcadium-Lithium-October-9-2024.pdf",
+        "outcome": "checked",
+        "status": "primary_or_cross_verified",
+        "collected_at": "2026-08-19"
+      },
+      {
+        "url": "https://newsroom.posco.com/en/posco-holdings-partners-with-australian-mining-company-hancock-in-lithium-business-for-rechargeable-battery-materials/",
+        "outcome": "checked",
+        "status": "primary_or_cross_verified",
+        "collected_at": "2026-08-19"
+      },
+      {
+        "url": "https://www.energy.gov/cmei/manufacturing/foreign-entity-concern-interpretive-guidance",
+        "outcome": "checked",
+        "status": "primary_or_cross_verified",
+        "collected_at": "2026-08-19"
+      },
+      {
+        "url": "https://newsroom.posco.com/en/posco-holdings-announces-2024-performance/",
+        "outcome": "checked",
+        "status": "primary_or_cross_verified",
+        "collected_at": "2026-08-19"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/889132/000119312525019002/d849026d6k.htm",
+        "outcome": "checked",
+        "status": "primary_or_cross_verified",
+        "collected_at": "2026-08-19"
+      },
+      {
+        "url": "https://www.sec.gov/Archives/edgar/data/889132/000119312525019002/d849026d6k.htm",
+        "outcome": "checked",
+        "status": "primary_or_cross_verified",
+        "collected_at": "2026-08-19"
+      },
+      {
+        "url": "https://www.publicnow.com/view/47542373B83FF9A1911C406B7FF6EC57FB90E16E",
+        "outcome": "checked",
+        "status": "primary_or_cross_verified",
+        "collected_at": "2026-08-19"
+      },
+      {
+        "url": "https://newsroom.posco.com/en/posco-holdings-improves-performance-despite-demand-industry-downturn-and-growing-uncertainties-secures-future-growth-engines-through-strategic-alliances/",
+        "outcome": "checked",
+        "status": "primary_or_cross_verified",
+        "collected_at": "2026-08-19"
+      },
+      {
+        "url": "https://www.posco-inc.co.kr/poscoinc/v4/kor/investor/s91e3000100c.jsp",
+        "outcome": "checked",
+        "status": "primary_or_cross_verified",
+        "collected_at": "2026-08-19"
+      },
+      {
+        "url": "https://newsroom.posco.com/en/posco-holdings-commits-krw-1-trillion-to-capital-increase-in-rechargeable-battery-material-subsidiaries-to-reinforce-responsible-management-of-core-businesses/",
+        "outcome": "checked",
+        "status": "primary_or_cross_verified",
+        "collected_at": "2026-08-19"
+      },
+      {
+        "url": "https://www.pilbaraminerals.com.au/investors/asx-announcements/",
+        "outcome": "checked",
+        "status": "primary_or_cross_verified",
+        "collected_at": "2026-08-19"
+      },
+      {
+        "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2025/executive-summary",
+        "outcome": "checked",
+        "status": "primary_or_cross_verified",
+        "collected_at": "2026-08-19"
+      },
+      {
+        "url": "https://www.iea.org/news/diversification-is-the-cornerstone-of-energy-security-yet-critical-minerals-are-moving-in-the-opposite-direction",
+        "outcome": "checked",
+        "status": "primary_or_cross_verified",
+        "collected_at": "2026-08-19"
+      },
+      {
+        "url": "https://newsroom.posco.com/en/posco-holdings-sets-out-to-demonstrate-dle-tech-in-the-u-s-speeds-up-lithium-supply-chain-in-north-america/",
+        "outcome": "checked",
+        "status": "primary_or_cross_verified",
+        "collected_at": "2026-08-19"
+      },
+      {
+        "url": "https://www.ansonresources.com.au/asx-announcements/",
+        "outcome": "checked",
+        "status": "primary_or_cross_verified",
+        "collected_at": "2026-08-19"
+      },
+      {
+        "url": "https://newsroom.posco.com/en/posco-holdings-invests-krw-1-1-trillion-to-secure-global-lithium-resources-continuing-future-growth-investments-for-materials-patriotism/",
+        "outcome": "checked",
+        "status": "primary_or_cross_verified",
+        "collected_at": "2026-08-19"
+      },
+      {
+        "url": "https://www.mineralresources.com.au/investors/asx-announcements/",
+        "outcome": "checked",
+        "status": "primary_or_cross_verified",
+        "collected_at": "2026-08-19"
+      },
+      {
+        "url": "https://www.lithiumsouth.com/news/",
+        "outcome": "checked",
+        "status": "primary_or_cross_verified",
+        "collected_at": "2026-08-19"
+      },
+      {
+        "url": "https://www.codelco.com/en/prensa/2025/chile-da-un-paso-historico-se-materializa-novaandino-litio-la-sociedad",
+        "outcome": "checked",
+        "status": "primary_or_cross_verified",
+        "collected_at": "2026-08-19"
+      },
+      {
+        "url": "https://ir.sqm.com/system/files-encrypted/nasdaq_kms/news/2024/12/05/18-18-17/Acuerdo-de-Asociacion-CODELCO-SQM_English-Translation.pdf",
+        "outcome": "checked",
+        "status": "primary_or_cross_verified",
+        "collected_at": "2026-08-19"
+      },
+      {
+        "url": "https://newsroom.posco.com/en/posco-groups-2026-new-years-message/",
+        "outcome": "checked",
+        "status": "primary_or_cross_verified",
+        "collected_at": "2026-08-19"
+      },
+      {
+        "url": "https://newsroom.posco.com/en/posco-holdings-invests-krw-1-1-trillion-to-secure-global-lithium-resources-continuing-future-growth-investments-for-materials-patriotism/",
+        "outcome": "checked",
+        "status": "primary_or_cross_verified",
+        "collected_at": "2026-08-19"
+      },
+      {
+        "url": "https://www.usgs.gov/centers/national-minerals-information-center/lithium-statistics-and-information",
+        "outcome": "failed",
+        "status": "access_error",
+        "collected_at": "2026-08-19"
+      },
+      {
+        "url": "https://www.riotinto.com/news/releases/2025/rio-tinto-very-resilient-financial-results-as-we-grow-and-diversify-our-portfolio",
+        "outcome": "failed",
+        "status": "access_error",
+        "collected_at": "2026-08-19"
+      }
+    ]
+  },
+  "items": [
+    {
+      "source": {
+        "content_file": "sources/20241009-rio-arcadium.md",
+        "title": "Rio Tinto의 Arcadium 인수로 리튬 경쟁 공급 확대",
+        "url": "https://www.riotinto.com/news/releases/2024/rio-tinto-to-acquire-arcadium-lithium",
+        "publisher": "Rio Tinto",
+        "published_at": "2024-10-09",
+        "collected_at": "2026-08-19",
+        "source_type": "company_release",
+        "language": "en",
+        "reliability": "primary"
+      },
+      "subject_id": "MKT-LITHIUM-RIO-20241009",
+      "claims": [
+        {
+          "predicate": "capacity",
+          "value": "75 kt LCE/year",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "capacity_target",
+          "value": "2028년 말까지 150 kt LCE/year 초과로 두 배 이상 확대 계획",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "transaction",
+          "value": "약 USD 6.7 billion",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "business_axis",
+          "value": "리튬",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "business_impact_score_1_to_5",
+          "value": 4,
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "business_impact_rationale",
+          "value": "경쟁사의 공급능력 확대는 가격 기준과 장기 계약 협상력을 불리하게 이동시킬 수 있습니다.",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "urgency_score_1_to_5",
+          "value": 3,
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "urgency_rationale",
+          "value": "증설은 중기 변수지만 2025~2026년 계약·램프업 가정에 선반영해야 합니다.",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "assessment_confidence",
+          "value": "medium",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "assessed_at",
+          "value": "2024-10-09",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "impact_path",
+          "value": "경쟁 공급 확대 → 시장 가격·계약 기준 압력 → POSCO 램프업·오프테이크 재검토",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "recommended_follow_up",
+          "value": "Rio Tinto Arcadium 통합·증설 진행률과 POSCO 장기계약 가격전가 조건 대조",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        }
+      ],
+      "signal": {
+        "title": "Arcadium 75kt LCE 증설 계획이 경쟁 공급곡선을 앞당깁니다",
+        "sentence": "Arcadium의 75kt LCE 현 생산능력과 2028년 말 두 배 이상 증설 계획은 POSCO 리튬의 가격·고객계약 방어 기준을 낮출 수 있습니다.",
+        "paragraph": "거래 종결보다 증설 속도가 POSCO 염수·광석 램프업과 장기 오프테이크 가격에 미칠 압력을 먼저 점검해야 합니다. 현재는 인수 후 통합과 생산 확대의 실제 이행률을 분리해 확인합니다.",
+        "company_id": "COM-POSCO-HOLDINGS",
+        "business_axis": "리튬",
+        "business_impact_score": 4,
+        "business_impact_rationale": "경쟁사의 공급능력 확대는 가격 기준과 장기 계약 협상력을 불리하게 이동시킬 수 있습니다.",
+        "urgency_score": 3,
+        "urgency_rationale": "증설은 중기 변수지만 2025~2026년 계약·램프업 가정에 선반영해야 합니다.",
+        "response_deadline": "2026-09-15",
+        "assessed_at": "2024-10-09",
+        "assessment_confidence": "medium",
+        "impact_path": "경쟁 공급 확대 → 시장 가격·계약 기준 압력 → POSCO 램프업·오프테이크 재검토",
+        "recommended_follow_up": "Rio Tinto Arcadium 통합·증설 진행률과 POSCO 장기계약 가격전가 조건 대조"
+      },
+      "analysis_file": "analysis/20241009-rio-arcadium.md",
+      "impact_estimate_file": "impact-estimates/20241009-rio-arcadium.json"
+    },
+    {
+      "source": {
+        "content_file": "sources/20241216-hancock.md",
+        "title": "POSCO-Hancock 호주 리튬 협력과 비중국 공급망 옵션",
+        "url": "https://newsroom.posco.com/en/posco-holdings-partners-with-australian-mining-company-hancock-in-lithium-business-for-rechargeable-battery-materials/",
+        "publisher": "POSCO Holdings",
+        "published_at": "2024-12-16",
+        "collected_at": "2026-08-19",
+        "source_type": "company_release",
+        "language": "en",
+        "reliability": "primary"
+      },
+      "subject_id": "MKT-LITHIUM-HANCOCK-20241216",
+      "claims": [
+        {
+          "predicate": "planned_capacity",
+          "value": "30 kt/year 계획",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "existing_capacity",
+          "value": "염수 25 kt/year 및 광석 43 kt/year, 합계 68 kt/year",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "feoc_option",
+          "value": "비중국·FEOC 리스크를 낮추는 호주 공급망 옵션",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "business_axis",
+          "value": "리튬",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "business_impact_score_1_to_5",
+          "value": 4,
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "business_impact_rationale",
+          "value": "비중국 원료와 고객 적격성은 북미 판매 가능 물량과 계약 프리미엄을 좌우할 수 있습니다.",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "urgency_score_1_to_5",
+          "value": 3,
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "urgency_rationale",
+          "value": "협력 실행 단계가 2025~2026년 투자·계약 선점 여부를 결정합니다.",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "assessment_confidence",
+          "value": "medium",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "assessed_at",
+          "value": "2024-12-16",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "impact_path",
+          "value": "호주 협력 계획 → FEOC 적격 원료 옵션 → 북미 고객계약·투자 우선순위 조정",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "recommended_follow_up",
+          "value": "Hancock 30kt 프로젝트의 FID·인허가·오프테이크·FEOC 적격성 확인",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        }
+      ],
+      "signal": {
+        "title": "Hancock 30kt 협력이 POSCO의 호주·비중국 리튬 옵션을 넓힙니다",
+        "sentence": "Hancock과의 30kt/year 협력 및 POSCO의 68kt/year 염수·광석 기반은 FEOC 대응형 비중국 공급망을 넓히지만 최종투자·가동 일정은 확정되지 않았습니다.",
+        "paragraph": "협력 발표를 상업 물량으로 간주하지 말고 30kt 계획이 인허가·투자·고객계약으로 전환됐는지 확인해야 합니다.",
+        "company_id": "COM-POSCO-HOLDINGS",
+        "business_axis": "리튬",
+        "business_impact_score": 4,
+        "business_impact_rationale": "비중국 원료와 고객 적격성은 북미 판매 가능 물량과 계약 프리미엄을 좌우할 수 있습니다.",
+        "urgency_score": 3,
+        "urgency_rationale": "협력 실행 단계가 2025~2026년 투자·계약 선점 여부를 결정합니다.",
+        "response_deadline": "2026-10-15",
+        "assessed_at": "2024-12-16",
+        "assessment_confidence": "medium",
+        "impact_path": "호주 협력 계획 → FEOC 적격 원료 옵션 → 북미 고객계약·투자 우선순위 조정",
+        "recommended_follow_up": "Hancock 30kt 프로젝트의 FID·인허가·오프테이크·FEOC 적격성 확인"
+      },
+      "analysis_file": "analysis/20241216-hancock.md",
+      "impact_estimate_file": "impact-estimates/20241216-hancock.json"
+    },
+    {
+      "source": {
+        "content_file": "sources/20250214-performance.md",
+        "title": "POSCO홀딩스 2024 실적의 리튬 투자·손상 부담",
+        "url": "https://newsroom.posco.com/en/posco-holdings-announces-2024-performance/",
+        "publisher": "POSCO Holdings",
+        "published_at": "2025-02-14",
+        "collected_at": "2026-08-19",
+        "source_type": "company_release",
+        "language": "en",
+        "reliability": "primary"
+      },
+      "subject_id": "MKT-LITHIUM-PERFORMANCE-20250214",
+      "claims": [
+        {
+          "predicate": "sales",
+          "value": "매출 72.688조원",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "op_profit",
+          "value": "영업이익 2.174조원",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "noncash_loss",
+          "value": "비현금 손실 약 1.3조원",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "business_axis",
+          "value": "리튬",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "business_impact_score_1_to_5",
+          "value": 5,
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "business_impact_rationale",
+          "value": "손상·비현금 손실은 리튬 자산 회수가능성, 추가 CAPEX 승인, 현금흐름 기대를 동시에 압박합니다.",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "urgency_score_1_to_5",
+          "value": 4,
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "urgency_rationale",
+          "value": "2025년 투자·램프업 전에 자산별 원가·가동률 검증이 필요합니다.",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "assessment_confidence",
+          "value": "medium",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "assessed_at",
+          "value": "2025-02-14",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "impact_path",
+          "value": "비현금 손실 → 자산 회수가능성 재평가 → CAPEX·램프업 승인 기준 강화",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "recommended_follow_up",
+          "value": "리튬 자산별 가동률·현금원가·손상검토 가정과 2025 CAPEX 게이트 재검증",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        }
+      ],
+      "signal": {
+        "title": "2024년 비현금 손실이 리튬 램프업의 자본규율을 강화합니다",
+        "sentence": "POSCO홀딩스의 2024년 비현금 손실 약 1.3조원은 리튬 램프업을 매출 성장보다 손익·현금흐름 검증 순서로 재정렬하게 합니다.",
+        "paragraph": "비현금 손실이 즉시 현금 유출은 아니더라도 리튬 자산 회수가능성과 투자 우선순위 심사를 강화합니다. 현재는 Phase I 안정화와 광석 플랜트 가동이 실제 현금창출로 이어졌는지 확인합니다.",
+        "company_id": "COM-POSCO-HOLDINGS",
+        "business_axis": "리튬",
+        "business_impact_score": 5,
+        "business_impact_rationale": "손상·비현금 손실은 리튬 자산 회수가능성, 추가 CAPEX 승인, 현금흐름 기대를 동시에 압박합니다.",
+        "urgency_score": 4,
+        "urgency_rationale": "2025년 투자·램프업 전에 자산별 원가·가동률 검증이 필요합니다.",
+        "response_deadline": "2025-04-30",
+        "assessed_at": "2025-02-14",
+        "assessment_confidence": "medium",
+        "impact_path": "비현금 손실 → 자산 회수가능성 재평가 → CAPEX·램프업 승인 기준 강화",
+        "recommended_follow_up": "리튬 자산별 가동률·현금원가·손상검토 가정과 2025 CAPEX 게이트 재검증"
+      },
+      "analysis_file": "analysis/20250214-performance.md",
+      "impact_estimate_file": "impact-estimates/20250214-performance.json"
+    },
+    {
+      "source": {
+        "content_file": "sources/20250424-q1-ir-delay.md",
+        "title": "POSCO 리튬 Phase II 및 PPLS 완공 일정의 2026년 이연",
+        "url": "https://www.sec.gov/Archives/edgar/data/889132/000119312525019002/d849026d6k.htm",
+        "publisher": "POSCO Holdings / SEC 6-K",
+        "published_at": "2025-04-24",
+        "collected_at": "2026-08-19",
+        "source_type": "company_ir",
+        "language": "en",
+        "reliability": "primary"
+      },
+      "subject_id": "MKT-LITHIUM-Q1-DELAY-20250424",
+      "claims": [
+        {
+          "predicate": "phase2_target",
+          "value": "완공 목표 Q3 2025에서 Q1 2026으로 이연",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "phase1_target",
+          "value": "Argentina Phase I 연말 2025 램프업 목표",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "ppls_target",
+          "value": "PPLS Plant 1 Q2 출하, Plant 2 Q3 인증·램프업 목표",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "business_axis",
+          "value": "리튬",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "business_impact_score_1_to_5",
+          "value": 5,
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "business_impact_rationale",
+          "value": "완공 지연은 판매 가능 물량과 CAPEX 회수 시점을 늦추고 원가곡선 노출을 바꿉니다.",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "urgency_score_1_to_5",
+          "value": 5,
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "urgency_rationale",
+          "value": "2025년 투자·계약 계획을 즉시 수정해야 하는 일정 리스크입니다.",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "assessment_confidence",
+          "value": "medium",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "assessed_at",
+          "value": "2025-04-24",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "impact_path",
+          "value": "완공 이연 → 판매 가능 물량·현금창출 지연 → CAPEX 회수·계약 일정 재설계",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "recommended_follow_up",
+          "value": "Phase II·PPLS의 준공·인증·계약출하·가동률을 월별 게이트로 추적",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        }
+      ],
+      "signal": {
+        "title": "리튬 Phase II 완공 이연이 2026년 현금창출 시점을 늦춥니다",
+        "sentence": "POSCO 리튬 Phase II와 POSCO Lithium Solution 완공 목표가 Q3 2025에서 Q1 2026으로 이연되어 2025년 매출·현금창출과 CAPEX 회수 시점의 간극이 커졌습니다.",
+        "paragraph": "시장 둔화와 가격 회복 지연이 일정·가동률 병목으로 전환됐습니다. 현재는 2026년 완공 발표가 인증·계약 출하·가동률로 연결됐는지를 확인합니다.",
+        "company_id": "COM-POSCO-HOLDINGS",
+        "business_axis": "리튬",
+        "business_impact_score": 5,
+        "business_impact_rationale": "완공 지연은 판매 가능 물량과 CAPEX 회수 시점을 늦추고 원가곡선 노출을 바꿉니다.",
+        "urgency_score": 5,
+        "urgency_rationale": "2025년 투자·계약 계획을 즉시 수정해야 하는 일정 리스크입니다.",
+        "response_deadline": "2025-05-31",
+        "assessed_at": "2025-04-24",
+        "assessment_confidence": "medium",
+        "impact_path": "완공 이연 → 판매 가능 물량·현금창출 지연 → CAPEX 회수·계약 일정 재설계",
+        "recommended_follow_up": "Phase II·PPLS의 준공·인증·계약출하·가동률을 월별 게이트로 추적"
+      },
+      "analysis_file": "analysis/20250424-q1-ir-delay.md",
+      "impact_estimate_file": "impact-estimates/20250424-q1-ir-delay.json"
+    },
+    {
+      "source": {
+        "content_file": "sources/20250509-investment.md",
+        "title": "POSCO 2025 투자계획 8.8조원과 Argentina Phase 2",
+        "url": "https://newsroom.posco.com/en/posco-holdings-improves-performance-despite-demand-industry-downturn-and-growing-uncertainties-secures-future-growth-engines-through-strategic-alliances/",
+        "publisher": "POSCO Holdings",
+        "published_at": "2025-05-09",
+        "collected_at": "2026-08-19",
+        "source_type": "company_ir",
+        "language": "en",
+        "reliability": "primary"
+      },
+      "subject_id": "MKT-LITHIUM-INVESTMENT-20250509",
+      "claims": [
+        {
+          "predicate": "q1_sales",
+          "value": "2025년 1분기 매출 17.437조원",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "q1_op",
+          "value": "2025년 1분기 영업이익 5680억원",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "investment_plan",
+          "value": "2025년 투자계획 8.8조원, Argentina Phase 2 포함",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "business_axis",
+          "value": "리튬",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "business_impact_score_1_to_5",
+          "value": 4,
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "business_impact_rationale",
+          "value": "대규모 투자계획은 가격·가동률 회복이 늦어질 때 현금흐름과 회수기간을 압박합니다.",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "urgency_score_1_to_5",
+          "value": 4,
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "urgency_rationale",
+          "value": "2025년 집행·보류·단계화 결정을 가격과 고객계약에 연동해야 합니다.",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "assessment_confidence",
+          "value": "medium",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "assessed_at",
+          "value": "2025-05-09",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "impact_path",
+          "value": "8.8조원 CAPEX → Phase 2 집행·가동률 → 현금회수·투자 우선순위",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "recommended_follow_up",
+          "value": "Argentina Phase 2 CAPEX 집행률·가동률·오프테이크와 현금회수 게이트 점검",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        }
+      ],
+      "signal": {
+        "title": "8.8조원 투자계획이 리튬 Phase 2 현금흐름 게이트를 만듭니다",
+        "sentence": "POSCO의 2025년 8.8조원 투자계획에 Argentina Phase 2가 포함되면서 리튬 가격·가동률 회복이 CAPEX 집행과 현금흐름을 좌우하는 게이트가 됐습니다.",
+        "paragraph": "투자계획의 존재보다 수요 둔화 국면에서 Phase 2 집행 순서와 회수 조건을 쪼개야 합니다. 현재는 투자액이 실제 집행·자산화되고 계약 출하·현금회수로 이어졌는지 확인합니다.",
+        "company_id": "COM-POSCO-HOLDINGS",
+        "business_axis": "리튬",
+        "business_impact_score": 4,
+        "business_impact_rationale": "대규모 투자계획은 가격·가동률 회복이 늦어질 때 현금흐름과 회수기간을 압박합니다.",
+        "urgency_score": 4,
+        "urgency_rationale": "2025년 집행·보류·단계화 결정을 가격과 고객계약에 연동해야 합니다.",
+        "response_deadline": "2025-06-30",
+        "assessed_at": "2025-05-09",
+        "assessment_confidence": "medium",
+        "impact_path": "8.8조원 CAPEX → Phase 2 집행·가동률 → 현금회수·투자 우선순위",
+        "recommended_follow_up": "Argentina Phase 2 CAPEX 집행률·가동률·오프테이크와 현금회수 게이트 점검"
+      },
+      "analysis_file": "analysis/20250509-investment.md",
+      "impact_estimate_file": "impact-estimates/20250509-investment.json"
+    },
+    {
+      "source": {
+        "content_file": "sources/20250516-capital-increase.md",
+        "title": "PPLS 등 배터리소재 자회사 9226억원 증자",
+        "url": "https://newsroom.posco.com/en/posco-holdings-commits-krw-1-trillion-to-capital-increase-in-rechargeable-battery-material-subsidiaries-to-reinforce-responsible-management-of-core-businesses/",
+        "publisher": "POSCO Holdings",
+        "published_at": "2025-05-16",
+        "collected_at": "2026-08-19",
+        "source_type": "company_release",
+        "language": "en",
+        "reliability": "primary"
+      },
+      "subject_id": "MKT-LITHIUM-CAPITAL-20250516",
+      "claims": [
+        {
+          "predicate": "total_capital",
+          "value": "총 9226억원",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "future_m",
+          "value": "Future M 5256억원",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "ppls",
+          "value": "PPLS 3280억원, POSCO 82%·Pilbara 18%",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "business_axis",
+          "value": "리튬",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "business_impact_score_1_to_5",
+          "value": 5,
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "business_impact_rationale",
+          "value": "PPLS 자본은 정제 생산능력과 고객 인증이 지연될 때 현금회수·자본효율을 직접 낮춥니다.",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "urgency_score_1_to_5",
+          "value": 4,
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "urgency_rationale",
+          "value": "증자 직후부터 분기별 자본투입 대비 출하·가동률 추적이 필요합니다.",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "assessment_confidence",
+          "value": "medium",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "assessed_at",
+          "value": "2025-05-16",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "impact_path",
+          "value": "PPLS 증자 → 정제·인증·출하 램프업 → 자본회수·지분가치 검증",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "recommended_follow_up",
+          "value": "PPLS 증자금 사용·Plant 1/2 인증·출하·가동률을 자본효율 대시보드로 연결",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        }
+      ],
+      "signal": {
+        "title": "PPLS 3280억원 증자가 리튬 자본회수 검증을 앞당깁니다",
+        "sentence": "PPLS 3280억원 증자와 POSCO 82% 지분은 리튬 정제 램프업을 지지하지만 추가 자본이 출하·가동률로 전환되는지 검증해야 합니다.",
+        "paragraph": "증자는 PPLS 생산·인증·고객 출하를 통과시키는 자본 게이트입니다. 현재는 증자 이후 가동률·매출 인식·Pilbara 원료 연계를 확인합니다.",
+        "company_id": "COM-POSCO-HOLDINGS",
+        "business_axis": "리튬",
+        "business_impact_score": 5,
+        "business_impact_rationale": "PPLS 자본은 정제 생산능력과 고객 인증이 지연될 때 현금회수·자본효율을 직접 낮춥니다.",
+        "urgency_score": 4,
+        "urgency_rationale": "증자 직후부터 분기별 자본투입 대비 출하·가동률 추적이 필요합니다.",
+        "response_deadline": "2025-09-30",
+        "assessed_at": "2025-05-16",
+        "assessment_confidence": "medium",
+        "impact_path": "PPLS 증자 → 정제·인증·출하 램프업 → 자본회수·지분가치 검증",
+        "recommended_follow_up": "PPLS 증자금 사용·Plant 1/2 인증·출하·가동률을 자본효율 대시보드로 연결"
+      },
+      "analysis_file": "analysis/20250516-capital-increase.md",
+      "impact_estimate_file": "impact-estimates/20250516-capital-increase.json"
+    },
+    {
+      "source": {
+        "content_file": "sources/20250521-iea.md",
+        "title": "IEA 2025 핵심광물 전망의 리튬 가격·공급 경고",
+        "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2025/executive-summary",
+        "publisher": "International Energy Agency",
+        "published_at": "2025-05-21",
+        "collected_at": "2026-08-19",
+        "source_type": "government",
+        "language": "en",
+        "reliability": "primary"
+      },
+      "subject_id": "MKT-LITHIUM-IEA-20250521",
+      "claims": [
+        {
+          "predicate": "price_drop",
+          "value": "리튬 가격 2023년 이후 80% 초과 하락",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "near_term",
+          "value": "단기 공급은 충분할 가능성",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "long_term",
+          "value": "2030년대 공급부족 가능성",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "business_axis",
+          "value": "리튬",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "business_impact_score_1_to_5",
+          "value": 4,
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "business_impact_rationale",
+          "value": "가격 약세는 현재 마진·현금흐름을 압박하지만 장기 부족 전망은 비중국 자원 선점 옵션을 높입니다.",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "urgency_score_1_to_5",
+          "value": 3,
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "urgency_rationale",
+          "value": "단기 중단·장기 선점 사이 단계화 기준을 2026년 투자계획에 반영해야 합니다.",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "assessment_confidence",
+          "value": "medium",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "assessed_at",
+          "value": "2025-05-21",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "impact_path",
+          "value": "단기 가격 약세 → 현금흐름 방어 → 2030년대 공급부족 옵션의 단계적 선점",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "recommended_follow_up",
+          "value": "IEA 수요·공급·투자 갱신과 POSCO 가격·원가·가동률 민감도를 분기별 재계산",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        }
+      ],
+      "signal": {
+        "title": "IEA의 단기 공급여유와 2030년대 부족 전망이 투자속도를 갈라놓습니다",
+        "sentence": "IEA는 리튬 가격이 2023년 이후 80% 넘게 하락하고 단기 공급은 충분하지만 2030년대 부족 가능성을 제시해 POSCO 투자속도의 양면 리스크를 만들었습니다.",
+        "paragraph": "단기 약세만으로 투자를 중단하면 장기 부족 기회를 놓칠 수 있고 즉시 증설하면 과잉공급 현금흐름을 훼손할 수 있습니다. 현재는 가격·가동률·고객계약을 묶은 단계적 기준이 필요합니다.",
+        "company_id": "COM-POSCO-HOLDINGS",
+        "business_axis": "리튬",
+        "business_impact_score": 4,
+        "business_impact_rationale": "가격 약세는 현재 마진·현금흐름을 압박하지만 장기 부족 전망은 비중국 자원 선점 옵션을 높입니다.",
+        "urgency_score": 3,
+        "urgency_rationale": "단기 중단·장기 선점 사이 단계화 기준을 2026년 투자계획에 반영해야 합니다.",
+        "response_deadline": "2026-09-30",
+        "assessed_at": "2025-05-21",
+        "assessment_confidence": "medium",
+        "impact_path": "단기 가격 약세 → 현금흐름 방어 → 2030년대 공급부족 옵션의 단계적 선점",
+        "recommended_follow_up": "IEA 수요·공급·투자 갱신과 POSCO 가격·원가·가동률 민감도를 분기별 재계산"
+      },
+      "analysis_file": "analysis/20250521-iea.md",
+      "impact_estimate_file": "impact-estimates/20250521-iea.json"
+    },
+    {
+      "source": {
+        "content_file": "sources/20250715-dle.md",
+        "title": "POSCO-Anson 미국 DLE 실증 및 북미 공급망 옵션",
+        "url": "https://newsroom.posco.com/en/posco-holdings-sets-out-to-demonstrate-dle-tech-in-the-u-s-speeds-up-lithium-supply-chain-in-north-america/",
+        "publisher": "POSCO Holdings",
+        "published_at": "2025-07-15",
+        "collected_at": "2026-08-19",
+        "source_type": "company_release",
+        "language": "en",
+        "reliability": "primary"
+      },
+      "subject_id": "MKT-LITHIUM-DLE-20250715",
+      "claims": [
+        {
+          "predicate": "mou_date",
+          "value": "2025년 6월 30일 MOU 체결",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "demo_target",
+          "value": "2026년 미국 데모플랜트 건설 목표",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "commercial_gate",
+          "value": "데모 검증 후 상업성 판단",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "business_axis",
+          "value": "리튬",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "business_impact_score_1_to_5",
+          "value": 4,
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "business_impact_rationale",
+          "value": "DLE 상업화는 북미 원료와 물 사용 효율을 개선할 수 있지만 실패 시 개발비와 일정만 남습니다.",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "urgency_score_1_to_5",
+          "value": 3,
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "urgency_rationale",
+          "value": "2026년 데모 착공·성능 검증 일정이 다음 투자 게이트입니다.",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "assessment_confidence",
+          "value": "medium",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "assessed_at",
+          "value": "2025-07-15",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "impact_path",
+          "value": "DLE 데모 → 회수율·원가·수자원 검증 → 북미 상업화·고객계약 옵션",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "recommended_follow_up",
+          "value": "DLE 데모 착공·회수율·원가·물 사용량·고객 인증을 투자 게이트로 확인",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        }
+      ],
+      "signal": {
+        "title": "미국 DLE 데모가 북미 리튬 공급망 선택지를 열지만 상업성은 미검증입니다",
+        "sentence": "POSCO-Anson의 미국 DLE MOU와 2026년 데모 건설 목표는 북미 비중국 리튬 옵션을 열지만 상업적 회수율·원가·수자원 성능은 검증 전입니다.",
+        "paragraph": "DLE를 즉시 생산능력으로 계상하지 않고 회수율·시약비·물 사용량·고객 적격성 검증 후 옵션가치로 관리해야 합니다. 현재는 데모 착공과 검증 결과를 확인합니다.",
+        "company_id": "COM-POSCO-HOLDINGS",
+        "business_axis": "리튬",
+        "business_impact_score": 4,
+        "business_impact_rationale": "DLE 상업화는 북미 원료와 물 사용 효율을 개선할 수 있지만 실패 시 개발비와 일정만 남습니다.",
+        "urgency_score": 3,
+        "urgency_rationale": "2026년 데모 착공·성능 검증 일정이 다음 투자 게이트입니다.",
+        "response_deadline": "2026-03-31",
+        "assessed_at": "2025-07-15",
+        "assessment_confidence": "medium",
+        "impact_path": "DLE 데모 → 회수율·원가·수자원 검증 → 북미 상업화·고객계약 옵션",
+        "recommended_follow_up": "DLE 데모 착공·회수율·원가·물 사용량·고객 인증을 투자 게이트로 확인"
+      },
+      "analysis_file": "analysis/20250715-dle.md",
+      "impact_estimate_file": "impact-estimates/20250715-dle.json"
+    },
+    {
+      "source": {
+        "content_file": "sources/20251114-resource-invest.md",
+        "title": "POSCO홀딩스 글로벌 리튬 자원 1.1조원 투자",
+        "url": "https://newsroom.posco.com/en/posco-holdings-invests-krw-1-1-trillion-to-secure-global-lithium-resources-continuing-future-growth-investments-for-materials-patriotism/",
+        "publisher": "POSCO Holdings",
+        "published_at": "2025-11-14",
+        "collected_at": "2026-08-19",
+        "source_type": "company_release",
+        "language": "en",
+        "reliability": "primary"
+      },
+      "subject_id": "MKT-LITHIUM-RESOURCE-20251114",
+      "claims": [
+        {
+          "predicate": "total_investment",
+          "value": "글로벌 리튬 자원 투자 총 1.1조원",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "mineral_resources",
+          "value": "Mineral Resources 지분 30%, 농축물 270 kt/year",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "lioh_equivalent",
+          "value": "LiOH 환산 37 kt/year, Lithium South 지분 100%",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "business_axis",
+          "value": "리튬",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "business_impact_score_1_to_5",
+          "value": 5,
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "business_impact_rationale",
+          "value": "대규모 자원투자는 공급망 안정성을 주지만 가동률·가격이 낮으면 자본회수와 현금흐름을 압박합니다.",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "urgency_score_1_to_5",
+          "value": 5,
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "urgency_rationale",
+          "value": "2026년 자원 포트폴리오 우선순위와 회수 게이트를 즉시 재검토해야 합니다.",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "assessment_confidence",
+          "value": "medium",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "assessed_at",
+          "value": "2025-11-14",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "impact_path",
+          "value": "자원 지분 투자 → 원료 보안·환산 생산능력 → 가동률·가격·현금회수 검증",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "recommended_follow_up",
+          "value": "Mineral Resources·Lithium South 생산·가동률·가격·배당과 POSCO 투자회수율 연결",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        }
+      ],
+      "signal": {
+        "title": "1.1조원 글로벌 자원투자가 공급망 선점과 현금회수 리스크를 함께 키웁니다",
+        "sentence": "POSCO의 글로벌 리튬 자원 1.1조원 투자는 Mineral Resources·Lithium South를 통한 비중국 공급망을 넓히지만 37kt LiOH 환산능력의 가동·가격·회수 검증이 필요합니다.",
+        "paragraph": "자원 지분은 원료 보안과 장기 옵션을 제공하지만 개발·운영·가격 하락기에 현금이 묶입니다. 현재는 발표 지분·환산능력을 실제 생산·판매·현금배당과 구분합니다.",
+        "company_id": "COM-POSCO-HOLDINGS",
+        "business_axis": "리튬",
+        "business_impact_score": 5,
+        "business_impact_rationale": "대규모 자원투자는 공급망 안정성을 주지만 가동률·가격이 낮으면 자본회수와 현금흐름을 압박합니다.",
+        "urgency_score": 5,
+        "urgency_rationale": "2026년 자원 포트폴리오 우선순위와 회수 게이트를 즉시 재검토해야 합니다.",
+        "response_deadline": "2026-03-31",
+        "assessed_at": "2025-11-14",
+        "assessment_confidence": "medium",
+        "impact_path": "자원 지분 투자 → 원료 보안·환산 생산능력 → 가동률·가격·현금회수 검증",
+        "recommended_follow_up": "Mineral Resources·Lithium South 생산·가동률·가격·배당과 POSCO 투자회수율 연결"
+      },
+      "analysis_file": "analysis/20251114-resource-invest.md",
+      "impact_estimate_file": "impact-estimates/20251114-resource-invest.json"
+    },
+    {
+      "source": {
+        "content_file": "sources/20251229-codelco-sqm.md",
+        "title": "Codelco-SQM NovaAndino 출범과 칠레 공급구조 변화",
+        "url": "https://www.codelco.com/en/prensa/2025/chile-da-un-paso-historico-se-materializa-novaandino-litio-la-sociedad",
+        "publisher": "Codelco",
+        "published_at": "2025-12-29",
+        "collected_at": "2026-08-19",
+        "source_type": "government",
+        "language": "en",
+        "reliability": "primary"
+      },
+      "subject_id": "MKT-LITHIUM-CODELCO-20251229",
+      "claims": [
+        {
+          "predicate": "date",
+          "value": "2025년 12월 29일 NovaAndino 출범",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "reviews",
+          "value": "필수 규제 심사 완료",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "state_water",
+          "value": "국가 다수 이익·염수 추출 및 물 균형 관리 목표",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "business_axis",
+          "value": "리튬",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "business_impact_score_1_to_5",
+          "value": 4,
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "business_impact_rationale",
+          "value": "칠레 공급 구조와 물 규제는 염수 원료 가용량·원가·계약 안정성에 영향을 줍니다.",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "urgency_score_1_to_5",
+          "value": 3,
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "urgency_rationale",
+          "value": "규제 심사 이후 조건이 구체화되는 2026년을 앞두고 구매전략을 갱신해야 합니다.",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "assessment_confidence",
+          "value": "medium",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "assessed_at",
+          "value": "2025-12-29",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "impact_path",
+          "value": "칠레 국가 지배 강화 → 추출·물 규제와 비용 변화 → 염수 원료계약·조달전략 재설계",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "recommended_follow_up",
+          "value": "NovaAndino 생산쿼터·물 사용·가격공식·국가 지분 조건을 POSCO 원료계약과 대조",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        }
+      ],
+      "signal": {
+        "title": "NovaAndino가 칠레 리튬의 국가 지배·물 규제·공급 조건을 바꿉니다",
+        "sentence": "Codelco-SQM NovaAndino 출범과 규제 심사 완료는 칠레 리튬의 국가 지배·물 균형·공급 조건을 바꿔 POSCO 원료계약 가정을 재검증하게 합니다.",
+        "paragraph": "합작사 출범은 경쟁사 추가가 아니라 칠레 공급정책과 추출량·물 관리 조건이 결합되는 구조 변화입니다. 현재는 생산쿼터·계약조건·비용 전가와 POSCO 구매선 영향을 확인합니다.",
+        "company_id": "COM-POSCO-HOLDINGS",
+        "business_axis": "리튬",
+        "business_impact_score": 4,
+        "business_impact_rationale": "칠레 공급 구조와 물 규제는 염수 원료 가용량·원가·계약 안정성에 영향을 줍니다.",
+        "urgency_score": 3,
+        "urgency_rationale": "규제 심사 이후 조건이 구체화되는 2026년을 앞두고 구매전략을 갱신해야 합니다.",
+        "response_deadline": "2026-06-30",
+        "assessed_at": "2025-12-29",
+        "assessment_confidence": "medium",
+        "impact_path": "칠레 국가 지배 강화 → 추출·물 규제와 비용 변화 → 염수 원료계약·조달전략 재설계",
+        "recommended_follow_up": "NovaAndino 생산쿼터·물 사용·가격공식·국가 지분 조건을 POSCO 원료계약과 대조"
+      },
+      "analysis_file": "analysis/20251229-codelco-sqm.md",
+      "impact_estimate_file": "impact-estimates/20251229-codelco-sqm.json"
+    },
+    {
+      "source": {
+        "content_file": "sources/20260102-newyear.md",
+        "title": "POSCO 2026 신년 메시지의 비중국 공급망·선택투자 전략",
+        "url": "https://newsroom.posco.com/en/posco-groups-2026-new-years-message/",
+        "publisher": "POSCO Holdings",
+        "published_at": "2026-01-02",
+        "collected_at": "2026-08-19",
+        "source_type": "company_release",
+        "language": "en",
+        "reliability": "primary"
+      },
+      "subject_id": "MKT-LITHIUM-NEWYEAR-20260102",
+      "claims": [
+        {
+          "predicate": "market",
+          "value": "EV 성장 둔화와 원료 가격 변동성",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "supply_chain",
+          "value": "호주·아르헨티나 등 비중국 공급망 활용",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "strategy",
+          "value": "선택적 투자와 공정 최적화",
+          "as_of": "2026-08-19",
+          "confidence": "high",
+          "reason": "공식 원문에서 직접 확인한 원자 사실입니다. 발표일은 값에 보존했습니다."
+        },
+        {
+          "predicate": "business_axis",
+          "value": "리튬",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "business_impact_score_1_to_5",
+          "value": 4,
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "business_impact_rationale",
+          "value": "비중국 조달은 FEOC·고객 적격성 방어력을 높일 수 있지만 프리미엄·운송·검증비용이 현금흐름을 압박할 수 있습니다.",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "urgency_score_1_to_5",
+          "value": 4,
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "urgency_rationale",
+          "value": "2026년 CAPEX·구매계약·고객 인증을 동시에 재설계해야 하는 운영 신호입니다.",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "assessment_confidence",
+          "value": "medium",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "assessed_at",
+          "value": "2026-01-02",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "impact_path",
+          "value": "EV·원료 변동성 → 비중국 공급망 프리미엄·적격성 → 선택적 CAPEX·계약 재설계",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        },
+        {
+          "predicate": "recommended_follow_up",
+          "value": "비중국 원료 비중·프리미엄·운송비·고객 인증을 CAPEX 단계화 기준에 반영",
+          "as_of": "2026-08-19",
+          "confidence": "medium",
+          "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다."
+        }
+      ],
+      "signal": {
+        "title": "2026년 POSCO의 비중국 조달·선택투자가 리튬 CAPEX 기준을 재설정합니다",
+        "sentence": "POSCO의 2026년 신년 메시지는 EV 둔화와 원료 변동성에 대응해 호주·아르헨티나 비중국 공급망과 선택적 투자를 강조하며 리튬 CAPEX 기준을 재설정합니다.",
+        "paragraph": "공급망 다변화가 원료 확보를 넘어 가격·정책·고객 적격성 리스크를 낮추는 선택권입니다. 현재는 메시지가 투자 보류·단계화와 계약 물량·프리미엄으로 이어졌는지 확인합니다.",
+        "company_id": "COM-POSCO-HOLDINGS",
+        "business_axis": "리튬",
+        "business_impact_score": 4,
+        "business_impact_rationale": "비중국 조달은 FEOC·고객 적격성 방어력을 높일 수 있지만 프리미엄·운송·검증비용이 현금흐름을 압박할 수 있습니다.",
+        "urgency_score": 4,
+        "urgency_rationale": "2026년 CAPEX·구매계약·고객 인증을 동시에 재설계해야 하는 운영 신호입니다.",
+        "response_deadline": "2026-03-31",
+        "assessed_at": "2026-01-02",
+        "assessment_confidence": "medium",
+        "impact_path": "EV·원료 변동성 → 비중국 공급망 프리미엄·적격성 → 선택적 CAPEX·계약 재설계",
+        "recommended_follow_up": "비중국 원료 비중·프리미엄·운송비·고객 인증을 CAPEX 단계화 기준에 반영"
+      },
+      "analysis_file": "analysis/20260102-newyear.md",
+      "impact_estimate_file": "impact-estimates/20260102-newyear.json"
+    }
+  ]
+}

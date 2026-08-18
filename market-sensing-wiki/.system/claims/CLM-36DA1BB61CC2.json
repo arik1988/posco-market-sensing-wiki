@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-36DA1BB61CC2",
+  "subject_id": "MKT-STEEL-CHINA-WORKPLAN-2025",
+  "predicate": "urgency_rationale",
+  "value": "2025~2026 실행지표를 2026년 상반기 계획에 반영해야 합니다.",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-96E7F525"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "정책 실행과 경쟁제품 전환 확인 필요",
+      "source_ids": [
+        "SRC-20260819-96E7F525"
+      ]
+    }
+  ]
+}

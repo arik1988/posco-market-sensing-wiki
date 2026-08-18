@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "signal_id": "SIG-C85F0B291DEA",
+  "sentence": "POSCO의 2025년 8.8조원 투자계획에 Argentina Phase 2가 포함되면서 리튬 가격·가동률 회복이 CAPEX 집행과 현금흐름을 좌우하는 게이트가 됐습니다.",
+  "insight_id": "INS-09E594EF0D30",
+  "company_ids": [
+    "COM-POSCO-HOLDINGS"
+  ],
+  "business_axis": "리튬",
+  "business_impact": {
+    "score": 4,
+    "rationale": "대규모 투자계획은 가격·가동률 회복이 늦어질 때 현금흐름과 회수기간을 압박합니다."
+  },
+  "urgency": {
+    "score": 4,
+    "rationale": "2025년 집행·보류·단계화 결정을 가격과 고객계약에 연동해야 합니다.",
+    "response_deadline": "2025-06-30"
+  },
+  "assessed_at": "2025-05-09",
+  "assessment_confidence": "medium",
+  "claim_ids": [
+    "CLM-005B38A5A4D0",
+    "CLM-C17E02FDAB3B",
+    "CLM-E735D5AEEADC",
+    "CLM-32B57A1E4FAA",
+    "CLM-73BDC5F339F0",
+    "CLM-CF2CD72E2AF1",
+    "CLM-0B7B6A008821",
+    "CLM-9C722E04669E",
+    "CLM-66ED963FEA84",
+    "CLM-69ADEEDAD14B",
+    "CLM-81BB357BA227",
+    "CLM-2C88AC7BF500"
+  ],
+  "source_ids": [
+    "SRC-20260819-499F2B05"
+  ],
+  "status": "active",
+  "created_at": "2026-08-19T00:54:17+09:00",
+  "updated_at": "2026-08-19T00:54:17+09:00",
+  "run_id": "lithium-backfill-20240819-20260819"
+}

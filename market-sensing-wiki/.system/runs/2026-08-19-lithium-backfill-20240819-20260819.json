@@ -1,0 +1,229 @@
+{
+  "run_id": "lithium-backfill-20240819-20260819",
+  "started_at": "2026-08-19T08:00:00+09:00",
+  "finished_at": "2026-08-19T00:54:35+09:00",
+  "search_since": "2024-08-19",
+  "search_until": "2026-08-19",
+  "scope": {
+    "company": "POSCO Holdings",
+    "business_axis": "리튬",
+    "topics": [
+      "염수·광석 생산",
+      "램프업·원가곡선",
+      "가격·고객계약",
+      "IRA·FEOC·정책",
+      "경쟁 공급",
+      "CAPEX·현금흐름"
+    ]
+  },
+  "queries": [
+    "POSCO Holdings lithium brine ore production ramp up 2024 2025 2026",
+    "POSCO Argentina Phase II POSCO Lithium Solution delay 2025 2026",
+    "POSCO Hancock lithium FEOC Australia 30 kt",
+    "lithium critical minerals outlook 2025 IEA price supply deficit",
+    "Rio Tinto Arcadium lithium acquisition capacity 2028",
+    "POSCO Anson DLE Utah lithium 2026 demo",
+    "POSCO global lithium resources Mineral Resources Lithium South 1.1 trillion",
+    "Codelco SQM NovaAndino lithium 2025 water extraction",
+    "POSCO 2026 New Year non-China lithium supply chain"
+  ],
+  "checked_urls": [
+    "https://www.riotinto.com/news/releases/2024/rio-tinto-to-acquire-arcadium-lithium",
+    "https://ir.arcadiumlithium.com/files/doc_downloads/2024/10/Rio-Tinto-to-acquire-Arcadium-Lithium-October-9-2024.pdf",
+    "https://newsroom.posco.com/en/posco-holdings-partners-with-australian-mining-company-hancock-in-lithium-business-for-rechargeable-battery-materials/",
+    "https://www.energy.gov/cmei/manufacturing/foreign-entity-concern-interpretive-guidance",
+    "https://newsroom.posco.com/en/posco-holdings-announces-2024-performance/",
+    "https://www.sec.gov/Archives/edgar/data/889132/000119312525019002/d849026d6k.htm",
+    "https://www.sec.gov/Archives/edgar/data/889132/000119312525019002/d849026d6k.htm",
+    "https://www.publicnow.com/view/47542373B83FF9A1911C406B7FF6EC57FB90E16E",
+    "https://newsroom.posco.com/en/posco-holdings-improves-performance-despite-demand-industry-downturn-and-growing-uncertainties-secures-future-growth-engines-through-strategic-alliances/",
+    "https://www.posco-inc.co.kr/poscoinc/v4/kor/investor/s91e3000100c.jsp",
+    "https://newsroom.posco.com/en/posco-holdings-commits-krw-1-trillion-to-capital-increase-in-rechargeable-battery-material-subsidiaries-to-reinforce-responsible-management-of-core-businesses/",
+    "https://www.pilbaraminerals.com.au/investors/asx-announcements/",
+    "https://www.iea.org/reports/global-critical-minerals-outlook-2025/executive-summary",
+    "https://www.iea.org/news/diversification-is-the-cornerstone-of-energy-security-yet-critical-minerals-are-moving-in-the-opposite-direction",
+    "https://newsroom.posco.com/en/posco-holdings-sets-out-to-demonstrate-dle-tech-in-the-u-s-speeds-up-lithium-supply-chain-in-north-america/",
+    "https://www.ansonresources.com.au/asx-announcements/",
+    "https://newsroom.posco.com/en/posco-holdings-invests-krw-1-1-trillion-to-secure-global-lithium-resources-continuing-future-growth-investments-for-materials-patriotism/",
+    "https://www.mineralresources.com.au/investors/asx-announcements/",
+    "https://www.lithiumsouth.com/news/",
+    "https://www.codelco.com/en/prensa/2025/chile-da-un-paso-historico-se-materializa-novaandino-litio-la-sociedad",
+    "https://ir.sqm.com/system/files-encrypted/nasdaq_kms/news/2024/12/05/18-18-17/Acuerdo-de-Asociacion-CODELCO-SQM_English-Translation.pdf",
+    "https://newsroom.posco.com/en/posco-groups-2026-new-years-message/",
+    "https://newsroom.posco.com/en/posco-holdings-invests-krw-1-1-trillion-to-secure-global-lithium-resources-continuing-future-growth-investments-for-materials-patriotism/"
+  ],
+  "failed_urls": [
+    "https://www.usgs.gov/centers/national-minerals-information-center/lithium-statistics-and-information",
+    "https://www.riotinto.com/news/releases/2025/rio-tinto-very-resilient-financial-results-as-we-grow-and-diversify-our-portfolio"
+  ],
+  "access_attempts": [
+    {
+      "url": "https://www.riotinto.com/news/releases/2024/rio-tinto-to-acquire-arcadium-lithium",
+      "outcome": "checked",
+      "status": "primary_or_cross_verified",
+      "collected_at": "2026-08-19"
+    },
+    {
+      "url": "https://ir.arcadiumlithium.com/files/doc_downloads/2024/10/Rio-Tinto-to-acquire-Arcadium-Lithium-October-9-2024.pdf",
+      "outcome": "checked",
+      "status": "primary_or_cross_verified",
+      "collected_at": "2026-08-19"
+    },
+    {
+      "url": "https://newsroom.posco.com/en/posco-holdings-partners-with-australian-mining-company-hancock-in-lithium-business-for-rechargeable-battery-materials/",
+      "outcome": "checked",
+      "status": "primary_or_cross_verified",
+      "collected_at": "2026-08-19"
+    },
+    {
+      "url": "https://www.energy.gov/cmei/manufacturing/foreign-entity-concern-interpretive-guidance",
+      "outcome": "checked",
+      "status": "primary_or_cross_verified",
+      "collected_at": "2026-08-19"
+    },
+    {
+      "url": "https://newsroom.posco.com/en/posco-holdings-announces-2024-performance/",
+      "outcome": "checked",
+      "status": "primary_or_cross_verified",
+      "collected_at": "2026-08-19"
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/889132/000119312525019002/d849026d6k.htm",
+      "outcome": "checked",
+      "status": "primary_or_cross_verified",
+      "collected_at": "2026-08-19"
+    },
+    {
+      "url": "https://www.sec.gov/Archives/edgar/data/889132/000119312525019002/d849026d6k.htm",
+      "outcome": "checked",
+      "status": "primary_or_cross_verified",
+      "collected_at": "2026-08-19"
+    },
+    {
+      "url": "https://www.publicnow.com/view/47542373B83FF9A1911C406B7FF6EC57FB90E16E",
+      "outcome": "checked",
+      "status": "primary_or_cross_verified",
+      "collected_at": "2026-08-19"
+    },
+    {
+      "url": "https://newsroom.posco.com/en/posco-holdings-improves-performance-despite-demand-industry-downturn-and-growing-uncertainties-secures-future-growth-engines-through-strategic-alliances/",
+      "outcome": "checked",
+      "status": "primary_or_cross_verified",
+      "collected_at": "2026-08-19"
+    },
+    {
+      "url": "https://www.posco-inc.co.kr/poscoinc/v4/kor/investor/s91e3000100c.jsp",
+      "outcome": "checked",
+      "status": "primary_or_cross_verified",
+      "collected_at": "2026-08-19"
+    },
+    {
+      "url": "https://newsroom.posco.com/en/posco-holdings-commits-krw-1-trillion-to-capital-increase-in-rechargeable-battery-material-subsidiaries-to-reinforce-responsible-management-of-core-businesses/",
+      "outcome": "checked",
+      "status": "primary_or_cross_verified",
+      "collected_at": "2026-08-19"
+    },
+    {
+      "url": "https://www.pilbaraminerals.com.au/investors/asx-announcements/",
+      "outcome": "checked",
+      "status": "primary_or_cross_verified",
+      "collected_at": "2026-08-19"
+    },
+    {
+      "url": "https://www.iea.org/reports/global-critical-minerals-outlook-2025/executive-summary",
+      "outcome": "checked",
+      "status": "primary_or_cross_verified",
+      "collected_at": "2026-08-19"
+    },
+    {
+      "url": "https://www.iea.org/news/diversification-is-the-cornerstone-of-energy-security-yet-critical-minerals-are-moving-in-the-opposite-direction",
+      "outcome": "checked",
+      "status": "primary_or_cross_verified",
+      "collected_at": "2026-08-19"
+    },
+    {
+      "url": "https://newsroom.posco.com/en/posco-holdings-sets-out-to-demonstrate-dle-tech-in-the-u-s-speeds-up-lithium-supply-chain-in-north-america/",
+      "outcome": "checked",
+      "status": "primary_or_cross_verified",
+      "collected_at": "2026-08-19"
+    },
+    {
+      "url": "https://www.ansonresources.com.au/asx-announcements/",
+      "outcome": "checked",
+      "status": "primary_or_cross_verified",
+      "collected_at": "2026-08-19"
+    },
+    {
+      "url": "https://newsroom.posco.com/en/posco-holdings-invests-krw-1-1-trillion-to-secure-global-lithium-resources-continuing-future-growth-investments-for-materials-patriotism/",
+      "outcome": "checked",
+      "status": "primary_or_cross_verified",
+      "collected_at": "2026-08-19"
+    },
+    {
+      "url": "https://www.mineralresources.com.au/investors/asx-announcements/",
+      "outcome": "checked",
+      "status": "primary_or_cross_verified",
+      "collected_at": "2026-08-19"
+    },
+    {
+      "url": "https://www.lithiumsouth.com/news/",
+      "outcome": "checked",
+      "status": "primary_or_cross_verified",
+      "collected_at": "2026-08-19"
+    },
+    {
+      "url": "https://www.codelco.com/en/prensa/2025/chile-da-un-paso-historico-se-materializa-novaandino-litio-la-sociedad",
+      "outcome": "checked",
+      "status": "primary_or_cross_verified",
+      "collected_at": "2026-08-19"
+    },
+    {
+      "url": "https://ir.sqm.com/system/files-encrypted/nasdaq_kms/news/2024/12/05/18-18-17/Acuerdo-de-Asociacion-CODELCO-SQM_English-Translation.pdf",
+      "outcome": "checked",
+      "status": "primary_or_cross_verified",
+      "collected_at": "2026-08-19"
+    },
+    {
+      "url": "https://newsroom.posco.com/en/posco-groups-2026-new-years-message/",
+      "outcome": "checked",
+      "status": "primary_or_cross_verified",
+      "collected_at": "2026-08-19"
+    },
+    {
+      "url": "https://newsroom.posco.com/en/posco-holdings-invests-krw-1-1-trillion-to-secure-global-lithium-resources-continuing-future-growth-investments-for-materials-patriotism/",
+      "outcome": "checked",
+      "status": "primary_or_cross_verified",
+      "collected_at": "2026-08-19"
+    },
+    {
+      "url": "https://www.usgs.gov/centers/national-minerals-information-center/lithium-statistics-and-information",
+      "outcome": "failed",
+      "status": "access_error",
+      "collected_at": "2026-08-19"
+    },
+    {
+      "url": "https://www.riotinto.com/news/releases/2025/rio-tinto-very-resilient-financial-results-as-we-grow-and-diversify-our-portfolio",
+      "outcome": "failed",
+      "status": "access_error",
+      "collected_at": "2026-08-19"
+    }
+  ],
+  "results": {
+    "new_sources": 11,
+    "new_claims": 132,
+    "new_signals": 11
+  },
+  "signal_ids": [
+    "SIG-557B19547C16",
+    "SIG-4A25A18DCE47",
+    "SIG-AA1311F13FCD",
+    "SIG-5481DFF9613F",
+    "SIG-C85F0B291DEA",
+    "SIG-E2291E5912D0",
+    "SIG-62DB257CEA16",
+    "SIG-82BB8B02BF82",
+    "SIG-BD81BF99EDC7",
+    "SIG-4FC6F602ABF5",
+    "SIG-EFCFCCCC5A58"
+  ]
+}

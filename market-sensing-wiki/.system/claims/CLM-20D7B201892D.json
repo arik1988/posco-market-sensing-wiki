@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-20D7B201892D",
+  "subject_id": "MKT-RIO-TINTO-LITHIUM-2026",
+  "predicate": "h1_2026_lce_production",
+  "value": "27.3 kt; +53% year on year",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-D7286E4D"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "Rio Tinto 2026년 상반기 생산실적",
+      "source_ids": [
+        "SRC-20260818-D7286E4D"
+      ]
+    }
+  ]
+}

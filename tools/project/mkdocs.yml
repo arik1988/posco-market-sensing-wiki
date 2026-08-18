@@ -1,0 +1,79 @@
+site_name: 포스코그룹 마켓센싱
+site_url: https://market-sensing-ai-wiki.vercel.app
+site_description: 철강·리튬·에너지 3대 사업축의 근거 기반 Market Sensing Wiki
+docs_dir: ../../market-sensing-wiki
+site_dir: site
+use_directory_urls: true
+strict: true
+
+theme:
+  name: material
+  language: ko
+  features:
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.tracking
+    - search.suggest
+    - search.highlight
+    - content.tooltips
+
+plugins:
+  - material/meta
+  - search:
+      lang:
+        - ko
+        - en
+  - enumerate-headings:
+      start_level: 2
+      increment_across_pages: false
+      toc_depth: 3
+
+hooks:
+  - mkdocs_hooks.py
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/mermaid.min.js
+  - javascripts/mermaid-theme.js
+  - javascripts/mermaid-contrast.js
+  - javascripts/mermaid-viewer.js
+  - javascripts/footnote-tooltips.js
+  - javascripts/contextual-navigation.js
+  - javascripts/impact-simulator.js
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - footnotes
+  - tables
+  - toc
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_div_format
+        - name: impact-simulator
+          class: impact-simulator-data
+          format: !!python/name:pymdownx.superfences.fence_div_format
+
+exclude_docs: |
+  .system/
+  config/
+  projects/
+  reports/audits/
+  AGENTS.md
+  log.md
+
+not_in_nav: |
+  sources/
+
+copyright: 근거 기반 포스코그룹 마켓센싱 · POSCO Blue theme

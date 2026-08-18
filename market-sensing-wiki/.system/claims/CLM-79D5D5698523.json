@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-79D5D5698523",
+  "subject_id": "COM-POSCO-INTERNATIONAL",
+  "predicate": "business_impact_rationale",
+  "value": "LNG 수출업자의 내수 공급 의무가 호주 동부 내수 공급을 늘리고 가격 하락을 유도하면 내수 생산자인 Senex의 판매가격과 증산 프로젝트 경제성에 하방 압력이 생길 수 있다.",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-38019D54"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "AI 분석",
+      "source_ids": [
+        "SRC-20260818-38019D54"
+      ]
+    }
+  ]
+}

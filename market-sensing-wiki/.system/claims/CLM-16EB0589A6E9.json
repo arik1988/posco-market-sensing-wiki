@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-16EB0589A6E9",
+  "subject_id": "OPS-POSCO-ARGENTINA-Q2-2026",
+  "predicate": "assessed_at",
+  "value": "2026-08-18",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-A26B22EF"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "평가 기준일",
+      "source_ids": [
+        "SRC-20260818-A26B22EF"
+      ]
+    }
+  ]
+}

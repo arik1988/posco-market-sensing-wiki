@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "signal_id": "SIG-748B3CDABD5B",
+  "sentence": "Senex Atlas Unit 1은 준공에서 시운전으로 넘어갔지만 2025년 Q2 테스트 완료와 Units 2·3 후속 가동이 증산 매출·현금흐름의 핵심 게이트.",
+  "insight_id": "INS-FADFA96C4E46",
+  "company_ids": [
+    "COM-POSCO-INTERNATIONAL"
+  ],
+  "business_axis": "에너지",
+  "business_impact": {
+    "score": 5,
+    "rationale": "처리시설과 가스관의 실제 가동이 생산·판매·현금회수의 병목입니다."
+  },
+  "urgency": {
+    "score": 4,
+    "rationale": "Q2 2025 테스트 완료와 하반기 후속시설 가동을 확인해야 합니다.",
+    "response_deadline": "2025-04-15"
+  },
+  "assessed_at": "2024-12-04",
+  "assessment_confidence": "high",
+  "claim_ids": [
+    "CLM-1D145C384658",
+    "CLM-7701A5105C10",
+    "CLM-F3B45A1363AC",
+    "CLM-E3D87F7DDBF9",
+    "CLM-E87D1404C48A",
+    "CLM-5323C02D6C0D",
+    "CLM-20AAE92FBB1E",
+    "CLM-3AED98F24441",
+    "CLM-EA59A3CAE3A9",
+    "CLM-9768529148E0",
+    "CLM-54817381683E",
+    "CLM-B6C8637F670E",
+    "CLM-3F3A758CF0BC",
+    "CLM-FA4C2D04528D"
+  ],
+  "source_ids": [
+    "SRC-20260819-21B1AAAB"
+  ],
+  "status": "active",
+  "created_at": "2026-08-19T00:54:50+09:00",
+  "updated_at": "2026-08-19T00:54:50+09:00",
+  "run_id": "energy-backfill-20240819-20260819"
+}

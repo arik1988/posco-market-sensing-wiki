@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-3E0663A1A6B2",
+  "subject_id": "MKT-ENERGY-ACCC-Q1-2025-SUPPLY",
+  "predicate": "q1_2025_east_coast_surplus_pj",
+  "value": "12~27 PJ",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-C117952B"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "ACCC 원문 전망",
+      "source_ids": [
+        "SRC-20260819-C117952B"
+      ]
+    }
+  ]
+}

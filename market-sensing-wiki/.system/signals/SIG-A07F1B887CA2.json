@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "signal_id": "SIG-A07F1B887CA2",
+  "sentence": "2028년 세계 철강 과잉설비가 7억4500만t까지 늘 전망이어서 포스코는 범용재 물량 확대보다 고부가 믹스와 지역별 통상 대응의 수익성을 우선 검증해야 합니다.",
+  "insight_id": "INS-35A5BFD1457B",
+  "company_ids": [
+    "COM-POSCO"
+  ],
+  "business_axis": "철강",
+  "business_impact": {
+    "score": 5,
+    "rationale": "설비 증가가 수요를 앞질러 범용재 가격과 통상비용을 동시에 압박하므로 제품믹스·현지화 투자수익률에 직접 영향이 있습니다."
+  },
+  "urgency": {
+    "score": 4,
+    "rationale": "2027~2028 판매·생산·투자계획에 구조적 저가격과 추가 무역조치를 반영해야 합니다.",
+    "response_deadline": "2026-09-30"
+  },
+  "assessed_at": "2026-08-18",
+  "assessment_confidence": "medium",
+  "claim_ids": [
+    "CLM-7F8FBE547BCE",
+    "CLM-EC6238D6CF0F",
+    "CLM-D8A86EF178E1",
+    "CLM-D76E02778055",
+    "CLM-7F08C99D0B52",
+    "CLM-A1329CAF5B9B",
+    "CLM-16B4A806C09B",
+    "CLM-1CCF61DD3BE6",
+    "CLM-D99144DB561D",
+    "CLM-E5D5E04540E4",
+    "CLM-C41B3779E433",
+    "CLM-11115A9E700F"
+  ],
+  "source_ids": [
+    "SRC-20260818-2778E1E7"
+  ],
+  "status": "active",
+  "created_at": "2026-08-18T23:35:42+09:00",
+  "updated_at": "2026-08-18T23:35:42+09:00",
+  "run_id": "topic-scan-20260818"
+}

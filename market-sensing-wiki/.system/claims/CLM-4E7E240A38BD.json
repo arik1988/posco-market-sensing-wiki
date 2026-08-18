@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-4E7E240A38BD",
+  "subject_id": "MKT-STEEL-KR-ETS-PHASE4-2025",
+  "predicate": "business_impact_rationale",
+  "value": "국내 탄소비용과 감축투자 기준을 동시에 바꾸는 계획입니다.",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-D1248F53"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "ETS 업종원칙과 해외비용의 분리",
+      "source_ids": [
+        "SRC-20260819-D1248F53"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-C41B3779E433",
+  "subject_id": "MKT-GLOBAL-STEEL-OVERCAPACITY-2026",
+  "predicate": "impact_path",
+  "value": "과잉설비→잉여수출→가격하락·무역구제→제품믹스·현지화 수익성",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-2778E1E7"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "공개 사실에서 사업 의사결정으로 이어지는 영향 경로",
+      "source_ids": [
+        "SRC-20260818-2778E1E7"
+      ]
+    }
+  ]
+}

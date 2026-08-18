@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-7E92C4676AE0",
+  "subject_id": "MKT-RIO-TINTO-LITHIUM-2026",
+  "predicate": "business_impact_rationale",
+  "value": "경쟁사 램프업 선행은 비중국계 공급곡선과 고객 협상력을 바꿔 포스코홀딩스의 증설 시점·요구수익률에 영향을 줍니다.",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-D7286E4D"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "공개 근거 기반 AI 영향도 판단",
+      "source_ids": [
+        "SRC-20260818-D7286E4D"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-994FB638F436",
+  "subject_id": "MKT-ENERGY-AEMO-GSOO-2025",
+  "predicate": "recommended_follow_up",
+  "value": "Senex 실제 처리량·남부 저장률·SWQP 흐름·2028~29 계약 만기를 AEMO 가정과 대조",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-B694DC74"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "후속 확인",
+      "source_ids": [
+        "SRC-20260819-B694DC74"
+      ]
+    }
+  ]
+}

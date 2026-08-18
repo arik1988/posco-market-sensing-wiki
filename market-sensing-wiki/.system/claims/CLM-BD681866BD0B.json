@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-BD681866BD0B",
+  "subject_id": "COM-POSCO",
+  "predicate": "impact_path",
+  "value": "EU 수입쿼터 축소 및 초과분 50% 관세 → 한국산 철강의 EU 도착원가·판매가능 물량 변화 → 수출 믹스·가격·현지 생산 전략 조정",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-5C2CEB19"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "AI 분석",
+      "source_ids": [
+        "SRC-20260818-5C2CEB19"
+      ]
+    }
+  ]
+}

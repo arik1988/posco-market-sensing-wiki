@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-693D296E40C1",
+  "subject_id": "MKT-AUSTRALIA-EAST-COAST-GAS-2030",
+  "predicate": "urgency_rationale",
+  "value": "생산·파이프라인·장기계약을 2030 공백 이전에 함께 확정해야 희소가치를 실현할 수 있습니다.",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-0C29491C"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "공개 근거 기반 AI 긴급도 판단",
+      "source_ids": [
+        "SRC-20260818-0C29491C"
+      ]
+    }
+  ]
+}

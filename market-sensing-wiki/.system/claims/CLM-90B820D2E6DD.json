@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-90B820D2E6DD",
+  "subject_id": "MKT-STEEL-KR-ETS-PHASE4-2025",
+  "predicate": "business_impact_score_1_to_5",
+  "value": "4",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-D1248F53"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "국내 탄소 현금비용 방어와 감축투자 압력을 동시에 변경",
+      "source_ids": [
+        "SRC-20260819-D1248F53"
+      ]
+    }
+  ]
+}

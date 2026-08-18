@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-504441054077",
+  "subject_id": "MKT-GLOBAL-LNG-HORMUZ-2026",
+  "predicate": "assessment_confidence",
+  "value": "medium",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-3DD53EA4"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "공개자료 범위의 평가 신뢰도",
+      "source_ids": [
+        "SRC-20260818-3DD53EA4"
+      ]
+    }
+  ]
+}

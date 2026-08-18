@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-E1656FDDCE7F",
+  "subject_id": "MKT-STEEL-INDIA-FLAT-SAFEGUARD-2025",
+  "predicate": "urgency_score_1_to_5",
+  "value": "4",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-1066116D"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "권고 후 재무부 최종 통지 전 가격·선적안 준비 필요",
+      "source_ids": [
+        "SRC-20260819-1066116D"
+      ]
+    }
+  ]
+}

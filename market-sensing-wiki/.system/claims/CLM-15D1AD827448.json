@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-15D1AD827448",
+  "subject_id": "MKT-ENERGY-SENEX-ATLAS-OPENING",
+  "predicate": "senex_wells_completed",
+  "value": "more than 160 wells",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-F3EBEB9A"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "Senex 공식 발표",
+      "source_ids": [
+        "SRC-20260819-F3EBEB9A"
+      ]
+    }
+  ]
+}

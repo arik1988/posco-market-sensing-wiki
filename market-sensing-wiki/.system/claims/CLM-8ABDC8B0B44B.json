@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-8ABDC8B0B44B",
+  "subject_id": "MKT-AUSTRALIA-EAST-COAST-GAS-2030",
+  "predicate": "business_impact_rationale",
+  "value": "2030년 이후 공급공백은 Senex 증산의 장기계약·운송권 가치를 높이지만 단기 가격약세와 내수규제가 상단을 제한할 수 있습니다.",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-0C29491C"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "공개 근거 기반 AI 영향도 판단",
+      "source_ids": [
+        "SRC-20260818-0C29491C"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-243BFC675E77",
+  "subject_id": "MKT-STEEL-KR-CARBON-PLANT-SUPPORT-2025",
+  "predicate": "business_impact_score_1_to_5",
+  "value": "3",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-057B0417"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "지원 창구는 CAPEX 부담을 낮출 수 있으나 선정 불확실",
+      "source_ids": [
+        "SRC-20260819-057B0417"
+      ]
+    }
+  ]
+}

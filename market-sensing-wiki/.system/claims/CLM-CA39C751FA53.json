@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-CA39C751FA53",
+  "subject_id": "MKT-ENERGY-IEA-LNG-Q3-2025",
+  "predicate": "europe_lng_import_change_h1_2025",
+  "value": "25% year-on-year increase",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-2FA37997"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "IEA executive summary",
+      "source_ids": [
+        "SRC-20260819-2FA37997"
+      ]
+    }
+  ]
+}

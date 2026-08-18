@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-1B6654B349C5",
+  "subject_id": "OPS-POSCO-ARGENTINA-Q2-2026",
+  "predicate": "business_axis",
+  "value": "리튬",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-A26B22EF"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "분석 대상 사업축",
+      "source_ids": [
+        "SRC-20260818-A26B22EF"
+      ]
+    }
+  ]
+}

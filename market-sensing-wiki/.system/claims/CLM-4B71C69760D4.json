@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-4B71C69760D4",
+  "subject_id": "MKT-ENERGY-POSCO-Q3-2025-SENEX-RAMP",
+  "predicate": "myanmar_q3_2025_operating_profit",
+  "value": "900억원",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-D7164DFA"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "POSCO IR p.4",
+      "source_ids": [
+        "SRC-20260819-D7164DFA"
+      ]
+    }
+  ]
+}

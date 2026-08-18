@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-AE0AFEBA51EA",
+  "subject_id": "COM-POSCO",
+  "predicate": "business_impact_rationale",
+  "value": "EU 무관세 수입 한도가 연 18.3Mt로 축소되고 쿼터 초과분에 50% 관세가 붙어 제품·분기별 쿼터 소진 순서와 현지 생산 전환의 경제성이 직접 바뀐다.",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-5C2CEB19"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "AI 분석",
+      "source_ids": [
+        "SRC-20260818-5C2CEB19"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-676A51064537",
+  "subject_id": "MKT-STEEL-CHINA-CAPACITY-PAUSE-2024",
+  "predicate": "assessment_confidence",
+  "value": "medium",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-BCECCDDE"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "공식 공고와 Reuters 독립 재인용 확인",
+      "source_ids": [
+        "SRC-20260819-BCECCDDE"
+      ]
+    }
+  ]
+}

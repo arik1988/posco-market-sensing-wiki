@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-98782873B55B",
+  "subject_id": "COM-POSCO-HOLDINGS",
+  "predicate": "urgency_rationale",
+  "value": "산업 전반의 투자 축소기에 경쟁 프로젝트·자산가치·장기계약 조건이 재평가되므로 2026년 투자계획 확정 전에 재검토할 가치가 높다.",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-F3E8E66B"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "AI 분석",
+      "source_ids": [
+        "SRC-20260818-F3E8E66B"
+      ]
+    }
+  ]
+}

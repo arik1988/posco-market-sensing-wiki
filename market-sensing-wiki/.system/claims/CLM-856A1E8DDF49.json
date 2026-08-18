@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-856A1E8DDF49",
+  "subject_id": "MKT-STEEL-CHINA-CAPACITY-PAUSE-2024",
+  "predicate": "policy_measure",
+  "value": "각 지방의 신규 철강 생산능력 치환 방안 공시·공고를 일시 중단",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-BCECCDDE"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "공고 원문 조치 문장",
+      "source_ids": [
+        "SRC-20260819-BCECCDDE"
+      ]
+    }
+  ]
+}

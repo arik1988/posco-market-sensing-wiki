@@ -1,0 +1,33 @@
+{
+  "claim_id": "CLM-CD3482520DF4",
+  "subject_id": "POL-EU-CBAM-2026",
+  "predicate": "assessment_confidence",
+  "value": "medium",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-D363136D"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "공개자료 범위의 평가 신뢰도",
+      "source_ids": [
+        "SRC-20260818-D363136D"
+      ]
+    },
+    {
+      "date": "2026-08-18",
+      "action": "verified",
+      "reason": "공개자료 범위의 평가 신뢰도",
+      "source_ids": [
+        "SRC-20260818-D363136D"
+      ]
+    }
+  ]
+}

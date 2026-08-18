@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-F0CF16063194",
+  "subject_id": "MKT-STEEL-EU-ACTION-PLAN-2025",
+  "predicate": "urgency_score_1_to_5",
+  "value": "4",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-77D38668"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "2026년 이후 보호·지원 세부화를 앞둔 준비기간",
+      "source_ids": [
+        "SRC-20260819-77D38668"
+      ]
+    }
+  ]
+}

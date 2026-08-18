@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "signal_id": "SIG-01BC189FE839",
+  "sentence": "Atlas 증산은 시설 준공·시운전 단계를 넘어 2025년 2월 실제 시장 유입과 고객 인도로 전환되어 Senex의 물량·계약 매출 회수 위험을 낮춘 실행 신호.",
+  "insight_id": "INS-68CE85A21EEB",
+  "company_ids": [
+    "COM-POSCO-INTERNATIONAL"
+  ],
+  "business_axis": "에너지",
+  "business_impact": {
+    "score": 5,
+    "rationale": "실제 고객 인도가 Senex 물량과 계약 현금회수로 연결됩니다."
+  },
+  "urgency": {
+    "score": 4,
+    "rationale": "후속 시설 ramp-up과 고객별 판매량을 분기 실적에서 확인해야 합니다.",
+    "response_deadline": "2025-04-15"
+  },
+  "assessed_at": "2025-02-28",
+  "assessment_confidence": "high",
+  "claim_ids": [
+    "CLM-8F1DA7050893",
+    "CLM-32E04FDC784E",
+    "CLM-00C4A16D9792",
+    "CLM-88EBF86AAE8B",
+    "CLM-2CC0444F0B4A",
+    "CLM-34C594FBAF2C",
+    "CLM-670F30F76679",
+    "CLM-0726C5322ABD",
+    "CLM-A7227491F3CC",
+    "CLM-673A20838211",
+    "CLM-A9BF59B5BC76",
+    "CLM-899870AF2547",
+    "CLM-B1B45E7A568F",
+    "CLM-C9EB2F1D3A5A"
+  ],
+  "source_ids": [
+    "SRC-20260819-72A89CB9"
+  ],
+  "status": "active",
+  "created_at": "2026-08-19T00:54:59+09:00",
+  "updated_at": "2026-08-19T00:54:59+09:00",
+  "run_id": "energy-backfill-20240819-20260819"
+}

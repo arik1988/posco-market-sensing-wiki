@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-3EEC0357D423",
+  "subject_id": "MKT-RIO-TINTO-LITHIUM-2026",
+  "predicate": "urgency_rationale",
+  "value": "2027~2028 증설 의사결정 전에 발표 용량이 아닌 실제 분기 출하속도를 반영해야 합니다.",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-D7286E4D"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "공개 근거 기반 AI 긴급도 판단",
+      "source_ids": [
+        "SRC-20260818-D7286E4D"
+      ]
+    }
+  ]
+}

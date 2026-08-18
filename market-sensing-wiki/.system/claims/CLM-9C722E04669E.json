@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-9C722E04669E",
+  "subject_id": "MKT-LITHIUM-INVESTMENT-20250509",
+  "predicate": "urgency_rationale",
+  "value": "2025년 집행·보류·단계화 결정을 가격과 고객계약에 연동해야 합니다.",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-499F2B05"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다.",
+      "source_ids": [
+        "SRC-20260819-499F2B05"
+      ]
+    }
+  ]
+}

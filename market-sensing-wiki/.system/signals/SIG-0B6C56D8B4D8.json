@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "signal_id": "SIG-0B6C56D8B4D8",
+  "sentence": "호주 남부 기존 가스전 생산이 5년간 46% 감소 전망인 만큼 Senex 60PJ 증산은 단순 판매확대보다 2030 공급공백을 겨냥한 장기계약·운송가치로 평가해야 합니다.",
+  "insight_id": "INS-D1FBEA76A243",
+  "company_ids": [
+    "COM-POSCO-INTERNATIONAL"
+  ],
+  "business_axis": "에너지",
+  "business_impact": {
+    "score": 5,
+    "rationale": "2030년 이후 공급공백은 Senex 증산의 장기계약·운송권 가치를 높이지만 단기 가격약세와 내수규제가 상단을 제한할 수 있습니다."
+  },
+  "urgency": {
+    "score": 4,
+    "rationale": "생산·파이프라인·장기계약을 2030 공백 이전에 함께 확정해야 희소가치를 실현할 수 있습니다.",
+    "response_deadline": "2026-10-31"
+  },
+  "assessed_at": "2026-08-18",
+  "assessment_confidence": "medium",
+  "claim_ids": [
+    "CLM-4901B6B4958F",
+    "CLM-DE2E244F0123",
+    "CLM-9D3799372F63",
+    "CLM-81DE121254A5",
+    "CLM-046C20F4E464",
+    "CLM-8ABDC8B0B44B",
+    "CLM-839765411947",
+    "CLM-693D296E40C1",
+    "CLM-D50C648E9E94",
+    "CLM-532EDCC4EC39",
+    "CLM-337728D3B08C",
+    "CLM-FFB1860DC828"
+  ],
+  "source_ids": [
+    "SRC-20260818-0C29491C"
+  ],
+  "status": "active",
+  "created_at": "2026-08-18T23:36:33+09:00",
+  "updated_at": "2026-08-18T23:36:33+09:00",
+  "run_id": "topic-scan-20260818"
+}

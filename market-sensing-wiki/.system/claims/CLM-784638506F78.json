@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-784638506F78",
+  "subject_id": "OPS-POSCO-ARGENTINA-Q2-2026",
+  "predicate": "recommended_follow_up",
+  "value": "1공장 흑자 브리지와 2공장 고객승인 연계 증산 게이트를 2026-09-15까지 확정",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-A26B22EF"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "공개자료 한계를 해소할 후속 확인",
+      "source_ids": [
+        "SRC-20260818-A26B22EF"
+      ]
+    }
+  ]
+}

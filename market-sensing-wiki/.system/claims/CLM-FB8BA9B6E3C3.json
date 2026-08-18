@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-FB8BA9B6E3C3",
+  "subject_id": "COM-POSCO-HOLDINGS",
+  "predicate": "business_axis",
+  "value": "리튬",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-F3E8E66B"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "AI 분류: 포스코홀딩스 리튬사업 관련",
+      "source_ids": [
+        "SRC-20260818-F3E8E66B"
+      ]
+    }
+  ]
+}

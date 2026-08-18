@@ -1,0 +1,304 @@
+{
+  "schema_version": 1,
+  "title": "호주 가스예약제의 Senex 연간 EBITDA 민감도",
+  "description": "정책이 동부 가스가격과 재계약 물량에 전달되는 경우의 가격효과, 물량효과, 대응비용을 분리한 공개정보 기반 What-if입니다.",
+  "as_of": "2026-08-18",
+  "confidence": "low",
+  "notice": "모든 금액은 세전·이자·감가상각 전 연간 변화액입니다. Senex 계약별 판매량·가격식·현금원가는 공개되지 않아 기준값은 AI 가정이며 회사 실제 전망이 아닙니다. 호주 정부의 20% 내수공급 정책 수치는 규제 배경일 뿐 가격하락률로 직접 대입하지 않았습니다.",
+  "formula_display": "ΔEBITDA = [Q₀ × r재가격 × ΔP + ΔQ × (P₀ + ΔP − C변동) − C대응] × AUD/KRW",
+  "variables": [
+    {
+      "id": "baseline_sales_pj",
+      "label": "연간 기준 판매량",
+      "unit": "PJ",
+      "min": 5,
+      "max": 60,
+      "step": 1,
+      "default": 30,
+      "kind": "assumption",
+      "basis": "계약별 판매량 비공개. 영향 범위를 5~60PJ로 두고 기준 시나리오에 30PJ를 적용했습니다.",
+      "source_ids": []
+    },
+    {
+      "id": "repricing_exposure_pct",
+      "label": "재가격 노출률",
+      "unit": "%",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "default": 50,
+      "kind": "assumption",
+      "basis": "기존 장기계약과 신규·갱신 물량의 가격 재설정 비중이 공개되지 않아 50%를 기준으로 둔 가정입니다.",
+      "source_ids": []
+    },
+    {
+      "id": "policy_price_change_aud_per_gj",
+      "label": "정책 반영 가격변화",
+      "unit": "AUD/GJ",
+      "min": -3,
+      "max": 0,
+      "step": 0.1,
+      "default": -1.5,
+      "kind": "assumption",
+      "basis": "20% 내수공급 의무를 가격하락률로 오인하지 않고, 실제 시장 전달폭을 별도 변수로 둔 가정입니다.",
+      "source_ids": []
+    },
+    {
+      "id": "volume_change_pj",
+      "label": "연간 판매량 변화",
+      "unit": "PJ",
+      "min": -5,
+      "max": 10,
+      "step": 0.5,
+      "default": 2,
+      "kind": "assumption",
+      "basis": "가격 하락에 따른 산업수요·계약물량 변화가 비공개이므로 감소 5PJ~증가 10PJ 범위를 둡니다.",
+      "source_ids": []
+    },
+    {
+      "id": "baseline_price_aud_per_gj",
+      "label": "정책 전 기준 실현가격",
+      "unit": "AUD/GJ",
+      "min": 7,
+      "max": 15,
+      "step": 0.1,
+      "default": 12.5,
+      "kind": "assumption",
+      "basis": "계약별 가격식 비공개. 정책 후 가격은 이 기준가격에 정책 가격변화를 더해 일관되게 계산합니다.",
+      "source_ids": []
+    },
+    {
+      "id": "variable_cash_cost_aud_per_gj",
+      "label": "변동 현금원가",
+      "unit": "AUD/GJ",
+      "min": 2,
+      "max": 8,
+      "step": 0.1,
+      "default": 4,
+      "kind": "assumption",
+      "basis": "Senex의 계약·자산별 변동원가가 공개되지 않아 추가 물량 공헌이익 계산용 범위를 둡니다.",
+      "source_ids": []
+    },
+    {
+      "id": "annual_response_cost_aud_m",
+      "label": "연간 대응비용",
+      "unit": "AUD m",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "default": 5,
+      "kind": "assumption",
+      "basis": "계약 재협상·운영 조정·정책 대응에 드는 일회성 및 연간 비용을 합친 예비 가정입니다.",
+      "source_ids": []
+    },
+    {
+      "id": "aud_krw",
+      "label": "원/호주달러 환율",
+      "unit": "KRW/AUD",
+      "min": 750,
+      "max": 1000,
+      "step": 5,
+      "default": 880,
+      "kind": "assumption",
+      "basis": "평가일의 확정 환율을 고정하지 않고 장기 손익 민감도용 범위와 기준값을 사용합니다.",
+      "source_ids": []
+    }
+  ],
+  "outputs": [
+    {
+      "id": "annual_ebitda_impact",
+      "label": "연간 EBITDA 영향",
+      "unit": "억원/년",
+      "decimals": 0,
+      "show_sign": true,
+      "primary": true,
+      "expression": {
+        "op": "divide",
+        "args": [
+          {
+            "op": "multiply",
+            "args": [
+              {
+                "op": "add",
+                "args": [
+                  {
+                    "op": "multiply",
+                    "args": [
+                      { "var": "baseline_sales_pj" },
+                      1000000,
+                      { "var": "repricing_exposure_pct" },
+                      0.01,
+                      { "var": "policy_price_change_aud_per_gj" }
+                    ]
+                  },
+                  {
+                    "op": "multiply",
+                    "args": [
+                      { "var": "volume_change_pj" },
+                      1000000,
+                      {
+                        "op": "subtract",
+                        "args": [
+                          {
+                            "op": "add",
+                            "args": [
+                              { "var": "baseline_price_aud_per_gj" },
+                              { "var": "policy_price_change_aud_per_gj" }
+                            ]
+                          },
+                          { "var": "variable_cash_cost_aud_per_gj" }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "op": "negate",
+                    "args": [
+                      {
+                        "op": "multiply",
+                        "args": [{ "var": "annual_response_cost_aud_m" }, 1000000]
+                      }
+                    ]
+                  }
+                ]
+              },
+              { "var": "aud_krw" }
+            ]
+          },
+          100000000
+        ]
+      }
+    },
+    {
+      "id": "price_effect",
+      "label": "기존 물량 가격효과",
+      "unit": "억원/년",
+      "decimals": 0,
+      "show_sign": true,
+      "primary": false,
+      "expression": {
+        "op": "divide",
+        "args": [
+          {
+            "op": "multiply",
+            "args": [
+              { "var": "baseline_sales_pj" },
+              1000000,
+              { "var": "repricing_exposure_pct" },
+              0.01,
+              { "var": "policy_price_change_aud_per_gj" },
+              { "var": "aud_krw" }
+            ]
+          },
+          100000000
+        ]
+      }
+    },
+    {
+      "id": "volume_effect",
+      "label": "판매량 변화효과",
+      "unit": "억원/년",
+      "decimals": 0,
+      "show_sign": true,
+      "primary": false,
+      "expression": {
+        "op": "divide",
+        "args": [
+          {
+            "op": "multiply",
+            "args": [
+              { "var": "volume_change_pj" },
+              1000000,
+              {
+                "op": "subtract",
+                "args": [
+                  {
+                    "op": "add",
+                    "args": [
+                      { "var": "baseline_price_aud_per_gj" },
+                      { "var": "policy_price_change_aud_per_gj" }
+                    ]
+                  },
+                  { "var": "variable_cash_cost_aud_per_gj" }
+                ]
+              },
+              { "var": "aud_krw" }
+            ]
+          },
+          100000000
+        ]
+      }
+    },
+    {
+      "id": "response_cost_effect",
+      "label": "대응비용 효과",
+      "unit": "억원/년",
+      "decimals": 0,
+      "show_sign": true,
+      "primary": false,
+      "expression": {
+        "op": "divide",
+        "args": [
+          {
+            "op": "negate",
+            "args": [
+              {
+                "op": "multiply",
+                "args": [
+                  { "var": "annual_response_cost_aud_m" },
+                  1000000,
+                  { "var": "aud_krw" }
+                ]
+              }
+            ]
+          },
+          100000000
+        ]
+      }
+    }
+  ],
+  "presets": [
+    {
+      "id": "defense",
+      "label": "방어 시나리오",
+      "values": {
+        "baseline_sales_pj": 25,
+        "repricing_exposure_pct": 30,
+        "policy_price_change_aud_per_gj": -0.5,
+        "volume_change_pj": 4,
+        "baseline_price_aud_per_gj": 12,
+        "variable_cash_cost_aud_per_gj": 4,
+        "annual_response_cost_aud_m": 3,
+        "aud_krw": 850
+      }
+    },
+    {
+      "id": "base",
+      "label": "기준 시나리오",
+      "values": {
+        "baseline_sales_pj": 30,
+        "repricing_exposure_pct": 50,
+        "policy_price_change_aud_per_gj": -1.5,
+        "volume_change_pj": 2,
+        "baseline_price_aud_per_gj": 12.5,
+        "variable_cash_cost_aud_per_gj": 4,
+        "annual_response_cost_aud_m": 5,
+        "aud_krw": 880
+      }
+    },
+    {
+      "id": "pressure",
+      "label": "압박 시나리오",
+      "values": {
+        "baseline_sales_pj": 50,
+        "repricing_exposure_pct": 80,
+        "policy_price_change_aud_per_gj": -2.5,
+        "volume_change_pj": 0,
+        "baseline_price_aud_per_gj": 12,
+        "variable_cash_cost_aud_per_gj": 4.5,
+        "annual_response_cost_aud_m": 8,
+        "aud_krw": 920
+      }
+    }
+  ]
+}

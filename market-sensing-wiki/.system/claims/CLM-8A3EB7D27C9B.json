@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-8A3EB7D27C9B",
+  "subject_id": "COM-POSCO-INTERNATIONAL",
+  "predicate": "impact_path",
+  "value": "LNG 수출량의 20% 상당 내수 공급 의무 → 호주 동부 가스 공급 증가·구매자 우위 강화 → Senex 실현가격·장기계약·증산 투자수익률 변동",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-38019D54"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "AI 분석",
+      "source_ids": [
+        "SRC-20260818-38019D54"
+      ]
+    }
+  ]
+}

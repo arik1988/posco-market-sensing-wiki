@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "insight_id": "INS-C34E92EB0FE2",
+  "title": "Senex 증산의 그룹 성장축 승격",
+  "summary": "그룹 발표는 2025년 LNG 실적과 2026년 지속 추가이익 계획을 확인합니다. 그러나 Senex 단독 EBITDA·가격·원가·현금흐름은 공개되지 않으므로 내부 결산과 생산·청구 데이터를 대조한 뒤 자본배분을 확정해야 합니다.",
+  "analysis_markdown": "# POSCO Holdings 2025년 결산, Senex LNG 증산을 성장축으로 확인\n\n## 원문 보존\n\n- 제목: POSCO Holdings posts KRW 69 trillion in 2025 sales, eyes profit rebound with lithium production and overseas steel expansion\n- 발행자: POSCO Holdings / POSCO Group Newsroom\n- 발표일: 2026-02-03; 실적기간 2025년\n- 원문: https://newsroom.posco.com/en/posco-holdings-posts-krw-69-trillion-in-2025-sales-eyes-profit-rebound-with-lithium-production-and-overseas-steel-expansion/\n- 접근 상태: 공개 HTML 본문 확인.\n\n### 핵심 원문 문장\n\n> POSCO International maintained solid earnings by expanding its value chain through LNG production increases at Australia’s Senex Energy.\n\n> Strengthen the energy value chain through LNG production expansion at Senex Energy in Australia ... generating continuous additional profits.\n\nPOSCO Holdings는 2025년 연결 매출 69.095조원, 영업이익 1.827조원을 발표하고 2026년 인프라부문에서 Senex 증산을 통한 지속 추가이익을 경영계획에 포함했습니다.\n\n## Signal\n\n**POSCO Holdings의 2025년 결산은 Senex 증산을 실제 LNG 가치사슬 이익과 2026년 지속 추가이익 계획으로 승격했지만, 물량·단가·CAPEX 회수의 내부 수치를 별도 확인해야 하는 현재 상태 신호.**\n\n- 사업축: 포스코인터내셔널 에너지 — Senex LNG·호주 가스 가치사슬\n- 사업영향도: 5/5 — 그룹 자본배분·에너지 투자 우선순위와 연결이익 전망에 직접 반영.\n- 긴급도: 4/5 — 2026년 증산·추가투자 예산과 실제 생산·현금회수 대조 필요.\n- 평가 신뢰도: 중간~높음(그룹 공식 결산), 사업부별 숫자는 중간.\n\n## Insight와 문서급 분석\n\n### 판단 질문과 잠정 결론\n\n**2025년 Senex 증산 실적을 2026년 지속이익의 확정근거로 사용할 것인가?** 조건부로 예입니다. 그룹 공식 결산은 LNG 증산이 2025년 수익을 지지했고 2026년에도 지속 추가이익을 계획한다고 밝혔습니다. 다만 그룹 발표는 Senex의 물량·가격·운영비·지분별 연결 숫자를 공개하지 않아, 내부 예산과 생산·청구 데이터를 확인한 뒤 확정해야 합니다.\n\n### 통념과 확인된 간극\n\n통념은 공식 결산의 “solid earnings”만으로 증산의 경제성을 확정하는 것입니다. 실제로는 POSCO Holdings가 인프라 부문과 전체 그룹의 방향을 설명했을 뿐 Senex 단독 EBITDA·순현금흐름을 제시하지 않았습니다. 2025년 3분기 POSCO International IR의 판매량·영업이익 증가와 일관되지만, 장기계약의 가격전가·운영비·감가상각은 여전히 내부 확인 대상입니다.\n\n### 확인된 변화와 시점\n\n2026-02-03 발표로 2025년 결산이 확정됐고, 2026년 계획에 Senex 증산을 통한 지속 추가이익이 명시됐습니다. 이는 2025년 2월 first gas와 2025년 3분기 신규시설 ramp-up 이후의 그룹 차원 후속 상태입니다.\n\n### 사업 영향 경로\n\n```mermaid\nflowchart LR\n A[2025 Senex 증산·실적] --> B[POSCO Holdings LNG 성장축 판단]\n B --> C[2026 CAPEX·생산·계약 예산]\n C --> D[판매량·단위마진·현금회수]\n D --> E[POSCO International 연결이익·자본배분]\n```\n\n### 사업 시나리오\n\n| 시나리오 | 관찰 조건 | 예상 사업 의미 | 우선 대응 |\n| --- | --- | --- | --- |\n| 상방 | 2026 생산·판매 증가, 단가·원가 안정 | LNG 추가이익과 CAPEX 회수 동시 달성 | 증산·저장·고객계약 확대 |\n| 기준 | 물량 증가, 가격·운영비 정상화 | 안정적이지만 추가이익 폭은 제한 | 물량·단가·비용별 월별 브리지 |\n| 하방 | 공급정책·가격·시설·계약 지연 | 그룹 성장계획과 실제 연결이익 괴리 | 투자 단계·계약 전가·중단 기준 설정 |\n\n### 지금 확인할 지표\n\n- Senex 2025년 연간·2026년 월별 생산·판매량·가격·운영비\n- 신규 처리시설 가동률, 고객별 장기 GSA 인도·미수금·현금회수\n- POSCO International 에너지 CAPEX·감가상각·연결 조정 및 현금흐름\n\n### 의사결정에 필요한 다음 산출물\n\n1. 재무 주관 Senex 2025 결산 실제값과 2026 예산의 물량·가격·원가 브리지(2026-02-28).\n2. 에너지전략 주관 증산·터미널·발전·트레이딩 투자 우선순위 표(2026-03-15).\n3. 리스크 주관 호주 가스정책·가격·시설지연별 CAPEX 중단·확대 트리거(2026-03-31).\n\n### 결론을 확정·폐기할 조건\n\n2026년 1분기 Senex 생산·판매량과 현금회수가 2025년 3분기 ramp-up을 이어가면 지속이익 판단을 확정합니다. 물량 정체·마진 하락·CAPEX 지연이 확인되면 그룹의 추가이익 가정을 재검토합니다.\n\n!!! warning \"판단의 한계\"\n\n    POSCO Holdings의 결산 발표는 사업 방향과 그룹 실적을 확인하는 1차 자료지만, Senex 세부 원가·계약·현금흐름과 포스코인터내셔널 개별 연결조정은 공개되지 않습니다.",
+  "impact_estimate": null,
+  "document_path": null,
+  "company_ids": [
+    "COM-POSCO-INTERNATIONAL"
+  ],
+  "business_axis": "에너지",
+  "claim_ids": [
+    "CLM-EBC191CA5D7C",
+    "CLM-0D0FF8BA277A",
+    "CLM-AA9AEB883FFE",
+    "CLM-99EEB8527657",
+    "CLM-B76A69D4619E",
+    "CLM-D9A970F39BB9",
+    "CLM-602F00871A6D",
+    "CLM-FFB69BA3CD32",
+    "CLM-5FEE8E8E358E",
+    "CLM-E1019358397C",
+    "CLM-4AB470AE7EB6",
+    "CLM-EB042B10A494",
+    "CLM-40B4073E568E",
+    "CLM-A01AF09F135C"
+  ],
+  "source_ids": [
+    "SRC-20260819-207A826E"
+  ],
+  "created_at": "2026-08-19T00:55:29+09:00",
+  "updated_at": "2026-08-19T00:55:29+09:00",
+  "run_id": "energy-backfill-20240819-20260819"
+}

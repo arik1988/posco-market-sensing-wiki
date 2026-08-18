@@ -1,0 +1,33 @@
+{
+  "claim_id": "CLM-0965B02D9353",
+  "subject_id": "POL-EU-CBAM-2026",
+  "predicate": "effective_date",
+  "value": "2026-01-01",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-D363136D"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "European Commission이 확인한 본제도 시행일",
+      "source_ids": [
+        "SRC-20260818-D363136D"
+      ]
+    },
+    {
+      "date": "2026-08-18",
+      "action": "verified",
+      "reason": "European Commission이 확인한 본제도 시행일",
+      "source_ids": [
+        "SRC-20260818-D363136D"
+      ]
+    }
+  ]
+}

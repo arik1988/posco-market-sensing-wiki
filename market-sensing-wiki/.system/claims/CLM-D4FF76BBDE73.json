@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-D4FF76BBDE73",
+  "subject_id": "MKT-ENERGY-IEA-LNG-Q3-2025",
+  "predicate": "urgency_rationale",
+  "value": "2025~26 계약·선복·저장 포지션을 공급증가 전후로 재점검해야 합니다.",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-2FA37997"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "AI 분석",
+      "source_ids": [
+        "SRC-20260819-2FA37997"
+      ]
+    }
+  ]
+}

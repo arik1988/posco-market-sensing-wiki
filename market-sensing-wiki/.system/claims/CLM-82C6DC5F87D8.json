@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-82C6DC5F87D8",
+  "subject_id": "COM-POSCO",
+  "predicate": "assessment_confidence",
+  "value": "medium",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-5C2CEB19"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "EU 제도 사실은 높으나 POSCO의 품목별 노출액 데이터는 미확인",
+      "source_ids": [
+        "SRC-20260818-5C2CEB19"
+      ]
+    }
+  ]
+}

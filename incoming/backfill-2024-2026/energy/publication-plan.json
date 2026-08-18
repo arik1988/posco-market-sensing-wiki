@@ -1,0 +1,1612 @@
+{
+    "run": {
+        "run_id": "energy-backfill-20240819-20260819",
+        "started_at": "2026-08-19T09:00:00+09:00",
+        "finished_at": "2026-08-19T18:00:00+09:00",
+        "search_since": "2024-08-19",
+        "search_until": "2026-08-19",
+        "scope": "POSCO International energy: Senex, Myanmar gas field, LNG terminal, power generation and LNG trading signals",
+        "queries": [
+            "POSCO International 2024 third quarter earnings LNG Senex Myanmar gas field terminal",
+            "Senex Atlas gas first gas 2024 official",
+            "Senex Atlas gas first gas 2025 official",
+            "AEMO Gas Statement of Opportunities 2025 east coast gas",
+            "ACCC gas inquiry September 2024 east coast supply",
+            "ACCC March 2025 supply demand gas",
+            "Korea 11th Basic Plan Electricity Supply Demand 2025 LNG official",
+            "IEA Gas Market Report Q3 2025 LNG supply official",
+            "POSCO International 2025 Q3 results Senex gas",
+            "POSCO Holdings 2025 results Senex LNG"
+        ],
+        "checked_urls": [
+            "https://www.accc.gov.au/media-release/gas-supply-for-q1-2025-tightens-as-risk-of-shortfall-in-short-term-remains",
+            "https://poscointl.com/upload/ir/kor_3Q%202024%20Earnings%20Release.pdf",
+            "https://senexenergy.com.au/news/senex-energy-delivers-on-promise-of-more-domestic-natural-gas-supply-with-official-opening-of-1-billion-expansion/",
+            "https://newsroom.posco.com/en/posco-international-begins-test-operation-of-gas-processing-facility-unit-1-for-senex-energy-in-australia-with-plans-to-triple-natural-gas-production-progressing-smoothly/",
+            "https://www.motir.go.kr/kor/article/ATCL3f49a5a8c/170183/view",
+            "https://senexenergy.com.au/news/first-gas-flows-from-senexs-queensland-atlas-expansion/",
+            "https://www.aemo.com.au/-/media/files/gas/national_planning_and_forecasting/gsoo/2025/2025-gas-statement-of-opportunities.pdf",
+            "https://www.accc.gov.au/media-release/east-coast-gas-supply-outlook-worsens-july-to-september-2025-but-forward-longer-term-prices-ease",
+            "https://www.accc.gov.au/media-release/deteriorating-short-term-outlook-for-east-coast-gas-supply",
+            "https://www.iea.org/reports/gas-market-report-q3-2025",
+            "https://www.poscointl.com/upload/file/202510/202510QrrmjSOggdZe.pdf",
+            "https://newsroom.posco.com/en/posco-holdings-posts-krw-69-trillion-in-2025-sales-eyes-profit-rebound-with-lithium-production-and-overseas-steel-expansion/"
+        ],
+        "failed_urls": [
+            "https://www.accc.gov.au/inquiries-and-consultations/gas-inquiry-2017-30/december-2024-interim-report",
+            "https://senexenergy.com.au/news/2024-sustainability-report/"
+        ],
+        "access_attempts": [
+            {
+                "url": "https://www.accc.gov.au/inquiries-and-consultations/gas-inquiry-2017-30/december-2024-interim-report",
+                "attempted_at": "2026-08-19T10:00:00+09:00",
+                "method": "browser",
+                "outcome": "failure",
+                "http_status": null,
+                "failure_class": "network",
+                "retry_count": 1,
+                "final": true,
+                "note": "timeout; direct PDF and later ACCC reports used"
+            },
+            {
+                "url": "https://senexenergy.com.au/news/2024-sustainability-report/",
+                "attempted_at": "2026-08-19T10:10:00+09:00",
+                "method": "browser",
+                "outcome": "failure",
+                "http_status": null,
+                "failure_class": "content_missing",
+                "retry_count": 0,
+                "final": true,
+                "note": "official opening and first-gas releases used instead"
+            }
+        ]
+    },
+    "items": [
+        {
+            "subject_id": "MKT-ENERGY-ACCC-Q1-2025-SUPPLY",
+            "source": {
+                "content_file": "2024-09-27-accc-east-coast-q1-2025.md",
+                "title": "Gas supply for Q1 2025 tightens, as risk of shortfall in short-term remains",
+                "url": "https://www.accc.gov.au/media-release/gas-supply-for-q1-2025-tightens-as-risk-of-shortfall-in-short-term-remains",
+                "publisher": "Australian Competition and Consumer Commission",
+                "published_at": "2024-09-27",
+                "collected_at": "2026-08-19",
+                "source_type": "government",
+                "language": "en",
+                "reliability": "primary"
+            },
+            "claims": [
+                {
+                    "predicate": "q1_2025_east_coast_surplus_pj",
+                    "value": "12~27 PJ",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "ACCC \uc6d0\ubb38 \uc804\ub9dd"
+                },
+                {
+                    "predicate": "business_axis",
+                    "value": "\uc5d0\ub108\uc9c0",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "POSCO International Senex\u00b7\ud638\uc8fc \uac00\uc2a4 \uc601\ud5a5\ucd95"
+                },
+                {
+                    "predicate": "business_impact_score_1_to_5",
+                    "value": "4",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\uacc4\uc57d\u00b7\uc6b4\uc1a1\u00b7\uac00\uaca9 \uacbd\ub85c \uc9c1\uc811\uc131"
+                },
+                {
+                    "predicate": "business_impact_rationale",
+                    "value": "\uacc4\uc57d\u00b7\uc6b4\uc1a1\u00b7\uac00\uaca9 \uacbd\ub85c\uac00 Senex \ud310\ub9e4\uc640 \ud604\uae08\ud68c\uc218\uc5d0 \uc9c1\uc811 \uc5f0\uacb0\ub429\ub2c8\ub2e4.",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "urgency_score_1_to_5",
+                    "value": "4",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "2025 Q1 \uaca8\uc6b8 \uc804 \uacc4\uc57d \ud655\uc778 \ud544\uc694"
+                },
+                {
+                    "predicate": "urgency_rationale",
+                    "value": "2025\ub144 1\ubd84\uae30 \uaca8\uc6b8 \uc804 \uacc4\uc57d\u00b7\uc800\uc7a5\u00b7\uc218\uc1a1 \uc870\uac74 \ud655\uc778\uc774 \ud544\uc694\ud569\ub2c8\ub2e4.",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "assessment_confidence",
+                    "value": "high",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "ACCC \uacf5\uc2dd \uc804\ub9dd"
+                },
+                {
+                    "predicate": "assessed_at",
+                    "value": "2024-09-27",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "\ud3c9\uac00\uc77c"
+                },
+                {
+                    "predicate": "impact_path",
+                    "value": "\ub3d9\ubd80 \uc218\uae09 \uc789\uc5ec\u00b7\uc9c0\uc5ed\ubcd1\ubaa9 \u2192 \ub0a8\ubd80 \uc778\ub3c4\ub2e8\uac00\u00b7\uc804\uc1a1\ube44 \u2192 Senex \ud310\ub9e4\u00b7\ud604\uae08\ud68c\uc218",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "recommended_follow_up",
+                    "value": "Senex \uc99d\uc0b0\ubd84 \ub0a8\ubd80 \uace0\uc815 \uc778\ub3c4\uacc4\uc57d \ube44\uc911\uacfc AEMO \uc800\uc7a5\u00b7\uc804\uc1a1 \ud750\ub984\uc744 \uc6d4\ubcc4 \ud655\uc778",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\ud6c4\uc18d \ud655\uc778"
+                },
+                {
+                    "predicate": "response_deadline",
+                    "value": "2025-01-15",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "2025 Q1 \uacc4\uc57d \uc804"
+                },
+                {
+                    "predicate": "affected_business",
+                    "value": "Senex upstream\u00b7\ud638\uc8fc \ub3d9\ubd80 \uac00\uc2a4 \ud310\ub9e4",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\uc0ac\uc5c5 \uc601\ud5a5"
+                }
+            ],
+            "signal": {
+                "title": "\ub3d9\ubd80 \ud638\uc8fc \uac00\uc2a4 \uc789\uc5ec \uc18d \uc9c0\uc5ed \ubd80\uc871 \uc704\ud5d8",
+                "sentence": "2025\ub144 1\ubd84\uae30 \ub3d9\ubd80 \ud638\uc8fc \uac00\uc2a4\ub294 \ucd1d\ub7c9 \uc789\uc5ec\uac00 \ub0a8\uc544\ub3c4 \uc9c0\uc5ed\u00b7\uc2dc\uc810\ubcc4 \ubd80\uc871 \uc704\ud5d8\uc774 \uc788\uc5b4 Senex \uc99d\uc0b0\ubd84\uc758 \uc7a5\uae30\uacc4\uc57d\uacfc \ub0a8\ubd80 \uc804\uc1a1\uad8c\uc744 \uc6b0\uc120 \ud655\ubcf4\ud574\uc57c \ud558\ub294 \uc2dc\uc7a5.",
+                "paragraph": "ACCC\uc758 12~27 PJ \uc789\uc5ec \uc804\ub9dd\uc740 Senex \uc99d\uc0b0\uc758 \uc548\uc804\ud310\ucc98\ub7fc \ubcf4\uc774\uc9c0\ub9cc \ub0a8\ubd80 \uc6b4\uc1a1\u00b7\uc800\uc7a5\u00b7\ud55c\ud30c\u00b7\ubc1c\uc804\uc218\uc694\uc5d0 \uc870\uac74\ubd80\uc785\ub2c8\ub2e4. \ucd1d\ub7c9\ubcf4\ub2e4 \uace0\uc815 \uc778\ub3c4\uacc4\uc57d\uacfc \uc2e4\uc81c \uc804\uc1a1\uad8c\uc744 \uc6b0\uc120 \ud655\uc778\ud574\uc57c \ud569\ub2c8\ub2e4.",
+                "company_id": "COM-POSCO-INTERNATIONAL",
+                "business_axis": "\uc5d0\ub108\uc9c0",
+                "business_impact_score": 4,
+                "business_impact_rationale": "\uacc4\uc57d\u00b7\uc6b4\uc1a1\u00b7\uac00\uaca9 \uacbd\ub85c\uac00 Senex \ud310\ub9e4\uc640 \ud604\uae08\ud68c\uc218\uc5d0 \uc9c1\uc811 \uc5f0\uacb0\ub429\ub2c8\ub2e4.",
+                "urgency_score": 4,
+                "urgency_rationale": "2025\ub144 1\ubd84\uae30 \uaca8\uc6b8 \uc804 \uacc4\uc57d\u00b7\uc800\uc7a5\u00b7\uc218\uc1a1 \uc870\uac74 \ud655\uc778\uc774 \ud544\uc694\ud569\ub2c8\ub2e4.",
+                "response_deadline": "2025-01-15",
+                "assessed_at": "2024-09-27",
+                "assessment_confidence": "high"
+            },
+            "analysis_file": "2024-09-27-accc-east-coast-q1-2025.md",
+            "impact_estimate_file": "impact-2024-09-accc-q1.json"
+        },
+        {
+            "subject_id": "MKT-ENERGY-POSCO-Q3-2024-ASSET-BRIDGE",
+            "source": {
+                "content_file": "2024-10-30-posco-q3-energy.md",
+                "title": "POSCO International 2024 Q3 Energy Results",
+                "url": "https://poscointl.com/upload/ir/kor_3Q%202024%20Earnings%20Release.pdf",
+                "publisher": "POSCO INTERNATIONAL",
+                "published_at": "2024-10-30",
+                "collected_at": "2026-08-19",
+                "source_type": "company_ir",
+                "language": "ko",
+                "reliability": "primary"
+            },
+            "claims": [
+                {
+                    "predicate": "myanmar_q3_2024_sales_volume",
+                    "value": "43.1 Bcf",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "POSCO IR p.4"
+                },
+                {
+                    "predicate": "myanmar_q3_2024_operating_profit",
+                    "value": "1,080\uc5b5\uc6d0",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "POSCO IR p.4"
+                },
+                {
+                    "predicate": "senex_q3_2024_operating_profit",
+                    "value": "101\uc5b5\uc6d0",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "POSCO IR p.4"
+                },
+                {
+                    "predicate": "business_axis",
+                    "value": "\uc5d0\ub108\uc9c0",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "POSCO International \uc5d0\ub108\uc9c0 \ucd95"
+                },
+                {
+                    "predicate": "business_impact_score_1_to_5",
+                    "value": "5",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\uc790\uc0b0\ubcc4 \uc190\uc775 \uc9c1\uc811\uc131"
+                },
+                {
+                    "predicate": "business_impact_rationale",
+                    "value": "\uc790\uc0b0\ubcc4 \ubb3c\ub7c9\u00b7\uac00\uaca9\u00b7\ud68c\uc218\uc728\uc774 \uc5f0\uacb0 \uc5d0\ub108\uc9c0 \uc190\uc775\uc5d0 \uc9c1\uc811 \ubc18\uc601\ub429\ub2c8\ub2e4.",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "urgency_score_1_to_5",
+                    "value": "4",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\ub2e4\uc74c \ubd84\uae30 \ud68c\ubcf5 \ud655\uc778"
+                },
+                {
+                    "predicate": "urgency_rationale",
+                    "value": "\ub2e4\uc74c \ubd84\uae30\uae4c\uc9c0 \ubbf8\uc580\ub9c8 \ud68c\uc218\uc728\uacfc Senex \ub2e8\uac00\uc758 \uc9c0\uc18d\uc131\uc744 \uac80\uc99d\ud574\uc57c \ud569\ub2c8\ub2e4.",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "assessment_confidence",
+                    "value": "high",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "\ud68c\uc0ac IR \uc6d0\ubb38"
+                },
+                {
+                    "predicate": "assessed_at",
+                    "value": "2024-10-30",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "\ud3c9\uac00\uc77c"
+                },
+                {
+                    "predicate": "impact_path",
+                    "value": "\ubbf8\uc580\ub9c8 \uc815\ube44\u00b7\ud68c\uc218\uc728\u00b7Senex \ub2e8\uac00 \u2192 \uc790\uc0b0\ubcc4 \ud310\ub9e4\ub7c9\u00b7\ub9c8\uc9c4 \u2192 \uc5d0\ub108\uc9c0 \uc5f0\uacb0 EBITDA",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "recommended_follow_up",
+                    "value": "\ubbf8\uc580\ub9c8 Cost Recovery\u00b7\uc815\ube44\uc77c\uacfc Senex \ub2e8\uac00\u00b7\ud310\ub9e4\ub7c9\uc744 \uc790\uc0b0\ubcc4 \uc774\uc775 \ube0c\ub9ac\uc9c0\ub85c \ud655\uc778",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\ud6c4\uc18d \ud655\uc778"
+                },
+                {
+                    "predicate": "response_deadline",
+                    "value": "2025-01-31",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\ub2e4\uc74c \ubd84\uae30 \uac80\uc99d"
+                },
+                {
+                    "predicate": "affected_business",
+                    "value": "Myanmar gas field\u00b7Senex\u00b7LNG terminal\u00b7power generation",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\uc0ac\uc5c5 \uc601\ud5a5"
+                }
+            ],
+            "signal": {
+                "title": "\ubbf8\uc580\ub9c8 \ud68c\uc218\uc728\uacfc Senex \ub2e8\uac00\uc758 \ubd84\ub9ac \uad00\ub9ac",
+                "sentence": "2024\ub144 3\ubd84\uae30 \uc5d0\ub108\uc9c0\ub294 \ubbf8\uc580\ub9c8 \uc720\uc9c0\ubcf4\uc218\u00b7Cost Recovery \ud558\ub77d\uc744 Senex \ub2e8\uac00 \uc0c1\uc2b9\uacfc \ud130\ubbf8\ub110\u00b7\ubc1c\uc804 \uc774\uc775\uc774 \ubcf4\uc644\ud55c \uad6c\uc870.",
+                "paragraph": "POSCO IR\uc740 \ubbf8\uc580\ub9c8 \uac00\uc2a4\uc804 \ud310\ub9e4\ub7c9\u00b7\uc774\uc775 \uac10\uc18c \uc6d0\uc778\uc744 \uac00\uc2a4\uad00 \uc720\uc9c0\ubcf4\uc218\uc640 Cost Recovery \ud558\ub77d\uc73c\ub85c, Senex \uc99d\uac00\ub97c \ud3c9\uade0\ud310\ub9e4\ub2e8\uac00 \uc0c1\uc2b9\uc73c\ub85c \uad6c\ubd84\ud569\ub2c8\ub2e4. \uc804\uccb4 \uc774\uc775\ubcf4\ub2e4 \uc790\uc0b0\ubcc4 \ud604\uae08\ud68c\uc218 \uc870\uac74\uc744 \ubd84\ub9ac \uad00\ub9ac\ud574\uc57c \ud569\ub2c8\ub2e4.",
+                "company_id": "COM-POSCO-INTERNATIONAL",
+                "business_axis": "\uc5d0\ub108\uc9c0",
+                "business_impact_score": 5,
+                "business_impact_rationale": "\uc790\uc0b0\ubcc4 \ubb3c\ub7c9\u00b7\uac00\uaca9\u00b7\ud68c\uc218\uc728\uc774 \uc5f0\uacb0 \uc5d0\ub108\uc9c0 \uc190\uc775\uc5d0 \uc9c1\uc811 \ubc18\uc601\ub429\ub2c8\ub2e4.",
+                "urgency_score": 4,
+                "urgency_rationale": "\ub2e4\uc74c \ubd84\uae30\uae4c\uc9c0 \ubbf8\uc580\ub9c8 \ud68c\uc218\uc728\uacfc Senex \ub2e8\uac00\uc758 \uc9c0\uc18d\uc131\uc744 \uac80\uc99d\ud574\uc57c \ud569\ub2c8\ub2e4.",
+                "response_deadline": "2025-01-31",
+                "assessed_at": "2024-10-30",
+                "assessment_confidence": "high"
+            },
+            "analysis_file": "2024-10-30-posco-q3-energy.md",
+            "impact_estimate_file": "impact-2024-10-posco-q3.json"
+        },
+        {
+            "subject_id": "MKT-ENERGY-SENEX-ATLAS-OPENING",
+            "source": {
+                "content_file": "2024-11-25-senex-atlas-opening.md",
+                "title": "Senex $1bn Atlas and Roma North expansion official opening",
+                "url": "https://senexenergy.com.au/news/senex-energy-delivers-on-promise-of-more-domestic-natural-gas-supply-with-official-opening-of-1-billion-expansion/",
+                "publisher": "Senex Energy",
+                "published_at": "2024-11-25",
+                "collected_at": "2026-08-19",
+                "source_type": "company_release",
+                "language": "en",
+                "reliability": "primary"
+            },
+            "claims": [
+                {
+                    "predicate": "senex_expansion_capex",
+                    "value": "A$1 billion",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "Senex \uacf5\uc2dd \ubc1c\ud45c"
+                },
+                {
+                    "predicate": "senex_target_capacity",
+                    "value": "60 PJ/year",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "Senex \uacf5\uc2dd \ubc1c\ud45c"
+                },
+                {
+                    "predicate": "senex_wells_completed",
+                    "value": "more than 160 wells",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "Senex \uacf5\uc2dd \ubc1c\ud45c"
+                },
+                {
+                    "predicate": "business_axis",
+                    "value": "\uc5d0\ub108\uc9c0",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "Senex POSCO International \uc790\uc0b0"
+                },
+                {
+                    "predicate": "business_impact_score_1_to_5",
+                    "value": "5",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "CAPEX\u00b7\uc0dd\uc0b0\u00b7\uacc4\uc57d \uc9c1\uc811\uc131"
+                },
+                {
+                    "predicate": "business_impact_rationale",
+                    "value": "\uc0dd\uc0b0\ub2a5\ub825\uacfc \uace0\uac1d\uacc4\uc57d\uc774 CAPEX \ud68c\uc218\uc640 \uc5f0\uacb0\uc774\uc775\uc744 \uc9c1\uc811 \uc88c\uc6b0\ud569\ub2c8\ub2e4.",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "urgency_score_1_to_5",
+                    "value": "4",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "2025\ub144 first gas \uc804 \uac80\uc99d"
+                },
+                {
+                    "predicate": "urgency_rationale",
+                    "value": "2025\ub144 first gas\uc640 \ud6c4\uc18d \uc2dc\uc124 \uac00\ub3d9 \uc99d\ube59\uc744 \ud655\uc778\ud574\uc57c \ud569\ub2c8\ub2e4.",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "assessment_confidence",
+                    "value": "medium",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "\uc0ac\uc5c5\uc790 \ubc1c\ud45c\u00b7\ud6c4\uc18d \uac80\uc99d \ud544\uc694"
+                },
+                {
+                    "predicate": "assessed_at",
+                    "value": "2024-11-25",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "\ud3c9\uac00\uc77c"
+                },
+                {
+                    "predicate": "impact_path",
+                    "value": "A$1bn CAPEX\u00b7\ucc98\ub9ac\uc2dc\uc124 \u2192 first gas\u00b7\uace0\uac1d \uc778\ub3c4 \u2192 \ud310\ub9e4\ub9c8\uc9c4\u00b7\ud604\uae08\ud68c\uc218",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "recommended_follow_up",
+                    "value": "\uc2dc\uc124\ubcc4 \uc0c1\uc5c5\uc6b4\uc804\u00b7\uace0\uac1d \uc778\ub3c4\u00b7\uac00\uaca9\u00b7\uc6b4\uc601\ube44\ub97c 2025\ub144 \ubd84\uae30 \uc2e4\uc801\uacfc \ub300\uc870",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\ud6c4\uc18d \ud655\uc778"
+                },
+                {
+                    "predicate": "response_deadline",
+                    "value": "2025-02-15",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "first gas \uc774\ud6c4"
+                },
+                {
+                    "predicate": "affected_business",
+                    "value": "Senex upstream\u00b7\ud638\uc8fc \ub3d9\ubd80 \uad6d\ub0b4\uac00\uc2a4",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\uc0ac\uc5c5 \uc601\ud5a5"
+                }
+            ],
+            "signal": {
+                "title": "Senex Atlas\u00b7Roma North \uc99d\uc0b0 \uc2e4\ud589 \uac8c\uc774\ud2b8",
+                "sentence": "Senex\uc758 A$1bn Atlas\u00b7Roma North \uc99d\uc0b0\uc740 \uac1c\uc7a5\u00b7\ucc98\ub9ac\uc2dc\uc124 \uac00\ub3d9 \ub2e8\uacc4\ub85c \uc9c4\uc785\ud588\uc9c0\ub9cc 60 PJ/\ub144 \uc804\ub7c9 \ud310\ub9e4\uc640 2025\ub144 \ud604\uae08\ud654\ub294 \ud6c4\uc18d \uac00\ub3d9\u00b7\uacc4\uc57d \uc774\ud589\uc744 \uc870\uac74\uc73c\ub85c \ud558\ub294 \uc2e4\ud589 \uc2e0\ud638.",
+                "paragraph": "\uac1c\uc7a5\uc2dd\uc740 1\ub2e8\uacc4 \uc2dc\uc124\u00b7\uc0dd\uc0b0\uc815\u00b7\ud30c\uc774\ud504\ub77c\uc778 \uc9c4\ucc99\uc744 \ud655\uc778\ud558\uc9c0\ub9cc 60 PJ\ub294 \uc804\uccb4 \uac1c\ubc1c \ubaa9\ud45c\uc785\ub2c8\ub2e4. first gas, \ud6c4\uc18d \ucc98\ub9ac\uc2dc\uc124, \uace0\uac1d \uc778\ub3c4\uc640 \ub9e4\ucd9c \uc778\uc2dd \uc2dc\uc810\uc744 \uad6c\ubd84\ud574 CAPEX \ud68c\uc218 \ud310\ub2e8\uc744 \uac31\uc2e0\ud574\uc57c \ud569\ub2c8\ub2e4.",
+                "company_id": "COM-POSCO-INTERNATIONAL",
+                "business_axis": "\uc5d0\ub108\uc9c0",
+                "business_impact_score": 5,
+                "business_impact_rationale": "\uc0dd\uc0b0\ub2a5\ub825\uacfc \uace0\uac1d\uacc4\uc57d\uc774 CAPEX \ud68c\uc218\uc640 \uc5f0\uacb0\uc774\uc775\uc744 \uc9c1\uc811 \uc88c\uc6b0\ud569\ub2c8\ub2e4.",
+                "urgency_score": 4,
+                "urgency_rationale": "2025\ub144 first gas\uc640 \ud6c4\uc18d \uc2dc\uc124 \uac00\ub3d9 \uc99d\ube59\uc744 \ud655\uc778\ud574\uc57c \ud569\ub2c8\ub2e4.",
+                "response_deadline": "2025-02-15",
+                "assessed_at": "2024-11-25",
+                "assessment_confidence": "medium"
+            },
+            "analysis_file": "2024-11-25-senex-atlas-opening.md",
+            "impact_estimate_file": "impact-2024-11-senex-opening.json"
+        },
+        {
+            "subject_id": "MKT-ENERGY-SENEX-ATLAS-UNIT1",
+            "source": {
+                "content_file": "2024-12-04-posco-senex-unit1-test.md",
+                "title": "POSCO International Senex Atlas Unit 1 test operation",
+                "url": "https://newsroom.posco.com/en/posco-international-begins-test-operation-of-gas-processing-facility-unit-1-for-senex-energy-in-australia-with-plans-to-triple-natural-gas-production-progressing-smoothly/",
+                "publisher": "POSCO INTERNATIONAL",
+                "published_at": "2024-12-04",
+                "collected_at": "2026-08-19",
+                "source_type": "company_release",
+                "language": "en",
+                "reliability": "primary"
+            },
+            "claims": [
+                {
+                    "predicate": "atlas_unit1_status",
+                    "value": "test operation after completion ceremony",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "POSCO \uacf5\uc2dd \ubc1c\ud45c"
+                },
+                {
+                    "predicate": "atlas_production_wells_plan",
+                    "value": "280 production wells",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "POSCO \uacf5\uc2dd \ubc1c\ud45c"
+                },
+                {
+                    "predicate": "atlas_units2_3_target",
+                    "value": "operate in latter half of 2025",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "POSCO \uacf5\uc2dd \ubc1c\ud45c"
+                },
+                {
+                    "predicate": "business_axis",
+                    "value": "\uc5d0\ub108\uc9c0",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "Senex POSCO International \uc790\uc0b0"
+                },
+                {
+                    "predicate": "business_impact_score_1_to_5",
+                    "value": "5",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\uc99d\uc0b0 \uac00\ub3d9 \uac8c\uc774\ud2b8 \uc9c1\uc811\uc131"
+                },
+                {
+                    "predicate": "business_impact_rationale",
+                    "value": "\ucc98\ub9ac\uc2dc\uc124\uacfc \uac00\uc2a4\uad00\uc758 \uc2e4\uc81c \uac00\ub3d9\uc774 \uc0dd\uc0b0\u00b7\ud310\ub9e4\u00b7\ud604\uae08\ud68c\uc218\uc758 \ubcd1\ubaa9\uc785\ub2c8\ub2e4.",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "urgency_score_1_to_5",
+                    "value": "4",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "Q2 2025 \ud14c\uc2a4\ud2b8 \uac8c\uc774\ud2b8"
+                },
+                {
+                    "predicate": "urgency_rationale",
+                    "value": "Q2 2025 \ud14c\uc2a4\ud2b8 \uc644\ub8cc\uc640 \ud558\ubc18\uae30 \ud6c4\uc18d\uc2dc\uc124 \uac00\ub3d9\uc744 \ud655\uc778\ud574\uc57c \ud569\ub2c8\ub2e4.",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "assessment_confidence",
+                    "value": "high",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "\ud68c\uc0ac \uacf5\uc2dd \ubc1c\ud45c"
+                },
+                {
+                    "predicate": "assessed_at",
+                    "value": "2024-12-04",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "\ud3c9\uac00\uc77c"
+                },
+                {
+                    "predicate": "impact_path",
+                    "value": "Unit 1 \uc2dc\uc6b4\uc804\u00b7\uac00\uc2a4\uad00 \u2192 Units 2\u00b73\u00b7\uc0dd\uc0b0\uc815 \u2192 \uace0\uac1d \uc778\ub3c4\u00b7\ud310\ub9e4 EBITDA",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "recommended_follow_up",
+                    "value": "Q2 2025 \uc2dc\uc6b4\uc804 \uc99d\ube59\u00b7\uac00\uc2a4\uad00 \uc720\ub7c9\u00b7\ud6c4\uc18d\uc2dc\uc124 \uac00\ub3d9\u00b7\uace0\uac1d \uccad\uad6c\ub97c \ub300\uc870",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\ud6c4\uc18d \ud655\uc778"
+                },
+                {
+                    "predicate": "response_deadline",
+                    "value": "2025-04-15",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "Q2 \ud14c\uc2a4\ud2b8 \uc804"
+                },
+                {
+                    "predicate": "affected_business",
+                    "value": "Senex upstream\u00b7\ucc98\ub9ac\uc2dc\uc124\u00b7\ud638\uc8fc \ub3d9\ubd80 \uac00\uc2a4 \ud310\ub9e4",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\uc0ac\uc5c5 \uc601\ud5a5"
+                }
+            ],
+            "signal": {
+                "title": "Atlas Unit 1 \uc2dc\uc6b4\uc804\uacfc \uc99d\uc0b0 \ub9e4\ucd9c \uac8c\uc774\ud2b8",
+                "sentence": "Senex Atlas Unit 1\uc740 \uc900\uacf5\uc5d0\uc11c \uc2dc\uc6b4\uc804\uc73c\ub85c \ub118\uc5b4\uac14\uc9c0\ub9cc 2025\ub144 Q2 \ud14c\uc2a4\ud2b8 \uc644\ub8cc\uc640 Units 2\u00b73 \ud6c4\uc18d \uac00\ub3d9\uc774 \uc99d\uc0b0 \ub9e4\ucd9c\u00b7\ud604\uae08\ud750\ub984\uc758 \ud575\uc2ec \uac8c\uc774\ud2b8.",
+                "paragraph": "Unit 1 \uc900\uacf5\uc740 \uc0c1\uc5c5\ud310\ub9e4 \uc804 \ub2e8\uacc4\uc785\ub2c8\ub2e4. \uac00\uc2a4\uad00 \uc720\ub7c9, \uc0dd\uc0b0\uc815 \uc5f0\uacb0, Units 2\u00b73 \uac00\ub3d9, \uace0\uac1d \uccad\uad6c\uac00 \uc21c\uc11c\ub300\ub85c \ud655\uc778\ub3fc\uc57c 2026\ub144 \uacf5\uae09 \ubaa9\ud45c\uc640 CAPEX \ud68c\uc218 \ud310\ub2e8\uc744 \ud655\uc815\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.",
+                "company_id": "COM-POSCO-INTERNATIONAL",
+                "business_axis": "\uc5d0\ub108\uc9c0",
+                "business_impact_score": 5,
+                "business_impact_rationale": "\ucc98\ub9ac\uc2dc\uc124\uacfc \uac00\uc2a4\uad00\uc758 \uc2e4\uc81c \uac00\ub3d9\uc774 \uc0dd\uc0b0\u00b7\ud310\ub9e4\u00b7\ud604\uae08\ud68c\uc218\uc758 \ubcd1\ubaa9\uc785\ub2c8\ub2e4.",
+                "urgency_score": 4,
+                "urgency_rationale": "Q2 2025 \ud14c\uc2a4\ud2b8 \uc644\ub8cc\uc640 \ud558\ubc18\uae30 \ud6c4\uc18d\uc2dc\uc124 \uac00\ub3d9\uc744 \ud655\uc778\ud574\uc57c \ud569\ub2c8\ub2e4.",
+                "response_deadline": "2025-04-15",
+                "assessed_at": "2024-12-04",
+                "assessment_confidence": "high"
+            },
+            "analysis_file": "2024-12-04-posco-senex-unit1-test.md",
+            "impact_estimate_file": "impact-2024-12-senex-unit1.json"
+        },
+        {
+            "subject_id": "MKT-ENERGY-KOREA-11TH-POWER-PLAN",
+            "source": {
+                "content_file": "2025-02-21-korea-11th-electricity-plan.md",
+                "title": "Korea 11th Basic Electricity Supply and Demand Plan confirmed",
+                "url": "https://www.motir.go.kr/kor/article/ATCL3f49a5a8c/170183/view",
+                "publisher": "Ministry of Trade, Industry and Energy",
+                "published_at": "2025-02-21",
+                "collected_at": "2026-08-19",
+                "source_type": "government",
+                "language": "ko",
+                "reliability": "primary"
+            },
+            "claims": [
+                {
+                    "predicate": "korea_2038_lng_generation_share",
+                    "value": "10.6%",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "\uc815\ubd80 \ud655\uc815\uacc4\ud68d\u00b7IEA \uc815\ucc45 \ud398\uc774\uc9c0"
+                },
+                {
+                    "predicate": "korea_2038_total_generation",
+                    "value": "704.5 TWh",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "IEA policy summary cross-check"
+                },
+                {
+                    "predicate": "lng_capacity_market_follow_up",
+                    "value": "new CHP LNG capacity-market main bid planned",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "\uc0b0\uc5c5\ud1b5\uc0c1\uc790\uc6d0\ubd80 \uc6d0\ubb38"
+                },
+                {
+                    "predicate": "business_axis",
+                    "value": "\uc5d0\ub108\uc9c0",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "LNG terminal\u00b7power \uc601\ud5a5\ucd95"
+                },
+                {
+                    "predicate": "business_impact_score_1_to_5",
+                    "value": "4",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\ubc1c\uc804\u00b7\ud130\ubbf8\ub110 \uc218\uc694 \uad6c\uc870 \uc601\ud5a5"
+                },
+                {
+                    "predicate": "business_impact_rationale",
+                    "value": "\uc815\ucc45\uc774 LNG \ubc1c\uc804\uc758 \ubb3c\ub7c9\uacfc \ubcf4\uc0c1\ubc29\uc2dd\uc744 \ub3d9\uc2dc\uc5d0 \ubc14\uafc9\ub2c8\ub2e4.",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "urgency_score_1_to_5",
+                    "value": "3",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\ud6c4\uc18d \uc785\ucc30\u00b7\uac00\uc2a4\uacc4\ud68d \uc77c\uc815"
+                },
+                {
+                    "predicate": "urgency_rationale",
+                    "value": "\ud6c4\uc18d \uc6a9\ub7c9\uc2dc\uc7a5 \uc785\ucc30\uacfc \uc7a5\uae30 \ucc9c\uc5f0\uac00\uc2a4 \uc218\uae09\uacc4\ud68d \ud655\uc778\uc774 \ud544\uc694\ud569\ub2c8\ub2e4.",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "assessment_confidence",
+                    "value": "high",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "\uc815\ubd80 \ud655\uc815\uacc4\ud68d"
+                },
+                {
+                    "predicate": "assessed_at",
+                    "value": "2025-02-21",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "\ud3c9\uac00\uc77c"
+                },
+                {
+                    "predicate": "impact_path",
+                    "value": "\uc804\uc6d0\ubbf9\uc2a4\u00b7LNG \uc6a9\ub7c9\uc2dc\uc7a5 \u2192 \ubc1c\uc804 \uc774\uc6a9\ub960\u00b7\uc6a9\ub7c9\uc694\uae08 \u2192 \ud130\ubbf8\ub110 \ud68c\uc804\uc728\u00b7\uc870\ub2ec\uacc4\uc57d",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "recommended_follow_up",
+                    "value": "LNG \uc6a9\ub7c9\uc2dc\uc7a5 \ub099\ucc30\u00b7ESS \uc124\uce58\u00b7\uad11\uc591\ud130\ubbf8\ub110 \ud68c\uc804\uc728\u00b7\ubc1c\uc804 \uc774\uc6a9\ub960\uc744 \ud655\uc778",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\ud6c4\uc18d \ud655\uc778"
+                },
+                {
+                    "predicate": "response_deadline",
+                    "value": "2025-04-30",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\ud6c4\uc18d \uc785\ucc30 \uc804"
+                },
+                {
+                    "predicate": "affected_business",
+                    "value": "LNG terminal\u00b7power generation\u00b7trading",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\uc0ac\uc5c5 \uc601\ud5a5"
+                }
+            ],
+            "signal": {
+                "title": "LNG\uc758 \ubc31\uc5c5\u00b7\uc6a9\ub7c9\uc2dc\uc7a5 \uc5ed\ud560 \uc7ac\ubc30\uce58",
+                "sentence": "\uc81c11\ucc28 \uc804\uae30\ubcf8\uc740 LNG\ub97c \uae30\uc800 \ud655\ub300\uac00 \uc544\ub2cc \uc5f4\ubcd1\ud569\u00b7\ubc31\uc5c5\u00b7\uc6a9\ub7c9\uc2dc\uc7a5\uc73c\ub85c \uc7ac\ubc30\uce58\ud558\ubbc0\ub85c \uad11\uc591\ud130\ubbf8\ub110\u00b7\ubc1c\uc804\uc758 \uc870\ub2ec\u00b7\uac00\ub3d9\ub960 \uac00\uc815\uc744 \uc804\ub825\uc218\uc694\uc640 \uc6a9\ub7c9\uc2dc\uc7a5 \uae30\uc900\uc73c\ub85c \ub2e4\uc2dc \uc9dc\uc57c \ud558\ub294 \uc815\ucc45 \uc2e0\ud638.",
+                "paragraph": "2038\ub144 LNG \ubc1c\uc804\ube44\uc911\uc740 10.6%\uc9c0\ub9cc \uc815\ubd80\ub294 \uc2e0\uaddc \uc5f4\ubcd1\ud569 LNG \uc6a9\ub7c9\uc2dc\uc7a5 \uc785\ucc30\uacfc ESS\u00b7\ubb34\ud0c4\uc18c \uc785\ucc30\uc744 \ud568\uaed8 \ucd94\uc9c4\ud569\ub2c8\ub2e4. \uc5f0\uac04 \ubb3c\ub7c9\ubcf4\ub2e4 \uc6a9\ub7c9\uc694\uae08\u00b7\uc720\uc5f0\uc131\u00b7\uc800\uc7a5\uac00\uce58\uac00 \ud575\uc2ec\uc785\ub2c8\ub2e4.",
+                "company_id": "COM-POSCO-INTERNATIONAL",
+                "business_axis": "\uc5d0\ub108\uc9c0",
+                "business_impact_score": 4,
+                "business_impact_rationale": "\uc815\ucc45\uc774 LNG \ubc1c\uc804\uc758 \ubb3c\ub7c9\uacfc \ubcf4\uc0c1\ubc29\uc2dd\uc744 \ub3d9\uc2dc\uc5d0 \ubc14\uafc9\ub2c8\ub2e4.",
+                "urgency_score": 3,
+                "urgency_rationale": "\ud6c4\uc18d \uc6a9\ub7c9\uc2dc\uc7a5 \uc785\ucc30\uacfc \uc7a5\uae30 \ucc9c\uc5f0\uac00\uc2a4 \uc218\uae09\uacc4\ud68d \ud655\uc778\uc774 \ud544\uc694\ud569\ub2c8\ub2e4.",
+                "response_deadline": "2025-04-30",
+                "assessed_at": "2025-02-21",
+                "assessment_confidence": "high"
+            },
+            "analysis_file": "2025-02-21-korea-11th-electricity-plan.md",
+            "impact_estimate_file": null
+        },
+        {
+            "subject_id": "MKT-ENERGY-SENEX-ATLAS-FIRST-GAS",
+            "source": {
+                "content_file": "2025-02-28-senex-first-gas.md",
+                "title": "First gas flows from Senex Queensland Atlas expansion",
+                "url": "https://senexenergy.com.au/news/first-gas-flows-from-senexs-queensland-atlas-expansion/",
+                "publisher": "Senex Energy",
+                "published_at": "2025-02-28",
+                "collected_at": "2026-08-19",
+                "source_type": "company_release",
+                "language": "en",
+                "reliability": "primary"
+            },
+            "claims": [
+                {
+                    "predicate": "atlas_first_gas_status",
+                    "value": "first gas flowing to market",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "Senex \uacf5\uc2dd \ubc1c\ud45c"
+                },
+                {
+                    "predicate": "orora_supply_contract",
+                    "value": "10-year gas supply deal receiving gas",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "Senex\u00b7Orora \uc6d0\ubb38"
+                },
+                {
+                    "predicate": "atlas_project_domestic_spend",
+                    "value": "95% of A$1bn spent within Australia",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "Senex \uacf5\uc2dd \ubc1c\ud45c"
+                },
+                {
+                    "predicate": "business_axis",
+                    "value": "\uc5d0\ub108\uc9c0",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "Senex POSCO International \uc790\uc0b0"
+                },
+                {
+                    "predicate": "business_impact_score_1_to_5",
+                    "value": "5",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\uc2e4\uc81c \uace0\uac1d \uc778\ub3c4\u00b7\ub9e4\ucd9c \uc804\ud658"
+                },
+                {
+                    "predicate": "business_impact_rationale",
+                    "value": "\uc2e4\uc81c \uace0\uac1d \uc778\ub3c4\uac00 Senex \ubb3c\ub7c9\uacfc \uacc4\uc57d \ud604\uae08\ud68c\uc218\ub85c \uc5f0\uacb0\ub429\ub2c8\ub2e4.",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "urgency_score_1_to_5",
+                    "value": "4",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\ud6c4\uc18d ramp-up \ud655\uc778"
+                },
+                {
+                    "predicate": "urgency_rationale",
+                    "value": "\ud6c4\uc18d \uc2dc\uc124 ramp-up\uacfc \uace0\uac1d\ubcc4 \ud310\ub9e4\ub7c9\uc744 \ubd84\uae30 \uc2e4\uc801\uc5d0\uc11c \ud655\uc778\ud574\uc57c \ud569\ub2c8\ub2e4.",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "assessment_confidence",
+                    "value": "high",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "\uc0ac\uc5c5\uc790\u00b7\uace0\uac1d \uc6d0\ubb38"
+                },
+                {
+                    "predicate": "assessed_at",
+                    "value": "2025-02-28",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "\ud3c9\uac00\uc77c"
+                },
+                {
+                    "predicate": "impact_path",
+                    "value": "Atlas first gas \u2192 \uace0\uac1d \uc778\ub3c4\u00b7\uc7a5\uae30 GSA \u2192 \ud310\ub9e4\ub7c9\u00b7\ub2e8\uc704\ub9c8\uc9c4 \u2192 \ud604\uae08\ud68c\uc218",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "recommended_follow_up",
+                    "value": "\uace0\uac1d\ubcc4 \uc778\ub3c4 PJ\u00b7\uccad\uad6c\uc561\u00b7\ud6c4\uc18d\uc2dc\uc124 \uac00\ub3d9\ub960\u00b7Senex \uc6b4\uc601\ube44\ub97c \ubd84\uae30\ubcc4 \ud655\uc778",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\ud6c4\uc18d \ud655\uc778"
+                },
+                {
+                    "predicate": "response_deadline",
+                    "value": "2025-04-15",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "1\ubd84\uae30 \uc2e4\uc801 \uc804"
+                },
+                {
+                    "predicate": "affected_business",
+                    "value": "Senex \uad6d\ub0b4\uac00\uc2a4 \ud310\ub9e4\u00b7CAPEX \ud68c\uc218",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\uc0ac\uc5c5 \uc601\ud5a5"
+                }
+            ],
+            "signal": {
+                "title": "Atlas first gas\uc758 \uc0c1\uc5c5\ud654 \uc804\ud658",
+                "sentence": "Atlas \uc99d\uc0b0\uc740 \uc2dc\uc124 \uc900\uacf5\u00b7\uc2dc\uc6b4\uc804 \ub2e8\uacc4\ub97c \ub118\uc5b4 2025\ub144 2\uc6d4 \uc2e4\uc81c \uc2dc\uc7a5 \uc720\uc785\uacfc \uace0\uac1d \uc778\ub3c4\ub85c \uc804\ud658\ub418\uc5b4 Senex\uc758 \ubb3c\ub7c9\u00b7\uacc4\uc57d \ub9e4\ucd9c \ud68c\uc218 \uc704\ud5d8\uc744 \ub0ae\ucd98 \uc2e4\ud589 \uc2e0\ud638.",
+                "paragraph": "first gas\ub294 \uc2e4\uc81c \uc2dc\uc7a5 \uc720\uc785\uacfc Orora \uc778\ub3c4\ub97c \ud655\uc778\ud558\uc9c0\ub9cc 60 PJ full capacity\ub97c \ub73b\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. 2025\ub144 \ubd84\uae30 \ud310\ub9e4\ub7c9\u00b7\ub2e8\uac00\u00b7\uc6b4\uc601\ube44\u00b7\ud604\uae08\ud68c\uc218\ub85c \uc0c1\uc5c5\ud654 \uc218\uc900\uc744 \uac31\uc2e0\ud574\uc57c \ud569\ub2c8\ub2e4.",
+                "company_id": "COM-POSCO-INTERNATIONAL",
+                "business_axis": "\uc5d0\ub108\uc9c0",
+                "business_impact_score": 5,
+                "business_impact_rationale": "\uc2e4\uc81c \uace0\uac1d \uc778\ub3c4\uac00 Senex \ubb3c\ub7c9\uacfc \uacc4\uc57d \ud604\uae08\ud68c\uc218\ub85c \uc5f0\uacb0\ub429\ub2c8\ub2e4.",
+                "urgency_score": 4,
+                "urgency_rationale": "\ud6c4\uc18d \uc2dc\uc124 ramp-up\uacfc \uace0\uac1d\ubcc4 \ud310\ub9e4\ub7c9\uc744 \ubd84\uae30 \uc2e4\uc801\uc5d0\uc11c \ud655\uc778\ud574\uc57c \ud569\ub2c8\ub2e4.",
+                "response_deadline": "2025-04-15",
+                "assessed_at": "2025-02-28",
+                "assessment_confidence": "high"
+            },
+            "analysis_file": "2025-02-28-senex-first-gas.md",
+            "impact_estimate_file": null
+        },
+        {
+            "subject_id": "MKT-ENERGY-AEMO-GSOO-2025",
+            "source": {
+                "content_file": "2025-03-20-aemo-gsoo.md",
+                "title": "AEMO 2025 Gas Statement of Opportunities",
+                "url": "https://www.aemo.com.au/-/media/files/gas/national_planning_and_forecasting/gsoo/2025/2025-gas-statement-of-opportunities.pdf",
+                "publisher": "Australian Energy Market Operator",
+                "published_at": "2025-03-20",
+                "collected_at": "2026-08-19",
+                "source_type": "government",
+                "language": "en",
+                "reliability": "primary"
+            },
+            "claims": [
+                {
+                    "predicate": "southern_peak_shortfall_start",
+                    "value": "2028",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "AEMO GSOO executive summary"
+                },
+                {
+                    "predicate": "southern_structural_gap_start",
+                    "value": "2029",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "AEMO GSOO executive summary"
+                },
+                {
+                    "predicate": "atlas_processing_capacity",
+                    "value": "57 TJ/d",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "AEMO GSOO key changes"
+                },
+                {
+                    "predicate": "business_axis",
+                    "value": "\uc5d0\ub108\uc9c0",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "\ud638\uc8fc \ub3d9\ubd80 \uac00\uc2a4 \uc601\ud5a5\ucd95"
+                },
+                {
+                    "predicate": "business_impact_score_1_to_5",
+                    "value": "5",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\uc7a5\uae30 \uacf5\uae09\u00b7\uc778\ud504\ub77c \ud22c\uc790 \uc9c1\uc811\uc131"
+                },
+                {
+                    "predicate": "business_impact_rationale",
+                    "value": "AEMO\uc758 \ubc95\uc815 \uc218\uae09\uc804\ub9dd\uc774 Senex \uc7a5\uae30 \uacc4\uc57d\uacfc \uc778\ud504\ub77c \ud22c\uc790 \uae30\uc900\uc744 \uc81c\uacf5\ud569\ub2c8\ub2e4.",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "urgency_score_1_to_5",
+                    "value": "4",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "2028~29 \ud22c\uc790 \uc900\ube44\uae30\uac04"
+                },
+                {
+                    "predicate": "urgency_rationale",
+                    "value": "2028~29\ub144 \ubd80\uc871\uc5d0 \ub300\ube44\ud55c \ud22c\uc790\u00b7\uacc4\uc57d \uc900\ube44\uac00 \ud544\uc694\ud569\ub2c8\ub2e4.",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "assessment_confidence",
+                    "value": "high",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "AEMO \ubc95\uc815 \uc804\ub9dd"
+                },
+                {
+                    "predicate": "assessed_at",
+                    "value": "2025-03-20",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "\ud3c9\uac00\uc77c"
+                },
+                {
+                    "predicate": "impact_path",
+                    "value": "\ub0a8\ubd80 \uc0dd\uc0b0 \uac10\uc18c\u00b7Senex \ucc98\ub9ac\ub2a5\ub825 \u2192 \uc804\uc1a1\u00b7\uc800\uc7a5 \uade0\ud615 \u2192 2028 \ud53c\ud06c\u00b72029 \uad6c\uc870\uc801 \uacf5\ubc31 \u2192 \uc7a5\uae30 \ud22c\uc790",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "recommended_follow_up",
+                    "value": "Senex \uc2e4\uc81c \ucc98\ub9ac\ub7c9\u00b7\ub0a8\ubd80 \uc800\uc7a5\ub960\u00b7SWQP \ud750\ub984\u00b72028~29 \uacc4\uc57d \ub9cc\uae30\ub97c AEMO \uac00\uc815\uacfc \ub300\uc870",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\ud6c4\uc18d \ud655\uc778"
+                },
+                {
+                    "predicate": "response_deadline",
+                    "value": "2025-05-31",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\uc7a5\uae30 \ud22c\uc790 \uac80\ud1a0"
+                },
+                {
+                    "predicate": "affected_business",
+                    "value": "Senex\u00b7\ud638\uc8fc \ub3d9\ubd80 \uac00\uc2a4\u00b7\uc800\uc7a5\u00b7\uc804\uc1a1",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\uc0ac\uc5c5 \uc601\ud5a5"
+                }
+            ],
+            "signal": {
+                "title": "Atlas \uc99d\uc0b0 \ud6c4\uc5d0\ub3c4 \ub0a8\ub294 2029\ub144 \uad6c\uc870\uc801 \uacf5\ubc31",
+                "sentence": "AEMO\ub294 Atlas first gas\ub97c \ubc18\uc601\ud574 \ub2e8\uae30 \ubd80\uc871 \uc2dc\uc810\uc744 2028\ub144\uc73c\ub85c \ub2a6\ucdc4\uc9c0\ub9cc 2029\ub144 \uad6c\uc870\uc801 \uacf5\ubc31\uc740 \ub0a8\uaca8 Senex \uc99d\uc0b0\uc744 \ub2e8\uae30 \ud310\ub9e4\uac00 \uc544\ub2c8\ub77c \uc7a5\uae30 \uacf5\uae09\u00b7\uc800\uc7a5\u00b7\uc804\uc1a1 \ud22c\uc790 \ud310\ub2e8\uc73c\ub85c \uc5f0\uacb0\ud574\uc57c \ud55c\ub2e4\ub294 \uae30\uc900\uc120\uc744 \uc81c\uc2dc.",
+                "paragraph": "AEMO\ub294 Atlas 57 TJ/d\uc640 Roma North 28.5 TJ/d\ub97c \ubc18\uc601\ud558\uba74\uc11c\ub3c4 \ub0a8\ubd80 \uc0dd\uc0b0 \uac10\uc18c\uc640 2029\ub144 \uc5f0\uac04 \uacf5\uae09\uacf5\ubc31\uc744 \uc804\ub9dd\ud569\ub2c8\ub2e4. \uc99d\uc0b0\uc740 \ud574\uacb0 \uc644\ub8cc\uac00 \uc544\ub2c8\ub77c \uc800\uc7a5\u00b7\uc804\uc1a1\uacfc \uacb0\ud569\ud574\uc57c \ud558\ub294 \uc644\ucda9\uc785\ub2c8\ub2e4.",
+                "company_id": "COM-POSCO-INTERNATIONAL",
+                "business_axis": "\uc5d0\ub108\uc9c0",
+                "business_impact_score": 5,
+                "business_impact_rationale": "AEMO\uc758 \ubc95\uc815 \uc218\uae09\uc804\ub9dd\uc774 Senex \uc7a5\uae30 \uacc4\uc57d\uacfc \uc778\ud504\ub77c \ud22c\uc790 \uae30\uc900\uc744 \uc81c\uacf5\ud569\ub2c8\ub2e4.",
+                "urgency_score": 4,
+                "urgency_rationale": "2028~29\ub144 \ubd80\uc871\uc5d0 \ub300\ube44\ud55c \ud22c\uc790\u00b7\uacc4\uc57d \uc900\ube44\uac00 \ud544\uc694\ud569\ub2c8\ub2e4.",
+                "response_deadline": "2025-05-31",
+                "assessed_at": "2025-03-20",
+                "assessment_confidence": "high"
+            },
+            "analysis_file": "2025-03-20-aemo-gsoo.md",
+            "impact_estimate_file": null
+        },
+        {
+            "subject_id": "MKT-ENERGY-ACCC-Q3-2025-SHORTFALL",
+            "source": {
+                "content_file": "2025-03-27-accc-q3-shortfall.md",
+                "title": "ACCC Q3 2025 east coast gas shortfall outlook",
+                "url": "https://www.accc.gov.au/media-release/east-coast-gas-supply-outlook-worsens-july-to-september-2025-but-forward-longer-term-prices-ease",
+                "publisher": "Australian Competition and Consumer Commission",
+                "published_at": "2025-03-27",
+                "collected_at": "2026-08-19",
+                "source_type": "government",
+                "language": "en",
+                "reliability": "primary"
+            },
+            "claims": [
+                {
+                    "predicate": "q3_2025_east_coast_shortfall",
+                    "value": "9 PJ",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "ACCC \uc6d0\ubb38"
+                },
+                {
+                    "predicate": "q3_2025_southern_shortfall",
+                    "value": "40 PJ",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "ACCC \uc6d0\ubb38"
+                },
+                {
+                    "predicate": "q3_2025_2025_producer_gas_price",
+                    "value": "13.58 AUD/GJ",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "ACCC \uc6d0\ubb38"
+                },
+                {
+                    "predicate": "business_axis",
+                    "value": "\uc5d0\ub108\uc9c0",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "Senex\u00b7\ud638\uc8fc \ub3d9\ubd80 \uac00\uc2a4 \uc601\ud5a5\ucd95"
+                },
+                {
+                    "predicate": "business_impact_score_1_to_5",
+                    "value": "5",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\uaca8\uc6b8 \uac00\uaca9\u00b7\ubb3c\ub7c9 \uc9c1\uc811\uc131"
+                },
+                {
+                    "predicate": "business_impact_rationale",
+                    "value": "\uaca8\uc6b8 \ubd80\uc871\uacfc \uc804\uc1a1\u00b7\uc800\uc7a5 \uc870\uac74\uc774 Senex \ud310\ub9e4\u00b7\uc870\ub2ec \ub9c8\uc9c4\uc5d0 \uc9c1\uc811 \ubc18\uc601\ub429\ub2c8\ub2e4.",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "urgency_score_1_to_5",
+                    "value": "5",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "2025\ub144 7~9\uc6d4 \uc804\ub9dd"
+                },
+                {
+                    "predicate": "urgency_rationale",
+                    "value": "2025\ub144 7~9\uc6d4 \uc774\uc804 \uc870\ub2ec\u00b7\uc800\uc7a5\u00b7\uacc4\uc57d \ub300\uc751\uc774 \ud544\uc694\ud569\ub2c8\ub2e4.",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "assessment_confidence",
+                    "value": "high",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "ACCC \uacf5\uc2dd \uc804\ub9dd"
+                },
+                {
+                    "predicate": "assessed_at",
+                    "value": "2025-03-27",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "\ud3c9\uac00\uc77c"
+                },
+                {
+                    "predicate": "impact_path",
+                    "value": "\ub0a8\ubd80 \ubd80\uc871\u00b7\ubbf8\uacc4\uc57d LNG \u2192 \uc804\uc1a1\u00b7\uc800\uc7a5 \ud504\ub9ac\ubbf8\uc5c4 \u2192 Senex GSA\u00b7\ud604\ubb3c \ub9c8\uc9c4 \u2192 \ud604\uae08\ud68c\uc218",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "recommended_follow_up",
+                    "value": "ACCC 7~9\uc6d4 \uc5c5\ub370\uc774\ud2b8\u00b7\ub0a8\ubd80 \uc800\uc7a5\ub960\u00b7LNG \uad6d\ub0b4\uacf5\uae09\ub7c9\u00b7Senex \uace0\uac1d\ubcc4 \uc778\ub3c4\ub7c9 \ud655\uc778",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\ud6c4\uc18d \ud655\uc778"
+                },
+                {
+                    "predicate": "response_deadline",
+                    "value": "2025-05-31",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\uaca8\uc6b8 \uc870\ub2ec \uc804"
+                },
+                {
+                    "predicate": "affected_business",
+                    "value": "Senex \uad6d\ub0b4\uac00\uc2a4 \ud310\ub9e4\u00b7LNG trading",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\uc0ac\uc5c5 \uc601\ud5a5"
+                }
+            ],
+            "signal": {
+                "title": "2025\ub144 \uaca8\uc6b8 \ub0a8\ubd80 \uac00\uc2a4 40 PJ \ubd80\uc871 \ud2b8\ub9ac\uac70",
+                "sentence": "2025\ub144 \uaca8\uc6b8 \ub3d9\ubd80 \ud638\uc8fc\ub294 \ub0a8\ubd80 40 PJ \ubd80\uc871\uc744 \ud038\uc990\ub79c\ub4dc \uc804\uc1a1\u00b7\uc800\uc7a5\u00b7LNG \ubbf8\uacc4\uc57d \uac00\uc2a4\uc5d0 \uc758\uc874\ud558\ubbc0\ub85c Senex \ubb3c\ub7c9\uc758 \uac00\uaca9\u00b7\uc778\ub3c4\uc9c0\uc810\u00b7\uc804\uc1a1\uad8c\uc744 \ub2e8\uc21c \uc0dd\uc0b0\ub7c9\uc774 \uc544\ub2cc \uaca8\uc6b8 \uc870\ub2ec \uc548\uc804\uc131\uc73c\ub85c \ud3c9\uac00\ud574\uc57c \ud558\ub294 \ub2e8\uae30 \ud2b8\ub9ac\uac70.",
+                "paragraph": "ACCC\ub294 9 PJ \ub3d9\ubd80 \ubd80\uc871\uacfc \ub0a8\ubd80 40 PJ \ubd80\uc871\uc744 \uc804\ub9dd\ud558\uace0 \ud038\uc990\ub79c\ub4dc 30 PJ\u00b7\uc800\uc7a5 10 PJ\uc758 \ubcf4\uc644\uc744 \uc804\uc81c\ub85c \ud569\ub2c8\ub2e4. \uac00\uaca9 \ud558\ub77d\uacfc \uc2e4\uc81c \uaca8\uc6b8 \uc644\ucda9\uc740 \ubcc4\uac1c\uc774\ubbc0\ub85c \uc778\ub3c4\uad8c\uacfc \uc800\uc7a5\uc744 \uc6b0\uc120 \ud655\uc778\ud574\uc57c \ud569\ub2c8\ub2e4.",
+                "company_id": "COM-POSCO-INTERNATIONAL",
+                "business_axis": "\uc5d0\ub108\uc9c0",
+                "business_impact_score": 5,
+                "business_impact_rationale": "\uaca8\uc6b8 \ubd80\uc871\uacfc \uc804\uc1a1\u00b7\uc800\uc7a5 \uc870\uac74\uc774 Senex \ud310\ub9e4\u00b7\uc870\ub2ec \ub9c8\uc9c4\uc5d0 \uc9c1\uc811 \ubc18\uc601\ub429\ub2c8\ub2e4.",
+                "urgency_score": 5,
+                "urgency_rationale": "2025\ub144 7~9\uc6d4 \uc774\uc804 \uc870\ub2ec\u00b7\uc800\uc7a5\u00b7\uacc4\uc57d \ub300\uc751\uc774 \ud544\uc694\ud569\ub2c8\ub2e4.",
+                "response_deadline": "2025-05-31",
+                "assessed_at": "2025-03-27",
+                "assessment_confidence": "high"
+            },
+            "analysis_file": "2025-03-27-accc-q3-shortfall.md",
+            "impact_estimate_file": null
+        },
+        {
+            "subject_id": "MKT-ENERGY-ACCC-2026-OUTLOOK",
+            "source": {
+                "content_file": "2025-06-30-accc-outlook-deteriorates.md",
+                "title": "ACCC 2025 Q4 and 2026 east coast gas outlook deteriorates",
+                "url": "https://www.accc.gov.au/media-release/deteriorating-short-term-outlook-for-east-coast-gas-supply",
+                "publisher": "Australian Competition and Consumer Commission",
+                "published_at": "2025-06-30",
+                "collected_at": "2026-08-19",
+                "source_type": "government",
+                "language": "en",
+                "reliability": "primary"
+            },
+            "claims": [
+                {
+                    "predicate": "q4_2025_supply_range",
+                    "value": "2 PJ shortfall to 11 PJ surplus",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "ACCC \uc6d0\ubb38"
+                },
+                {
+                    "predicate": "2026_shortfall_condition",
+                    "value": "shortfall risk if Queensland LNG producers export all uncontracted gas",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "ACCC \uc6d0\ubb38"
+                },
+                {
+                    "predicate": "2025_producer_offer_price",
+                    "value": "13.34 AUD/GJ",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "ACCC \uc6d0\ubb38"
+                },
+                {
+                    "predicate": "business_axis",
+                    "value": "\uc5d0\ub108\uc9c0",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "\ud638\uc8fc \ub3d9\ubd80 \uac00\uc2a4 \uc601\ud5a5\ucd95"
+                },
+                {
+                    "predicate": "business_impact_score_1_to_5",
+                    "value": "5",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\uacc4\uc57d\u00b7\uacf5\uae09 \uc804\ub9dd \uc9c1\uc811\uc131"
+                },
+                {
+                    "predicate": "business_impact_rationale",
+                    "value": "\uac00\uaca9\uacfc \uacf5\uae09\uc758 \uac04\uadf9\uc774 Senex \uacc4\uc57d\uae30\uac04\u00b7\ud604\uae08\ud68c\uc218\u00b7\uace0\uac1d \uc778\ub3c4\uc5d0 \uc9c1\uc811 \uc601\ud5a5\uc744 \uc90d\ub2c8\ub2e4.",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "urgency_score_1_to_5",
+                    "value": "5",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "2025 Q4\u00b72026 \uacc4\uc57d \uc804"
+                },
+                {
+                    "predicate": "urgency_rationale",
+                    "value": "2025 Q4\u00b72026 \uacc4\uc57d \ubc0f \uc800\uc7a5 \uc7ac\ucda9\uc804 \uc804\uc5d0 \ub300\uc751\uc774 \ud544\uc694\ud569\ub2c8\ub2e4.",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "assessment_confidence",
+                    "value": "high",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "ACCC \uacf5\uc2dd \uc790\ub8cc"
+                },
+                {
+                    "predicate": "assessed_at",
+                    "value": "2025-06-30",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "\ud3c9\uac00\uc77c"
+                },
+                {
+                    "predicate": "impact_path",
+                    "value": "\uac00\uaca9 \ud558\ub77d\u00b7\ub2e8\uae30\uacc4\uc57d \u2192 \ubbf8\uacc4\uc57d LNG \uc218\ucd9c\u00b7\uc800\uc7a5 \u2192 2025Q4\u00b72026 \ubd80\uc871 \u2192 Senex \uacc4\uc57d \ud604\uae08\ud68c\uc218",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "recommended_follow_up",
+                    "value": "2026\ub144 GSA \ub9cc\uae30\u00b7\uac00\uaca9\u00b7\ubb3c\ub7c9\u00b7\uc804\uc1a1\uad8c\uacfc ACCC \uc0dd\uc0b0\uc804\ub9dd\u00b7\uc800\uc7a5\ucda9\uc804\uc744 \ub300\uc870",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\ud6c4\uc18d \ud655\uc778"
+                },
+                {
+                    "predicate": "response_deadline",
+                    "value": "2025-09-01",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "Q4 \uc870\ub2ec \uc804"
+                },
+                {
+                    "predicate": "affected_business",
+                    "value": "Senex\u00b7\uac00\uc2a4 trading\u00b7\ud638\uc8fc \ub3d9\ubd80 \uace0\uac1d\uacc4\uc57d",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\uc0ac\uc5c5 \uc601\ud5a5"
+                }
+            ],
+            "signal": {
+                "title": "\uac00\uaca9 \ud558\ub77d\uacfc 2026\ub144 \uacf5\uae09 \uc545\ud654\uc758 \uac04\uadf9",
+                "sentence": "\uac00\uc2a4 \uac00\uaca9\uc740 \ud558\ub77d\ud588\uc9c0\ub9cc 2025\ub144 4\ubd84\uae30~2026\ub144 \uacf5\uae09\uc740 \ubbf8\uacc4\uc57d LNG\uc640 \ud038\uc990\ub79c\ub4dc \uc758\uc874\uc73c\ub85c \uc545\ud654\ub418\uc5b4 Senex \uc99d\uc0b0\uc758 \uacc4\uc57d\uae30\uac04\u00b7\ud604\uae08\ud68c\uc218 \uc548\uc815\uc131\uc744 \uac00\uaca9 \ud558\ub77d\uacfc \ubd84\ub9ac\ud574 \ud310\ub2e8\ud574\uc57c \ud558\ub294 \uaddc\uc81c \uc2e0\ud638.",
+                "paragraph": "ACCC\ub294 2025 Q4\ub97c 2 PJ \ubd80\uc871~11 PJ \uc789\uc5ec\ub85c, 2026\ub144\uc744 \ubbf8\uacc4\uc57d LNG \uc218\ucd9c \uc2dc \ubd80\uc871 \uc704\ud5d8\uc73c\ub85c \uc81c\uc2dc\ud588\uc2b5\ub2c8\ub2e4. \uac00\uaca9 \ud558\ub77d\uc774 \uc7a5\uae30 \uacf5\uae09 \ud655\uc2e4\uc131\uc744 \ub73b\ud558\uc9c0 \uc54a\uc73c\ubbc0\ub85c \uacc4\uc57d\uae30\uac04\u00b7\uc800\uc7a5\u00b7\uc804\uc1a1\uad8c\uc744 \ubcc4\ub3c4 \uad00\ub9ac\ud574\uc57c \ud569\ub2c8\ub2e4.",
+                "company_id": "COM-POSCO-INTERNATIONAL",
+                "business_axis": "\uc5d0\ub108\uc9c0",
+                "business_impact_score": 5,
+                "business_impact_rationale": "\uac00\uaca9\uacfc \uacf5\uae09\uc758 \uac04\uadf9\uc774 Senex \uacc4\uc57d\uae30\uac04\u00b7\ud604\uae08\ud68c\uc218\u00b7\uace0\uac1d \uc778\ub3c4\uc5d0 \uc9c1\uc811 \uc601\ud5a5\uc744 \uc90d\ub2c8\ub2e4.",
+                "urgency_score": 5,
+                "urgency_rationale": "2025 Q4\u00b72026 \uacc4\uc57d \ubc0f \uc800\uc7a5 \uc7ac\ucda9\uc804 \uc804\uc5d0 \ub300\uc751\uc774 \ud544\uc694\ud569\ub2c8\ub2e4.",
+                "response_deadline": "2025-09-01",
+                "assessed_at": "2025-06-30",
+                "assessment_confidence": "high"
+            },
+            "analysis_file": "2025-06-30-accc-outlook-deteriorates.md",
+            "impact_estimate_file": null
+        },
+        {
+            "subject_id": "MKT-ENERGY-IEA-LNG-Q3-2025",
+            "source": {
+                "content_file": "2025-07-22-iea-gas-q3.md",
+                "title": "IEA Gas Market Report Q3 2025",
+                "url": "https://www.iea.org/reports/gas-market-report-q3-2025",
+                "publisher": "International Energy Agency",
+                "published_at": "2025-07-22",
+                "collected_at": "2026-08-19",
+                "source_type": "government",
+                "language": "en",
+                "reliability": "primary"
+            },
+            "claims": [
+                {
+                    "predicate": "global_lng_supply_growth_2026",
+                    "value": "7% or 40 bcm",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "IEA report"
+                },
+                {
+                    "predicate": "asian_lng_spot_price_change_h1_2025",
+                    "value": "28% above H1 2024",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "IEA executive summary"
+                },
+                {
+                    "predicate": "europe_lng_import_change_h1_2025",
+                    "value": "25% year-on-year increase",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "IEA executive summary"
+                },
+                {
+                    "predicate": "business_axis",
+                    "value": "\uc5d0\ub108\uc9c0",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "LNG \uc870\ub2ec\u00b7trading \uc601\ud5a5\ucd95"
+                },
+                {
+                    "predicate": "business_impact_score_1_to_5",
+                    "value": "4",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\uad6d\uc81c \uac00\uaca9\u00b7\uc120\ubcf5\u00b7\uc7ac\ud310\ub9e4 \uc9c1\uc811\uc131"
+                },
+                {
+                    "predicate": "business_impact_rationale",
+                    "value": "\uc9c0\uc5ed\uac00\uaca9\u00b7\uc6b4\uc784\u00b7\uc120\ubcf5\uc774 LNG \uc870\ub2ec\ube44\uc640 \uc7ac\ud310\ub9e4 \ub9c8\uc9c4\uc5d0 \uc9c1\uc811 \uc5f0\uacb0\ub429\ub2c8\ub2e4.",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "urgency_score_1_to_5",
+                    "value": "4",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "2025~26 \uacc4\uc57d\u00b7\uc120\ubcf5 \uc7ac\uc810\uac80"
+                },
+                {
+                    "predicate": "urgency_rationale",
+                    "value": "2025~26 \uacc4\uc57d\u00b7\uc120\ubcf5\u00b7\uc800\uc7a5 \ud3ec\uc9c0\uc158\uc744 \uacf5\uae09\uc99d\uac00 \uc804\ud6c4\ub85c \uc7ac\uc810\uac80\ud574\uc57c \ud569\ub2c8\ub2e4.",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "assessment_confidence",
+                    "value": "high",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "IEA \ubd84\uc11d"
+                },
+                {
+                    "predicate": "assessed_at",
+                    "value": "2025-07-22",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "\ud3c9\uac00\uc77c"
+                },
+                {
+                    "predicate": "impact_path",
+                    "value": "\uae00\ub85c\ubc8c LNG \uc218\uae09\u00b7\uc9c0\uc5ed\uac00\uaca9 \u2192 \uc6b4\uc784\u00b7\uc120\ubcf5\u00b7\uacc4\uc57d \uc720\uc5f0\uc131 \u2192 \uad11\uc591 \uc800\uc7a5\u00b7\uc7ac\ud310\ub9e4 \ub9c8\uc9c4",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "recommended_follow_up",
+                    "value": "JKM\u00b7TTF\u00b7Henry Hub\u00b7\uc6b4\uc784\u00b7\uc120\ubcf5\u00b7\ubaa9\uc801\uc9c0 \uc804\ud658\uad8c\u00b7\uc800\uc7a5\ub7c9\uc744 \ud1b5\ud569 \ud3ec\uc9c0\uc158\uc73c\ub85c \ud655\uc778",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\ud6c4\uc18d \ud655\uc778"
+                },
+                {
+                    "predicate": "response_deadline",
+                    "value": "2025-09-15",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\uacc4\uc57d\u00b7\uc120\ubcf5 \uac31\uc2e0 \uc804"
+                },
+                {
+                    "predicate": "affected_business",
+                    "value": "LNG \uc870\ub2ec\u00b7\uc804\uc6a9\uc120\u00b7\ud130\ubbf8\ub110\u00b7trading",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\uc0ac\uc5c5 \uc601\ud5a5"
+                }
+            ],
+            "signal": {
+                "title": "2025 \ud0c0\uc774\ud2b8\ud55c LNG\uc640 2026 \uacf5\uae09\uc99d\uac00\uc758 \uad50\ucc28",
+                "sentence": "2025\ub144 LNG \uc2dc\uc7a5\uc740 2025\ub144 \uc0c1\ubc18\uae30 \ud0c0\uc774\ud2b8\ud55c \uc544\uc2dc\uc544 \uc218\uc694\u00b7\uac00\uaca9\uacfc 2026\ub144 \ubd81\ubbf8\u00b7\uce74\ud0c0\ub974 \uacf5\uae09\uc99d\uac00\uac00 \uad50\ucc28\ud558\ubbc0\ub85c \ud3ec\uc2a4\ucf54\uc778\ud130\ub0b4\uc154\ub110\uc740 \uc7a5\uae30\uc870\ub2ec \uace0\uc815\uac00\ubcf4\ub2e4 \ubaa9\uc801\uc9c0\u00b7\uc120\ubcf5\u00b7\uc7ac\ud310\ub9e4 \uc120\ud0dd\uad8c\uc758 \uc2dc\uac04\uac00\uce58\ub97c \uad00\ub9ac\ud574\uc57c \ud558\ub294 \uae00\ub85c\ubc8c \ud2b8\ub808\uc774\ub529 \uc2e0\ud638.",
+                "paragraph": "IEA\ub294 \uc544\uc2dc\uc544 \ud604\ubb3c\uac00\uaca9\uacfc \uc720\ub7fd LNG \uc218\uc785\uc758 \uc0c1\uc2b9\uc744 \ud655\uc778\ud558\uba74\uc11c 2026\ub144 \uacf5\uae09\uc99d\uac00\ub97c \uc804\ub9dd\ud569\ub2c8\ub2e4. \uacf5\uae09\uc99d\uac00\ub294 \uc77c\uad04\uc801\uc778 \uac00\uaca9 \ud558\ub77d\uc774 \uc544\ub2c8\ub77c \uc9c0\uc5ed \uc2a4\ud504\ub808\ub4dc\uc640 \ubaa9\uc801\uc9c0 \uc804\ud658 \uac00\uce58\uc758 \ubcc0\ud654\ub97c \ub73b\ud569\ub2c8\ub2e4.",
+                "company_id": "COM-POSCO-INTERNATIONAL",
+                "business_axis": "\uc5d0\ub108\uc9c0",
+                "business_impact_score": 4,
+                "business_impact_rationale": "\uc9c0\uc5ed\uac00\uaca9\u00b7\uc6b4\uc784\u00b7\uc120\ubcf5\uc774 LNG \uc870\ub2ec\ube44\uc640 \uc7ac\ud310\ub9e4 \ub9c8\uc9c4\uc5d0 \uc9c1\uc811 \uc5f0\uacb0\ub429\ub2c8\ub2e4.",
+                "urgency_score": 4,
+                "urgency_rationale": "2025~26 \uacc4\uc57d\u00b7\uc120\ubcf5\u00b7\uc800\uc7a5 \ud3ec\uc9c0\uc158\uc744 \uacf5\uae09\uc99d\uac00 \uc804\ud6c4\ub85c \uc7ac\uc810\uac80\ud574\uc57c \ud569\ub2c8\ub2e4.",
+                "response_deadline": "2025-09-15",
+                "assessed_at": "2025-07-22",
+                "assessment_confidence": "high"
+            },
+            "analysis_file": "2025-07-22-iea-gas-q3.md",
+            "impact_estimate_file": null
+        },
+        {
+            "subject_id": "MKT-ENERGY-POSCO-Q3-2025-SENEX-RAMP",
+            "source": {
+                "content_file": "2025-10-27-posco-q3-energy-ramp.md",
+                "title": "POSCO International 2025 Q3 Senex ramp-up results",
+                "url": "https://www.poscointl.com/upload/file/202510/202510QrrmjSOggdZe.pdf",
+                "publisher": "POSCO INTERNATIONAL",
+                "published_at": "2025-10-27",
+                "collected_at": "2026-08-19",
+                "source_type": "company_ir",
+                "language": "ko",
+                "reliability": "primary"
+            },
+            "claims": [
+                {
+                    "predicate": "senex_q3_2025_sales_volume",
+                    "value": "9.2 Bcf",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "POSCO IR p.4"
+                },
+                {
+                    "predicate": "senex_q3_2025_operating_profit",
+                    "value": "267\uc5b5\uc6d0",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "POSCO IR p.4"
+                },
+                {
+                    "predicate": "myanmar_q3_2025_operating_profit",
+                    "value": "900\uc5b5\uc6d0",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "POSCO IR p.4"
+                },
+                {
+                    "predicate": "business_axis",
+                    "value": "\uc5d0\ub108\uc9c0",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "POSCO International \uc5d0\ub108\uc9c0 \ucd95"
+                },
+                {
+                    "predicate": "business_impact_score_1_to_5",
+                    "value": "5",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\uc2e4\uc81c \uc99d\uc0b0 \uc190\uc775 \uc9c1\uc811\uc131"
+                },
+                {
+                    "predicate": "business_impact_rationale",
+                    "value": "\uc99d\uc0b0 \uc2e4\uc801\uacfc \uc790\uc0b0\ubcc4 \ud68c\uc218\uc728\uc774 \uc5f0\uacb0 \uc5d0\ub108\uc9c0 \uc190\uc775\uc744 \uc9c1\uc811 \ubc14\uafc9\ub2c8\ub2e4.",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "urgency_score_1_to_5",
+                    "value": "4",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\uc5f0\uac04 \uacb0\uc0b0\u00b72026 \uacc4\ud68d \ud655\uc778"
+                },
+                {
+                    "predicate": "urgency_rationale",
+                    "value": "2025\ub144 \uacb0\uc0b0\uacfc 2026\ub144 \uacc4\ud68d\uc5d0\uc11c \uc2dc\uc124\u00b7\ud68c\uc218\uc728 \uc9c0\uc18d\uc131\uc744 \ud655\uc778\ud574\uc57c \ud569\ub2c8\ub2e4.",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "assessment_confidence",
+                    "value": "high",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "\ud68c\uc0ac IR \uc2e4\uc801"
+                },
+                {
+                    "predicate": "assessed_at",
+                    "value": "2025-10-27",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "\ud3c9\uac00\uc77c"
+                },
+                {
+                    "predicate": "impact_path",
+                    "value": "\uc2e0\uaddc \ucc98\ub9ac\uc2dc\uc124 \u2192 Senex \ud310\ub9e4\ub7c9\u00b7\ub2e8\uac00\u00b7\uc6b4\uc601\ube44 \u2192 \uc5f0\uacb0 \uc5d0\ub108\uc9c0 \uc774\uc775, Myanmar \ud68c\uc218\uc728\uc740 \ubc18\ub300 \ubc29\ud5a5",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "recommended_follow_up",
+                    "value": "Senex \uc5f0\uac04 \uc0dd\uc0b0\u00b7\ud310\ub9e4\u00b7\uc6d0\uac00\uc640 Myanmar Cost Recovery\u00b7\uc815\ube44\ub97c \ubcc4\ub3c4 \uc190\uc775 \ube0c\ub9ac\uc9c0\ub85c \ud655\uc778",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\ud6c4\uc18d \ud655\uc778"
+                },
+                {
+                    "predicate": "response_deadline",
+                    "value": "2026-02-15",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\uc5f0\uac04 \uacb0\uc0b0 \uc804"
+                },
+                {
+                    "predicate": "affected_business",
+                    "value": "Senex\u00b7Myanmar gas field\u00b7power generation",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\uc0ac\uc5c5 \uc601\ud5a5"
+                }
+            ],
+            "signal": {
+                "title": "Senex \uc99d\uc0b0 \uc2e4\uc801\uacfc Myanmar \ud68c\uc218\uc728 \ud558\ub77d\uc758 \ubcd1\uc874",
+                "sentence": "2025\ub144 3\ubd84\uae30 Senex \uc2e0\uaddc \ucc98\ub9ac\uc2dc\uc124 \uc99d\uc0b0\uc774 \ud310\ub9e4\ub7c9\u00b7\uc601\uc5c5\uc774\uc775\uc73c\ub85c \ud655\uc778\ub410\uc9c0\ub9cc \ubbf8\uc580\ub9c8 Cost Recovery \ud558\ub77d\uc774 \ubcd1\uc874\ud574 \uc5d0\ub108\uc9c0 \uc131\uc7a5\ub960\uc744 Senex \uc99d\uc0b0\uacfc Myanmar \ud68c\uc218\uc728\ub85c \ubd84\ub9ac \uad00\ub9ac\ud574\uc57c \ud558\ub294 \ud6c4\uc18d \uac80\uc99d \uc2e0\ud638.",
+                "paragraph": "Senex \ud310\ub9e4\ub7c9\uc740 9.2 Bcf, \uc601\uc5c5\uc774\uc775\uc740 267\uc5b5\uc6d0\uc73c\ub85c \ub298\uc5c8\uc9c0\ub9cc Myanmar \uac00\uc2a4\uc804 \uc601\uc5c5\uc774\uc775\uc740 900\uc5b5\uc6d0\uc73c\ub85c \uac10\uc18c\ud588\uc2b5\ub2c8\ub2e4. \uc99d\uc0b0\uc758 \uad6c\uc870\uc801 \uc9c0\uc18d\uc131\uacfc \ud68c\uc218\uc728 \uc704\ud5d8\uc744 \ubd84\ub9ac\ud574 2026\ub144 \uc608\uc0b0\uc744 \uc9dc\uc57c \ud569\ub2c8\ub2e4.",
+                "company_id": "COM-POSCO-INTERNATIONAL",
+                "business_axis": "\uc5d0\ub108\uc9c0",
+                "business_impact_score": 5,
+                "business_impact_rationale": "\uc99d\uc0b0 \uc2e4\uc801\uacfc \uc790\uc0b0\ubcc4 \ud68c\uc218\uc728\uc774 \uc5f0\uacb0 \uc5d0\ub108\uc9c0 \uc190\uc775\uc744 \uc9c1\uc811 \ubc14\uafc9\ub2c8\ub2e4.",
+                "urgency_score": 4,
+                "urgency_rationale": "2025\ub144 \uacb0\uc0b0\uacfc 2026\ub144 \uacc4\ud68d\uc5d0\uc11c \uc2dc\uc124\u00b7\ud68c\uc218\uc728 \uc9c0\uc18d\uc131\uc744 \ud655\uc778\ud574\uc57c \ud569\ub2c8\ub2e4.",
+                "response_deadline": "2026-02-15",
+                "assessed_at": "2025-10-27",
+                "assessment_confidence": "high"
+            },
+            "analysis_file": "2025-10-27-posco-q3-energy-ramp.md",
+            "impact_estimate_file": null
+        },
+        {
+            "subject_id": "MKT-ENERGY-POSCO-FY2025-SENEX",
+            "source": {
+                "content_file": "2026-02-03-posco-fy2025-lng.md",
+                "title": "POSCO Holdings 2025 results position Senex LNG expansion as growth axis",
+                "url": "https://newsroom.posco.com/en/posco-holdings-posts-krw-69-trillion-in-2025-sales-eyes-profit-rebound-with-lithium-production-and-overseas-steel-expansion/",
+                "publisher": "POSCO Holdings",
+                "published_at": "2026-02-03",
+                "collected_at": "2026-08-19",
+                "source_type": "company_release",
+                "language": "en",
+                "reliability": "primary"
+            },
+            "claims": [
+                {
+                    "predicate": "posco_holdings_2025_sales",
+                    "value": "KRW 69.095 trillion",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "POSCO Holdings official results"
+                },
+                {
+                    "predicate": "posco_holdings_2025_operating_profit",
+                    "value": "KRW 1.827 trillion",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "POSCO Holdings official results"
+                },
+                {
+                    "predicate": "senex_2026_plan",
+                    "value": "continuous additional profits through LNG production expansion",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "POSCO Holdings official plan"
+                },
+                {
+                    "predicate": "business_axis",
+                    "value": "\uc5d0\ub108\uc9c0",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "Senex LNG \uac00\uce58\uc0ac\uc2ac"
+                },
+                {
+                    "predicate": "business_impact_score_1_to_5",
+                    "value": "5",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\uadf8\ub8f9 \uc790\ubcf8\ubc30\ubd84\u00b7\uc5f0\uacb0\uc774\uc775 \uc9c1\uc811\uc131"
+                },
+                {
+                    "predicate": "business_impact_rationale",
+                    "value": "\uadf8\ub8f9 \uc131\uc7a5\ucd95\uacfc CAPEX \uacc4\ud68d\uc774 Senex \ubb3c\ub7c9\u00b7\uac00\uaca9\u00b7\ud604\uae08\ud68c\uc218\uc5d0 \uc5f0\uacb0\ub429\ub2c8\ub2e4.",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "urgency_score_1_to_5",
+                    "value": "4",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "2026 \uc608\uc0b0\u00b7\uc2e4\uc801 \ub300\uc870"
+                },
+                {
+                    "predicate": "urgency_rationale",
+                    "value": "2026\ub144 1\ubd84\uae30 \uc0dd\uc0b0\u00b7\ud310\ub9e4\u00b7\ud604\uae08\ud68c\uc218\uc640 \uacc4\ud68d\uc758 \uc77c\uce58 \uc5ec\ubd80\ub97c \ud655\uc778\ud574\uc57c \ud569\ub2c8\ub2e4.",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "assessment_confidence",
+                    "value": "medium",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "\uadf8\ub8f9 \uacf5\uc2dd \uacb0\uc0b0\uc774\ub098 \uc138\ubd80 \uc0ac\uc5c5\uc218\uce58 \uc81c\ud55c"
+                },
+                {
+                    "predicate": "assessed_at",
+                    "value": "2026-02-03",
+                    "as_of": "2026-08-19",
+                    "confidence": "high",
+                    "reason": "\ud3c9\uac00\uc77c"
+                },
+                {
+                    "predicate": "impact_path",
+                    "value": "Senex \uc99d\uc0b0 \uc2e4\uc801 \u2192 \uadf8\ub8f9 LNG \uc131\uc7a5\ucd95\u00b7CAPEX \uacc4\ud68d \u2192 \uc0dd\uc0b0\u00b7\uacc4\uc57d\u00b7\ud604\uae08\ud68c\uc218 \u2192 \uc5f0\uacb0\uc774\uc775",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "AI \ubd84\uc11d"
+                },
+                {
+                    "predicate": "recommended_follow_up",
+                    "value": "Senex 2025 \uacb0\uc0b0 \uc2e4\uc81c\uac12\u00b72026 \uc608\uc0b0\uc758 \ubb3c\ub7c9\u00b7\ub2e8\uac00\u00b7\uc6d0\uac00\u00b7\ud604\uae08\ud750\ub984\uc744 \ub300\uc870",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\ud6c4\uc18d \ud655\uc778"
+                },
+                {
+                    "predicate": "response_deadline",
+                    "value": "2026-03-31",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "1\ubd84\uae30 \uacc4\ud68d \ub300\uc870"
+                },
+                {
+                    "predicate": "affected_business",
+                    "value": "Senex LNG\u00b7POSCO International energy value chain",
+                    "as_of": "2026-08-19",
+                    "confidence": "medium",
+                    "reason": "\uc0ac\uc5c5 \uc601\ud5a5"
+                }
+            ],
+            "signal": {
+                "title": "Senex \uc99d\uc0b0\uc758 \uadf8\ub8f9 \uc131\uc7a5\ucd95 \uc2b9\uaca9",
+                "sentence": "POSCO Holdings\uc758 2025\ub144 \uacb0\uc0b0\uc740 Senex \uc99d\uc0b0\uc744 \uc2e4\uc81c LNG \uac00\uce58\uc0ac\uc2ac \uc774\uc775\uacfc 2026\ub144 \uc9c0\uc18d \ucd94\uac00\uc774\uc775 \uacc4\ud68d\uc73c\ub85c \uc2b9\uaca9\ud588\uc9c0\ub9cc, \ubb3c\ub7c9\u00b7\ub2e8\uac00\u00b7CAPEX \ud68c\uc218\uc758 \ub0b4\ubd80 \uc218\uce58\ub97c \ubcc4\ub3c4 \ud655\uc778\ud574\uc57c \ud558\ub294 \ud604\uc7ac \uc0c1\ud0dc \uc2e0\ud638.",
+                "paragraph": "\uadf8\ub8f9 \ubc1c\ud45c\ub294 2025\ub144 LNG \uc2e4\uc801\uacfc 2026\ub144 \uc9c0\uc18d \ucd94\uac00\uc774\uc775 \uacc4\ud68d\uc744 \ud655\uc778\ud569\ub2c8\ub2e4. \uadf8\ub7ec\ub098 Senex \ub2e8\ub3c5 EBITDA\u00b7\uac00\uaca9\u00b7\uc6d0\uac00\u00b7\ud604\uae08\ud750\ub984\uc740 \uacf5\uac1c\ub418\uc9c0 \uc54a\uc73c\ubbc0\ub85c \ub0b4\ubd80 \uacb0\uc0b0\uacfc \uc0dd\uc0b0\u00b7\uccad\uad6c \ub370\uc774\ud130\ub97c \ub300\uc870\ud55c \ub4a4 \uc790\ubcf8\ubc30\ubd84\uc744 \ud655\uc815\ud574\uc57c \ud569\ub2c8\ub2e4.",
+                "company_id": "COM-POSCO-INTERNATIONAL",
+                "business_axis": "\uc5d0\ub108\uc9c0",
+                "business_impact_score": 5,
+                "business_impact_rationale": "\uadf8\ub8f9 \uc131\uc7a5\ucd95\uacfc CAPEX \uacc4\ud68d\uc774 Senex \ubb3c\ub7c9\u00b7\uac00\uaca9\u00b7\ud604\uae08\ud68c\uc218\uc5d0 \uc5f0\uacb0\ub429\ub2c8\ub2e4.",
+                "urgency_score": 4,
+                "urgency_rationale": "2026\ub144 1\ubd84\uae30 \uc0dd\uc0b0\u00b7\ud310\ub9e4\u00b7\ud604\uae08\ud68c\uc218\uc640 \uacc4\ud68d\uc758 \uc77c\uce58 \uc5ec\ubd80\ub97c \ud655\uc778\ud574\uc57c \ud569\ub2c8\ub2e4.",
+                "response_deadline": "2026-03-31",
+                "assessed_at": "2026-02-03",
+                "assessment_confidence": "medium"
+            },
+            "analysis_file": "2026-02-03-posco-fy2025-lng.md",
+            "impact_estimate_file": null
+        }
+    ]
+}

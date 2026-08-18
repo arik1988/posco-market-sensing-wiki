@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "title": "Atlas staged-ramp delay EBITDA sensitivity",
+  "description": "Conditional EBITDA sensitivity to delayed or unsold Atlas volume, unit margin and POSCO International share.",
+  "as_of": "2024-12-04",
+  "confidence": "low",
+  "notice": "Facility ramp timing, price and costs are not public; this is a preliminary delay sensitivity, not a company forecast.",
+  "formula_display": "delayed_pj × margin_aud_gj × ownership_share",
+  "variables": [
+    {
+      "id": "delayed_pj",
+      "label": "Delayed or unsold volume",
+      "unit": "PJ",
+      "min": 1,
+      "max": 30,
+      "step": 5,
+      "default": 10,
+      "kind": "assumption",
+      "basis": "Facility ramp-up and delivered volume are not public.",
+      "source_ids": []
+    },
+    {
+      "id": "margin_aud_gj",
+      "label": "Unit margin",
+      "unit": "AUD/GJ",
+      "min": 0.5,
+      "max": 4,
+      "step": 0.5,
+      "default": 2,
+      "kind": "assumption",
+      "basis": "Price and cost are not public.",
+      "source_ids": []
+    },
+    {
+      "id": "ownership_share",
+      "label": "POSCO International ownership share",
+      "unit": "share",
+      "min": 0.45,
+      "max": 0.55,
+      "step": 0.01,
+      "default": 0.5,
+      "kind": "assumption",
+      "basis": "Ownership is held as an assumption until source registration.",
+      "source_ids": []
+    }
+  ],
+  "outputs": [
+    {
+      "id": "ebitda_delay",
+      "label": "Indicative delayed EBITDA",
+      "unit": "AUD million",
+      "decimals": 1,
+      "primary": true,
+      "expression": {
+        "op": "multiply",
+        "args": [
+          {
+            "op": "multiply",
+            "args": [
+              {
+                "var": "delayed_pj"
+              },
+              {
+                "var": "margin_aud_gj"
+              }
+            ]
+          },
+          {
+            "var": "ownership_share"
+          }
+        ]
+      }
+    }
+  ],
+  "presets": [
+    {
+      "id": "defensive",
+      "label": "Defensive",
+      "values": {
+        "delayed_pj": 5,
+        "margin_aud_gj": 2.5,
+        "ownership_share": 0.5
+      }
+    },
+    {
+      "id": "base",
+      "label": "Base",
+      "values": {
+        "delayed_pj": 10,
+        "margin_aud_gj": 2,
+        "ownership_share": 0.5
+      }
+    },
+    {
+      "id": "pressure",
+      "label": "Pressure",
+      "values": {
+        "delayed_pj": 25,
+        "margin_aud_gj": 1,
+        "ownership_share": 0.5
+      }
+    }
+  ]
+}

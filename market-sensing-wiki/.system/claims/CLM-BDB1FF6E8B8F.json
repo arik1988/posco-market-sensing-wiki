@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-BDB1FF6E8B8F",
+  "subject_id": "MKT-ENERGY-KOREA-11TH-POWER-PLAN",
+  "predicate": "business_impact_score_1_to_5",
+  "value": "4",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-FE4320CB"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "발전·터미널 수요 구조 영향",
+      "source_ids": [
+        "SRC-20260819-FE4320CB"
+      ]
+    }
+  ]
+}

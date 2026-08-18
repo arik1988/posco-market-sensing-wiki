@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-A62CAB7DC8FF",
+  "subject_id": "MKT-ENERGY-POSCO-Q3-2024-ASSET-BRIDGE",
+  "predicate": "recommended_follow_up",
+  "value": "미얀마 Cost Recovery·정비일과 Senex 단가·판매량을 자산별 이익 브리지로 확인",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-73A730DD"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "후속 확인",
+      "source_ids": [
+        "SRC-20260819-73A730DD"
+      ]
+    }
+  ]
+}

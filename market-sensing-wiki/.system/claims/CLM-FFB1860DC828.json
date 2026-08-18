@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-FFB1860DC828",
+  "subject_id": "MKT-AUSTRALIA-EAST-COAST-GAS-2030",
+  "predicate": "recommended_follow_up",
+  "value": "Senex 생산·운송·계약 통합 램프업과 AEMO 시나리오 민감도를 2026-10-31까지 완료",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-0C29491C"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "공개자료 한계를 해소할 후속 확인",
+      "source_ids": [
+        "SRC-20260818-0C29491C"
+      ]
+    }
+  ]
+}

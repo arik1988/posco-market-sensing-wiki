@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "signal_id": "SIG-934ECBF9D82E",
+  "sentence": "AEMO는 Atlas first gas를 반영해 단기 부족 시점을 2028년으로 늦췄지만 2029년 구조적 공백은 남겨 Senex 증산을 단기 판매가 아니라 장기 공급·저장·전송 투자 판단으로 연결해야 한다는 기준선을 제시.",
+  "insight_id": "INS-A3018166C4A9",
+  "company_ids": [
+    "COM-POSCO-INTERNATIONAL"
+  ],
+  "business_axis": "에너지",
+  "business_impact": {
+    "score": 5,
+    "rationale": "AEMO의 법정 수급전망이 Senex 장기 계약과 인프라 투자 기준을 제공합니다."
+  },
+  "urgency": {
+    "score": 4,
+    "rationale": "2028~29년 부족에 대비한 투자·계약 준비가 필요합니다.",
+    "response_deadline": "2025-05-31"
+  },
+  "assessed_at": "2025-03-20",
+  "assessment_confidence": "high",
+  "claim_ids": [
+    "CLM-A1AEFFF6B60B",
+    "CLM-04014DEAEDEA",
+    "CLM-0C4E06F3E26C",
+    "CLM-0B2FC5F46A68",
+    "CLM-CAC7D4B0E288",
+    "CLM-E0F801FF4CFB",
+    "CLM-A1BED8296F4E",
+    "CLM-E47600502062",
+    "CLM-33BC1040A577",
+    "CLM-D9EE219CF674",
+    "CLM-AE6522D1BADB",
+    "CLM-994FB638F436",
+    "CLM-B1025DC7042F",
+    "CLM-97CC6E5EA3F7"
+  ],
+  "source_ids": [
+    "SRC-20260819-B694DC74"
+  ],
+  "status": "active",
+  "created_at": "2026-08-19T00:55:04+09:00",
+  "updated_at": "2026-08-19T00:55:04+09:00",
+  "run_id": "energy-backfill-20240819-20260819"
+}

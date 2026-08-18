@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-852372C79FA0",
+  "subject_id": "OPS-POSCO-ARGENTINA-Q2-2026",
+  "predicate": "urgency_rationale",
+  "value": "하반기 2공장 초기비용이 발생하기 전에 흑자 원인과 증산 조건을 분해해야 합니다.",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-A26B22EF"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "공개 근거 기반 AI 긴급도 판단",
+      "source_ids": [
+        "SRC-20260818-A26B22EF"
+      ]
+    }
+  ]
+}

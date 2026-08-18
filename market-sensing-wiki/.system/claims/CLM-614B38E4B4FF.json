@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-614B38E4B4FF",
+  "subject_id": "MKT-ENERGY-SENEX-ATLAS-OPENING",
+  "predicate": "assessed_at",
+  "value": "2024-11-25",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-F3EBEB9A"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "평가일",
+      "source_ids": [
+        "SRC-20260819-F3EBEB9A"
+      ]
+    }
+  ]
+}

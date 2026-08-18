@@ -1,0 +1,14 @@
+{
+  "name": "future-research-steel-llm-wiki",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Local development tools for the evidence-based POSCO Group market sensing wiki",
+  "scripts": {
+    "codegraph:init": "codegraph init --index ../..",
+    "codegraph:sync": "codegraph sync ../..",
+    "codegraph:status": "codegraph status ../.."
+  },
+  "devDependencies": {
+    "@colbymchenry/codegraph": "1.5.0"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "signal_id": "SIG-F0DF50590831",
+  "sentence": "2025년 LNG 시장은 2025년 상반기 타이트한 아시아 수요·가격과 2026년 북미·카타르 공급증가가 교차하므로 포스코인터내셔널은 장기조달 고정가보다 목적지·선복·재판매 선택권의 시간가치를 관리해야 하는 글로벌 트레이딩 신호.",
+  "insight_id": "INS-ACA34DC08544",
+  "company_ids": [
+    "COM-POSCO-INTERNATIONAL"
+  ],
+  "business_axis": "에너지",
+  "business_impact": {
+    "score": 4,
+    "rationale": "지역가격·운임·선복이 LNG 조달비와 재판매 마진에 직접 연결됩니다."
+  },
+  "urgency": {
+    "score": 4,
+    "rationale": "2025~26 계약·선복·저장 포지션을 공급증가 전후로 재점검해야 합니다.",
+    "response_deadline": "2025-09-15"
+  },
+  "assessed_at": "2025-07-22",
+  "assessment_confidence": "high",
+  "claim_ids": [
+    "CLM-7BEAA3ACF2AC",
+    "CLM-724F27A30B50",
+    "CLM-CA39C751FA53",
+    "CLM-E65FB1525AF5",
+    "CLM-34EB60A951D1",
+    "CLM-3661F57CAC80",
+    "CLM-0351C44FE20C",
+    "CLM-D4FF76BBDE73",
+    "CLM-DDA8E06EFB72",
+    "CLM-F93CC3263E2C",
+    "CLM-0AFAD8332F59",
+    "CLM-6BD39B817DA1",
+    "CLM-0839FB0EFC45",
+    "CLM-1767B34D4A55"
+  ],
+  "source_ids": [
+    "SRC-20260819-2FA37997"
+  ],
+  "status": "active",
+  "created_at": "2026-08-19T00:55:19+09:00",
+  "updated_at": "2026-08-19T00:55:19+09:00",
+  "run_id": "energy-backfill-20240819-20260819"
+}

@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "title": "호주 공급 협력 매출 기회",
+  "description": "Hancock 협력의 계획 공급능력과 가동률을 가격에 적용한 연간 매출 기회.",
+  "as_of": "2026-08-19",
+  "confidence": "medium",
+  "notice": "공개자료 기반 민감도 초안이며 POSCO 실제 원가·계약·물량이 아닙니다.",
+  "variables": [
+    {
+      "id": "capacity",
+      "label": "계획 공급능력",
+      "unit": "kt/년",
+      "min": 1,
+      "max": 50,
+      "step": 1,
+      "default": 30,
+      "kind": "verified",
+      "basis": "POSCO-Hancock 발표 30kt/년",
+      "source_ids": [
+        "SRC-20260819-55D6ECBF"
+      ]
+    },
+    {
+      "id": "ramp",
+      "label": "가동률",
+      "unit": "fraction",
+      "min": 0.1,
+      "max": 1,
+      "step": 0.05,
+      "default": 0.5,
+      "kind": "assumption",
+      "basis": "상업화 초기 가동률",
+      "source_ids": []
+    },
+    {
+      "id": "price",
+      "label": "수산화리튬 가격",
+      "unit": "USD/t",
+      "min": 3000,
+      "max": 30000,
+      "step": 500,
+      "default": 12000,
+      "kind": "assumption",
+      "basis": "시장 가격 시나리오",
+      "source_ids": []
+    }
+  ],
+  "outputs": [
+    {
+      "id": "annual_revenue_opportunity",
+      "label": "연간 매출 기회",
+      "unit": "USD m/년",
+      "decimals": 1,
+      "primary": true,
+      "expression": {
+        "op": "divide",
+        "args": [
+          {
+            "op": "multiply",
+            "args": [
+              {
+                "op": "multiply",
+                "args": [
+                  {
+                    "var": "capacity"
+                  },
+                  {
+                    "var": "ramp"
+                  }
+                ]
+              },
+              {
+                "var": "price"
+              }
+            ]
+          },
+          1000
+        ]
+      }
+    }
+  ],
+  "presets": [
+    {
+      "id": "downside",
+      "label": "하방",
+      "values": {
+        "capacity": 20,
+        "ramp": 0.3,
+        "price": 8000
+      }
+    },
+    {
+      "id": "base",
+      "label": "기준",
+      "values": {
+        "capacity": 30,
+        "ramp": 0.5,
+        "price": 12000
+      }
+    },
+    {
+      "id": "upside",
+      "label": "상방",
+      "values": {
+        "capacity": 30,
+        "ramp": 0.8,
+        "price": 18000
+      }
+    }
+  ]
+}

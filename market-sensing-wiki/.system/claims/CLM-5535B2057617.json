@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-5535B2057617",
+  "subject_id": "MKT-LITHIUM-DLE-20250715",
+  "predicate": "impact_path",
+  "value": "DLE 데모 → 회수율·원가·수자원 검증 → 북미 상업화·고객계약 옵션",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-8048735E"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다.",
+      "source_ids": [
+        "SRC-20260819-8048735E"
+      ]
+    }
+  ]
+}

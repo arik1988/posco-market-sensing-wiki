@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-D50C648E9E94",
+  "subject_id": "MKT-AUSTRALIA-EAST-COAST-GAS-2030",
+  "predicate": "assessment_confidence",
+  "value": "medium",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-0C29491C"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "공개자료 범위의 평가 신뢰도",
+      "source_ids": [
+        "SRC-20260818-0C29491C"
+      ]
+    }
+  ]
+}

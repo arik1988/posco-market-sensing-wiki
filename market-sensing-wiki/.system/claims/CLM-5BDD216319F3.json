@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-5BDD216319F3",
+  "subject_id": "MKT-ENERGY-POSCO-Q3-2025-SENEX-RAMP",
+  "predicate": "business_axis",
+  "value": "에너지",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-D7164DFA"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "POSCO International 에너지 축",
+      "source_ids": [
+        "SRC-20260819-D7164DFA"
+      ]
+    }
+  ]
+}

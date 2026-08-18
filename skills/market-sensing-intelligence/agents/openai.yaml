@@ -1,0 +1,4 @@
+interface:
+  display_name: "포스코그룹 마켓센싱"
+  short_description: "철강·리튬·에너지 사업에 영향을 주는 외부 변화를 선별·평가합니다"
+  default_prompt: "Use $market-sensing-intelligence to search or update the evidence-backed POSCO Group market sensing knowledge base."

@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-C6D8094177B4",
+  "subject_id": "MKT-STEEL-CHINA-WORKPLAN-2025",
+  "predicate": "business_impact_rationale",
+  "value": "중국 제품 믹스와 공급경쟁·원료 방향을 바꿀 수 있습니다.",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-96E7F525"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "정책 목표에서 제품 경쟁으로 이어지는 경로",
+      "source_ids": [
+        "SRC-20260819-96E7F525"
+      ]
+    }
+  ]
+}

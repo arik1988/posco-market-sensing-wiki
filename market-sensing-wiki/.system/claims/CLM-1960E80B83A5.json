@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-1960E80B83A5",
+  "subject_id": "MKT-LITHIUM-HANCOCK-20241216",
+  "predicate": "business_impact_rationale",
+  "value": "비중국 원료와 고객 적격성은 북미 판매 가능 물량과 계약 프리미엄을 좌우할 수 있습니다.",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-55D6ECBF"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다.",
+      "source_ids": [
+        "SRC-20260819-55D6ECBF"
+      ]
+    }
+  ]
+}

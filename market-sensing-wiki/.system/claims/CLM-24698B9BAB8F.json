@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-24698B9BAB8F",
+  "subject_id": "MKT-LITHIUM-CODELCO-20251229",
+  "predicate": "recommended_follow_up",
+  "value": "NovaAndino 생산쿼터·물 사용·가격공식·국가 지분 조건을 POSCO 원료계약과 대조",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-07130472"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다.",
+      "source_ids": [
+        "SRC-20260819-07130472"
+      ]
+    }
+  ]
+}

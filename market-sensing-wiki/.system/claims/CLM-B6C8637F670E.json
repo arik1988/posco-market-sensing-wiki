@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-B6C8637F670E",
+  "subject_id": "MKT-ENERGY-SENEX-ATLAS-UNIT1",
+  "predicate": "recommended_follow_up",
+  "value": "Q2 2025 시운전 증빙·가스관 유량·후속시설 가동·고객 청구를 대조",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-21B1AAAB"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "후속 확인",
+      "source_ids": [
+        "SRC-20260819-21B1AAAB"
+      ]
+    }
+  ]
+}

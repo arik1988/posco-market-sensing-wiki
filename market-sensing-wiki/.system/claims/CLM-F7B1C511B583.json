@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-F7B1C511B583",
+  "subject_id": "MKT-STEEL-EU-ACTION-PLAN-2025",
+  "predicate": "decarbonisation_pathway",
+  "value": "일부 철강은 직접 전기화, 일부는 전해수소 기반 간접 전기화",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-77D38668"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "원문 기술 경로 설명",
+      "source_ids": [
+        "SRC-20260819-77D38668"
+      ]
+    }
+  ]
+}

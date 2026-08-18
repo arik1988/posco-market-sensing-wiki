@@ -1,0 +1,109 @@
+{
+  "run_id": "steel-backfill-20240819-20260819",
+  "started_at": "2026-08-19T09:00:00+09:00",
+  "finished_at": "2026-08-19T00:54:05+09:00",
+  "search_since": "2024-08-19",
+  "search_until": "2026-08-19",
+  "scope": "POSCO 철강사업의 가격·원가·물량·계약·CAPEX·수출 접근성에 직접 영향을 주는 정부·규제·산업정책 변화",
+  "queries": [
+    "site:whitehouse.gov 2025 proclamation steel aluminum tariffs 50 percent June 4 2025",
+    "site:ec.europa.eu steel safeguard 2025 quota 0.1 percent",
+    "China MIIT steel capacity replacement pause August 2024",
+    "European Steel and Metals Action Plan March 2025 official",
+    "Korea ETS Phase 4 allocation steel 2026 2030 official",
+    "China steel work plan 2025 2026 value added 4 percent official",
+    "India DGTR final findings flat steel safeguard August 2025",
+    "Korea MOTIE carbon neutral leading plant support 2025"
+  ],
+  "checked_urls": [
+    "https://www.mofcom.gov.cn/claw/clawContent.shtml?id=100481",
+    "https://www.marketscreener.com/news/latest/China-pauses-steel-capacity-swap-programme-which-will-limit-expansion-47716689/",
+    "https://www.whitehouse.gov/presidential-actions/2025/06/adjusting-imports-of-aluminum-and-steel-into-the-united-states/",
+    "https://www.whitehouse.gov/fact-sheets/2025/06/fact-sheet-president-donald-j-trump-increases-section-232-tariffs-on-steel-and-aluminum/",
+    "https://www.investing.com/news/stock-market-news/factboxtrumps-tariffs-and-threatened-trade-actions-4080709",
+    "https://policy.trade.ec.europa.eu/news/commission-strengthens-protection-eu-steel-industry-2025-03-25_en",
+    "https://www.marketscreener.com/news/latest/EU-tightens-steel-import-restrictions-49426844/",
+    "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=celex:52025DC0125",
+    "https://single-market-economy.ec.europa.eu/publications/european-steel-and-metals-action-plan_en",
+    "https://www.motie.go.kr/kor/article/ATCL2826a2625/70244/view",
+    "https://www.motie.go.kr/kor/article/ATCLc01b2801b/70007/view",
+    "https://www.mcee.go.kr/eng/web/board/read.do?boardCategoryId=&boardId=1820110&boardMasterId=522&decorator=&maxIndexPages=10&maxPageItems=10&menuId=461&orgCd=&pagerOffset=0&searchKey=&searchValue=",
+    "https://english.www.gov.cn/news/202509/22/content_WS68d0ecf6c6d00fa19f7a29cd.html",
+    "https://dgtr.gov.in/sites/default/files/2025-08/NCV%20FINAL%20SGD%20Steel%2016.08.2025.pdf",
+    "https://www.dgtr.gov.in/en/safe-guard-investigation-india"
+  ],
+  "failed_urls": [],
+  "access_attempts": [
+    {
+      "url": "https://www.mofcom.gov.cn/claw/clawContent.shtml?id=100481",
+      "method": "http",
+      "outcome": "success",
+      "http_status": 200,
+      "final": true
+    },
+    {
+      "url": "https://www.whitehouse.gov/presidential-actions/2025/06/adjusting-imports-of-aluminum-and-steel-into-the-united-states/",
+      "method": "http",
+      "outcome": "success",
+      "http_status": 200,
+      "final": true
+    },
+    {
+      "url": "https://policy.trade.ec.europa.eu/news/commission-strengthens-protection-eu-steel-industry-2025-03-25_en",
+      "method": "http",
+      "outcome": "success",
+      "http_status": 200,
+      "final": true
+    },
+    {
+      "url": "https://eur-lex.europa.eu/legal-content/EN/ALL/?uri=celex:52025DC0125",
+      "method": "http",
+      "outcome": "success",
+      "http_status": 200,
+      "final": true
+    },
+    {
+      "url": "https://www.motie.go.kr/kor/article/ATCL2826a2625/70244/view",
+      "method": "http",
+      "outcome": "success",
+      "http_status": 200,
+      "final": true
+    },
+    {
+      "url": "https://www.mcee.go.kr/eng/web/board/read.do?boardId=1820110",
+      "method": "http",
+      "outcome": "success",
+      "http_status": 200,
+      "final": true
+    },
+    {
+      "url": "https://english.www.gov.cn/news/202509/22/content_WS68d0ecf6c6d00fa19f7a29cd.html",
+      "method": "http",
+      "outcome": "success",
+      "http_status": 200,
+      "final": true
+    },
+    {
+      "url": "https://dgtr.gov.in/sites/default/files/2025-08/NCV%20FINAL%20SGD%20Steel%2016.08.2025.pdf",
+      "method": "document",
+      "outcome": "success",
+      "http_status": 200,
+      "final": true
+    }
+  ],
+  "results": {
+    "new_sources": 8,
+    "new_claims": 99,
+    "new_signals": 8
+  },
+  "signal_ids": [
+    "SIG-C477DD938B51",
+    "SIG-50D67D94CE68",
+    "SIG-DD57A408BE89",
+    "SIG-6B84311777B3",
+    "SIG-B62618A2EFD8",
+    "SIG-652BB1C14590",
+    "SIG-0A9D118B1909",
+    "SIG-C8AF9A1B623E"
+  ]
+}

@@ -1,0 +1,161 @@
+{
+  "schema_version": 1,
+  "insight_id": "INS-4F2DD61C177F",
+  "title": "Senex Atlas·Roma North 증산 실행 게이트",
+  "summary": "개장식은 1단계 시설·생산정·파이프라인 진척을 확인하지만 60 PJ는 전체 개발 목표입니다. first gas, 후속 처리시설, 고객 인도와 매출 인식 시점을 구분해 CAPEX 회수 판단을 갱신해야 합니다.",
+  "analysis_markdown": "# Senex Energy, Atlas·Roma North 증산 프로젝트 공식 개장\n\n## 원문 보존\n\n- 제목: Senex Energy delivers on promise of more domestic natural gas supply with official opening of $1 billion expansion\n- 발행자: Senex Energy\n- 발표일: 2024-11-25 (11월 24일 개장식)\n- 원문: https://senexenergy.com.au/news/senex-energy-delivers-on-promise-of-more-domestic-natural-gas-supply-with-official-opening-of-1-billion-expansion/\n- 접근 상태: 공개 HTML 본문 확인.\n\n### 핵심 원문 문장\n\n> First gas is set to flow from Senex Energy’s $1 billion Atlas natural gas field expansion following the official opening ...\n\n> the expansion of Atlas and Roma North gas developments to deliver 60 petajoules (PJ) per year.\n\nSenex는 160개 이상 생산정, Atlas–Reedy Creek 파이프라인 및 1단계 처리시설을 완료했고 2025년 초 신규 공급을 예고했습니다. 프로젝트 비용의 95%를 호주에서 집행하고 약 1,000개 일자리를 만들었다고 설명했습니다.\n\n## Signal\n\n**Senex의 A$1bn Atlas·Roma North 증산은 개장·처리시설 가동 단계로 진입했지만 60 PJ/년 전량 판매와 2025년 현금화는 후속 가동·계약 이행을 조건으로 하는 실행 신호.**\n\n- 사업축: 포스코인터내셔널 에너지 — Senex 증산·호주 동부 국내가스\n- 사업영향도: 5/5 — POSCO International의 50.1% 공동투자 자산에서 물량·CAPEX 회수·계약 매출을 동시에 바꿈.\n- 긴급도: 4/5 — 2025년 초 first gas와 처리시설 가동 실적 확인 필요.\n- 평가 신뢰도: 중간~높음(사업자 원문, 실제 달성은 후속 검증 필요).\n\n## Insight와 문서급 분석\n\n### 판단 질문과 잠정 결론\n\n**개장식을 60 PJ/년 증산의 실현으로 인식해 2025년 수익을 선반영해도 되는가?** 아니오. 개장식은 1단계 처리시설과 일부 파이프라인 완료를 확인하지만, 60 PJ는 Atlas와 Roma North의 전체 개발 목표이며 first gas·단계별 처리·판매계약 이행이 남아 있습니다. CAPEX 회수 판단은 개장식이 아니라 월별 판매량, 고객 인도, 단가와 운영비로 갱신해야 합니다.\n\n### 확인된 변화와 시점\n\n2024년 11월 25일 Senex는 Atlas·Roma North 1단계 확장 개장과 60 PJ/년 목표를 공개했습니다.\n\n### 통념과 확인된 간극\n\n통념은 “A$1bn 프로젝트가 열렸으니 생산·현금흐름이 즉시 세 배가 된다”는 것입니다. 원문은 160개 생산정과 1단계 시설이 완료됐고 가스가 흐르며 시운전 중이라고 하면서도, 2025년 초 공급과 full capacity를 구분합니다. 또 제조업 고객은 Senex의 기존·신규 계약을 통해 공급받지만 60 PJ가 모두 같은 가격·지역으로 판매되는 것은 아닙니다. 발표된 투자액·일자리와 회계상 감가상각·운영비·매출 인식 시점 사이의 간극을 예산에 반영해야 합니다.\n\n### 사업 영향 경로\n\n```mermaid\nflowchart LR\n A[A$1bn Atlas·Roma North CAPEX] --> B[처리시설·파이프라인·생산정 단계 가동]\n B --> C[First gas와 고객별 인도량]\n C --> D[판매단가·운영비·현금회수]\n D --> E[POSCO International 연결 EBITDA·CAPEX 회수]\n```\n\n### 사업 시나리오\n\n| 시나리오 | 관찰 조건 | 사업 의미 | 우선 대응 |\n| --- | --- | --- | --- |\n| 상방 | first gas 조기, 생산정·처리시설 순차 가동, 장기 GSA 인도 정상 | 60 PJ 목표의 가시성 상승, 증산 회수 가속 | 고객별 인도·마진 대시보드 고정 |\n| 기준 | 1단계만 안정, Units 2·3 일정 유지 | 매출은 점진 증가, 초기 운영비 부담 | 월별 생산·운영비와 CAPEX 잔액 연결 |\n| 하방 | 처리·파이프라인 지연, 가격·전송비 상승 | 물량은 늘어도 현금흐름·수익성 지연 | 공정별 지연 임계값과 대체판매 계획 마련 |\n\n### 지금 확인할 지표\n\n- 시설별 시운전·상업운전일 및 생산정 연결 수\n- 고객별 PJ·가격공식·호주 동부 전송비\n- 운영비·CAPEX 집행액과 2025년 1분기 실제 청구 매출\n\n### 의사결정에 필요한 다음 산출물\n\n1. 완료·시운전·상업판매 상태별 프로젝트 원가표 — 프로젝트 주관, 2024-12-31.\n2. 고객별 인도·가격·전송비·단위마진 표 — 영업 주관, 2025-02-15.\n3. first gas 이후 12개월 CAPEX 회수 현금흐름 브리지 — 재무 주관, 2025-03-15.\n\n결론을 확정하는 단일 확인은 2025년 1분기 고객 인도 가스와 청구 매출이 실제로 계상됐는지입니다.\n\n!!! warning \"판단의 한계\"\n\n    Senex 발표는 사업자 자체의 공정·고용·투자 설명이며 POSCO International 연결 기준의 손익·실제 가동률·계약가격을 확정하지 않습니다. 60 PJ는 목표용량이지 공개된 2025년 매출 가이던스가 아닙니다.\n\n### impact-estimate 초안\n\n```json\n{\n  \"schema_version\": 1,\n  \"title\":\"Senex 60 PJ 증산 CAPEX 회수 예비모델\",\n  \"description\":\"Senex 증산 판매량·단위마진·운영비를 사용한 POSCO International 지분 현금흐름 민감도\",\n  \"as_of\":\"2024-11-25\",\n  \"confidence\":\"low\",\n  \"notice\":\"공개 생산목표와 가정 가격·마진을 사용한 예비 현금흐름 모델이며 회사 실제값 아님\",\n  \"formula_display\":\"판매량(PJ) × 단위마진(AUD/GJ) × POSCO 지분율 − 대응·운영비\",\n  \"variables\":[\n    {\"id\":\"sales_pj\",\"label\":\"연간 판매량\",\"unit\":\"PJ\",\"min\":10,\"max\":60,\"step\":5,\"default\":36,\"kind\":\"derived\",\"basis\":\"Senex 발표 60 PJ 목표, 단계 가동 가정\",\"source_ids\":[]},\n    {\"id\":\"margin_aud_gj\",\"label\":\"단위마진\",\"unit\":\"AUD/GJ\",\"min\":0.5,\"max\":4,\"step\":0.5,\"default\":2,\"kind\":\"assumption\",\"basis\":\"계약가격·운영비 비공개\",\"source_ids\":[]},\n    {\"id\":\"ownership\",\"label\":\"POSCO International 지분율\",\"unit\":\"share\",\"min\":0.45,\"max\":0.55,\"step\":0.001,\"default\":0.501,\"kind\":\"assumption\",\"basis\":\"POSCO 공식 Senex 자료를 publication 단계에서 Source로 연결\",\"source_ids\":[]},\n    {\"id\":\"opex_aud_m\",\"label\":\"연간 운영·대응비용\",\"unit\":\"AUD million\",\"min\":10,\"max\":150,\"step\":10,\"default\":60,\"kind\":\"assumption\",\"basis\":\"회사별 원가 비공개\",\"source_ids\":[]}\n  ],\n  \"outputs\":[{\"id\":\"cashflow\",\"label\":\"예상 연간 현금흐름\",\"unit\":\"AUD million\",\"decimals\":1,\"primary\":true,\"expression\":{\"op\":\"subtract\",\"args\":[{\"op\":\"multiply\",\"args\":[{\"op\":\"multiply\",\"args\":[{\"var\":\"sales_pj\"},{\"var\":\"margin_aud_gj\"}]},{\"var\":\"ownership\"}]},{\"var\":\"opex_aud_m\"}]}}],\n  \"presets\":[{\"id\":\"defensive\",\"label\":\"방어\",\"values\":{\"sales_pj\":45,\"margin_aud_gj\":2.5,\"ownership\":0.501,\"opex_aud_m\":45}},{\"id\":\"base\",\"label\":\"기준\",\"values\":{\"sales_pj\":36,\"margin_aud_gj\":2,\"ownership\":0.501,\"opex_aud_m\":60}},{\"id\":\"pressure\",\"label\":\"압박\",\"values\":{\"sales_pj\":20,\"margin_aud_gj\":1,\"ownership\":0.501,\"opex_aud_m\":100}}]\n}\n```",
+  "impact_estimate": {
+    "schema_version": 1,
+    "title": "Senex 60 PJ expansion cash-flow sensitivity",
+    "description": "Conditional annual cash-flow sensitivity from Senex sales volume, unit margin, operating cost and POSCO International share.",
+    "as_of": "2024-11-25",
+    "confidence": "low",
+    "notice": "Public production target plus assumptions; price, cost, contract and ramp timing are not disclosed and this is not a company forecast.",
+    "formula_display": "sales_pj × margin_aud_gj × ownership_share − opex_aud_m",
+    "variables": [
+      {
+        "id": "sales_pj",
+        "label": "Annual sales volume",
+        "unit": "PJ",
+        "min": 10,
+        "max": 60,
+        "step": 5,
+        "default": 36,
+        "kind": "derived",
+        "basis": "Senex 60 PJ target with staged ramp-up assumption.",
+        "source_ids": []
+      },
+      {
+        "id": "margin_aud_gj",
+        "label": "Unit margin",
+        "unit": "AUD/GJ",
+        "min": 0.5,
+        "max": 4,
+        "step": 0.5,
+        "default": 2,
+        "kind": "assumption",
+        "basis": "Contract price and operating cost are not public.",
+        "source_ids": []
+      },
+      {
+        "id": "ownership_share",
+        "label": "POSCO International ownership share",
+        "unit": "share",
+        "min": 0.45,
+        "max": 0.55,
+        "step": 0.01,
+        "default": 0.5,
+        "kind": "assumption",
+        "basis": "Ownership is held as an assumption until source registration.",
+        "source_ids": []
+      },
+      {
+        "id": "opex_aud_m",
+        "label": "Annual operating and response cost",
+        "unit": "AUD million",
+        "min": 10,
+        "max": 150,
+        "step": 10,
+        "default": 60,
+        "kind": "assumption",
+        "basis": "Company operating cost is not public.",
+        "source_ids": []
+      }
+    ],
+    "outputs": [
+      {
+        "id": "cashflow",
+        "label": "Indicative annual cash flow",
+        "unit": "AUD million",
+        "decimals": 1,
+        "primary": true,
+        "expression": {
+          "op": "subtract",
+          "args": [
+            {
+              "op": "multiply",
+              "args": [
+                {
+                  "op": "multiply",
+                  "args": [
+                    {
+                      "var": "sales_pj"
+                    },
+                    {
+                      "var": "margin_aud_gj"
+                    }
+                  ]
+                },
+                {
+                  "var": "ownership_share"
+                }
+              ]
+            },
+            {
+              "var": "opex_aud_m"
+            }
+          ]
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "defensive",
+        "label": "Defensive",
+        "values": {
+          "sales_pj": 45,
+          "margin_aud_gj": 2.5,
+          "ownership_share": 0.5,
+          "opex_aud_m": 45
+        }
+      },
+      {
+        "id": "base",
+        "label": "Base",
+        "values": {
+          "sales_pj": 36,
+          "margin_aud_gj": 2,
+          "ownership_share": 0.5,
+          "opex_aud_m": 60
+        }
+      },
+      {
+        "id": "pressure",
+        "label": "Pressure",
+        "values": {
+          "sales_pj": 20,
+          "margin_aud_gj": 1,
+          "ownership_share": 0.5,
+          "opex_aud_m": 100
+        }
+      }
+    ]
+  },
+  "document_path": null,
+  "company_ids": [
+    "COM-POSCO-INTERNATIONAL"
+  ],
+  "business_axis": "에너지",
+  "claim_ids": [
+    "CLM-5162D267E6AB",
+    "CLM-473933EE6EC9",
+    "CLM-15D1AD827448",
+    "CLM-BF613893BCBF",
+    "CLM-F8FF37ED5860",
+    "CLM-0E9CCEBCC71A",
+    "CLM-7495AEBF47BA",
+    "CLM-4DDD6B4C1009",
+    "CLM-F22E855EEBC4",
+    "CLM-614B38E4B4FF",
+    "CLM-A8CA5879DDC6",
+    "CLM-DD2EC29FCE11",
+    "CLM-F34F733E5C46",
+    "CLM-2CC06C1455AC"
+  ],
+  "source_ids": [
+    "SRC-20260819-F3EBEB9A"
+  ],
+  "created_at": "2026-08-19T00:54:46+09:00",
+  "updated_at": "2026-08-19T00:54:46+09:00",
+  "run_id": "energy-backfill-20240819-20260819"
+}

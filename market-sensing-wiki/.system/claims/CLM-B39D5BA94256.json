@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-B39D5BA94256",
+  "subject_id": "OPS-POSCO-ARGENTINA-Q2-2026",
+  "predicate": "business_impact_rationale",
+  "value": "1공장 안정가동 재현성과 2공장 초기비용 흡수 여부가 리튬사업 현금흐름과 후속 증설 게이트를 바꿉니다.",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-A26B22EF"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "공개 근거 기반 AI 영향도 판단",
+      "source_ids": [
+        "SRC-20260818-A26B22EF"
+      ]
+    }
+  ]
+}

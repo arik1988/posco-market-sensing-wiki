@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "signal_id": "SIG-A4D20EDE549C",
+  "sentence": "Rio Tinto의 리튬 생산 20% 증가와 일부 프로젝트 조기생산은 2028 공급압력을 앞당길 수 있어 포스코홀딩스의 증설 게이트를 원가·품질·오프테이크 기준으로 재정의해야 합니다.",
+  "insight_id": "INS-6BC559400743",
+  "company_ids": [
+    "COM-POSCO-HOLDINGS"
+  ],
+  "business_axis": "리튬",
+  "business_impact": {
+    "score": 4,
+    "rationale": "경쟁사 램프업 선행은 비중국계 공급곡선과 고객 협상력을 바꿔 포스코홀딩스의 증설 시점·요구수익률에 영향을 줍니다."
+  },
+  "urgency": {
+    "score": 4,
+    "rationale": "2027~2028 증설 의사결정 전에 발표 용량이 아닌 실제 분기 출하속도를 반영해야 합니다.",
+    "response_deadline": "2026-09-30"
+  },
+  "assessed_at": "2026-08-18",
+  "assessment_confidence": "medium",
+  "claim_ids": [
+    "CLM-62DD80208A03",
+    "CLM-20D7B201892D",
+    "CLM-50517CF684C1",
+    "CLM-43208EF68C2D",
+    "CLM-B84DEEE0B7FF",
+    "CLM-7E92C4676AE0",
+    "CLM-08B99FB42555",
+    "CLM-3EEC0357D423",
+    "CLM-CD5E7311E2F9",
+    "CLM-D7BC29C3A259",
+    "CLM-38406BD67672",
+    "CLM-A5D68520EDF2"
+  ],
+  "source_ids": [
+    "SRC-20260818-D7286E4D"
+  ],
+  "status": "active",
+  "created_at": "2026-08-18T23:36:30+09:00",
+  "updated_at": "2026-08-18T23:36:30+09:00",
+  "run_id": "topic-scan-20260818"
+}

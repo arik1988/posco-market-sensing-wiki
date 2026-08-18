@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "insight_id": "INS-FADFA96C4E46",
+  "title": "Atlas Unit 1 시운전과 증산 매출 게이트",
+  "summary": "Unit 1 준공은 상업판매 전 단계입니다. 가스관 유량, 생산정 연결, Units 2·3 가동, 고객 청구가 순서대로 확인돼야 2026년 공급 목표와 CAPEX 회수 판단을 확정할 수 있습니다.",
+  "analysis_markdown": "# POSCO International, Senex Atlas 가스처리시설 Unit 1 시운전\n\n## 원문 보존\n\n- 제목: POSCO INTERNATIONAL Begins Test Operation of Gas Processing Facility Unit 1 for Senex Energy in Australia, with Plans to Triple Natural Gas Production Progressing Smoothly\n- 발행자: POSCO INTERNATIONAL / POSCO Group Newsroom\n- 발표일: 2024-12-04; 준공식 사건일 2024-11-24\n- 원문: https://newsroom.posco.com/en/posco-international-begins-test-operation-of-gas-processing-facility-unit-1-for-senex-energy-in-australia-with-plans-to-triple-natural-gas-production-progressing-smoothly/\n- 접근 상태: 공개 HTML 본문과 게시일·사건일 확인.\n\n### 핵심 원문 문장\n\n> The production expansion plan announced in 2022 is progressing smoothly, with gradual expansion set to begin in the latter half of 2025.\n\n> POSCO INTERNATIONAL aims to finish the test operation of Gas Processing Facility Unit 1 and its associated gas pipelines by the second quarter of 2025, followed by gradual sales of the expanded gas production.\n\n원문은 280개 생산정, 처리시설 2개 추가, 가스관 건설, 2025년 말 증산 완료 목표, 2026년 동부 호주 국내 가스수요 10% 이상 공급 전망을 함께 제시합니다.\n\n## Signal\n\n**Senex Atlas Unit 1은 준공에서 시운전으로 넘어갔지만 2025년 Q2 테스트 완료와 Units 2·3 후속 가동이 증산 매출·현금흐름의 핵심 게이트.**\n\n- 사업축: 포스코인터내셔널 에너지 — Senex upstream·호주 동부 가스\n- 사업영향도: 5/5 — 생산능력·판매개시·운영 CAPEX의 순서를 바꾸는 프로젝트 이행 신호.\n- 긴급도: 4/5 — Q2 2025 테스트 완료와 하반기 후속시설 가동 확인 필요.\n- 평가 신뢰도: 높음(회사 공식 발표), 일정 달성은 중간.\n\n## Insight와 문서급 분석\n\n### 판단 질문과 잠정 결론\n\n**Unit 1 준공을 증산 매출의 확정으로 보고 2025년 전량 판매를 가정해도 되는가?** 아니오. 원문 자체가 “test operation”, “gradual sales”, “Units 2 and 3 in the latter half of 2025”로 상태를 나눕니다. 생산정·가스관·처리시설이 모두 연결되고 판매계약 인도까지 확인돼야 CAPEX 회수의 시계를 시작할 수 있습니다.\n\n### 확인된 변화와 시점\n\n2024년 12월 4일 POSCO International은 Atlas 가스처리시설 Unit 1의 시운전 진입과 후속 Units 2·3 일정을 공개했습니다.\n\n### 통념과 확인된 간극\n\n개장 발표만 보면 2026년 10% 공급 목표가 확정된 것처럼 읽히지만, 280개 생산정과 두 개 추가 처리시설은 아직 건설·가동 단계이며, POSCO International은 Q2 2025까지 Unit 1과 연결 가스관 테스트를 계획합니다. 보도된 시설 완료와 실제 판매가스·청구 매출 사이의 간극이 있습니다. 또한 10%는 동부 호주 수요 전망에 대한 회사 기대치이며 Senex의 실제 판매량·전송 제한에 좌우됩니다.\n\n### 사업 영향 경로\n\n```mermaid\nflowchart LR\n A[Unit 1 준공] --> B[Q2 2025 시운전·가스관 연결]\n B --> C[Units 2·3·280개 생산정 순차 가동]\n C --> D[고객 인도·판매량·단가]\n D --> E[증산 EBITDA·CAPEX 회수]\n```\n\n### 사업 시나리오\n\n| 시나리오 | 관찰 조건 | 사업 의미 | 우선 대응 |\n| --- | --- | --- | --- |\n| 상방 | Q2 테스트 완료, 하반기 Units 2·3 상업가동, 인도량 증가 | 생산목표 달성 확률과 계약 매출 상승 | 생산·판매·청구를 주간 연결 |\n| 기준 | Unit 1만 안정, 후속시설 일정 유지 | 2025년 점진적 증산·운영비 선반영 | 시설별 가동률·원가·현금회수 관리 |\n| 하방 | 연결 가스관·후속시설 지연 | 2026년 공급목표와 CAPEX 회수 지연 | 지연 3개월마다 계약·현금흐름 재산정 |\n\n### 지금 확인할 지표\n\n- Q2 2025 시운전 완료 증빙과 가스관 실제 유량\n- Unit 2·3 건설 진척도와 생산정 접속 수\n- 고객별 월 인도량·가격공식·청구서\n\n### 의사결정에 필요한 다음 산출물\n\n1. 준공/시운전/상업판매/청구 네 상태 프로젝트 관리표 — 프로젝트 주관, 2025-03-31.\n2. AEMO GSOO·Senex first gas와 실제 유량 교차검증표 — 운영 주관, 2025-04-15.\n3. 후속시설 지연 3·6·12개월별 EBITDA·현금흐름 민감도 — 재무 주관, 2025-05-01.\n\n단일 확정 조건은 가스관을 통한 상업판매와 고객 청구서가 동시에 확인되는 시점입니다.\n\n!!! warning \"판단의 한계\"\n\n    회사 발표는 계획과 진행상태를 설명하며 독립적인 공정검수·생산량 검증을 제공하지 않습니다. 10% 수요 비중과 2026년 공급량은 회사 전망입니다.\n\n### impact-estimate 초안\n\n```json\n{\n  \"schema_version\": 1,\n  \"title\":\"Atlas 단계 가동 지연의 EBITDA 민감도\",\n  \"description\":\"Atlas 후속시설 지연 물량과 단위마진이 POSCO International 지분 EBITDA에 미치는 조건부 영향\",\n  \"as_of\":\"2024-12-04\",\n  \"confidence\":\"low\",\n  \"notice\":\"Unit 1·후속시설 일정과 단위마진은 공개되지 않아 예비 지연 민감도임\",\n  \"formula_display\":\"지연·가동 물량(PJ) × 단위마진(AUD/GJ) × 지분율\",\n  \"variables\":[\n    {\"id\":\"delayed_pj\",\"label\":\"지연 또는 미판매 물량\",\"unit\":\"PJ\",\"min\":1,\"max\":30,\"step\":5,\"default\":10,\"kind\":\"assumption\",\"basis\":\"시설별 ramp-up 비공개\",\"source_ids\":[]},\n    {\"id\":\"margin_aud_gj\",\"label\":\"단위마진\",\"unit\":\"AUD/GJ\",\"min\":0.5,\"max\":4,\"step\":0.5,\"default\":2,\"kind\":\"assumption\",\"basis\":\"가격·원가 비공개\",\"source_ids\":[]},\n    {\"id\":\"ownership\",\"label\":\"POSCO International 지분율\",\"unit\":\"share\",\"min\":0.45,\"max\":0.55,\"step\":0.001,\"default\":0.501,\"kind\":\"assumption\",\"basis\":\"POSCO 공식 발표를 publication 단계에서 Source로 연결\",\"source_ids\":[]}\n  ],\n  \"outputs\":[{\"id\":\"ebitda_delay\",\"label\":\"지연 EBITDA\",\"unit\":\"AUD million\",\"decimals\":1,\"primary\":true,\"expression\":{\"op\":\"multiply\",\"args\":[{\"op\":\"multiply\",\"args\":[{\"var\":\"delayed_pj\"},{\"var\":\"margin_aud_gj\"}]},{\"var\":\"ownership\"}]}}],\n  \"presets\":[{\"id\":\"defensive\",\"label\":\"방어\",\"values\":{\"delayed_pj\":5,\"margin_aud_gj\":2.5,\"ownership\":0.501}},{\"id\":\"base\",\"label\":\"기준\",\"values\":{\"delayed_pj\":10,\"margin_aud_gj\":2,\"ownership\":0.501}},{\"id\":\"pressure\",\"label\":\"압박\",\"values\":{\"delayed_pj\":25,\"margin_aud_gj\":1,\"ownership\":0.501}}]\n}\n```",
+  "impact_estimate": {
+    "schema_version": 1,
+    "title": "Atlas staged-ramp delay EBITDA sensitivity",
+    "description": "Conditional EBITDA sensitivity to delayed or unsold Atlas volume, unit margin and POSCO International share.",
+    "as_of": "2024-12-04",
+    "confidence": "low",
+    "notice": "Facility ramp timing, price and costs are not public; this is a preliminary delay sensitivity, not a company forecast.",
+    "formula_display": "delayed_pj × margin_aud_gj × ownership_share",
+    "variables": [
+      {
+        "id": "delayed_pj",
+        "label": "Delayed or unsold volume",
+        "unit": "PJ",
+        "min": 1,
+        "max": 30,
+        "step": 5,
+        "default": 10,
+        "kind": "assumption",
+        "basis": "Facility ramp-up and delivered volume are not public.",
+        "source_ids": []
+      },
+      {
+        "id": "margin_aud_gj",
+        "label": "Unit margin",
+        "unit": "AUD/GJ",
+        "min": 0.5,
+        "max": 4,
+        "step": 0.5,
+        "default": 2,
+        "kind": "assumption",
+        "basis": "Price and cost are not public.",
+        "source_ids": []
+      },
+      {
+        "id": "ownership_share",
+        "label": "POSCO International ownership share",
+        "unit": "share",
+        "min": 0.45,
+        "max": 0.55,
+        "step": 0.01,
+        "default": 0.5,
+        "kind": "assumption",
+        "basis": "Ownership is held as an assumption until source registration.",
+        "source_ids": []
+      }
+    ],
+    "outputs": [
+      {
+        "id": "ebitda_delay",
+        "label": "Indicative delayed EBITDA",
+        "unit": "AUD million",
+        "decimals": 1,
+        "primary": true,
+        "expression": {
+          "op": "multiply",
+          "args": [
+            {
+              "op": "multiply",
+              "args": [
+                {
+                  "var": "delayed_pj"
+                },
+                {
+                  "var": "margin_aud_gj"
+                }
+              ]
+            },
+            {
+              "var": "ownership_share"
+            }
+          ]
+        }
+      }
+    ],
+    "presets": [
+      {
+        "id": "defensive",
+        "label": "Defensive",
+        "values": {
+          "delayed_pj": 5,
+          "margin_aud_gj": 2.5,
+          "ownership_share": 0.5
+        }
+      },
+      {
+        "id": "base",
+        "label": "Base",
+        "values": {
+          "delayed_pj": 10,
+          "margin_aud_gj": 2,
+          "ownership_share": 0.5
+        }
+      },
+      {
+        "id": "pressure",
+        "label": "Pressure",
+        "values": {
+          "delayed_pj": 25,
+          "margin_aud_gj": 1,
+          "ownership_share": 0.5
+        }
+      }
+    ]
+  },
+  "document_path": null,
+  "company_ids": [
+    "COM-POSCO-INTERNATIONAL"
+  ],
+  "business_axis": "에너지",
+  "claim_ids": [
+    "CLM-1D145C384658",
+    "CLM-7701A5105C10",
+    "CLM-F3B45A1363AC",
+    "CLM-E3D87F7DDBF9",
+    "CLM-E87D1404C48A",
+    "CLM-5323C02D6C0D",
+    "CLM-20AAE92FBB1E",
+    "CLM-3AED98F24441",
+    "CLM-EA59A3CAE3A9",
+    "CLM-9768529148E0",
+    "CLM-54817381683E",
+    "CLM-B6C8637F670E",
+    "CLM-3F3A758CF0BC",
+    "CLM-FA4C2D04528D"
+  ],
+  "source_ids": [
+    "SRC-20260819-21B1AAAB"
+  ],
+  "created_at": "2026-08-19T00:54:50+09:00",
+  "updated_at": "2026-08-19T00:54:50+09:00",
+  "run_id": "energy-backfill-20240819-20260819"
+}

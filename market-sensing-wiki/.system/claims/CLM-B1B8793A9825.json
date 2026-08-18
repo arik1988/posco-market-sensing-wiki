@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-B1B8793A9825",
+  "subject_id": "MKT-STEEL-CHINA-WORKPLAN-2025",
+  "predicate": "business_impact_score_1_to_5",
+  "value": "4",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-96E7F525"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "범용 공급과 고급재 경쟁 방향을 함께 바꿈",
+      "source_ids": [
+        "SRC-20260819-96E7F525"
+      ]
+    }
+  ]
+}

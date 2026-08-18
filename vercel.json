@@ -1,0 +1,59 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "uv run --with-requirements tools/project/requirements-docs.txt -- mkdocs build --strict -f tools/project/mkdocs.yml",
+  "outputDirectory": "tools/project/site",
+  "cleanUrls": true,
+  "trailingSlash": true,
+  "redirects": [
+    {
+      "source": "/academic-landscape-:slug",
+      "destination": "/reports/academic-landscape-:slug",
+      "permanent": true
+    },
+    {
+      "source": "/brief-:slug",
+      "destination": "/reports/briefs/brief-:slug",
+      "permanent": true
+    },
+    {
+      "source": "/briefs/:path*",
+      "destination": "/reports/briefs/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/reports/brief-:slug",
+      "destination": "/reports/briefs/brief-:slug",
+      "permanent": true
+    },
+    {
+      "source": "/audit-:slug",
+      "destination": "/reports/audits/audit-:slug",
+      "permanent": true
+    },
+    {
+      "source": "/audits/:path*",
+      "destination": "/reports/audits/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/TEC-:slug",
+      "destination": "/technologies/TEC-:slug",
+      "permanent": true
+    },
+    {
+      "source": "/COM-:slug",
+      "destination": "/companies/COM-:slug",
+      "permanent": true
+    },
+    {
+      "source": "/PRJ-:slug",
+      "destination": "/projects/PRJ-:slug",
+      "permanent": true
+    },
+    {
+      "source": "/SRC-:slug",
+      "destination": "/sources/SRC-:slug",
+      "permanent": true
+    }
+  ]
+}

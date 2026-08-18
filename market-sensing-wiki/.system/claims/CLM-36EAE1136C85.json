@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-36EAE1136C85",
+  "subject_id": "MKT-ENERGY-ACCC-Q3-2025-SHORTFALL",
+  "predicate": "business_axis",
+  "value": "에너지",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-0270DC5A"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "Senex·호주 동부 가스 영향축",
+      "source_ids": [
+        "SRC-20260819-0270DC5A"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-BCD355BF15C9",
+  "subject_id": "MKT-LITHIUM-HANCOCK-20241216",
+  "predicate": "recommended_follow_up",
+  "value": "Hancock 30kt 프로젝트의 FID·인허가·오프테이크·FEOC 적격성 확인",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-55D6ECBF"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "발표 당시 공개정보를 현재 검증일에 재확인한 분석 연결입니다.",
+      "source_ids": [
+        "SRC-20260819-55D6ECBF"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-A4D20CC13B7B",
+  "subject_id": "OPS-POSCO-ARGENTINA-Q2-2026",
+  "predicate": "impact_path",
+  "value": "설비개선→수율·가동 안정→첫 분기 흑자→2공장 초기비용 흡수·증설 판단",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-A26B22EF"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "공개 사실에서 사업 의사결정으로 이어지는 영향 경로",
+      "source_ids": [
+        "SRC-20260818-A26B22EF"
+      ]
+    }
+  ]
+}

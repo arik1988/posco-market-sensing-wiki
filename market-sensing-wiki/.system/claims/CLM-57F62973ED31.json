@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-57F62973ED31",
+  "subject_id": "COM-POSCO-INTERNATIONAL",
+  "predicate": "urgency_rationale",
+  "value": "시행은 2027년 7월이지만 세부 제도 협의가 진행 중이어서 지금이 Senex의 국내전용 생산자 처리와 가격영향을 정책에 반영할 시점이다.",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-38019D54"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "AI 분석",
+      "source_ids": [
+        "SRC-20260818-38019D54"
+      ]
+    }
+  ]
+}

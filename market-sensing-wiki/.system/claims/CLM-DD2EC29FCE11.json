@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-DD2EC29FCE11",
+  "subject_id": "MKT-ENERGY-SENEX-ATLAS-OPENING",
+  "predicate": "recommended_follow_up",
+  "value": "시설별 상업운전·고객 인도·가격·운영비를 2025년 분기 실적과 대조",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-F3EBEB9A"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "후속 확인",
+      "source_ids": [
+        "SRC-20260819-F3EBEB9A"
+      ]
+    }
+  ]
+}

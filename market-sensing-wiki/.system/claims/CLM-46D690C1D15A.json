@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-46D690C1D15A",
+  "subject_id": "MKT-STEEL-CHINA-CAPACITY-PAUSE-2024",
+  "predicate": "urgency_score_1_to_5",
+  "value": "4",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-BCECCDDE"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "제도 개정 전후 공급경쟁 기준을 재설정해야 함",
+      "source_ids": [
+        "SRC-20260819-BCECCDDE"
+      ]
+    }
+  ]
+}

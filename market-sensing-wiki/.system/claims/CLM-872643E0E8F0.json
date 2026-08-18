@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-872643E0E8F0",
+  "subject_id": "OPS-POSCO-ARGENTINA-Q2-2026",
+  "predicate": "posco_argentina_profit_status_q2_2026",
+  "value": "first quarterly profit",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-A26B22EF"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "POSCO Holdings 공식 2분기 실적",
+      "source_ids": [
+        "SRC-20260818-A26B22EF"
+      ]
+    }
+  ]
+}

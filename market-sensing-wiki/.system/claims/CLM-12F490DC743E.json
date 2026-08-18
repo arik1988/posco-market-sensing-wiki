@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-12F490DC743E",
+  "subject_id": "MKT-STEEL-US-SECTION232-50-2025",
+  "predicate": "assessment_confidence",
+  "value": "high",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-E42DE3D9"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "백악관 포고령·팩트시트·Reuters 재인용 교차확인",
+      "source_ids": [
+        "SRC-20260819-E42DE3D9"
+      ]
+    }
+  ]
+}

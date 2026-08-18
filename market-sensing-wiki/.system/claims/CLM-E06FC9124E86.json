@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-E06FC9124E86",
+  "subject_id": "MKT-GLOBAL-LNG-HORMUZ-2026",
+  "predicate": "recommended_follow_up",
+  "value": "LNG 통합 포지션맵과 전용선 우회비용을 2026-08-31까지 작성",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-18",
+  "last_verified": "2026-08-18",
+  "source_ids": [
+    "SRC-20260818-3DD53EA4"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-18",
+      "action": "created",
+      "reason": "공개자료 한계를 해소할 후속 확인",
+      "source_ids": [
+        "SRC-20260818-3DD53EA4"
+      ]
+    }
+  ]
+}

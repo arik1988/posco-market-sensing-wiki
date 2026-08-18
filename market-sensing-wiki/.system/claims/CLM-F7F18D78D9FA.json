@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-F7F18D78D9FA",
+  "subject_id": "MKT-STEEL-KR-ETS-PHASE4-2025",
+  "predicate": "steel_free_allocation",
+  "value": "수출비중 높은 업종을 포함한 철강은 100% 무상할당 유지",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-D1248F53"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "정부 발표의 업종 원칙",
+      "source_ids": [
+        "SRC-20260819-D1248F53"
+      ]
+    }
+  ]
+}
