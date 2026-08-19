@@ -93,6 +93,20 @@ Insight의 선택 필드 `impact_estimate`는 MkDocs와 향후 웹 프로그램�
 - 결과는 회사 실제 전망이 아니라 공개정보 기반 예비 추정임을 `notice`에 밝힌다.
 - 동일한 시장가격·물량 충격을 공유하는 Signal은 독립 금액처럼 합산하지 않는다.
 
+## 구조적 추세·전략가정·지속 경고
+
+반복되는 외부 Signal이 동일한 전략가정을 흔들 때 다음 세 레코드를 분리 저장한다.
+
+- `.system/trends/TRD-*.json`: 사업축, 방향, 최초·최근 관찰일, Signal, 지지·반대 Source,
+  수치 indicator
+- `.system/theses/THS-*.json`: 위협받는 전략가정, 사업 영향 경로, 판단 기간, 반대 근거,
+  반증 조건
+- `.system/warnings/WRN-*.json`: 단계·상태, 최초·최근·다음 검토일, 강화·완화 규칙,
+  판단 질문·조치·변경 이력
+
+세 레코드는 schema version 1이며 `upsert-strategic-watch`로 함께 검증·저장한다. 활성
+Warning은 명시적 review 없이 삭제하거나 종료하지 않으며 변경은 history에 append한다.
+
 ## 목차
 
 1. 디렉터리

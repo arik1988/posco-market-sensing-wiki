@@ -1,0 +1,36 @@
+{
+  "claim_id": "CLM-DD7614F6749D",
+  "subject_id": "DEC-LFP-GLOBAL-20260819",
+  "predicate": "assessment_confidence",
+  "value": "high",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-3F479FFE",
+    "SRC-20260819-3EDE7B8B"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "국제기구 통계와 정부 기술자료의 독립 근거",
+      "source_ids": [
+        "SRC-20260819-3F479FFE",
+        "SRC-20260819-3EDE7B8B"
+      ]
+    },
+    {
+      "date": "2026-08-19",
+      "action": "verified",
+      "reason": "국제기구 통계와 정부 기술자료의 독립 근거",
+      "source_ids": [
+        "SRC-20260819-3F479FFE",
+        "SRC-20260819-3EDE7B8B"
+      ]
+    }
+  ]
+}

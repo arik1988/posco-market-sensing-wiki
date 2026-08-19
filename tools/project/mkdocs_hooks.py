@@ -135,8 +135,11 @@ def _signal_ui_data_script(payload: dict[str, Any]) -> str:
     )
     kind = payload["kind"]
     return (
-        f'<script type="application/json" data-signal-ui="{kind}">'
-        f"{serialized}</script>"
+        # Material instant navigation executes inserted script nodes even when their
+        # type is application/json. A template preserves inert JSON across both full
+        # loads and instant navigation without producing a console SyntaxError.
+        f'<template data-signal-ui="{kind}">'
+        f"{serialized}</template>"
     )
 
 
@@ -224,6 +227,13 @@ def on_config(config: Any) -> Any:
     """Build concise navigation from the generated knowledge pages."""
     root = Path(config["docs_dir"])
     nav: list[dict[str, Any]] = [{"홈": "index.md"}]
+
+    warnings = _pages(root, "strategic-warnings/WRN-*.md")
+    warning_index = root / "strategic-warnings" / "index.md"
+    if warning_index.is_file():
+        nav.append(
+            {"전략 경고": [{"전체 경고": "strategic-warnings/index.md"}, *warnings]}
+        )
 
     signals = _pages(root, "signals/SIG-*.md")
     signal_index = root / "signals" / "index.md"

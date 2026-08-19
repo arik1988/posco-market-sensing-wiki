@@ -303,6 +303,139 @@ class MarketSensingTests(unittest.TestCase):
         ):
             self.assertEqual(audit["counts"][category], 0)
 
+    def test_strategic_watch_persists_and_traces_from_warning_to_source(self):
+        market_sensing.write_json(
+            self.root / ".system" / "source-records" / "SRC-TEST.json",
+            {
+                "source_id": "SRC-TEST",
+                "title": "Official market source",
+                "publisher": "Agency",
+                "source_type": "government",
+                "reliability": "primary",
+                "raw_path": "",
+            },
+        )
+        market_sensing.write_json(
+            self.root / ".system" / "signals" / "SIG-TEST.json",
+            {
+                "schema_version": market_sensing.SIGNAL_SCHEMA_VERSION,
+                "signal_id": "SIG-TEST",
+                "sentence": "외부 시장구성이 바뀌어 제품별 계획을 다시 확인해야 합니다.",
+                "signal_type": "기술·운영",
+                "signal_role": "core_market_signal",
+                "signal_origin": "external_market",
+                "insight_id": "INS-TEST",
+                "company_ids": ["COM-POSCO-HOLDINGS"],
+                "business_axis": "리튬",
+                "business_impact": {"score": 4, "rationale": "제품 믹스 영향"},
+                "urgency": {"score": 4, "rationale": "계약 전 검토"},
+                "assessed_at": "2026-08-19",
+                "claim_ids": [],
+                "source_ids": ["SRC-TEST"],
+                "status": "active",
+                "run_id": "test-run",
+            },
+        )
+        market_sensing.write_json(
+            self.root / ".system" / "insights" / "INS-TEST.json",
+            {
+                "schema_version": market_sensing.INSIGHT_SCHEMA_VERSION,
+                "insight_id": "INS-TEST",
+                "title": "외부 시장구성이 바뀌었다",
+                "summary": "시장구성이 달라졌습니다. 제품별 계획을 다시 확인해야 합니다.",
+                "analysis_markdown": "상세 분석",
+                "claim_ids": [],
+                "source_ids": ["SRC-TEST"],
+                "run_id": "test-run",
+            },
+        )
+        manifest = {
+            "schema_version": 1,
+            "trend": {
+                "trend_id": "TRD-TEST",
+                "title": "시장구성 전환",
+                "summary": "같은 방향의 외부 변화가 반복됩니다.",
+                "business_axis": "리튬",
+                "direction": "strengthening",
+                "first_detected_at": "2026-08-01",
+                "last_observed_at": "2026-08-19",
+                "signal_ids": ["SIG-TEST"],
+                "supporting_source_ids": ["SRC-TEST"],
+                "counter_source_ids": [],
+                "indicators": [
+                    {
+                        "label": "시장 비중",
+                        "current": "55",
+                        "unit": "%",
+                        "observed_at": "2026-08-19",
+                        "interpretation": "주류 전환",
+                        "source_ids": ["SRC-TEST"],
+                    }
+                ],
+            },
+            "thesis": {
+                "thesis_id": "THS-TEST",
+                "title": "기존 성장전제 위험",
+                "statement": "제품별 성장률이 달라질 수 있습니다.",
+                "strategic_assumption_at_risk": "기존 제품이 시장 평균만큼 성장한다는 전제",
+                "business_impact_path": "시장구성 → 제품수요 → 가동률",
+                "business_axis": "리튬",
+                "trend_ids": ["TRD-TEST"],
+                "supporting_signal_ids": ["SIG-TEST"],
+                "execution_context_signal_ids": [],
+                "confidence": "high",
+                "decision_horizon": "2027년",
+                "counter_evidence": ["기존 제품의 성능 우위가 남습니다."],
+                "falsification_conditions": ["시장 비중이 2년 연속 하락합니다."],
+            },
+            "warning": {
+                "warning_id": "WRN-TEST",
+                "title": "기존 성장전제 재검증",
+                "business_axis": "리튬",
+                "thesis_id": "THS-TEST",
+                "level": "warning",
+                "status": "active",
+                "first_raised_at": "2026-08-19",
+                "last_reviewed_at": "2026-08-19",
+                "next_review_at": "2026-09-30",
+                "rationale": "독립 근거가 같은 방향을 가리킵니다.",
+                "persistence_rule": "사람이 반증 근거로 종료하기 전까지 유지합니다.",
+                "escalation_rules": ["시장 비중이 더 상승합니다."],
+                "deescalation_rules": ["시장 비중이 2년 연속 하락합니다."],
+                "decision_question": "제품별 계획을 바꿀 것인가?",
+                "decision_deadline": "2026-10-31",
+                "owner": "사업전략 담당",
+                "actions": ["제품별 수요를 재산정합니다."],
+                "history": [
+                    {
+                        "date": "2026-08-19",
+                        "action": "raised",
+                        "to_level": "warning",
+                        "rationale": "최초 경고",
+                    }
+                ],
+            },
+        }
+        watch_path = self.root / "watch.json"
+        market_sensing.write_json(watch_path, manifest)
+        result = market_sensing.upsert_strategic_watch(
+            Namespace(root=str(self.root), watch_file=str(watch_path))
+        )
+        self.assertEqual(result["warning_id"], "WRN-TEST")
+        page = (self.root / "strategic-warnings" / "WRN-TEST.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("흔들리는 전략가정", page)
+        self.assertIn("반대 근거와 해제 조건", page)
+        trace = market_sensing.trace_strategic_warning(
+            Namespace(root=str(self.root), warning_id="WRN-TEST", depth=4)
+        )
+        self.assertEqual(trace["sources"][0]["source_id"], "SRC-TEST")
+        audit = market_sensing.audit_store(
+            Namespace(root=str(self.root), stale_days=3650)
+        )
+        self.assertEqual(audit["counts"]["strategic_watch"], 0)
+
     def test_signal_rejects_invalid_score(self):
         document = self.root / "reports" / "briefs" / "decision-note.md"
         document.write_text("# 분석", encoding="utf-8")
@@ -916,9 +1049,13 @@ class MarketSensingTests(unittest.TestCase):
         self.assertEqual(config["nav"][0], {"홈": "index.md"})
         self.assertEqual(
             config["nav"][1],
+            {"전략 경고": [{"전체 경고": "strategic-warnings/index.md"}]},
+        )
+        self.assertEqual(
+            config["nav"][2],
             {"마켓 시그널": [{"전체 시그널": "signals/index.md"}]},
         )
-        self.assertEqual(config["nav"][2], {"최근 변화": "recent-updates.md"})
+        self.assertEqual(config["nav"][3], {"최근 변화": "recent-updates.md"})
         self.assertNotIn("HOME.md", repr(config["nav"]))
         self.assertNotIn("기술별 현황", repr(config["nav"]))
         self.assertNotIn("사업영향", repr(config["nav"]))
@@ -1149,6 +1286,13 @@ class MarketSensingTests(unittest.TestCase):
         self.assertIn('createIndexSection("핵심 시장신호"', script)
         self.assertIn('"실행·노출 확인",', script)
         self.assertIn("회사 발표·실적을 외부 시장신호의 노출과 실행 상태", script)
+        self.assertIn('template[data-signal-ui]', script)
+        self.assertIn("container.content.textContent", script)
+        rendered_payload = mkdocs_hooks._signal_ui_data_script(
+            {"kind": "detail", "item": {"title": "테스트"}}
+        )
+        self.assertTrue(rendered_payload.startswith("<template "))
+        self.assertNotIn("<script", rendered_payload)
         self.assertLess(
             script.index('createIndexSection("핵심 시장신호"'),
             script.index('"실행·노출 확인",'),

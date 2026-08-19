@@ -1,0 +1,41 @@
+{
+  "claim_id": "CLM-7D7860ACCEBB",
+  "subject_id": "COM-GENERAL-MOTORS",
+  "predicate": "spring_hill_battery_chemistry_strategy",
+  "value": "기존 NCMA와 LFP를 병행하는 다화학계 생산",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2025-07-14",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-55D3797D"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2025-07-14",
+      "action": "created",
+      "reason": "NMC 소멸이 아닌 제품군 분화를 보여주는 공식 발표",
+      "source_ids": [
+        "SRC-20260819-55D3797D"
+      ]
+    },
+    {
+      "date": "2025-07-14",
+      "action": "verified",
+      "reason": "NMC 소멸이 아닌 제품군 분화를 보여주는 공식 발표",
+      "source_ids": [
+        "SRC-20260819-55D3797D"
+      ]
+    },
+    {
+      "date": "2026-08-19",
+      "action": "verified",
+      "reason": "NMC 소멸이 아닌 제품군 분화를 보여주는 공식 발표",
+      "source_ids": [
+        "SRC-20260819-55D3797D"
+      ]
+    }
+  ]
+}

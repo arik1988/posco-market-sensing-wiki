@@ -2676,14 +2676,354 @@ CLM-E9A30E418789: added evidence SRC-20260819-198CA198
 
 0 findings. Report: reports/audits/audit-2026-08-19.md
 
-## [2026-08-19T10:11:07+09:00] sync-obsidian
-
-42 subjects and 42 sources projected.
-
-## [2026-08-19T10:11:20+09:00] audit
+## [2026-08-19T12:18:54+09:00] audit
 
 0 findings. Report: reports/audits/audit-2026-08-19.md
 
-## [2026-08-19T10:11:45+09:00] audit
+## [2026-08-19T12:30:51+09:00] add-source
+
+SRC-20260819-3F479FFE: Global EV Outlook 2026 - Electric vehicle batteries
+
+## [2026-08-19T12:30:51+09:00] add-source
+
+SRC-20260819-C39C1B19: Global EV Outlook 2025 - Electric vehicle batteries
+
+## [2026-08-19T12:30:52+09:00] add-source
+
+SRC-20260819-3EDE7B8B: Supply Chain Readiness Level Preliminary Analysis: Batteries Summary
+
+## [2026-08-19T12:30:52+09:00] add-source
+
+SRC-20260819-55D3797D: From Tennessee to Michigan, GM is building a battery-powered future
+
+## [2026-08-19T12:31:34+09:00] add-claim
+
+CLM-217C3CD215CB: MKT-GLOBAL-EV-BATTERY / global_ev_battery_deployment_2025 = 1.2 TWh; 2024년 대비 거의 30% 증가
+
+## [2026-08-19T12:31:35+09:00] add-claim
+
+CLM-ACC8C4E875F8: MKT-GLOBAL-EV-BATTERY / global_lfp_ev_battery_share_2025 = 55% 초과
+
+## [2026-08-19T12:31:35+09:00] add-claim
+
+CLM-97FA21CF402D: MKT-GLOBAL-EV-BATTERY / global_lfp_ev_battery_share_2024 = 거의 50%
+
+## [2026-08-19T12:31:35+09:00] add-claim
+
+CLM-9543D1CA4FEE: MKT-GLOBAL-EV-BATTERY / lfp_pack_price_discount_vs_nmc_2025 = kWh당 평균 40% 초과 저렴
+
+## [2026-08-19T12:31:36+09:00] add-claim
+
+CLM-C13051E88B4B: MKT-US-BATTERY-MARKET / us_battery_capacity_reallocated_to_lfp_2025 = 50 GWh 초과
+
+## [2026-08-19T12:31:36+09:00] add-claim
+
+CLM-9F5B046A33F3: MKT-US-BATTERY-MARKET / us_lfp_share_direction_2025 = 낮은 2024년 기준에서 거의 절반으로 감소
+
+## [2026-08-19T12:31:36+09:00] add-claim
+
+CLM-B50EB9EA6C44: MKT-GLOBAL-EV-BATTERY / nmc_energy_density_advantage_2024 = LFP 팩은 NMC 대비 질량 기준 약 20%, 부피 기준 약 33% 낮은 에너지밀도
+
+## [2026-08-19T12:31:37+09:00] add-claim
+
+CLM-D2B429F7EC09: MKT-GLOBAL-EV-BATTERY / global_ev_battery_demand_outlook_2030 = IEA STEPS에서 3 TWh 초과
+
+## [2026-08-19T12:31:37+09:00] add-claim
+
+CLM-80B9E235452D: MKT-LITHIUM-PRODUCT-MIX / preferred_lithium_compound_for_lfp = 탄산리튬 선호
+
+## [2026-08-19T12:31:37+09:00] add-claim
+
+CLM-3B26314F5F63: MKT-LITHIUM-PRODUCT-MIX / preferred_lithium_compound_for_nmc = 수산화리튬 선호
+
+## [2026-08-19T12:31:38+09:00] add-claim
+
+CLM-7636121C13CF: COM-GENERAL-MOTORS / spring_hill_lfp_commercial_production_target = 2027년 말
+
+## [2026-08-19T12:31:38+09:00] add-claim
+
+CLM-7D7860ACCEBB: COM-GENERAL-MOTORS / spring_hill_battery_chemistry_strategy = 기존 NCMA와 LFP를 병행하는 다화학계 생산
+
+## [2026-08-19T12:33:19+09:00] verify-claim
+
+CLM-217C3CD215CB: added evidence SRC-20260819-3F479FFE
+
+## [2026-08-19T12:33:19+09:00] verify-claim
+
+CLM-ACC8C4E875F8: added evidence SRC-20260819-3F479FFE
+
+## [2026-08-19T12:33:19+09:00] verify-claim
+
+CLM-97FA21CF402D: added evidence SRC-20260819-C39C1B19, SRC-20260819-3F479FFE
+
+## [2026-08-19T12:33:20+09:00] verify-claim
+
+CLM-9543D1CA4FEE: added evidence SRC-20260819-3F479FFE
+
+## [2026-08-19T12:33:20+09:00] verify-claim
+
+CLM-C13051E88B4B: added evidence SRC-20260819-3F479FFE
+
+## [2026-08-19T12:33:20+09:00] verify-claim
+
+CLM-9F5B046A33F3: added evidence SRC-20260819-3F479FFE
+
+## [2026-08-19T12:33:21+09:00] verify-claim
+
+CLM-B50EB9EA6C44: added evidence SRC-20260819-C39C1B19
+
+## [2026-08-19T12:33:21+09:00] verify-claim
+
+CLM-D2B429F7EC09: added evidence SRC-20260819-C39C1B19
+
+## [2026-08-19T12:33:21+09:00] verify-claim
+
+CLM-80B9E235452D: added evidence SRC-20260819-3EDE7B8B
+
+## [2026-08-19T12:33:22+09:00] verify-claim
+
+CLM-3B26314F5F63: added evidence SRC-20260819-3EDE7B8B
+
+## [2026-08-19T12:33:22+09:00] verify-claim
+
+CLM-7636121C13CF: added evidence SRC-20260819-55D3797D
+
+## [2026-08-19T12:33:22+09:00] verify-claim
+
+CLM-7D7860ACCEBB: added evidence SRC-20260819-55D3797D
+
+## [2026-08-19T12:33:23+09:00] add-claim
+
+CLM-12F907C5CC04: DEC-LFP-GLOBAL-20260819 / business_axis = 리튬
+
+## [2026-08-19T12:33:23+09:00] add-claim
+
+CLM-B80EF8DF1532: DEC-LFP-GLOBAL-20260819 / business_impact_score_1_to_5 = 5
+
+## [2026-08-19T12:33:23+09:00] add-claim
+
+CLM-5F889285DD27: DEC-LFP-GLOBAL-20260819 / business_impact_rationale = 배터리 화학계 구성은 탄산리튬과 수산화리튬의 판매 믹스, 설비 가동률, 증설 회수기간을 동시에 바꿀 수 있습니다.
+
+## [2026-08-19T12:33:24+09:00] add-claim
+
+CLM-91856C61842B: DEC-LFP-GLOBAL-20260819 / urgency_score_1_to_5 = 4
+
+## [2026-08-19T12:33:24+09:00] add-claim
+
+CLM-815AF397DE5E: DEC-LFP-GLOBAL-20260819 / urgency_rationale = 2027년 이후 고객 계약과 증설계획에 반영하려면 2026년 하반기에 고객별 화학계 수요를 다시 계산해야 합니다.
+
+## [2026-08-19T12:33:25+09:00] add-claim
+
+CLM-DD7614F6749D: DEC-LFP-GLOBAL-20260819 / assessment_confidence = high
+
+## [2026-08-19T12:33:25+09:00] add-claim
+
+CLM-2223B2E9E359: DEC-LFP-GLOBAL-20260819 / assessed_at = 2026-08-19
+
+## [2026-08-19T12:33:25+09:00] add-claim
+
+CLM-F8BF8A17DD7C: DEC-LFP-GLOBAL-20260819 / impact_path = LFP 점유율 상승 → 탄산리튬 선호 증가 → 수산화리튬 성장률·가동률·증설 회수기간 재검증
+
+## [2026-08-19T12:33:26+09:00] add-claim
+
+CLM-B4221D0A8614: DEC-LFP-GLOBAL-20260819 / recommended_follow_up = 고객·지역·화학계별 2027~2030 수요와 탄산·수산화 설비 전환성을 2026-09-30까지 재산정
+
+## [2026-08-19T12:33:26+09:00] add-claim
+
+CLM-3301C525BD7C: DEC-GM-LFP-20260819 / business_axis = 리튬
+
+## [2026-08-19T12:33:27+09:00] add-claim
+
+CLM-964132459854: DEC-GM-LFP-20260819 / business_impact_score_1_to_5 = 4
+
+## [2026-08-19T12:33:27+09:00] add-claim
+
+CLM-7211A12FE9C9: DEC-GM-LFP-20260819 / business_impact_rationale = 완성차의 현지 LFP 양산은 고객별 리튬염 구매구성과 수산화리튬 장기계약 갱신에 직접 영향을 줄 수 있습니다.
+
+## [2026-08-19T12:33:27+09:00] add-claim
+
+CLM-37406517D62F: DEC-GM-LFP-20260819 / urgency_score_1_to_5 = 4
+
+## [2026-08-19T12:33:28+09:00] add-claim
+
+CLM-7E74B063257A: DEC-GM-LFP-20260819 / urgency_rationale = 2027년 말 양산 목표보다 앞서 샘플승인과 계약변경이 진행될 수 있어 다음 계약주기 전에 확인이 필요합니다.
+
+## [2026-08-19T12:33:28+09:00] add-claim
+
+CLM-959CDC4B9158: DEC-GM-LFP-20260819 / assessment_confidence = high
+
+## [2026-08-19T12:33:29+09:00] add-claim
+
+CLM-77EF8E771F80: DEC-GM-LFP-20260819 / assessed_at = 2026-08-19
+
+## [2026-08-19T12:33:29+09:00] add-claim
+
+CLM-FBD0AD27FCFE: DEC-GM-LFP-20260819 / impact_path = GM 현지 LFP 양산 → 북미 고객의 화학계 구성 변화 → 리튬염 구매·계약갱신 → 수산화리튬 물량·가격 영향
+
+## [2026-08-19T12:33:29+09:00] add-claim
+
+CLM-5D15B180D1D9: DEC-GM-LFP-20260819 / recommended_follow_up = GM 공사·샘플승인·차종배정과 포스코 고객계약 갱신일을 2026-10-31까지 대조
+
+## [2026-08-19T12:33:45+09:00] add-signal
+
+SIG-F062894EEB9A: LFP가 세계 전기차 배터리의 절반을 넘어섰다
+
+## [2026-08-19T12:33:45+09:00] add-signal
+
+SIG-8BDE11D3224E: GM이 북미 LFP 양산 시점을 2027년으로 제시했다
+
+## [2026-08-19T12:35:12+09:00] upsert-strategic-watch
+
+WRN-LITHIUM-HYDROXIDE-MIX: 수산화리튬 중심 성장전제 재검증
+
+## [2026-08-19T12:37:20+09:00] sync-obsidian
+
+48 subjects and 46 sources projected.
+
+## [2026-08-19T12:37:34+09:00] audit
+
+11 findings. Report: reports/audits/audit-2026-08-19.md
+
+## [2026-08-19T12:38:04+09:00] verify-claim
+
+CLM-217C3CD215CB: added evidence SRC-20260819-3F479FFE
+
+## [2026-08-19T12:38:04+09:00] verify-claim
+
+CLM-ACC8C4E875F8: added evidence SRC-20260819-3F479FFE
+
+## [2026-08-19T12:38:04+09:00] verify-claim
+
+CLM-97FA21CF402D: added evidence SRC-20260819-C39C1B19, SRC-20260819-3F479FFE
+
+## [2026-08-19T12:38:05+09:00] verify-claim
+
+CLM-9543D1CA4FEE: added evidence SRC-20260819-3F479FFE
+
+## [2026-08-19T12:38:05+09:00] verify-claim
+
+CLM-C13051E88B4B: added evidence SRC-20260819-3F479FFE
+
+## [2026-08-19T12:38:06+09:00] verify-claim
+
+CLM-9F5B046A33F3: added evidence SRC-20260819-3F479FFE
+
+## [2026-08-19T12:38:06+09:00] verify-claim
+
+CLM-B50EB9EA6C44: added evidence SRC-20260819-C39C1B19
+
+## [2026-08-19T12:38:06+09:00] verify-claim
+
+CLM-D2B429F7EC09: added evidence SRC-20260819-C39C1B19
+
+## [2026-08-19T12:38:07+09:00] verify-claim
+
+CLM-80B9E235452D: added evidence SRC-20260819-3EDE7B8B
+
+## [2026-08-19T12:38:07+09:00] verify-claim
+
+CLM-3B26314F5F63: added evidence SRC-20260819-3EDE7B8B
+
+## [2026-08-19T12:38:07+09:00] verify-claim
+
+CLM-7636121C13CF: added evidence SRC-20260819-55D3797D
+
+## [2026-08-19T12:38:08+09:00] verify-claim
+
+CLM-7D7860ACCEBB: added evidence SRC-20260819-55D3797D
+
+## [2026-08-19T12:38:08+09:00] verify-claim
+
+CLM-12F907C5CC04: added evidence SRC-20260819-3F479FFE
+
+## [2026-08-19T12:38:09+09:00] verify-claim
+
+CLM-B80EF8DF1532: added evidence SRC-20260819-3F479FFE, SRC-20260819-3EDE7B8B
+
+## [2026-08-19T12:38:09+09:00] verify-claim
+
+CLM-5F889285DD27: added evidence SRC-20260819-3F479FFE, SRC-20260819-3EDE7B8B
+
+## [2026-08-19T12:38:10+09:00] verify-claim
+
+CLM-91856C61842B: added evidence SRC-20260819-3F479FFE
+
+## [2026-08-19T12:38:10+09:00] verify-claim
+
+CLM-815AF397DE5E: added evidence SRC-20260819-3F479FFE
+
+## [2026-08-19T12:38:10+09:00] verify-claim
+
+CLM-DD7614F6749D: added evidence SRC-20260819-3F479FFE, SRC-20260819-3EDE7B8B
+
+## [2026-08-19T12:38:11+09:00] verify-claim
+
+CLM-2223B2E9E359: added evidence SRC-20260819-3F479FFE
+
+## [2026-08-19T12:38:11+09:00] verify-claim
+
+CLM-F8BF8A17DD7C: added evidence SRC-20260819-3F479FFE, SRC-20260819-3EDE7B8B
+
+## [2026-08-19T12:38:12+09:00] verify-claim
+
+CLM-B4221D0A8614: added evidence SRC-20260819-3F479FFE
+
+## [2026-08-19T12:38:12+09:00] verify-claim
+
+CLM-3301C525BD7C: added evidence SRC-20260819-55D3797D
+
+## [2026-08-19T12:38:13+09:00] verify-claim
+
+CLM-964132459854: added evidence SRC-20260819-55D3797D, SRC-20260819-3EDE7B8B
+
+## [2026-08-19T12:38:13+09:00] verify-claim
+
+CLM-7211A12FE9C9: added evidence SRC-20260819-55D3797D, SRC-20260819-3EDE7B8B
+
+## [2026-08-19T12:38:13+09:00] verify-claim
+
+CLM-37406517D62F: added evidence SRC-20260819-55D3797D
+
+## [2026-08-19T12:38:14+09:00] verify-claim
+
+CLM-7E74B063257A: added evidence SRC-20260819-55D3797D
+
+## [2026-08-19T12:38:14+09:00] verify-claim
+
+CLM-959CDC4B9158: added evidence SRC-20260819-55D3797D, SRC-20260819-3F479FFE
+
+## [2026-08-19T12:38:15+09:00] verify-claim
+
+CLM-77EF8E771F80: added evidence SRC-20260819-55D3797D
+
+## [2026-08-19T12:38:15+09:00] verify-claim
+
+CLM-FBD0AD27FCFE: added evidence SRC-20260819-55D3797D, SRC-20260819-3EDE7B8B
+
+## [2026-08-19T12:38:16+09:00] verify-claim
+
+CLM-5D15B180D1D9: added evidence SRC-20260819-55D3797D
+
+## [2026-08-19T12:38:29+09:00] audit
 
 0 findings. Report: reports/audits/audit-2026-08-19.md
+
+## [2026-08-19T12:41:08+09:00] sync-obsidian
+
+48 subjects and 46 sources projected.
+
+## [2026-08-19T12:46:13+09:00] audit
+
+0 findings. Report: reports/audits/audit-2026-08-19.md
+
+## [2026-08-19T12:48:02+09:00] audit
+
+0 findings. Report: reports/audits/audit-2026-08-19.md
+
+## [2026-08-19T12:48:37+09:00] audit
+
+0 findings. Report: reports/audits/audit-2026-08-19.md
+
+## [2026-08-19T12:49:35+09:00] sync-obsidian
+
+48 subjects and 46 sources projected.

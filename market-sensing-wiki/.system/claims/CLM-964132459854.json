@@ -1,0 +1,36 @@
+{
+  "claim_id": "CLM-964132459854",
+  "subject_id": "DEC-GM-LFP-20260819",
+  "predicate": "business_impact_score_1_to_5",
+  "value": "4",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-55D3797D",
+    "SRC-20260819-3EDE7B8B"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "완성차 고객행동이 제품별 계약구성에 전달",
+      "source_ids": [
+        "SRC-20260819-55D3797D",
+        "SRC-20260819-3EDE7B8B"
+      ]
+    },
+    {
+      "date": "2026-08-19",
+      "action": "verified",
+      "reason": "완성차 고객행동이 제품별 계약구성에 전달",
+      "source_ids": [
+        "SRC-20260819-55D3797D",
+        "SRC-20260819-3EDE7B8B"
+      ]
+    }
+  ]
+}

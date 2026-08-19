@@ -1,0 +1,41 @@
+{
+  "claim_id": "CLM-B50EB9EA6C44",
+  "subject_id": "MKT-GLOBAL-EV-BATTERY",
+  "predicate": "nmc_energy_density_advantage_2024",
+  "value": "LFP 팩은 NMC 대비 질량 기준 약 20%, 부피 기준 약 33% 낮은 에너지밀도",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2024-12-31",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-C39C1B19"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2024-12-31",
+      "action": "created",
+      "reason": "NMC 수요가 유지될 반대 근거",
+      "source_ids": [
+        "SRC-20260819-C39C1B19"
+      ]
+    },
+    {
+      "date": "2024-12-31",
+      "action": "verified",
+      "reason": "NMC 수요가 유지될 반대 근거",
+      "source_ids": [
+        "SRC-20260819-C39C1B19"
+      ]
+    },
+    {
+      "date": "2026-08-19",
+      "action": "verified",
+      "reason": "NMC 수요가 유지될 반대 근거",
+      "source_ids": [
+        "SRC-20260819-C39C1B19"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "claim_id": "CLM-815AF397DE5E",
+  "subject_id": "DEC-LFP-GLOBAL-20260819",
+  "predicate": "urgency_rationale",
+  "value": "2027년 이후 고객 계약과 증설계획에 반영하려면 2026년 하반기에 고객별 화학계 수요를 다시 계산해야 합니다.",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-3F479FFE"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "긴급도 근거",
+      "source_ids": [
+        "SRC-20260819-3F479FFE"
+      ]
+    },
+    {
+      "date": "2026-08-19",
+      "action": "verified",
+      "reason": "긴급도 근거",
+      "source_ids": [
+        "SRC-20260819-3F479FFE"
+      ]
+    }
+  ]
+}

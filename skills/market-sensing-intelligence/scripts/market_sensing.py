@@ -75,6 +75,11 @@ SIGNAL_ROLE_ORIGINS = {
     },
     "execution_context": {"company_execution"},
 }
+STRATEGIC_WATCH_SCHEMA_VERSION = 1
+TREND_DIRECTIONS = {"strengthening", "stable", "weakening", "mixed"}
+THESIS_CONFIDENCE = {"high", "medium", "low"}
+WARNING_LEVELS = ("observe", "watch", "warning", "critical")
+WARNING_STATUSES = {"active", "closed"}
 RUN_SIGNAL_CONTRACT = {
     "version": 1,
     "minimum_core_market_ratio": 0.7,
@@ -2580,6 +2585,9 @@ SOURCE_CANDIDATES_DIR = Path(".system/source-candidates")
 CLAIMS_DIR = Path(".system/claims")
 SIGNALS_DIR = Path(".system/signals")
 INSIGHTS_DIR = Path(".system/insights")
+TRENDS_DIR = Path(".system/trends")
+THESES_DIR = Path(".system/theses")
+WARNINGS_DIR = Path(".system/warnings")
 PENDING_REVIEWS_DIR = Path(".system/reviews/pending")
 RESOLVED_REVIEWS_DIR = Path(".system/reviews/resolved")
 RUNS_DIR = Path(".system/runs")
@@ -3219,6 +3227,13 @@ STORE_AGENTS = """# Market Sensing Intelligence 저장소 지침
 - 외부 시장·정책·경쟁사·거래상대 변화는 `core_market_signal`, 대상 회사의 투자·증산·
   실적·공정 진척은 `execution_context/company_execution`으로 분리하세요. 회사 자체 발표만
   근거인 실행 사실을 core로 발행하지 말고, run×사업축마다 core 비중 70% 이상을 유지하세요.
+- 단발 Signal로 끝내지 마세요. 서로 독립적인 외부 Signal이 같은 전략가정을 반복해서
+  흔들면 `upsert-strategic-watch`로 `구조적 추세 → 위협받는 전략가정 → 지속 경고`를
+  연결하세요. 경고는 사람의 명시적 종료 또는 반증 근거가 쌓이기 전까지 삭제하지 말고,
+  다음 검토일과 강화·완화 조건 및 판단 이력을 유지하세요.
+- 전략 경고는 지지 근거만 모으지 말고 반대 근거와 반증 조건을 함께 기록하세요. 경고
+  단계는 기사 수가 아니라 서로 독립적인 근거 채널, 추세의 지속성, 사업 영향 경로 및
+  의사결정 시한으로 판단하세요.
 - 정량화 가능한 Signal은 공개정보와 합리적 대용변수를 사용해 영향액을 숫자로 먼저
   제시하고 방어·기준·압박 시나리오를 만드세요. 핵심 가정 3~8개는 근거·단위·범위를
   가진 슬라이더와 직접입력으로 조정되게 하고 `set-impact-estimate`로 연결하세요.
@@ -3289,6 +3304,9 @@ def scaffold(root: Path) -> dict[str, Any]:
         CLAIMS_DIR.as_posix(),
         SIGNALS_DIR.as_posix(),
         INSIGHTS_DIR.as_posix(),
+        TRENDS_DIR.as_posix(),
+        THESES_DIR.as_posix(),
+        WARNINGS_DIR.as_posix(),
         PENDING_REVIEWS_DIR.as_posix(),
         RESOLVED_REVIEWS_DIR.as_posix(),
         RUNS_DIR.as_posix(),
@@ -3299,6 +3317,7 @@ def scaffold(root: Path) -> dict[str, Any]:
         "sources",
         "events",
         "signals",
+        "strategic-warnings",
         "reports/briefs",
         "reports/audits",
     ]
@@ -3800,6 +3819,219 @@ def signal_records(root: Path) -> list[tuple[Path, dict[str, Any]]]:
 
 def insight_records(root: Path) -> list[tuple[Path, dict[str, Any]]]:
     return load_json_objects(root / INSIGHTS_DIR)
+
+
+def trend_records(root: Path) -> list[tuple[Path, dict[str, Any]]]:
+    return load_json_objects(root / TRENDS_DIR)
+
+
+def thesis_records(root: Path) -> list[tuple[Path, dict[str, Any]]]:
+    return load_json_objects(root / THESES_DIR)
+
+
+def warning_records(root: Path) -> list[tuple[Path, dict[str, Any]]]:
+    return load_json_objects(root / WARNINGS_DIR)
+
+
+def _required_text(record: dict[str, Any], field: str, record_id: str) -> str:
+    value = str(record.get(field) or "").strip()
+    if not value:
+        raise ValueError(f"{record_id}: missing {field}")
+    return value
+
+
+def _required_text_list(
+    record: dict[str, Any], field: str, record_id: str, *, allow_empty: bool = False
+) -> list[str]:
+    value = record.get(field)
+    if not isinstance(value, list) or any(
+        not isinstance(item, str) or not item.strip() for item in value
+    ):
+        raise ValueError(f"{record_id}: {field} must be a list of non-empty strings")
+    if not value and not allow_empty:
+        raise ValueError(f"{record_id}: {field} must not be empty")
+    return [item.strip() for item in value]
+
+
+def validate_strategic_watch_manifest(
+    root: Path, manifest: dict[str, Any]
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    if int(manifest.get("schema_version") or 0) != STRATEGIC_WATCH_SCHEMA_VERSION:
+        raise ValueError(
+            f"strategic watch schema_version must be {STRATEGIC_WATCH_SCHEMA_VERSION}"
+        )
+    trend = manifest.get("trend")
+    thesis = manifest.get("thesis")
+    warning = manifest.get("warning")
+    if not all(isinstance(item, dict) for item in (trend, thesis, warning)):
+        raise ValueError("strategic watch manifest requires trend, thesis, and warning objects")
+    assert isinstance(trend, dict) and isinstance(thesis, dict) and isinstance(warning, dict)
+
+    trend_id = _required_text(trend, "trend_id", "trend")
+    thesis_id = _required_text(thesis, "thesis_id", "thesis")
+    warning_id = _required_text(warning, "warning_id", "warning")
+    for value, prefix in ((trend_id, "TRD-"), (thesis_id, "THS-"), (warning_id, "WRN-")):
+        if not value.startswith(prefix):
+            raise ValueError(f"{value}: ID must start with {prefix}")
+    for record in (trend, thesis, warning):
+        record["schema_version"] = STRATEGIC_WATCH_SCHEMA_VERSION
+        _required_text(record, "title", str(record.get("trend_id") or record.get("thesis_id") or record.get("warning_id")))
+
+    axis = _required_text(trend, "business_axis", trend_id)
+    if axis not in set(MARKET_SENSING_AXES.values()):
+        raise ValueError(f"{trend_id}: invalid business_axis {axis!r}")
+    if thesis.get("business_axis") != axis or warning.get("business_axis") != axis:
+        raise ValueError("trend, thesis, and warning business_axis values must match")
+    if trend.get("direction") not in TREND_DIRECTIONS:
+        raise ValueError(f"{trend_id}: invalid direction {trend.get('direction')!r}")
+    for field in ("first_detected_at", "last_observed_at"):
+        validate_date(_required_text(trend, field, trend_id), field)
+    signal_ids = _required_text_list(trend, "signal_ids", trend_id)
+    supporting_sources = _required_text_list(trend, "supporting_source_ids", trend_id)
+    counter_sources = _required_text_list(
+        trend, "counter_source_ids", trend_id, allow_empty=True
+    )
+    signals_by_id = _records_by_id(signal_records(root), "signal_id")
+    sources_by_id = _records_by_id(source_records(root), "source_id")
+    unknown_signals = sorted(set(signal_ids) - set(signals_by_id))
+    unknown_sources = sorted(set(supporting_sources + counter_sources) - set(sources_by_id))
+    if unknown_signals:
+        raise ValueError(f"{trend_id}: unknown signal_ids {', '.join(unknown_signals)}")
+    if unknown_sources:
+        raise ValueError(f"{trend_id}: unknown source_ids {', '.join(unknown_sources)}")
+    indicators = trend.get("indicators")
+    if not isinstance(indicators, list) or not indicators:
+        raise ValueError(f"{trend_id}: indicators must not be empty")
+    for index, indicator in enumerate(indicators, 1):
+        if not isinstance(indicator, dict):
+            raise ValueError(f"{trend_id}: indicator {index} must be an object")
+        label = f"{trend_id}/indicator-{index}"
+        for field in ("label", "current", "unit", "observed_at", "interpretation"):
+            _required_text(indicator, field, label)
+        validate_date(str(indicator["observed_at"]), "indicator observed_at")
+        ids = _required_text_list(indicator, "source_ids", label)
+        missing = sorted(set(ids) - set(sources_by_id))
+        if missing:
+            raise ValueError(f"{label}: unknown source_ids {', '.join(missing)}")
+
+    _required_text(thesis, "statement", thesis_id)
+    _required_text(thesis, "strategic_assumption_at_risk", thesis_id)
+    _required_text(thesis, "business_impact_path", thesis_id)
+    _required_text(thesis, "decision_horizon", thesis_id)
+    if thesis.get("confidence") not in THESIS_CONFIDENCE:
+        raise ValueError(f"{thesis_id}: invalid confidence {thesis.get('confidence')!r}")
+    if _required_text_list(thesis, "trend_ids", thesis_id) != [trend_id]:
+        raise ValueError(f"{thesis_id}: trend_ids must contain this manifest's {trend_id}")
+    _required_text_list(thesis, "supporting_signal_ids", thesis_id)
+    context_signal_ids = _required_text_list(
+        thesis, "execution_context_signal_ids", thesis_id, allow_empty=True
+    )
+    missing_context = sorted(set(context_signal_ids) - set(signals_by_id))
+    if missing_context:
+        raise ValueError(
+            f"{thesis_id}: unknown execution_context_signal_ids {', '.join(missing_context)}"
+        )
+    _required_text_list(thesis, "counter_evidence", thesis_id)
+    _required_text_list(thesis, "falsification_conditions", thesis_id)
+
+    if warning.get("thesis_id") != thesis_id:
+        raise ValueError(f"{warning_id}: thesis_id must be {thesis_id}")
+    if warning.get("level") not in WARNING_LEVELS:
+        raise ValueError(f"{warning_id}: invalid level {warning.get('level')!r}")
+    if warning.get("status") not in WARNING_STATUSES:
+        raise ValueError(f"{warning_id}: invalid status {warning.get('status')!r}")
+    for field in ("first_raised_at", "last_reviewed_at", "next_review_at"):
+        validate_date(_required_text(warning, field, warning_id), field)
+    for field in (
+        "rationale",
+        "persistence_rule",
+        "decision_question",
+        "decision_deadline",
+        "owner",
+    ):
+        _required_text(warning, field, warning_id)
+    validate_date(str(warning["decision_deadline"]), "decision_deadline")
+    for field in ("escalation_rules", "deescalation_rules", "actions"):
+        _required_text_list(warning, field, warning_id)
+    history = warning.get("history")
+    if not isinstance(history, list) or not history:
+        raise ValueError(f"{warning_id}: history must not be empty")
+    for index, event in enumerate(history, 1):
+        if not isinstance(event, dict):
+            raise ValueError(f"{warning_id}: history event {index} must be an object")
+        validate_date(_required_text(event, "date", warning_id), "history date")
+        _required_text(event, "action", warning_id)
+        _required_text(event, "rationale", warning_id)
+    return trend, thesis, warning
+
+
+def upsert_strategic_watch(args: argparse.Namespace) -> dict[str, Any]:
+    root = require_store(Path(args.root))
+    manifest = read_json(Path(args.watch_file).resolve())
+    trend, thesis, warning = validate_strategic_watch_manifest(root, manifest)
+    records = (
+        (root / TRENDS_DIR / f"{trend['trend_id']}.json", trend),
+        (root / THESES_DIR / f"{thesis['thesis_id']}.json", thesis),
+        (root / WARNINGS_DIR / f"{warning['warning_id']}.json", warning),
+    )
+    originals = {path: path.read_bytes() if path.exists() else None for path, _ in records}
+    try:
+        for path, record in records:
+            write_json(path, record)
+    except OSError:
+        for path, content in originals.items():
+            if content is None:
+                path.unlink(missing_ok=True)
+            else:
+                path.write_bytes(content)
+        raise
+    sync_obsidian_store(root)
+    append_log(root, "upsert-strategic-watch", f"{warning['warning_id']}: {warning['title']}")
+    return {
+        "action": "strategic_watch_upserted",
+        "trend_id": trend["trend_id"],
+        "thesis_id": thesis["thesis_id"],
+        "warning_id": warning["warning_id"],
+        "level": warning["level"],
+    }
+
+
+def review_strategic_warning(args: argparse.Namespace) -> dict[str, Any]:
+    root = require_store(Path(args.root))
+    path = root / WARNINGS_DIR / f"{args.warning_id}.json"
+    if not path.is_file():
+        raise ValueError(f"Unknown warning ID: {args.warning_id}")
+    warning = read_json(path)
+    reviewed_at = validate_date(args.reviewed_at or today(), "reviewed_at")
+    next_review_at = validate_date(args.next_review_at, "next_review_at")
+    old_level = str(warning.get("level") or "")
+    warning["level"] = args.level
+    warning["status"] = args.status
+    warning["last_reviewed_at"] = reviewed_at
+    warning["next_review_at"] = next_review_at
+    history = warning.setdefault("history", [])
+    history.append(
+        {
+            "date": reviewed_at,
+            "action": "closed" if args.status == "closed" else "reviewed",
+            "from_level": old_level,
+            "to_level": args.level,
+            "added_signal_ids": list(args.signal_id or []),
+            "rationale": args.rationale,
+        }
+    )
+    thesis_id = str(warning.get("thesis_id") or "")
+    thesis = read_json(root / THESES_DIR / f"{thesis_id}.json")
+    trend_id = str((thesis.get("trend_ids") or [""])[0])
+    trend = read_json(root / TRENDS_DIR / f"{trend_id}.json")
+    validate_strategic_watch_manifest(
+        root,
+        {"schema_version": STRATEGIC_WATCH_SCHEMA_VERSION, "trend": trend, "thesis": thesis, "warning": warning},
+    )
+    write_json(path, warning)
+    sync_obsidian_store(root)
+    append_log(root, "review-strategic-warning", f"{args.warning_id}: {old_level} -> {args.level}")
+    return {"action": "strategic_warning_reviewed", "warning_id": args.warning_id, "level": args.level, "status": args.status}
 
 
 def run_record_by_id(root: Path, run_id: str) -> tuple[Path, dict[str, Any]]:
@@ -4514,6 +4746,97 @@ def trace_signal(args: argparse.Namespace) -> dict[str, Any]:
         "insight_to_claims": insight.get("claim_ids", []),
         "claims_to_sources": {
             claim["claim_id"]: claim.get("source_ids", []) for claim in result["claims"]
+        },
+    }
+    return result
+
+
+def trace_strategic_warning(args: argparse.Namespace) -> dict[str, Any]:
+    """Return the persistent warning and its evidence roots at progressive depth."""
+    root = require_store(Path(args.root))
+    depth = int(args.depth)
+    warnings = _records_by_id(warning_records(root), "warning_id")
+    warning = warnings.get(args.warning_id)
+    if warning is None:
+        raise ValueError(f"Unknown warning ID: {args.warning_id}")
+    result: dict[str, Any] = {
+        "action": "strategic_warning_trace",
+        "depth": depth,
+        "warning": warning,
+    }
+    if depth == 1:
+        return result
+    thesis = _records_by_id(thesis_records(root), "thesis_id").get(
+        str(warning.get("thesis_id"))
+    )
+    if thesis is None:
+        raise ValueError(f"Broken thesis link: {warning.get('thesis_id')}")
+    trends_by_id = _records_by_id(trend_records(root), "trend_id")
+    trends = [
+        trends_by_id[trend_id]
+        for trend_id in thesis.get("trend_ids", [])
+        if trend_id in trends_by_id
+    ]
+    result["thesis"] = thesis
+    result["trends"] = trends
+    if depth == 2:
+        return result
+    signal_ids = list(
+        dict.fromkeys(
+            [
+                str(signal_id)
+                for trend in trends
+                for signal_id in trend.get("signal_ids", [])
+            ]
+            + [str(signal_id) for signal_id in thesis.get("execution_context_signal_ids", [])]
+        )
+    )
+    signals_by_id = _records_by_id(signal_records(root), "signal_id")
+    signals = [signals_by_id[signal_id] for signal_id in signal_ids if signal_id in signals_by_id]
+    insights_by_id = _records_by_id(insight_records(root), "insight_id")
+    insights = [
+        insights_by_id[str(signal.get("insight_id"))]
+        for signal in signals
+        if str(signal.get("insight_id")) in insights_by_id
+    ]
+    claims_by_id = _records_by_id(claim_records(root), "claim_id")
+    result["signals"] = signals
+    result["insights"] = insights
+    result["claims"] = [
+        claims_by_id[claim_id]
+        for insight in insights
+        for claim_id in insight.get("claim_ids", [])
+        if claim_id in claims_by_id
+    ]
+    if depth == 3:
+        return result
+    source_ids = list(
+        dict.fromkeys(
+            str(source_id)
+            for trend in trends
+            for source_id in (
+                list(trend.get("supporting_source_ids", []))
+                + list(trend.get("counter_source_ids", []))
+            )
+        )
+    )
+    sources_by_id = _records_by_id(source_records(root), "source_id")
+    result["sources"] = [
+        {
+            **sources_by_id[source_id],
+            "archive_excerpt": _archive_excerpt(root, sources_by_id[source_id]),
+        }
+        for source_id in source_ids
+        if source_id in sources_by_id
+    ]
+    result["edges"] = {
+        "warning_to_thesis": [warning["warning_id"], thesis["thesis_id"]],
+        "thesis_to_trends": thesis.get("trend_ids", []),
+        "trends_to_signals": {trend["trend_id"]: trend.get("signal_ids", []) for trend in trends},
+        "trends_to_sources": {
+            trend["trend_id"]: list(trend.get("supporting_source_ids", []))
+            + list(trend.get("counter_source_ids", []))
+            for trend in trends
         },
     }
     return result
@@ -7060,6 +7383,239 @@ def signal_index_lines(
     return lines
 
 
+WARNING_LEVEL_LABELS = {
+    "observe": "관찰",
+    "watch": "주의",
+    "warning": "경고",
+    "critical": "심각",
+}
+THESIS_CONFIDENCE_LABELS = {"high": "높음", "medium": "중간", "low": "낮음"}
+WARNING_ACTION_LABELS = {
+    "raised": "최초 경고",
+    "reviewed": "정기 검토",
+    "closed": "경고 종료",
+}
+
+
+def _indicator_display_value(indicator: dict[str, Any]) -> str:
+    current = str(indicator.get("current") or "-").strip()
+    unit = str(indicator.get("unit") or "").strip()
+    if not unit or unit in {"목표시점", "일정"} or unit in current:
+        return current
+    if unit == "%":
+        return f"{current}%"
+    return f"{current} {unit}"
+
+
+def _warning_link(warning: dict[str, Any]) -> str:
+    return wikilink(
+        Path("strategic-warnings") / f"{warning.get('warning_id')}.md",
+        str(warning.get("title") or "전략 경고"),
+    )
+
+
+def strategic_warning_page_lines(
+    warning: dict[str, Any],
+    thesis: dict[str, Any],
+    trends: list[dict[str, Any]],
+    signals_by_id: dict[str, dict[str, Any]],
+    insights_by_id: dict[str, dict[str, Any]],
+    sources_by_id: dict[str, dict[str, Any]],
+) -> list[str]:
+    level = WARNING_LEVEL_LABELS.get(str(warning.get("level")), "미정")
+    status = "활성" if warning.get("status") == "active" else "종료"
+    lines = [
+        GENERATED_MARKER,
+        "",
+        f"# {markdown_cell(warning.get('title') or '전략 경고')}",
+        "",
+        f'!!! warning "{level} · {status}"',
+        "",
+        f"    **{markdown_cell(warning.get('rationale') or '-')}**",
+        "",
+        f"    최초 경고 {markdown_cell(warning.get('first_raised_at') or '-')} · "
+        f"최근 검토 {markdown_cell(warning.get('last_reviewed_at') or '-')} · "
+        f"다음 검토 {markdown_cell(warning.get('next_review_at') or '-')}",
+        "",
+        "## 무엇이 달라지고 있나",
+        "",
+    ]
+    for trend in trends:
+        lines.extend(
+            [
+                f"### {markdown_cell(trend.get('title') or '구조적 추세')}",
+                "",
+                markdown_cell(trend.get("summary") or "-"),
+                "",
+                "| 관찰 지표 | 현재 확인값 | 기준·방향 | 해석 |",
+                "| --- | --- | --- | --- |",
+            ]
+        )
+        for indicator in trend.get("indicators", []):
+            baseline = str(indicator.get("baseline") or "기준 없음")
+            direction = str(indicator.get("direction") or "")
+            lines.append(
+                f"| {markdown_cell(indicator.get('label') or '-')} "
+                f"| **{markdown_cell(_indicator_display_value(indicator))}** "
+                f"| {markdown_cell(baseline)}{(' · ' + markdown_cell(direction)) if direction else ''} "
+                f"| {markdown_cell(indicator.get('interpretation') or '-')} |"
+            )
+        lines.append("")
+
+    lines.extend(
+        [
+            "## 흔들리는 전략가정",
+            "",
+            f"**{markdown_cell(thesis.get('strategic_assumption_at_risk') or '-')}**",
+            "",
+            markdown_cell(thesis.get("statement") or "-"),
+            "",
+            f"- **사업 영향 경로:** {markdown_cell(thesis.get('business_impact_path') or '-')}",
+            f"- **판단 기간:** {markdown_cell(thesis.get('decision_horizon') or '-')}",
+            f"- **판단 신뢰도:** {THESIS_CONFIDENCE_LABELS.get(str(thesis.get('confidence')), '-')}",
+            "",
+            "## 지금 내려야 할 판단",
+            "",
+            f"### {markdown_cell(warning.get('decision_question') or '-')}",
+            "",
+            f"- **권고 판단 시한:** {markdown_cell(warning.get('decision_deadline') or '-')}",
+            f"- **권고 담당:** {markdown_cell(warning.get('owner') or '-')}",
+            "",
+        ]
+    )
+    lines.extend(f"- {markdown_cell(item)}" for item in warning.get("actions", []))
+    lines.extend(["", "## 이 경고를 만든 시그널", ""])
+    signal_ids = list(
+        dict.fromkeys(
+            [
+                str(signal_id)
+                for trend in trends
+                for signal_id in trend.get("signal_ids", [])
+            ]
+            + [str(signal_id) for signal_id in thesis.get("execution_context_signal_ids", [])]
+        )
+    )
+    for signal_id in signal_ids:
+        signal = signals_by_id.get(signal_id)
+        if not signal:
+            continue
+        insight = insights_by_id.get(str(signal.get("insight_id")), {})
+        label = insight.get("title") or signal.get("sentence") or signal_id
+        context_label = (
+            " · 회사 노출 확인"
+            if signal_id in set(thesis.get("execution_context_signal_ids", []))
+            else ""
+        )
+        lines.append(
+            f"- {wikilink(Path('signals') / f'{signal_id}.md', str(label))} · "
+            f"영향 {(signal.get('business_impact') or {}).get('score', '-')}/5 · "
+            f"긴급 {(signal.get('urgency') or {}).get('score', '-')}/5{context_label}"
+        )
+    if not signal_ids:
+        lines.append("- 연결된 시그널이 없습니다.")
+
+    lines.extend(["", "## 반대 근거와 해제 조건", "", "### 아직 남아 있는 반대 근거", ""])
+    lines.extend(f"- {markdown_cell(item)}" for item in thesis.get("counter_evidence", []))
+    lines.extend(["", "### 경고가 틀렸다고 판단할 조건", ""])
+    lines.extend(
+        f"- {markdown_cell(item)}" for item in thesis.get("falsification_conditions", [])
+    )
+    lines.extend(["", "### 경고 강화 조건", ""])
+    lines.extend(f"- {markdown_cell(item)}" for item in warning.get("escalation_rules", []))
+    lines.extend(["", "### 경고 완화 조건", ""])
+    lines.extend(f"- {markdown_cell(item)}" for item in warning.get("deescalation_rules", []))
+    lines.extend(
+        [
+            "",
+            '??? info "경고 유지 원칙"',
+            "",
+            f"    {markdown_cell(warning.get('persistence_rule') or '-')}",
+            "",
+            "## 판단 이력",
+            "",
+            "| 날짜 | 조치 | 단계 변화 | 판단 근거 |",
+            "| --- | --- | --- | --- |",
+        ]
+    )
+    for event in reversed(warning.get("history", [])):
+        transition = " → ".join(
+            filter(
+                None,
+                [
+                    WARNING_LEVEL_LABELS.get(str(event.get("from_level") or ""), ""),
+                    WARNING_LEVEL_LABELS.get(str(event.get("to_level") or ""), ""),
+                ],
+            )
+        ) or "-"
+        lines.append(
+            f"| {markdown_cell(event.get('date') or '-')} | "
+            f"{WARNING_ACTION_LABELS.get(str(event.get('action')), markdown_cell(event.get('action') or '-'))} "
+            f"| {markdown_cell(transition)} | {markdown_cell(event.get('rationale') or '-')} |"
+        )
+
+    source_ids = list(
+        dict.fromkeys(
+            str(source_id)
+            for trend in trends
+            for source_id in list(trend.get("supporting_source_ids", []))
+            + list(trend.get("counter_source_ids", []))
+        )
+    )
+    lines.extend(["", "## 원문 근거", ""])
+    for source_id in source_ids:
+        source = sources_by_id.get(source_id)
+        if not source:
+            continue
+        links = []
+        if source.get("url"):
+            links.append(f"[원문 링크]({source['url']})")
+        links.append(wikilink(Path("sources") / f"{source_id}.md", "보관 원문"))
+        lines.append(
+            f"- **{markdown_cell(source.get('title') or source_id)}** · "
+            f"{markdown_cell(source.get('publisher') or '-')} · "
+            f"{markdown_cell(source.get('published_at') or '게시일 미상')} · {' · '.join(links)}"
+        )
+    return lines
+
+
+def strategic_warning_index_lines(warnings: list[dict[str, Any]]) -> list[str]:
+    active = sorted(
+        (item for item in warnings if item.get("status") == "active"),
+        key=lambda item: (
+            WARNING_LEVELS.index(str(item.get("level"))) if item.get("level") in WARNING_LEVELS else -1,
+            str(item.get("last_reviewed_at") or ""),
+        ),
+        reverse=True,
+    )
+    lines = [
+        GENERATED_MARKER,
+        "",
+        "# 전략 경고",
+        "",
+        "여러 시그널이 같은 방향으로 누적되어 기존 사업전제를 흔드는 사안입니다. "
+        "새 기사가 없어도 반증되거나 사람이 종료할 때까지 계속 표시됩니다.",
+        "",
+        "## 활성 경고",
+        "",
+        "| 단계 | 사업축 | 경고 | 다음 검토 |",
+        "| --- | --- | --- | --- |",
+    ]
+    for warning in active:
+        lines.append(
+            f"| **{WARNING_LEVEL_LABELS.get(str(warning.get('level')), '-')}** "
+            f"| {markdown_cell(warning.get('business_axis') or '-')} "
+            f"| {_warning_link(warning)}<br>{markdown_cell(warning.get('rationale') or '-')} "
+            f"| {markdown_cell(warning.get('next_review_at') or '-')} |"
+        )
+    if not active:
+        lines.append("| - | - | 현재 활성 전략 경고가 없습니다. | - |")
+    closed = [item for item in warnings if item.get("status") == "closed"]
+    if closed:
+        lines.extend(["", "## 종료된 경고", ""])
+        lines.extend(f"- {_warning_link(item)}" for item in closed)
+    return lines
+
+
 def sync_obsidian_store(root: Path) -> dict[str, Any]:
     """Rebuild generated Markdown projections used by Obsidian."""
     root = require_store(root)
@@ -7068,7 +7624,14 @@ def sync_obsidian_store(root: Path) -> dict[str, Any]:
         predicate: index
         for index, predicate in enumerate(settings.get("priority_predicates", []))
     }
-    for folder in [*SUBJECT_FOLDERS.values(), "entities", "sources", "events", "signals"]:
+    for folder in [
+        *SUBJECT_FOLDERS.values(),
+        "entities",
+        "sources",
+        "events",
+        "signals",
+        "strategic-warnings",
+    ]:
         (root / folder).mkdir(parents=True, exist_ok=True)
     sources = [record for _, record in source_records(root)]
     sources_by_id = {
@@ -7079,7 +7642,12 @@ def sync_obsidian_store(root: Path) -> dict[str, Any]:
     claims = [claim for _, claim in claim_records(root)]
     signals = [signal for _, signal in signal_records(root)]
     insights = [insight for _, insight in insight_records(root)]
+    trends = [trend for _, trend in trend_records(root)]
+    theses = [thesis for _, thesis in thesis_records(root)]
+    warnings = [warning for _, warning in warning_records(root)]
     insights_by_id = _records_by_id(insight_records(root), "insight_id")
+    trends_by_id = _records_by_id(trend_records(root), "trend_id")
+    theses_by_id = _records_by_id(thesis_records(root), "thesis_id")
     claims_by_id = _records_by_id(claim_records(root), "claim_id")
     claims_by_subject: dict[str, list[dict[str, Any]]] = defaultdict(list)
     subjects_by_source: dict[str, set[str]] = defaultdict(set)
@@ -7345,6 +7913,35 @@ def sync_obsidian_store(root: Path) -> dict[str, Any]:
         "\n".join(signal_index_lines(signals, insights_by_id, settings)) + "\n",
     )
 
+    for warning in warnings:
+        warning_id = str(warning.get("warning_id") or "")
+        thesis = theses_by_id.get(str(warning.get("thesis_id") or ""))
+        if not warning_id or thesis is None:
+            continue
+        linked_trends = [
+            trends_by_id[trend_id]
+            for trend_id in thesis.get("trend_ids", [])
+            if trend_id in trends_by_id
+        ]
+        atomic_write_text(
+            root / "strategic-warnings" / f"{warning_id}.md",
+            "\n".join(
+                strategic_warning_page_lines(
+                    warning,
+                    thesis,
+                    linked_trends,
+                    _records_by_id(signal_records(root), "signal_id"),
+                    insights_by_id,
+                    sources_by_id,
+                )
+            )
+            + "\n",
+        )
+    atomic_write_text(
+        root / "strategic-warnings" / "index.md",
+        "\n".join(strategic_warning_index_lines(warnings)) + "\n",
+    )
+
     pending_records = load_json_objects(root / PENDING_REVIEWS_DIR)
     review_lines = [
         GENERATED_MARKER,
@@ -7531,6 +8128,16 @@ def sync_obsidian_store(root: Path) -> dict[str, Any]:
         "\n".join(update_lines) + "\n",
     )
 
+    active_warnings = sorted(
+        (warning for warning in warnings if warning.get("status") == "active"),
+        key=lambda item: (
+            WARNING_LEVELS.index(str(item.get("level")))
+            if item.get("level") in WARNING_LEVELS
+            else -1,
+            str(item.get("last_reviewed_at") or ""),
+        ),
+        reverse=True,
+    )
     index_lines = [
         GENERATED_MARKER,
         "",
@@ -7539,11 +8146,36 @@ def sync_obsidian_store(root: Path) -> dict[str, Any]:
         "철강·리튬·에너지 사업의 의사결정에 영향을 줄 외부 변화를 선별해 "
         "한 문장부터 원문까지 단계적으로 보여줍니다.",
         "",
+        "## 지금 봐야 할 전략 경고",
+        "",
+    ]
+    for warning in active_warnings:
+        index_lines.extend(
+            [
+                f'!!! warning "{WARNING_LEVEL_LABELS.get(str(warning.get("level")), "경고")} · '
+                f'{markdown_cell(warning.get("business_axis") or "-")}"',
+                "",
+                f"    **{_warning_link(warning)}**",
+                "",
+                f"    {markdown_cell(warning.get('rationale') or '-')}",
+                "",
+                f"    다음 검토: {markdown_cell(warning.get('next_review_at') or '-')} · "
+                f"판단 시한: {markdown_cell(warning.get('decision_deadline') or '-')}",
+                "",
+            ]
+        )
+    if not active_warnings:
+        index_lines.extend(["현재 활성 전략 경고가 없습니다.", ""])
+    index_lines.extend(
+        [
+        "[[strategic-warnings/index|전체 전략 경고 보기 →]]",
+        "",
         "## 지금 볼 시그널",
         "",
         "| 관심도 | 회사·사업축 | 핵심 변화 | 평가일 |",
         "| --- | --- | --- | --- |",
-    ]
+        ]
+    )
     ordered_signals = sorted(
         signals,
         key=lambda item: (
@@ -7591,7 +8223,8 @@ def sync_obsidian_store(root: Path) -> dict[str, Any]:
             "",
             '??? note "근거 저장 현황"',
             "",
-            f"    **{len(signals)}개 시그널** · **{len(sources)}개 원문** · "
+            f"    **활성 전략 경고 {len(active_warnings)}건** · "
+            f"**{len(signals)}개 시그널** · **{len(sources)}개 원문** · "
             f"**{len(claims)}개 검증 항목** · [[REVIEW|사람 검토 대기]] "
             f"**{len(pending_records)}건**",
         ]
@@ -7619,6 +8252,7 @@ def sync_obsidian_store(root: Path) -> dict[str, Any]:
     return {
         "subjects": len(claims_by_subject),
         "signals": len(signals),
+        "strategic_warnings": len(warnings),
         "sources": len(sources),
         "open_reviews": len(pending_records),
     }
@@ -8679,6 +9313,50 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
             )
         )
 
+    audit_trends = _records_by_id(trend_records(root), "trend_id")
+    audit_theses = _records_by_id(thesis_records(root), "thesis_id")
+    audit_warnings = _records_by_id(warning_records(root), "warning_id")
+    referenced_trends: set[str] = set()
+    referenced_theses: set[str] = set()
+    for warning_id, warning in sorted(audit_warnings.items()):
+        thesis_id = str(warning.get("thesis_id") or "")
+        thesis = audit_theses.get(thesis_id)
+        if thesis is None:
+            findings["strategic_watch"].append(
+                f"{warning_id}: unknown thesis {thesis_id or '-'}"
+            )
+            continue
+        referenced_theses.add(thesis_id)
+        trend_ids = [str(item) for item in thesis.get("trend_ids", [])]
+        if len(trend_ids) != 1 or trend_ids[0] not in audit_trends:
+            findings["strategic_watch"].append(
+                f"{warning_id}: requires exactly one valid linked trend"
+            )
+            continue
+        trend_id = trend_ids[0]
+        referenced_trends.add(trend_id)
+        try:
+            validate_strategic_watch_manifest(
+                root,
+                {
+                    "schema_version": STRATEGIC_WATCH_SCHEMA_VERSION,
+                    "trend": audit_trends[trend_id],
+                    "thesis": thesis,
+                    "warning": warning,
+                },
+            )
+        except ValueError as exc:
+            findings["strategic_watch"].append(f"{warning_id}: {exc}")
+        next_review = parse_iso_date(warning.get("next_review_at"))
+        if warning.get("status") == "active" and next_review and next_review < date.today():
+            findings["strategic_watch"].append(
+                f"{warning_id}: active warning review overdue since {next_review.isoformat()}"
+            )
+    for thesis_id in sorted(set(audit_theses) - referenced_theses):
+        findings["strategic_watch"].append(f"{thesis_id}: thesis is not linked to a warning")
+    for trend_id in sorted(set(audit_trends) - referenced_trends):
+        findings["strategic_watch"].append(f"{trend_id}: trend is not linked to a warning")
+
     for insight_id in sorted(set(insights) - referenced_insights):
         findings["signal_integrity"].append(
             f"{insight_id}: Insight is not referenced by any Signal"
@@ -8739,6 +9417,7 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
         "signal_integrity",
         "signal_quality",
         "signal_portfolio",
+        "strategic_watch",
         "unpublished_claims",
         "unpublished_sources",
         "run_publication",
@@ -9181,6 +9860,37 @@ def build_parser() -> argparse.ArgumentParser:
     trace_parser.add_argument("--signal-id", required=True)
     trace_parser.add_argument("--depth", type=int, choices=range(1, 5), default=4)
     trace_parser.set_defaults(func=trace_signal)
+
+    watch_parser = subparsers.add_parser(
+        "upsert-strategic-watch",
+        help="Atomically connect a structural trend, strategic thesis, and persistent warning.",
+    )
+    watch_parser.add_argument("root")
+    watch_parser.add_argument("--watch-file", required=True)
+    watch_parser.set_defaults(func=upsert_strategic_watch)
+
+    warning_trace_parser = subparsers.add_parser(
+        "trace-strategic-warning",
+        help="Traverse a persistent warning to thesis, trends, Signals, Claims, and Sources.",
+    )
+    warning_trace_parser.add_argument("root")
+    warning_trace_parser.add_argument("--warning-id", required=True)
+    warning_trace_parser.add_argument("--depth", type=int, choices=range(1, 5), default=4)
+    warning_trace_parser.set_defaults(func=trace_strategic_warning)
+
+    warning_review_parser = subparsers.add_parser(
+        "review-strategic-warning",
+        help="Append an evidence-backed review without deleting prior warning history.",
+    )
+    warning_review_parser.add_argument("root")
+    warning_review_parser.add_argument("--warning-id", required=True)
+    warning_review_parser.add_argument("--level", choices=WARNING_LEVELS, required=True)
+    warning_review_parser.add_argument("--status", choices=sorted(WARNING_STATUSES), default="active")
+    warning_review_parser.add_argument("--rationale", required=True)
+    warning_review_parser.add_argument("--reviewed-at")
+    warning_review_parser.add_argument("--next-review-at", required=True)
+    warning_review_parser.add_argument("--signal-id", action="append")
+    warning_review_parser.set_defaults(func=review_strategic_warning)
 
     review_parser = subparsers.add_parser(
         "resolve-review", help="Apply a human decision to a claim conflict."

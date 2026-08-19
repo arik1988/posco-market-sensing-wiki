@@ -229,21 +229,21 @@
   };
 
   const enhanceSignals = () => {
-    document.querySelectorAll("script[data-signal-ui]").forEach((script) => {
-      if (script.dataset.signalUiEnhanced === "true") return;
+    document.querySelectorAll("template[data-signal-ui]").forEach((container) => {
+      if (container.dataset.signalUiEnhanced === "true") return;
       let payload;
       try {
-        payload = JSON.parse(script.textContent);
+        payload = JSON.parse(container.content.textContent);
       } catch (_error) {
         return;
       }
       const enhanced =
         payload.kind === "index"
-          ? enhanceIndex(script, payload)
+          ? enhanceIndex(container, payload)
           : payload.kind === "detail"
-            ? enhanceDetail(script, payload)
+            ? enhanceDetail(container, payload)
             : false;
-      if (enhanced) script.dataset.signalUiEnhanced = "true";
+      if (enhanced) container.dataset.signalUiEnhanced = "true";
     });
   };
 

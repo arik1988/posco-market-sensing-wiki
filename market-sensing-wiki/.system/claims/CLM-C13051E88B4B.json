@@ -1,0 +1,41 @@
+{
+  "claim_id": "CLM-C13051E88B4B",
+  "subject_id": "MKT-US-BATTERY-MARKET",
+  "predicate": "us_battery_capacity_reallocated_to_lfp_2025",
+  "value": "50 GWh 초과",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2025-12-31",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-3F479FFE"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2025-12-31",
+      "action": "created",
+      "reason": "IEA 2026 미국 현지 생산능력 전환 통계",
+      "source_ids": [
+        "SRC-20260819-3F479FFE"
+      ]
+    },
+    {
+      "date": "2025-12-31",
+      "action": "verified",
+      "reason": "IEA 2026 미국 현지 생산능력 전환 통계",
+      "source_ids": [
+        "SRC-20260819-3F479FFE"
+      ]
+    },
+    {
+      "date": "2026-08-19",
+      "action": "verified",
+      "reason": "IEA 2026 미국 현지 생산능력 전환 통계",
+      "source_ids": [
+        "SRC-20260819-3F479FFE"
+      ]
+    }
+  ]
+}

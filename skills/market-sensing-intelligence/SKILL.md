@@ -159,6 +159,32 @@ LLM이 사용자가 가리킨 시그널에 답할 때는 `trace-signal --signal-
 출처 진위 확인은 4를 사용한다. MkDocs 본문에는 Signal·Insight·Claim ID, 해시,
 raw 경로 같은 시스템 필드를 노출하지 않는다.
 
+## 구조적 추세와 지속 경고 계약
+
+마켓센싱은 개별 뉴스를 나열하는 데서 끝나지 않는다. 서로 독립적인 Signal이 같은
+사업전제를 반복해 흔들면 `Signal → Trend → Thesis → Warning → Decision Task`로
+승격한다.
+
+- `Trend(TRD-)`는 같은 방향의 Signal, 수치 지표, 최초 감지일과 최근 관찰일, 지지·반대
+  Source를 누적한다.
+- `Thesis(THS-)`는 위협받는 전략가정, 회사로의 영향 경로, 판단 기간, 반대 근거와
+  명시적 반증 조건을 기록한다.
+- `Warning(WRN-)`은 `observe → watch → warning → critical` 단계와 최초 경고일,
+  최근·다음 검토일, 강화·완화 규칙, 담당·판단 시한·조치 및 변경 이력을 보존한다.
+- 활성 Warning은 새 기사가 없어도 홈과 `전략 경고`에 계속 표시한다. 사람의 명시적
+  종료 또는 반증 근거 없이 삭제하거나 낮추지 않는다.
+- 경고 단계는 기사 수가 아니라 독립 근거 채널 수, 방향의 지속성, 사업 전달 경로와
+  의사결정 시급성으로 판단한다. 지지 근거만 모으지 않고 counter evidence와
+  falsification condition을 필수로 둔다.
+- 총시장 성장과 제품구성 전환을 분리한다. 예를 들어 전체 리튬 수요가 늘어도 LFP가
+  부상하면 탄산리튬 선호와 고니켈 NMC용 수산화리튬 성장전제를 별도로 재검증한다.
+
+저장 시 `upsert-strategic-watch --watch-file ...`로 세 레코드를 원자적으로 연결한다.
+새 근거가 생기면 `review-strategic-warning`으로 이력을 추가하고, LLM은
+`trace-strategic-warning --warning-id ... --depth 1..4`로 경고에서 원문까지 순회한다.
+MkDocs에는 ID·내부 경로보다 경고, 추세, 흔들리는 가정, 판단 과제, 반대 근거를 평이한
+한국어로 보여준다.
+
 ### 문서급 상세 분석 최소 계약
 
 3단계 상세 분석은 짧은 해설이나 뉴스 요약이 아니다. 다음 항목을 내용에 맞게 모두

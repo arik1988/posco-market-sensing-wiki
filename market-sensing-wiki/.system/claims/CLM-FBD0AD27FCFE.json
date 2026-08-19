@@ -1,0 +1,36 @@
+{
+  "claim_id": "CLM-FBD0AD27FCFE",
+  "subject_id": "DEC-GM-LFP-20260819",
+  "predicate": "impact_path",
+  "value": "GM 현지 LFP 양산 → 북미 고객의 화학계 구성 변화 → 리튬염 구매·계약갱신 → 수산화리튬 물량·가격 영향",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-55D3797D",
+    "SRC-20260819-3EDE7B8B"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "고객행동과 원료선호를 연결한 AI 영향경로",
+      "source_ids": [
+        "SRC-20260819-55D3797D",
+        "SRC-20260819-3EDE7B8B"
+      ]
+    },
+    {
+      "date": "2026-08-19",
+      "action": "verified",
+      "reason": "고객행동과 원료선호를 연결한 AI 영향경로",
+      "source_ids": [
+        "SRC-20260819-55D3797D",
+        "SRC-20260819-3EDE7B8B"
+      ]
+    }
+  ]
+}

@@ -255,6 +255,15 @@ HTML 하단 출처 카드로 연결되며, 출처 레코드의 웹 URL과 보관
    `signal_schema`, `signal_integrity`, `signal_quality`, `signal_portfolio`가 0인지 확인한다. 기존
    `unpublished_claims`가 있더라도 이번 작업으로 그 수를 늘리지 않는다.
 
+### 구조적 경고 승격
+
+1. 서로 독립적인 외부 Signal이 같은 전략가정을 지지하는지 확인한다.
+2. 전체 시장 성장과 제품·기술 구성 전환을 분리해 영향 경로를 쓴다.
+3. 지지·반대 Source, 수치 지표, 반증 조건을 함께 채운 watch JSON을 만든다.
+4. `upsert-strategic-watch <root> --watch-file <json>`을 실행한다.
+5. 새 근거는 `review-strategic-warning`으로 단계와 다음 검토일을 갱신한다.
+6. `trace-strategic-warning --depth 4`와 `audit`로 원문까지 연결되는지 확인한다.
+
 ## 7. Audit
 
 `audit`을 실행하고 다음을 검토한다.

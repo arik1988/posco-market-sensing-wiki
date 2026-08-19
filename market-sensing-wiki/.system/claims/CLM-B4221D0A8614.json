@@ -1,0 +1,33 @@
+{
+  "claim_id": "CLM-B4221D0A8614",
+  "subject_id": "DEC-LFP-GLOBAL-20260819",
+  "predicate": "recommended_follow_up",
+  "value": "고객·지역·화학계별 2027~2030 수요와 탄산·수산화 설비 전환성을 2026-09-30까지 재산정",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-3F479FFE"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "의사결정 후속조치",
+      "source_ids": [
+        "SRC-20260819-3F479FFE"
+      ]
+    },
+    {
+      "date": "2026-08-19",
+      "action": "verified",
+      "reason": "의사결정 후속조치",
+      "source_ids": [
+        "SRC-20260819-3F479FFE"
+      ]
+    }
+  ]
+}
