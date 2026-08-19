@@ -47,6 +47,9 @@ class MarketSensingTests(unittest.TestCase):
             / "references"
             / "signal-analysis-template.md"
         ).read_text(encoding="utf-8")
+        skill = (
+            PROJECT_ROOT / "skills" / "market-sensing-intelligence" / "SKILL.md"
+        ).read_text(encoding="utf-8")
         scaffold_agents = (self.root / "AGENTS.md").read_text(encoding="utf-8")
         self.assertIn("Source·Claim만 만들거나", agents)
         self.assertIn("add-signal", agents)
@@ -81,6 +84,8 @@ class MarketSensingTests(unittest.TestCase):
             "사업축 pill 1개",
         ):
             self.assertIn(contract, agents)
+        self.assertIn("외부 핵심 시그널", skill)
+        self.assertIn("70%", skill)
         self.assertIn("사업 시사점", scaffold_agents)
         self.assertIn("재무·실적", scaffold_agents)
 
@@ -220,6 +225,8 @@ class MarketSensingTests(unittest.TestCase):
                 title="EU 철강 수입쿼터 축소",
                 sentence="EU 조치로 고객별 계약 갱신일과 가격 전가 범위를 다시 확인해야 합니다.",
                 signal_type="정책·규제",
+                signal_role="core_market_signal",
+                signal_origin="policy_regulator",
                 paragraph=(
                     "정부가 2027년부터 적용할 새 정책을 발표해 수입 철강의 도착원가가 "
                     "달라집니다. 포스코는 고객별 계약 갱신일과 가격 전가 가능 범위를 "
@@ -278,6 +285,10 @@ class MarketSensingTests(unittest.TestCase):
             signal_record["schema_version"], market_sensing.SIGNAL_SCHEMA_VERSION
         )
         self.assertEqual(signal_record["signal_type"], "정책·규제")
+        self.assertEqual(signal_record["signal_role"], "core_market_signal")
+        self.assertEqual(signal_record["signal_origin"], "policy_regulator")
+        self.assertEqual(run["signal_contract"]["minimum_core_market_ratio"], 0.7)
+        self.assertEqual(run["signal_contract"]["signal_ids"], [created["signal_id"]])
         audit = market_sensing.audit_store(
             Namespace(root=str(self.root), stale_days=180)
         )
@@ -285,6 +296,7 @@ class MarketSensingTests(unittest.TestCase):
             "signal_schema",
             "signal_integrity",
             "signal_quality",
+            "signal_portfolio",
             "unpublished_claims",
             "unpublished_sources",
             "run_publication",
@@ -300,6 +312,8 @@ class MarketSensingTests(unittest.TestCase):
                     root=str(self.root), title="t", sentence="s", paragraph="p",
                     run_id="test-run",
                     signal_type="정책·규제",
+                    signal_role="core_market_signal",
+                    signal_origin="policy_regulator",
                     document_path="reports/briefs/decision-note.md",
                     company_id=["COM-POSCO"], business_axis="철강",
                     claim_id=["missing"], business_impact_score=6,
@@ -380,6 +394,104 @@ class MarketSensingTests(unittest.TestCase):
         self.assertEqual(market_sensing.validate_signal_type("수급·가격"), "수급·가격")
         with self.assertRaisesRegex(ValueError, "signal_type must be one of"):
             market_sensing.validate_signal_type("시장 동향")
+
+    def test_signal_role_and_origin_contract_rejects_own_execution_as_core(self):
+        self.assertEqual(
+            market_sensing.validate_signal_classification(
+                "core_market_signal", "external_market"
+            ),
+            ("core_market_signal", "external_market"),
+        )
+        self.assertEqual(
+            market_sensing.validate_signal_classification(
+                "execution_context", "company_execution"
+            ),
+            ("execution_context", "company_execution"),
+        )
+        with self.assertRaisesRegex(ValueError, "only permits signal_origin"):
+            market_sensing.validate_signal_classification(
+                "core_market_signal", "company_execution"
+            )
+
+    def test_target_company_release_alone_cannot_be_a_core_market_signal(self):
+        signal = {
+            "signal_role": "core_market_signal",
+            "company_ids": ["COM-POSCO-INTERNATIONAL"],
+            "source_ids": ["SRC-SELF"],
+        }
+        sources = {
+            "SRC-SELF": {
+                "source_id": "SRC-SELF",
+                "publisher": "Senex Energy",
+                "source_type": "company_release",
+                "title": "Atlas expansion update",
+            }
+        }
+        self.assertTrue(
+            market_sensing.core_signal_uses_only_target_company_sources(
+                signal, sources
+            )
+        )
+        sources["SRC-REGULATOR"] = {
+            "source_id": "SRC-REGULATOR",
+            "publisher": "AEMO",
+            "source_type": "government",
+            "title": "Gas supply outlook",
+        }
+        signal["source_ids"].append("SRC-REGULATOR")
+        self.assertFalse(
+            market_sensing.core_signal_uses_only_target_company_sources(
+                signal, sources
+            )
+        )
+
+    def test_run_signal_contract_guards_external_share_and_single_asset_bias(self):
+        claims = {
+            "CLM-ATLAS": {"subject_id": "PRJ-SENEX-ATLAS"},
+            "CLM-ROMA": {"subject_id": "PRJ-SENEX-ROMA-NORTH"},
+        }
+        signals = [
+            {
+                "business_axis": "에너지",
+                "signal_role": "execution_context",
+                "signal_origin": "company_execution",
+                "claim_ids": ["CLM-ATLAS"],
+                "status": "active",
+            },
+            {
+                "business_axis": "에너지",
+                "signal_role": "core_market_signal",
+                "signal_origin": "external_market",
+                "claim_ids": ["CLM-ATLAS"],
+                "status": "active",
+            },
+            {
+                "business_axis": "에너지",
+                "signal_role": "core_market_signal",
+                "signal_origin": "policy_regulator",
+                "claim_ids": ["CLM-ATLAS"],
+                "status": "active",
+            },
+        ]
+        findings = market_sensing.evaluate_run_signal_contract(
+            "energy-run", signals, claims
+        )
+        self.assertTrue(any("minimum is 70%" in item for item in findings))
+        self.assertTrue(any("PRJ-SENEX-ATLAS" in item for item in findings))
+
+        signals.append(
+            {
+                "business_axis": "에너지",
+                "signal_role": "core_market_signal",
+                "signal_origin": "competitor_counterparty",
+                "claim_ids": ["CLM-ROMA"],
+                "status": "active",
+            }
+        )
+        findings = market_sensing.evaluate_run_signal_contract(
+            "energy-run", signals, claims
+        )
+        self.assertFalse(any("minimum is 70%" in item for item in findings))
 
     def test_signal_analysis_rejects_opaque_intro_without_reducing_depth(self):
         opaque = self.valid_signal_analysis().replace(
@@ -981,6 +1093,69 @@ class MarketSensingTests(unittest.TestCase):
             navigation,
         )
         self.assertIn("if (!targetNeedsCentering()) return", navigation)
+
+    def test_signal_ui_payload_preserves_index_order_and_includes_role(self):
+        signals = [
+            ("SIG-CORE", "INS-CORE", "core_market_signal", "핵심 변화"),
+            ("SIG-EXEC", "INS-EXEC", "execution_context", "실행 확인"),
+        ]
+        for signal_id, insight_id, signal_role, title in signals:
+            market_sensing.write_json(
+                self.root / ".system" / "signals" / f"{signal_id}.json",
+                {
+                    "insight_id": insight_id,
+                    "signal_role": signal_role,
+                    "signal_type": "재무·실적",
+                    "business_axis": "철강",
+                    "sentence": f"{title}의 사업 시사점입니다.",
+                },
+            )
+            market_sensing.write_json(
+                self.root / ".system" / "insights" / f"{insight_id}.json",
+                {"title": title},
+            )
+
+        payload = mkdocs_hooks._signal_ui_payload(
+            self.root,
+            "signals/index.md",
+            "[[signals/SIG-EXEC|실행]]\n[[signals/SIG-CORE|핵심]]",
+        )
+
+        self.assertEqual(payload["kind"], "index")
+        self.assertEqual(
+            [item["signal_role"] for item in payload["items"]],
+            ["execution_context", "core_market_signal"],
+        )
+        self.assertEqual(
+            [item["title"] for item in payload["items"]],
+            ["실행 확인", "핵심 변화"],
+        )
+
+    def test_signal_list_groups_roles_without_adding_a_role_pill(self):
+        script = (
+            PROJECT_ROOT
+            / "market-sensing-wiki"
+            / "javascripts"
+            / "signal-list.js"
+        ).read_text(encoding="utf-8")
+        styles = (
+            PROJECT_ROOT
+            / "market-sensing-wiki"
+            / "stylesheets"
+            / "extra.css"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn('item.signal_role === "execution_context"', script)
+        self.assertIn('createIndexSection("핵심 시장신호"', script)
+        self.assertIn('"실행·노출 확인",', script)
+        self.assertIn("회사 발표·실적을 외부 시장신호의 노출과 실행 상태", script)
+        self.assertLess(
+            script.index('createIndexSection("핵심 시장신호"'),
+            script.index('"실행·노출 확인",'),
+        )
+        self.assertNotIn("signal-pill-role", script)
+        self.assertIn(".signal-index-section-title", styles)
+        self.assertIn(".signal-index-section-description", styles)
 
     def test_footnote_source_preview_is_loaded(self):
         config = (PROJECT_TOOLS / "mkdocs.yml").read_text(encoding="utf-8")

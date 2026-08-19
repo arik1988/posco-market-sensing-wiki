@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-DD5B710FE503",
+  "subject_id": "MKT-ENERGY-ACCC-2027-OUTLOOK",
+  "predicate": "impact_path",
+  "value": "호주 분기별 수급·남부 저장과 운송 제약 → Senex 계약별 실현가격·인도량 → 포스코인터내셔널 연결이익과 투자 회수",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-943D3138"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "AI impact-path assessment",
+      "source_ids": [
+        "SRC-20260819-943D3138"
+      ]
+    }
+  ]
+}

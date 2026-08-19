@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-4B8ABBD1E400",
+  "subject_id": "MKT-ENERGY-ACCC-2027-OUTLOOK",
+  "predicate": "southern_storage_constraint",
+  "value": "Iona storage is critical and other unused capacity faces commercial and technical constraints",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-07-10",
+  "last_verified": "2026-07-10",
+  "source_ids": [
+    "SRC-20260819-943D3138"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-07-10",
+      "action": "created",
+      "reason": "ACCC July 2026 Gas Inquiry update",
+      "source_ids": [
+        "SRC-20260819-943D3138"
+      ]
+    }
+  ]
+}

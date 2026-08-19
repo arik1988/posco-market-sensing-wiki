@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-3256D7E14DA6",
+  "subject_id": "MKT-ENERGY-ACCC-2027-OUTLOOK",
+  "predicate": "contract_price_direction_q1_2026",
+  "value": "2027 supply contracts lower than previous quarter and broadly at pre-conflict levels",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-03-31",
+  "last_verified": "2026-03-31",
+  "source_ids": [
+    "SRC-20260819-943D3138"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-03-31",
+      "action": "created",
+      "reason": "ACCC July 2026 Gas Inquiry update",
+      "source_ids": [
+        "SRC-20260819-943D3138"
+      ]
+    }
+  ]
+}

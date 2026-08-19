@@ -1,0 +1,33 @@
+{
+  "claim_id": "CLM-E9A30E418789",
+  "subject_id": "MKT-ENERGY-US-LNG-2027",
+  "predicate": "us_lng_asia_exports_2025",
+  "value": "2.5 Bcf/d, down from 4.0 Bcf/d in 2024",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2025-12-31",
+  "last_verified": "2026-04-16",
+  "source_ids": [
+    "SRC-20260819-198CA198"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2025-12-31",
+      "action": "created",
+      "reason": "EIA Natural Gas Monthly cited in April 2026 article",
+      "source_ids": [
+        "SRC-20260819-198CA198"
+      ]
+    },
+    {
+      "date": "2026-04-16",
+      "action": "verified",
+      "reason": "Reverified against EIA publication date; value remains 2025 annual data",
+      "source_ids": [
+        "SRC-20260819-198CA198"
+      ]
+    }
+  ]
+}

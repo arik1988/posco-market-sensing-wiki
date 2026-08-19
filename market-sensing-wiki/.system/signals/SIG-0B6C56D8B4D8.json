@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "signal_id": "SIG-0B6C56D8B4D8",
-  "sentence": "AEMO가 호주 남부 기존 가스전 생산이 향후 5년간 46% 감소하고 2030년부터 공급 부족이 나타날 수 있다고 전망했으므로, 포스코인터내셔널은 Senex 증산을 단기 판매량뿐 아니라 장기계약·남부 운송권과 함께 평가해야 합니다.",
+  "sentence": "호주 남부 기존 가스전 생산이 향후 5년간 46% 감소할 전망이어서, 포스코인터내셔널은 Senex 증산의 가치를 생산량보다 남부 장기계약·운송권·저장권 확보 여부로 평가해야 합니다.",
   "insight_id": "INS-D1FBEA76A243",
   "company_ids": [
     "COM-POSCO-INTERNATIONAL"
@@ -39,5 +39,7 @@
   "created_at": "2026-08-18T23:36:33+09:00",
   "updated_at": "2026-08-19T07:13:54+09:00",
   "run_id": "topic-scan-20260818",
-  "signal_type": "수급·가격"
+  "signal_type": "수급·가격",
+  "signal_role": "core_market_signal",
+  "signal_origin": "external_market"
 }

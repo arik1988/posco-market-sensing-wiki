@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "signal_id": "SIG-B8FE09C65A92",
-  "sentence": "ACCC가 2025년 7~9월 호주 동부 전체 9페타줄(PJ), 남부 40페타줄의 공급 부족을 전망했으므로, 포스코인터내셔널은 Senex 생산량보다 남부 인도계약·운송권·저장 여력을 먼저 확인해야 합니다.",
+  "sentence": "2025년 겨울 호주 남부의 공급 부족 전망은 유효한 외부 신호였지만 대상 기간이 지났으므로, 포스코인터내셔널은 당시 실제 부족량·가격·Senex 인도량을 확인한 뒤 현재 판단에 사용할지를 정해야 합니다.",
   "insight_id": "INS-7008B0B01776",
   "company_ids": [
     "COM-POSCO-INTERNATIONAL"
@@ -41,5 +41,7 @@
   "created_at": "2026-08-19T00:55:09+09:00",
   "updated_at": "2026-08-19T07:13:54+09:00",
   "run_id": "energy-backfill-20240819-20260819",
-  "signal_type": "수급·가격"
+  "signal_type": "수급·가격",
+  "signal_role": "core_market_signal",
+  "signal_origin": "external_market"
 }

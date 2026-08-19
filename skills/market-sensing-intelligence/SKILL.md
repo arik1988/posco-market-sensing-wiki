@@ -101,7 +101,8 @@ python skills/market-sensing-intelligence/scripts/market_sensing.py --help
 - `add-image`: 필요한 설비 사진·공정도·특허 도면을 기존 source에 선택적으로 연결
 - `add-claim`: 주장 생성, 재검증 또는 충돌 검토 생성
 - `add-signal`: 검증된 Claim을 관측 변화 제목, 변화 유형, 사업 시사점, 문단 Insight,
-  상세 문서, Source 원문으로 연결
+  상세 문서, Source 원문으로 연결. 외부 핵심 시그널과 자사 실행 맥락의 역할·발생원을
+  함께 저장
 - `set-impact-estimate`: 기존 Signal에 검증된 정량 영향 What-if JSON을 연결하거나 교체
 - `trace-signal`: 지정한 Signal에서 질문 수준에 맞춰 1~4단계 근거 그래프를 읽기 전용 순회
 - `resolve-review`: 사람의 결정으로 주장 충돌 처리
@@ -124,6 +125,19 @@ python skills/market-sensing-intelligence/scripts/market_sensing.py --help
 별도 완전문장인 `사업 시사점`에 둔다. 설명 없는 번역투·내부 메모 용어·영문 약어를
 전문성으로 대신하지 않는다. 분석의 깊이는 상세 본문에 유지하되 문단과 각 절의
 도입부는 비전문 독자도 한 번에 이해할 수 있게 쓴다.
+
+Signal의 역할은 둘뿐이다. 시장·정책·경쟁사·거래상대에서 시작해 회사 판단을 바꾸는
+변화는 `core_market_signal`, 대상 회사와 자회사의 투자·증산·계약·실적·공정 진척은
+`execution_context`다. 발생원은 `external_market`, `policy_regulator`,
+`competitor_counterparty`, `company_execution` 중 하나이며 `company_execution`은
+`execution_context`에만 연결한다. 대상 회사의 보도자료·IR만으로 확인되는 실행 사실을
+외부 핵심 시그널로 승격하지 않는다. 회사 실행 정보는 외부 충격의 노출 규모·전달 경로·
+대응 여력을 확인하는 보조 근거로 쓴다.
+
+신규 조사 run은 사업축별 발행 Signal의 70% 이상을 `core_market_signal`로 유지한다.
+한 프로젝트·가스전·광산·설비가 같은 run의 사업축별 Signal 과반을 차지하고 Signal이
+3건 이상이면 편중으로 감사한다. 외부 변화가 회사명을 언급하지 않는다는 이유로
+우선순위를 낮추지 않으며, 영향 경로가 명확하면 회사 발표보다 먼저 검증한다.
 
 1. MkDocs 목록에는 관측 변화 제목, 사업 시사점, 회사, 사업축 pill 1개, 변화 유형 pill
    1개, 사업영향도·긴급도, 평가일을 보여준다. 변화 유형은 `정책·규제`, `수급·가격`,
@@ -250,6 +264,9 @@ Scout를 시작하기 전에 `references/adaptive-research.md`를 읽고, 조사
   구성도·특허·학술 그림·공정도처럼 세부 판독이 중요한 자료만 약 90%까지 넓게
   표시한다. 모바일에서는 본문 폭을 사용한다.
 - 실행 범위, 쿼리, 기간, 실패한 출처를 `.system/runs/`에 기록한다. “인터넷 전체를 확인했다”고 표현하지 않는다.
+- 발견 후보를 `core_market_signal`과 `execution_context`로 먼저 나누고, 회사 뉴스룸·IR
+  결과가 많아져도 이를 외부 시장 발견 건수로 세지 않는다. 사업축별 외부 핵심 시그널
+  70%와 단일 프로젝트·설비 과반 방지 조건을 만족하도록 빈 외부 coverage cell로 예산을 옮긴다.
 - run에는 확인한 coverage cell, 독립 탐지 채널, 쿼리별 신규 정보 수확, 고위험 미확인
   셀, 중단 근거, 한계와 다음 재탐색 트리거를 함께 기록한다.
 
@@ -369,5 +386,6 @@ Markdown 각주를 붙인다. 각주는 출처명, 발행자, 게시일, 원문 
 - MkDocs Signal 상세 한 페이지에서 한 문장·문단·문서급 분석·원문이 순서대로 읽힌다.
 - 중복·충돌 후보가 조용히 병합되지 않았다.
 - `audit` 결과에 원문 해시 오류, 끊긴 Source·Claim·Insight 링크, Signal 품질 오류가 없다.
+- 신규 run의 `signal_portfolio` 감사에 외부 핵심 비중 미달이나 단일 자산 편중이 없다.
 - 보고서의 모든 핵심 사실이 source ID로 추적된다.
 - strict 빌드와 Codex 앱 브라우저의 화면·콘솔 검증이 끝났다.

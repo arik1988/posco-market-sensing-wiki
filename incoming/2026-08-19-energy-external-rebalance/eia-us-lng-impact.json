@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "title": "미국 LNG 증설에 따른 트레이딩 상각 전 영업이익 민감도",
+  "description": "영향 화물량, 단위마진 변화, 가격노출과 실현률, 환율을 이용해 원화 기준 순마진 변화를 계산합니다.",
+  "as_of": "2026-04-16",
+  "confidence": "low",
+  "notice": "공개 공급전망과 가정에 기반한 예비 계산이며 회사 실제 물량·계약·헤지값이나 전망이 아닙니다.",
+  "formula_display": "영향물량(million MMBtu) × 단위마진 변화(USD/MMBtu) × 가격노출 비중 × 실현률 × 환율(KRW/USD) ÷ 1,000",
+  "variables": [
+    {"id":"volume_mmbtu_m","label":"영향 화물량","unit":"million MMBtu","min":2,"max":40,"step":1,"default":12,"kind":"assumption","basis":"포스코인터내셔널의 미국산 LNG 계약·재판매 물량 비공개","source_ids":[]},
+    {"id":"margin_delta","label":"단위마진 변화","unit":"USD/MMBtu","min":-2,"max":2,"step":0.1,"default":-0.5,"kind":"assumption","basis":"공급 증가가 지역 가격차에 미치는 민감도 가정","source_ids":[]},
+    {"id":"market_exposure","label":"가격노출 비중","unit":"share","min":0,"max":1,"step":0.05,"default":0.5,"kind":"assumption","basis":"고정·연동·현물 계약 비중 비공개","source_ids":[]},
+    {"id":"capture_rate","label":"마진 실현률","unit":"share","min":0.2,"max":1,"step":0.05,"default":0.6,"kind":"assumption","basis":"운임·액화비·헤지 후 실현률 비공개","source_ids":[]},
+    {"id":"fx_krw_usd","label":"원·달러 환율","unit":"KRW/USD","min":1100,"max":1600,"step":10,"default":1350,"kind":"assumption","basis":"장기 민감도 기준값","source_ids":[]}
+  ],
+  "outputs": [
+    {"id":"ebitda_change","label":"트레이딩 상각 전 영업이익 변화","unit":"KRW billion","decimals":1,"primary":true,"expression":{"op":"divide","args":[{"op":"multiply","args":[{"op":"multiply","args":[{"op":"multiply","args":[{"op":"multiply","args":[{"var":"volume_mmbtu_m"},{"var":"margin_delta"}]},{"var":"market_exposure"}]},{"var":"capture_rate"}]},{"var":"fx_krw_usd"}]},1000]}},
+    {"id":"usd_margin_change","label":"환산 전 마진 변화","unit":"USD million","decimals":1,"primary":false,"expression":{"op":"multiply","args":[{"op":"multiply","args":[{"op":"multiply","args":[{"var":"volume_mmbtu_m"},{"var":"margin_delta"}]},{"var":"market_exposure"}]},{"var":"capture_rate"}]}}
+  ],
+  "presets": [
+    {"id":"defensive","label":"방어","values":{"volume_mmbtu_m":8,"margin_delta":0.8,"market_exposure":0.35,"capture_rate":0.5,"fx_krw_usd":1300}},
+    {"id":"base","label":"기준","values":{"volume_mmbtu_m":12,"margin_delta":-0.5,"market_exposure":0.5,"capture_rate":0.6,"fx_krw_usd":1350}},
+    {"id":"pressure","label":"압박","values":{"volume_mmbtu_m":20,"margin_delta":-1.3,"market_exposure":0.7,"capture_rate":0.75,"fx_krw_usd":1400}}
+  ]
+}

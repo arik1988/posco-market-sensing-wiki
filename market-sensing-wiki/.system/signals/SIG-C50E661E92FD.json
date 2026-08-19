@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "signal_id": "SIG-C50E661E92FD",
-  "sentence": "ACCC가 2025년 1분기 동부 호주 가스의 총량 잉여를 12~27페타줄(PJ)로 전망하면서 지역별 부족 위험도 남겼으므로, 포스코인터내셔널은 Senex 증산분의 남부 인도계약·인도지점·운송권을 먼저 확인해야 합니다.",
+  "sentence": "2025년 1분기 호주 동부 전체에는 가스 잉여가 전망됐지만 남부 공급 병목은 남아, 당시 Senex 판매가 총량보다 인도지점·운송권에 좌우됐는지 실제 결과를 확인해야 합니다.",
   "insight_id": "INS-2B5269C42FFF",
   "company_ids": [
     "COM-POSCO-INTERNATIONAL"
@@ -39,5 +39,7 @@
   "created_at": "2026-08-19T00:54:39+09:00",
   "updated_at": "2026-08-19T07:13:54+09:00",
   "run_id": "energy-backfill-20240819-20260819",
-  "signal_type": "수급·가격"
+  "signal_type": "수급·가격",
+  "signal_role": "core_market_signal",
+  "signal_origin": "external_market"
 }

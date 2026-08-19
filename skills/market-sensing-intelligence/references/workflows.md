@@ -22,6 +22,8 @@
 3. 검색 기간을 마지막 성공일보다 3~7일 앞에서 시작해 누락을 줄인다.
 4. 발견→커버리지 점검→원문 검증→반증 탐색의 네 단계를 수행한다. 기업 공식명·약칭·
    프로젝트명·현지어·기술 동의어를 조합하고, 공식 출처와 실패 신호를 먼저 검색한다.
+   후보는 동시에 `core_market_signal`과 `execution_context`로 구분한다. 대상 회사가
+   무엇을 했다는 발표는 외부 변화 발견 건수에 포함하지 않는다.
 5. 잠재 사업영향·긴급성·불확실성·미확인 경과·변화 가능성이 높고 예상 비용이 낮은
    coverage cell부터 예산을 배정한다. 반복 재인용과 영향 경로가 약한 셀은 축소한다.
 6. 후보마다 본문, 게시일, 발행자, 원 URL을 확인한다. 설비 형태·공정 구성을
@@ -30,6 +32,8 @@
    확인한다. 동일 보도자료 재인용은 독립 검증으로 세지 않는다.
 8. `adaptive-research.md`의 수확 체감 조건을 충족할 때 탐색 가지를 닫는다. 미확인
    고위험 셀이 있으면 이유와 다음 재탐색 트리거 없이 완료 처리하지 않는다.
+   사업축별 외부 핵심 시그널이 70% 미만이거나 한 프로젝트·설비에 과반이 몰리면,
+   가격·수급·정책·경쟁사·고객·물류의 빈 외부 셀로 탐색 예산을 옮긴다.
 9. 쿼리와 결과를 run JSON에 기록한다. `coverage`에 확인 셀, 독립 채널, 쿼리별 수확,
    고위험 빈칸, 중단 근거, 한계, 다음 트리거를 남긴다. 저장 작업이면
    `results.new_claims`, `results.new_signals`, `signal_ids`를 함께 기록한다.
@@ -232,8 +236,12 @@ HTML 하단 출처 카드로 연결되며, 출처 레코드의 웹 URL과 보관
    한계를 포함한다.
 3. 변화 유형을 `정책·규제`, `수급·가격`, `경쟁사`, `투자·프로젝트`, `공급망·물류`,
    `고객·계약`, `기술·운영`, `재무·실적` 중 하나로 정하고,
-   `add-signal --signal-type <변화 유형> --analysis-file <파일>`로 Signal과 Insight를
-   생성한다. 제목은 관측 변화, 한 문장 필드는 사업 시사점으로 분리한다.
+   역할과 발생원을 정한 뒤 `add-signal --signal-type <변화 유형>
+   --signal-role <core_market_signal|execution_context>
+   --signal-origin <external_market|policy_regulator|competitor_counterparty|company_execution>
+   --analysis-file <파일>`로 Signal과 Insight를 생성한다. 제목은 관측 변화, 한 문장
+   필드는 사업 시사점으로 분리한다. 회사 자체 발표만 근거인 실행 사실은
+   `execution_context/company_execution`으로만 발행한다.
 4. 정량화 가능한 Signal이면 공개정보·대용변수·AI 가정을 구분한 What-if JSON을 작성하고
    `set-impact-estimate --signal-id <ID> --estimate-file <파일>`로 연결한다. 기준 추정액,
    가격·물량·원가·대응비용 구성효과, 방어·기준·압박 프리셋을 확인한다.
@@ -244,7 +252,7 @@ HTML 하단 출처 카드로 연결되며, 출처 레코드의 웹 URL과 보관
 6. MkDocs strict 빌드 후 실제 브라우저에서 슬라이더·직접입력·시나리오 초기화·Mermaid·
    표·긴 문장·원문 링크와 콘솔 오류를 확인한다.
 7. `audit`을 다시 실행해 이번 작업에서 만든 Claim이 모두 Signal에 연결됐고,
-   `signal_schema`, `signal_integrity`, `signal_quality`가 0인지 확인한다. 기존
+   `signal_schema`, `signal_integrity`, `signal_quality`, `signal_portfolio`가 0인지 확인한다. 기존
    `unpublished_claims`가 있더라도 이번 작업으로 그 수를 늘리지 않는다.
 
 ## 7. Audit
@@ -257,6 +265,8 @@ HTML 하단 출처 카드로 연결되며, 출처 레코드의 웹 URL과 보관
 - 같은 subject·predicate에 복수의 active 값
 - pending review
 - 잘못된 상태·신뢰도 값
+- 역할·발생원 조합 오류와 대상 회사 발표 단독의 외부 핵심 시그널
+- run×사업축 외부 핵심 시그널 70% 미달과 단일 프로젝트·설비 과반 편중
 
 도구는 사실을 자동 수정하지 않는다. 결과를 보고 review 또는 재검색으로 연결한다.
 

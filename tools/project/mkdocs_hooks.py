@@ -95,6 +95,7 @@ def _signal_ui_item(root: Path, signal_id: str) -> dict[str, Any] | None:
         "company": " · ".join(company_names),
         "business_axis": _display_text(signal.get("business_axis")),
         "signal_type": _display_text(signal.get("signal_type")),
+        "signal_role": _display_text(signal.get("signal_role")),
         "region": region,
         "business_impact": (signal.get("business_impact") or {}).get("score"),
         "urgency": (signal.get("urgency") or {}).get("score"),

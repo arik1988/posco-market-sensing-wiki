@@ -60,6 +60,37 @@ SIGNAL_TYPES = (
     "기술·운영",
     "재무·실적",
 )
+SIGNAL_ROLES = ("core_market_signal", "execution_context")
+SIGNAL_ORIGINS = (
+    "external_market",
+    "policy_regulator",
+    "competitor_counterparty",
+    "company_execution",
+)
+SIGNAL_ROLE_ORIGINS = {
+    "core_market_signal": {
+        "external_market",
+        "policy_regulator",
+        "competitor_counterparty",
+    },
+    "execution_context": {"company_execution"},
+}
+RUN_SIGNAL_CONTRACT = {
+    "version": 1,
+    "minimum_core_market_ratio": 0.7,
+    "single_asset_concentration_threshold": 0.5,
+    "single_asset_minimum_signals": 3,
+}
+TARGET_COMPANY_SOURCE_TERMS = {
+    "COM-POSCO": ("posco", "포스코"),
+    "COM-POSCO-HOLDINGS": ("posco holdings", "포스코홀딩스"),
+    "COM-POSCO-INTERNATIONAL": (
+        "posco international",
+        "포스코인터내셔널",
+        "senex",
+    ),
+}
+COMPANY_OWNED_SOURCE_TYPES = {"company_release", "company_ir"}
 MARKET_SENSING_AXES = {
     "COM-POSCO": "철강",
     "COM-POSCO-HOLDINGS": "리튬",
@@ -3185,6 +3216,9 @@ STORE_AGENTS = """# Market Sensing Intelligence 저장소 지침
 - Signal에는 `정책·규제`, `수급·가격`, `경쟁사`, `투자·프로젝트`, `공급망·물류`,
   `고객·계약`, `기술·운영`, `재무·실적` 중 하나의 변화 유형을 저장하세요. 사람 화면에는
   사업축 pill 1개와 변화 유형 pill 1개만 표시하세요.
+- 외부 시장·정책·경쟁사·거래상대 변화는 `core_market_signal`, 대상 회사의 투자·증산·
+  실적·공정 진척은 `execution_context/company_execution`으로 분리하세요. 회사 자체 발표만
+  근거인 실행 사실을 core로 발행하지 말고, run×사업축마다 core 비중 70% 이상을 유지하세요.
 - 정량화 가능한 Signal은 공개정보와 합리적 대용변수를 사용해 영향액을 숫자로 먼저
   제시하고 방어·기준·압박 시나리오를 만드세요. 핵심 가정 3~8개는 근거·단위·범위를
   가진 슬라이더와 직접입력으로 조정되게 하고 `set-impact-estimate`로 연결하세요.
@@ -3915,6 +3949,115 @@ def validate_signal_type(value: Any) -> str:
     return signal_type
 
 
+def validate_signal_classification(role_value: Any, origin_value: Any) -> tuple[str, str]:
+    """Validate whether a Signal is external sensing or execution context."""
+    role = str(role_value or "").strip()
+    origin = str(origin_value or "").strip()
+    if role not in SIGNAL_ROLES:
+        raise ValueError("signal_role must be one of: " + ", ".join(SIGNAL_ROLES))
+    if origin not in SIGNAL_ORIGINS:
+        raise ValueError("signal_origin must be one of: " + ", ".join(SIGNAL_ORIGINS))
+    if origin not in SIGNAL_ROLE_ORIGINS[role]:
+        allowed = ", ".join(sorted(SIGNAL_ROLE_ORIGINS[role]))
+        raise ValueError(f"signal_role {role} only permits signal_origin: {allowed}")
+    return role, origin
+
+
+def source_is_owned_by_target_company(
+    source: dict[str, Any], company_ids: list[str]
+) -> bool:
+    """Return true only for a target company's own newsroom or IR source."""
+    if source.get("source_type") not in COMPANY_OWNED_SOURCE_TYPES:
+        return False
+    hosts = []
+    for field in ("canonical_url", "url"):
+        try:
+            hosts.append(urlsplit(str(source.get(field) or "")).hostname or "")
+        except ValueError:
+            pass
+    identity = normalize_text(" ".join([str(source.get("publisher") or ""), *hosts]))
+    return any(
+        normalize_text(term) in identity
+        for company_id in company_ids
+        for term in TARGET_COMPANY_SOURCE_TERMS.get(company_id, ())
+    )
+
+
+def core_signal_uses_only_target_company_sources(
+    signal: dict[str, Any], sources_by_id: dict[str, dict[str, Any]]
+) -> bool:
+    """Detect a self-announcement incorrectly elevated to a core market signal."""
+    if signal.get("signal_role") != "core_market_signal":
+        return False
+    sources = [
+        sources_by_id[source_id]
+        for source_id in (str(item) for item in signal.get("source_ids", []))
+        if source_id in sources_by_id
+    ]
+    company_ids = [str(item) for item in signal.get("company_ids", [])]
+    return bool(sources) and all(
+        source_is_owned_by_target_company(source, company_ids) for source in sources
+    )
+
+
+def evaluate_run_signal_contract(
+    run_id: str,
+    signals: list[dict[str, Any]],
+    claims_by_id: dict[str, dict[str, Any]],
+    contract: dict[str, Any] | None = None,
+) -> list[str]:
+    """Check external-signal share and single-asset concentration per business axis."""
+    contract = contract or RUN_SIGNAL_CONTRACT
+    minimum_core_ratio = float(contract.get("minimum_core_market_ratio", 0.7))
+    concentration_threshold = float(
+        contract.get("single_asset_concentration_threshold", 0.5)
+    )
+    minimum_signals = int(contract.get("single_asset_minimum_signals", 3))
+    findings: list[str] = []
+    by_axis: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for signal in signals:
+        if signal.get("status", "active") == "active":
+            by_axis[str(signal.get("business_axis") or "미분류")].append(signal)
+
+    for axis, axis_signals in sorted(by_axis.items()):
+        total = len(axis_signals)
+        core_count = sum(
+            signal.get("signal_role") == "core_market_signal"
+            for signal in axis_signals
+        )
+        ratio = core_count / total if total else 0.0
+        if ratio + 1e-12 < minimum_core_ratio:
+            findings.append(
+                f"{run_id}/{axis}: external core market signals are "
+                f"{core_count}/{total} ({ratio:.0%}); minimum is {minimum_core_ratio:.0%}"
+            )
+
+        if total < minimum_signals:
+            continue
+        asset_counts: dict[str, int] = defaultdict(int)
+        for signal in axis_signals:
+            asset_ids = {
+                str(claims_by_id[claim_id].get("subject_id") or "")
+                for claim_id in (str(item) for item in signal.get("claim_ids", []))
+                if claim_id in claims_by_id
+                and str(claims_by_id[claim_id].get("subject_id") or "").startswith(
+                    ("PRJ-", "FAC-")
+                )
+            }
+            for asset_id in asset_ids:
+                asset_counts[asset_id] += 1
+        if not asset_counts:
+            continue
+        asset_id, asset_count = max(asset_counts.items(), key=lambda item: item[1])
+        concentration = asset_count / total
+        if concentration > concentration_threshold:
+            findings.append(
+                f"{run_id}/{axis}: {asset_id} appears in {asset_count}/{total} Signals "
+                f"({concentration:.0%}); single asset limit is {concentration_threshold:.0%}"
+            )
+    return findings
+
+
 def validate_signal_copy(title: str, sentence: str, summary: str) -> None:
     """Reject reader-facing copy that is opaque or too thin for the Signal surface."""
     raw_title = str(title or "")
@@ -4104,7 +4247,7 @@ def read_impact_estimate(path_value: str | None) -> dict[str, Any] | None:
 
 
 def add_signal(args: argparse.Namespace) -> dict[str, Any]:
-    """Create schema v2 Signal and Insight nodes linked to governed evidence."""
+    """Create a governed Signal and Insight linked to evidence and a research run."""
     root = require_store(Path(args.root))
     run_id = str(getattr(args, "run_id", "") or "").strip()
     if not run_id:
@@ -4118,6 +4261,9 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
         raise ValueError(f"Invalid assessment confidence: {args.assessment_confidence}")
     validate_signal_copy(args.title, args.sentence, args.paragraph)
     signal_type = validate_signal_type(getattr(args, "signal_type", None))
+    signal_role, signal_origin = validate_signal_classification(
+        getattr(args, "signal_role", None), getattr(args, "signal_origin", None)
+    )
 
     claim_ids = list(dict.fromkeys(args.claim_id))
     claims_by_id = _records_by_id(claim_records(root), "claim_id")
@@ -4158,6 +4304,19 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
     if invalid_pairs:
         raise ValueError(
             "Invalid company/business-axis pairs: " + ", ".join(invalid_pairs)
+        )
+    sources_by_id = _records_by_id(source_records(root), "source_id")
+    proposed_signal = {
+        "signal_role": signal_role,
+        "signal_origin": signal_origin,
+        "source_ids": source_ids,
+        "company_ids": company_ids,
+    }
+    if core_signal_uses_only_target_company_sources(proposed_signal, sources_by_id):
+        raise ValueError(
+            "core_market_signal cannot rely only on target-company releases; "
+            "classify it as execution_context/company_execution or add independent "
+            "external evidence"
         )
     selected_predicates = {
         str(claims_by_id[claim_id].get("predicate") or "") for claim_id in claim_ids
@@ -4219,6 +4378,8 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
         "signal_id": signal_id,
         "sentence": args.sentence.strip(),
         "signal_type": signal_type,
+        "signal_role": signal_role,
+        "signal_origin": signal_origin,
         "insight_id": insight_id,
         "company_ids": company_ids,
         "business_axis": args.business_axis.strip(),
@@ -4246,6 +4407,11 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
         dict.fromkeys([*run_record.get("signal_ids", []), signal_id])
     )
     run_record["signal_ids"] = published_signal_ids
+    signal_contract = dict(run_record.get("signal_contract") or RUN_SIGNAL_CONTRACT)
+    signal_contract["signal_ids"] = list(
+        dict.fromkeys([*signal_contract.get("signal_ids", []), signal_id])
+    )
+    run_record["signal_contract"] = signal_contract
     run_record.setdefault("results", {})["new_signals"] = len(published_signal_ids)
     write_json(run_path, run_record)
     sync_obsidian_store(root)
@@ -8308,6 +8474,7 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
 
     audit_claims_by_id = _records_by_id(claim_records(root), "claim_id")
     audit_runs_by_id = _records_by_id(load_json_objects(root / RUNS_DIR), "run_id")
+    audit_sources_by_id = _records_by_id(source_records(root), "source_id")
     insights = _records_by_id(insight_records(root), "insight_id")
     referenced_insights: set[str] = set()
     published_claim_ids: set[str] = set()
@@ -8324,6 +8491,35 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
             validate_signal_type(signal.get("signal_type"))
         except ValueError as exc:
             findings["signal_schema"].append(f"{signal_id}: {exc}")
+        run_id = str(signal.get("run_id") or "")
+        run_contract = (
+            audit_runs_by_id.get(run_id, {}).get("signal_contract")
+            if run_id
+            else None
+        )
+        contract_signal_ids = {
+            str(item)
+            for item in (run_contract or {}).get("signal_ids", [])
+        }
+        has_classification = bool(
+            signal.get("signal_role")
+            or signal.get("signal_origin")
+            or signal_id in contract_signal_ids
+        )
+        if has_classification:
+            try:
+                validate_signal_classification(
+                    signal.get("signal_role"), signal.get("signal_origin")
+                )
+            except ValueError as exc:
+                findings["signal_schema"].append(f"{signal_id}: {exc}")
+            if core_signal_uses_only_target_company_sources(
+                signal, audit_sources_by_id
+            ):
+                findings["signal_quality"].append(
+                    f"{signal_id}: core market Signal relies only on target-company "
+                    "releases; use execution_context or add independent external evidence"
+                )
         insight_id = str(signal.get("insight_id") or "")
         if not insight_id or insight_id not in insights:
             findings["signal_integrity"].append(
@@ -8336,7 +8532,6 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
             findings["signal_schema"].append(
                 f"{insight_id}: schema_version must be {INSIGHT_SCHEMA_VERSION}"
             )
-        run_id = str(signal.get("run_id") or "")
         if not run_id or run_id not in audit_runs_by_id:
             findings["signal_integrity"].append(
                 f"{signal_id}: missing or unknown run_id {run_id or '-'}"
@@ -8463,6 +8658,27 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
                 )
         analysis_by_insight[insight_id] = analysis
 
+    signals_by_run: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for _, signal in signal_records(root):
+        signals_by_run[str(signal.get("run_id") or "")].append(signal)
+    for run_id, run in sorted(audit_runs_by_id.items()):
+        contract = run.get("signal_contract")
+        if not isinstance(contract, dict) or int(contract.get("version") or 0) < 1:
+            continue
+        findings["signal_portfolio"].extend(
+            evaluate_run_signal_contract(
+                run_id,
+                [
+                    signal
+                    for signal in signals_by_run.get(run_id, [])
+                    if str(signal.get("signal_id") or "")
+                    in {str(item) for item in contract.get("signal_ids", [])}
+                ],
+                audit_claims_by_id,
+                contract,
+            )
+        )
+
     for insight_id in sorted(set(insights) - referenced_insights):
         findings["signal_integrity"].append(
             f"{insight_id}: Insight is not referenced by any Signal"
@@ -8522,6 +8738,7 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
         "signal_schema",
         "signal_integrity",
         "signal_quality",
+        "signal_portfolio",
         "unpublished_claims",
         "unpublished_sources",
         "run_publication",
@@ -8912,6 +9129,14 @@ def build_parser() -> argparse.ArgumentParser:
     signal_parser.add_argument(
         "--signal-type", choices=SIGNAL_TYPES, required=True,
         help="Governed change-type classification shown separately from business axis.",
+    )
+    signal_parser.add_argument(
+        "--signal-role", choices=SIGNAL_ROLES, required=True,
+        help="core_market_signal for external sensing; execution_context for own execution.",
+    )
+    signal_parser.add_argument(
+        "--signal-origin", choices=SIGNAL_ORIGINS, required=True,
+        help="Where the observed change originated; must be compatible with signal-role.",
     )
     signal_parser.add_argument("--paragraph", required=True)
     signal_parser.add_argument(

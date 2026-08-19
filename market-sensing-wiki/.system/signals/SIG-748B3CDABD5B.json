@@ -41,5 +41,7 @@
   "created_at": "2026-08-19T00:54:50+09:00",
   "updated_at": "2026-08-19T07:13:54+09:00",
   "run_id": "energy-backfill-20240819-20260819",
-  "signal_type": "기술·운영"
+  "signal_type": "기술·운영",
+  "signal_role": "execution_context",
+  "signal_origin": "company_execution"
 }

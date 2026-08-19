@@ -45,8 +45,34 @@
   line-height: 1.45;
 }
 
-.md-typeset .signal-index-list {
+.md-typeset .signal-index-groups {
   margin: 1.1rem 0 1.6rem;
+}
+
+.md-typeset .signal-index-section + .signal-index-section {
+  margin-top: 1.65rem;
+}
+
+.md-typeset .signal-index-section-title {
+  margin: 0;
+  color: #173746;
+  font-size: 0.9rem;
+  font-weight: 750;
+  line-height: 1.4;
+}
+
+.md-typeset .signal-index-section-description {
+  max-width: 75ch;
+  margin: 0.22rem 0 0;
+  color: #52636d;
+  font-size: 0.7rem;
+  line-height: 1.5;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.md-typeset .signal-index-list {
+  margin: 0.55rem 0 0;
   border-block: 1px solid #cbd6dd;
   background: #ffffff;
 }
@@ -300,6 +326,10 @@
 }
 
 @media screen and (max-width: 48em) {
+  .md-typeset .signal-index-section + .signal-index-section {
+    margin-top: 1.4rem;
+  }
+
   .md-typeset .signal-index-row {
     grid-template-areas:
       "context"

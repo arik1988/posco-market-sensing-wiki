@@ -1,0 +1,346 @@
+{
+  "manifest_version": 1,
+  "scope": {
+    "repository": "market-sensing-wiki",
+    "business_axis": "에너지",
+    "company_id": "COM-POSCO-INTERNATIONAL",
+    "as_of": "2026-08-19",
+    "source_signal_count": 15,
+    "mutates_system_records": false,
+    "raw_files_touched": false
+  },
+  "intent": "외부 변화가 핵심 Signal의 주인공이 되게 하고, 포스코인터내셔널·Senex의 실행·실적 발표는 삭제하지 않고 노출과 이행 상태를 설명하는 supporting context로 재배치한다.",
+  "taxonomy": {
+    "roles": {
+      "core_external_market_signal": "회사 밖에서 발생해 가격·물량·원가·계약·투자·운영 판단을 바꾸는 변화",
+      "supporting_execution_context": "자사·관계사의 실행, 실적, 생산, 고객 인도 상태를 확인하는 근거"
+    },
+    "origins": [
+      "external_market",
+      "external_policy",
+      "external_geopolitics_logistics",
+      "company_execution",
+      "company_performance"
+    ],
+    "ranking_rule": "현재 핵심 목록은 외부 발생·의사결정 시한·평가 최신성을 우선한다. 기한이 지난 외부 Signal은 삭제하지 않고 재검증 또는 역사적 기준선으로 내린다. 실행·실적 항목은 핵심 순위에서 제외하고 연결된 외부 Signal의 근거 상자에 배치한다.",
+    "selection_guardrails": [
+      "신규 에너지 Signal의 70~80% 이상을 외부 발생 신호로 구성",
+      "회사명 직접 언급 여부를 발견·랭킹 가점으로 사용하지 않음",
+      "회사 발표만으로 구성된 항목은 외부 변화와 결합되지 않는 한 supporting_execution_context로 분류",
+      "단일 자산·지역 군집이 현재 핵심 목록의 40%를 넘으면 다른 영향 경로의 빈칸을 우선 조사",
+      "외부 변화에서 포스코인터내셔널의 가격·물량·원가·계약·투자·운영 중 하나로 이어지는 전달 경로가 없으면 발행하지 않음"
+    ]
+  },
+  "counts": {
+    "core_external_market_signal": 9,
+    "supporting_execution_context": 6,
+    "company_or_senex_primary_source": 6,
+    "government_or_intergovernmental_primary_source": 9,
+    "current_core_surface": 4,
+    "revalidation_queue": 4,
+    "historical_external_context": 1
+  },
+  "items": [
+    {
+      "signal_id": "SIG-CC38306D8ADB",
+      "insight_id": "INS-72768BA0AB05",
+      "current_title": "호르무즈 LNG 운송량, 분쟁 전 수준 크게 밑돌아",
+      "current_sentence": "IEA가 호르무즈 해협의 LNG 흐름이 분쟁 이전 수준을 크게 밑돈다고 평가했으므로, 포스코인터내셔널은 장기계약·전용선·터미널에서 목적지를 바꿀 수 있는 물량과 실제 선박 여력을 확인해 조달 안정성을 다시 계산해야 합니다.",
+      "role": "core_external_market_signal",
+      "origin": "external_geopolitics_logistics",
+      "rationale": "포스코인터내셔널의 행동이 아니라 외부 분쟁과 항로 회복 지연이 계약 전환권·선복·터미널 가용성을 통해 조달 안정성에 전달된다.",
+      "source": {"source_id": "SRC-20260818-3DD53EA4", "source_type": "government", "publisher": "International Energy Agency", "reliability": "primary", "published_at": "2026-07-07"},
+      "claim_audit": {"count": 12, "active": 12},
+      "concentration_cluster": "global_lng_security_and_shipping",
+      "recommended_rank": {"surface": "core_current", "position": 1},
+      "migration_action": "keep_as_core_and_rewrite_lead",
+      "supporting_context_signal_ids": [],
+      "editorial_rewrite": {
+        "title": "호르무즈 LNG 운송량의 불완전 회복",
+        "sentence": "호르무즈 해협의 LNG 흐름이 분쟁 이전 수준을 회복하지 못해, 포스코인터내셔널은 목적지 전환 가능 물량과 실제 선박·터미널 여력을 기준으로 조달 안정성을 다시 계산해야 합니다.",
+        "body_lead": "호르무즈 해협의 LNG 운송은 일부 회복됐지만 분쟁 이전 수준에는 미치지 못했습니다. 가격 전망보다 계약상 목적지 전환권, 사용할 수 있는 선박, 광양터미널 일정이 필요한 시점에 함께 맞는지가 조달 차질의 크기를 결정합니다."
+      }
+    },
+    {
+      "signal_id": "SIG-0B6C56D8B4D8",
+      "insight_id": "INS-D1FBEA76A243",
+      "current_title": "호주 남부 기존 가스전 생산 5년간 46% 감소 전망",
+      "current_sentence": "AEMO가 호주 남부 기존 가스전 생산이 향후 5년간 46% 감소하고 2030년부터 공급 부족이 나타날 수 있다고 전망했으므로, 포스코인터내셔널은 Senex 증산을 단기 판매량뿐 아니라 장기계약·남부 운송권과 함께 평가해야 합니다.",
+      "role": "core_external_market_signal",
+      "origin": "external_market",
+      "rationale": "호주 남부의 외생적 생산 감소가 장기계약 가치와 운송·저장 인프라 확보 필요성을 바꾼다.",
+      "source": {"source_id": "SRC-20260818-0C29491C", "source_type": "government", "publisher": "Australian Energy Market Operator", "reliability": "primary", "published_at": "2026-03-26"},
+      "claim_audit": {"count": 12, "active": 12},
+      "concentration_cluster": "australia_south_supply_and_transport",
+      "recommended_rank": {"surface": "core_current", "position": 2},
+      "migration_action": "keep_as_core_and_tighten_copy",
+      "supporting_context_signal_ids": ["SIG-01BC189FE839", "SIG-029E3B2DAA47", "SIG-748B3CDABD5B"],
+      "editorial_rewrite": {
+        "title": "호주 남부 기존 가스전 생산 5년간 46% 감소 전망",
+        "sentence": "호주 남부 기존 가스전 생산이 향후 5년간 46% 감소할 전망이어서, 포스코인터내셔널은 Senex 증산의 가치를 생산량보다 남부 장기계약·운송권·저장권 확보 여부로 평가해야 합니다.",
+        "body_lead": "호주 남부 기존 가스전 생산은 향후 5년간 46% 줄고 2030년부터 공급 공백이 나타날 수 있습니다. 이 변화는 Senex 증산분의 가치를 높일 수 있지만, 퀸즐랜드 생산량을 남부 고객에게 보낼 운송권과 저장권이 확보돼야 실제 판매와 현금 회수로 이어집니다."
+      }
+    },
+    {
+      "signal_id": "SIG-E424C4E087DE",
+      "insight_id": "INS-38FB400C6EF1",
+      "current_title": "호주 LNG 수출물량 20% 내수공급 의무 추진",
+      "current_sentence": "호주 정부가 2027년 7월부터 LNG 수출량의 20% 상당을 내수에 공급하는 제도를 추진하므로, 포스코인터내셔널은 Senex의 직접 적용 여부와 별개로 지역 가격·계약 만기·증산 수익률을 조건별로 다시 계산해야 합니다.",
+      "role": "core_external_market_signal",
+      "origin": "external_policy",
+      "rationale": "호주 정부의 내수공급 정책이 경쟁 공급자의 행동과 지역 가격을 통해 Senex 계약·증산 경제성에 영향을 줄 수 있다.",
+      "source": {"source_id": "SRC-20260818-38019D54", "source_type": "government", "publisher": "Australian Government Department of Industry, Science and Resources", "reliability": "primary", "published_at": "2026-05-07"},
+      "claim_audit": {"count": 10, "active": 10},
+      "concentration_cluster": "australia_domestic_gas_policy",
+      "recommended_rank": {"surface": "core_current", "position": 3},
+      "migration_action": "keep_as_core_and_tighten_copy",
+      "supporting_context_signal_ids": ["SIG-01BC189FE839", "SIG-067F405D30C8"],
+      "editorial_rewrite": {
+        "title": "호주 LNG 수출물량 20% 내수공급 의무 추진",
+        "sentence": "호주가 LNG 수출량의 20% 상당을 내수에 공급하는 제도를 추진해, 포스코인터내셔널은 Senex의 직접 적용 여부뿐 아니라 지역 가격과 계약 만기에 따른 증산 수익률 변화를 다시 계산해야 합니다.",
+        "body_lead": "호주 정부는 2027년 7월 시행을 목표로 LNG 수출량의 20% 상당을 내수에 공급하는 제도를 추진하고 있습니다. 최종 대상과 예외는 확정되지 않았지만 경쟁 공급자의 내수 물량이 늘면 Senex가 직접 규제 대상이 아니어도 재계약 가격과 증산 수익률이 달라질 수 있습니다."
+      }
+    },
+    {
+      "signal_id": "SIG-EEE1E86FA129",
+      "insight_id": "INS-67EBDEF2E3B2",
+      "current_title": "2038년 LNG 발전 비중 10.6%와 열병합 용량시장 추진",
+      "current_sentence": "정부가 2038년 LNG 발전 비중을 10.6%로 제시하면서 열병합 용량시장과 에너지저장장치·무탄소 입찰을 함께 추진하므로, 포스코인터내셔널은 광양터미널과 발전의 물량·가동률·용량요금 가정을 다시 계산해야 합니다.",
+      "role": "core_external_market_signal",
+      "origin": "external_policy",
+      "rationale": "국내 전력정책이 LNG 발전량과 용량가치를 다르게 움직여 터미널·발전 자산의 수익 구조를 바꾼다.",
+      "source": {"source_id": "SRC-20260819-FE4320CB", "source_type": "government", "publisher": "Ministry of Trade, Industry and Energy", "reliability": "primary", "published_at": "2025-02-21"},
+      "claim_audit": {"count": 14, "active": 14},
+      "concentration_cluster": "korea_power_market_policy",
+      "recommended_rank": {"surface": "core_current", "position": 4},
+      "migration_action": "keep_as_core_but_revalidate_follow_on_plan",
+      "supporting_context_signal_ids": [],
+      "editorial_rewrite": {
+        "title": "2038년 LNG 발전 비중 10.6%와 열병합 용량시장 추진",
+        "sentence": "2038년 LNG 발전 비중은 10.6%로 낮아지지만 열병합 용량시장이 함께 추진돼, 포스코인터내셔널은 광양터미널 물량과 발전소 가동률·용량요금을 분리해 다시 계산해야 합니다.",
+        "body_lead": "정부는 2038년 LNG 발전 비중을 10.6%로 제시하면서 열병합 LNG 용량시장도 추진했습니다. 발전량 감소가 곧바로 발전 자산 가치의 같은 폭 감소를 뜻하지 않으므로, 연료 물량과 가동률, 전력 수급을 보완하는 용량 보상을 나눠 봐야 합니다."
+      }
+    },
+    {
+      "signal_id": "SIG-C5958F0A0B3B",
+      "insight_id": "INS-F39866D84BE8",
+      "current_title": "호주 동부 가스 가격 하락과 2026년 공급 부족 위험 병존",
+      "current_sentence": "ACCC가 단기 가스가격 하락과 함께 2026년 미계약 가스가 모두 수출될 경우의 공급 부족 위험을 제시했으므로, 포스코인터내셔널은 Senex 판매계약의 기간·인도권·현금 회수를 가격 변화와 분리해 점검해야 합니다.",
+      "role": "core_external_market_signal",
+      "origin": "external_market",
+      "rationale": "시장 가격과 가용 물량이 반대 방향으로 움직일 수 있다는 외부 수급 신호로 계약 기간·인도 조건 판단을 바꾼다.",
+      "source": {"source_id": "SRC-20260819-4F098D9C", "source_type": "government", "publisher": "Australian Competition and Consumer Commission", "reliability": "primary", "published_at": "2025-06-30"},
+      "claim_audit": {"count": 14, "active": 14},
+      "concentration_cluster": "australia_east_price_and_contract_supply",
+      "recommended_rank": {"surface": "revalidation_queue", "position": 1},
+      "migration_action": "keep_external_role_but_revalidate_before_current_ranking",
+      "supporting_context_signal_ids": ["SIG-01BC189FE839", "SIG-B3D99438BE40"],
+      "editorial_rewrite": {
+        "title": "호주 동부 가스가격 하락 속 2026년 공급 부족 위험",
+        "sentence": "호주 동부 가스가격이 낮아져도 미계약 물량의 수출 여부에 따라 2026년 공급이 부족할 수 있어, 포스코인터내셔널은 Senex 계약의 가격과 기간·인도조건을 분리해 점검해야 합니다.",
+        "body_lead": "호주 동부 가스가격 하락은 공급 안정과 같은 뜻이 아닙니다. 미계약 가스가 수출되면 국내 가용 물량이 줄 수 있으므로, Senex의 실제 판매가치는 시장 평균가격보다 계약기간과 인도지점, 운송 가능 물량에 달려 있습니다."
+      }
+    },
+    {
+      "signal_id": "SIG-934ECBF9D82E",
+      "insight_id": "INS-A3018166C4A9",
+      "current_title": "호주 남부의 2029년 가스 공급 부족 전망 유지",
+      "current_sentence": "AEMO가 Atlas와 Roma North의 추가 처리능력을 반영하고도 2029년부터 호주 남부의 공급 부족이 이어질 수 있다고 전망했으므로, 포스코인터내셔널은 Senex 물량을 장기계약·저장·운송 투자와 묶어 평가해야 합니다.",
+      "role": "core_external_market_signal",
+      "origin": "external_market",
+      "rationale": "Senex 증설을 반영한 뒤에도 남는 외부 공급 공백 전망으로, 생산능력과 실제 남부 인도능력의 간극을 보여준다.",
+      "source": {"source_id": "SRC-20260819-B694DC74", "source_type": "government", "publisher": "Australian Energy Market Operator", "reliability": "primary", "published_at": "2025-03-20"},
+      "claim_audit": {"count": 14, "active": 14},
+      "concentration_cluster": "australia_south_supply_and_transport",
+      "recommended_rank": {"surface": "revalidation_queue", "position": 2},
+      "migration_action": "keep_external_role_but_revalidate_and_deduplicate_with_SIG-0B6C56D8B4D8",
+      "supporting_context_signal_ids": ["SIG-01BC189FE839", "SIG-029E3B2DAA47", "SIG-748B3CDABD5B"],
+      "editorial_rewrite": {
+        "title": "호주 남부의 2029년 가스 공급 부족 전망 유지",
+        "sentence": "Atlas와 Roma North의 추가 처리능력을 반영해도 호주 남부의 2029년 공급 부족 전망이 남아, 포스코인터내셔널은 생산량과 남부 고객에게 실제 인도할 물량을 구분해야 합니다.",
+        "body_lead": "Atlas와 Roma North의 처리능력이 늘어도 호주 남부의 장기 공급 부족 전망은 사라지지 않았습니다. 북부 생산능력보다 남부까지 연결되는 운송·저장·장기계약이 실제 고객 인도와 가격을 결정합니다."
+      }
+    },
+    {
+      "signal_id": "SIG-B8FE09C65A92",
+      "insight_id": "INS-7008B0B01776",
+      "current_title": "호주 남부의 2025년 겨울 가스 공급 부족 전망",
+      "current_sentence": "ACCC가 2025년 7~9월 호주 동부 전체 9페타줄(PJ), 남부 40페타줄의 공급 부족을 전망했으므로, 포스코인터내셔널은 Senex 생산량보다 남부 인도계약·운송권·저장 여력을 먼저 확인해야 합니다.",
+      "role": "core_external_market_signal",
+      "origin": "external_market",
+      "rationale": "외부 계절 수급과 지역 병목을 보여주는 유효한 시장 신호지만 대상 기간과 대응 기한이 지났다.",
+      "source": {"source_id": "SRC-20260819-0270DC5A", "source_type": "government", "publisher": "Australian Competition and Consumer Commission", "reliability": "primary", "published_at": "2025-03-27"},
+      "claim_audit": {"count": 14, "active": 14},
+      "concentration_cluster": "australia_south_supply_and_transport",
+      "recommended_rank": {"surface": "revalidation_queue", "position": 3},
+      "migration_action": "remove_from_current_ranking_until_outturn_is_checked",
+      "supporting_context_signal_ids": ["SIG-01BC189FE839"],
+      "editorial_rewrite": {
+        "title": "호주 남부의 2025년 겨울 가스 공급 부족 전망",
+        "sentence": "2025년 겨울 호주 남부의 공급 부족 전망은 유효한 외부 신호였지만 대상 기간이 지났으므로, 포스코인터내셔널은 당시 실제 부족량·가격·Senex 인도량을 확인한 뒤 현재 판단에 사용할지를 정해야 합니다.",
+        "body_lead": "ACCC는 2025년 7~9월 호주 남부에 최대 40페타줄의 공급 부족을 전망했습니다. 현재는 전망 자체보다 실제 부족량과 가격, Senex의 남부 인도 실적을 대조해 운송·저장 병목이 현실화됐는지를 검증해야 합니다."
+      }
+    },
+    {
+      "signal_id": "SIG-F0DF50590831",
+      "insight_id": "INS-ACA34DC08544",
+      "current_title": "IEA의 2026년 세계 LNG 공급 7% 증가 전망",
+      "current_sentence": "IEA가 2026년 세계 LNG 공급이 7%, 약 400억 세제곱미터 늘 것으로 전망했으므로, 포스코인터내셔널은 고정가격 조달뿐 아니라 목적지 전환권·선박 여력·재판매 가능 물량을 함께 점검해야 합니다.",
+      "role": "core_external_market_signal",
+      "origin": "external_market",
+      "rationale": "글로벌 공급 증가라는 외부 전망이 조달비와 재판매 기회를 바꾸지만, 2025년 발표 전망이므로 최신 실적 대조가 필요하다.",
+      "source": {"source_id": "SRC-20260819-2FA37997", "source_type": "government", "publisher": "International Energy Agency", "reliability": "primary", "published_at": "2025-07-22"},
+      "claim_audit": {"count": 14, "active": 14},
+      "concentration_cluster": "global_lng_supply_and_arbitrage",
+      "recommended_rank": {"surface": "revalidation_queue", "position": 4},
+      "migration_action": "keep_external_role_but_replace_forecast_with_latest_outturn_when_available",
+      "supporting_context_signal_ids": ["SIG-067F405D30C8"],
+      "editorial_rewrite": {
+        "title": "2026년 세계 LNG 공급 7% 증가 전망",
+        "sentence": "2026년 세계 LNG 공급이 7% 늘어날 전망이어서, 포스코인터내셔널은 조달가격뿐 아니라 목적지 전환권·선박 여력·재판매 가능 물량이 실제로 늘어나는지를 함께 확인해야 합니다.",
+        "body_lead": "IEA는 2026년 세계 LNG 공급이 미국·캐나다·카타르 신규 물량을 중심으로 7% 증가할 것으로 전망했습니다. 공급 증가는 지역과 시점에 따라 가격 하락 또는 재판매 기회로 나타나므로, 계약 전환권과 선박의 실제 사용 가능성이 손익 방향을 결정합니다."
+      }
+    },
+    {
+      "signal_id": "SIG-C50E661E92FD",
+      "insight_id": "INS-2B5269C42FFF",
+      "current_title": "호주 동부 가스 총량 잉여와 남부 공급 병목 병존",
+      "current_sentence": "ACCC가 2025년 1분기 동부 호주 가스의 총량 잉여를 12~27페타줄(PJ)로 전망하면서 지역별 부족 위험도 남겼으므로, 포스코인터내셔널은 Senex 증산분의 남부 인도계약·인도지점·운송권을 먼저 확인해야 합니다.",
+      "role": "core_external_market_signal",
+      "origin": "external_market",
+      "rationale": "외부 총량과 지역 가용성의 차이를 보여주지만 전망 대상 기간이 지나 현재 Signal보다 역사적 기준선에 가깝다.",
+      "source": {"source_id": "SRC-20260819-C117952B", "source_type": "government", "publisher": "Australian Competition and Consumer Commission", "reliability": "primary", "published_at": "2024-09-27"},
+      "claim_audit": {"count": 12, "active": 12},
+      "concentration_cluster": "australia_south_supply_and_transport",
+      "recommended_rank": {"surface": "historical_external_context", "position": 1},
+      "migration_action": "retain_as_historical_external_baseline_and_remove_from_current_ranking",
+      "supporting_context_signal_ids": ["SIG-01BC189FE839"],
+      "editorial_rewrite": {
+        "title": "호주 동부 총량 잉여 속 남부 공급 병목",
+        "sentence": "2025년 1분기 호주 동부 전체에는 가스 잉여가 전망됐지만 남부 공급 병목은 남아, 당시 Senex 판매가 총량보다 인도지점·운송권에 좌우됐는지 실제 결과를 확인해야 합니다.",
+        "body_lead": "호주 동부 전체의 가스 잉여와 남부 지역의 공급 위험은 동시에 존재할 수 있습니다. 이 자료는 현재 전망이 아니라 총량만으로 Senex의 판매 안정성을 판단할 수 없다는 역사적 기준선으로 보존하는 편이 적절합니다."
+      }
+    },
+    {
+      "signal_id": "SIG-01BC189FE839",
+      "insight_id": "INS-68CE85A21EEB",
+      "current_title": "Senex Atlas 확장 가스 첫 생산과 Orora 공급 개시",
+      "current_sentence": "Senex가 2025년 2월 Atlas 확장 가스의 첫 생산과 Orora 10년 계약의 공급 개시를 발표했으므로, 포스코인터내셔널은 연 60페타줄(PJ) 목표를 미리 실적으로 잡지 말고 분기 판매량·단가·운영비·현금 회수를 확인해야 합니다.",
+      "role": "supporting_execution_context",
+      "origin": "company_execution",
+      "rationale": "Senex의 첫 생산과 고객 인도는 시장 밖 외부 변화가 아니라 자산 실행과 노출을 확인하는 회사 발표다. 외부 수급·정책 Signal의 영향 크기를 계산하는 근거로는 유용하다.",
+      "source": {"source_id": "SRC-20260819-72A89CB9", "source_type": "company_release", "publisher": "Senex Energy", "reliability": "primary", "published_at": "2025-02-28"},
+      "claim_audit": {"count": 14, "active": 14},
+      "concentration_cluster": "senex_atlas_execution",
+      "recommended_rank": {"surface": "supporting_execution_context", "position": 1},
+      "migration_action": "remove_from_core_signal_ranking_and_link_as_exposure_evidence",
+      "supports_core_signal_ids": ["SIG-0B6C56D8B4D8", "SIG-934ECBF9D82E", "SIG-B8FE09C65A92", "SIG-C5958F0A0B3B", "SIG-E424C4E087DE"],
+      "editorial_rewrite": null
+    },
+    {
+      "signal_id": "SIG-B3D99438BE40",
+      "insight_id": "INS-BAAECEA6AA0D",
+      "current_title": "Senex 판매·영업이익 증가와 미얀마 가스전 이익 감소",
+      "current_sentence": "2025년 3분기 Senex 판매량과 영업이익은 늘고 미얀마 가스전 영업이익은 줄었으므로, 포스코인터내셔널은 2026년 예산에서 증산 효과와 비용 회수 위험을 자산별로 나눠 검증해야 합니다.",
+      "role": "supporting_execution_context",
+      "origin": "company_performance",
+      "rationale": "자사 분기 실적은 외부 시장 신호가 아니라 어떤 자산과 손익 항목이 외부 충격에 노출됐는지를 확인하는 내부 경계값이다.",
+      "source": {"source_id": "SRC-20260819-D7164DFA", "source_type": "company_ir", "publisher": "POSCO INTERNATIONAL", "reliability": "primary", "published_at": "2025-10-27"},
+      "claim_audit": {"count": 14, "active": 14},
+      "concentration_cluster": "posco_energy_portfolio_performance",
+      "recommended_rank": {"surface": "supporting_execution_context", "position": 2},
+      "migration_action": "remove_from_core_signal_ranking_and_use_as_asset_sensitivity_evidence",
+      "supports_core_signal_ids": ["SIG-C5958F0A0B3B", "SIG-0B6C56D8B4D8", "SIG-F0DF50590831"],
+      "editorial_rewrite": null
+    },
+    {
+      "signal_id": "SIG-067F405D30C8",
+      "insight_id": "INS-C34E92EB0FE2",
+      "current_title": "2026년 그룹 성장계획에 Senex LNG 증산 반영",
+      "current_sentence": "포스코홀딩스가 2025년 결산에서 Senex LNG 증산을 2026년 추가이익 계획에 반영했으므로, 포스코인터내셔널은 Senex의 물량·단가·원가·현금흐름을 내부 결산과 대조한 뒤 추가 투자를 확정해야 합니다.",
+      "role": "supporting_execution_context",
+      "origin": "company_performance",
+      "rationale": "그룹의 성장계획과 기대이익은 외부 변화가 아니라 외부 LNG·호주 정책 변화에 노출된 계획 기준선이다.",
+      "source": {"source_id": "SRC-20260819-207A826E", "source_type": "company_release", "publisher": "POSCO Holdings", "reliability": "primary", "published_at": "2026-02-03"},
+      "claim_audit": {"count": 14, "active": 14},
+      "concentration_cluster": "posco_energy_plan_and_capex",
+      "recommended_rank": {"surface": "supporting_execution_context", "position": 3},
+      "migration_action": "remove_from_core_signal_ranking_and_use_as_plan_baseline",
+      "supports_core_signal_ids": ["SIG-F0DF50590831", "SIG-E424C4E087DE", "SIG-0B6C56D8B4D8"],
+      "editorial_rewrite": null
+    },
+    {
+      "signal_id": "SIG-DC54DC18D74A",
+      "insight_id": "INS-64EF044EF45F",
+      "current_title": "미얀마 가스전 이익 감소와 Senex 판매단가 상승",
+      "current_sentence": "2024년 3분기 미얀마 가스전 이익은 유지보수와 비용 회수 감소로 줄고 Senex는 판매단가 상승의 수혜를 봤으므로, 포스코인터내셔널은 에너지 전체 이익이 아니라 자산별 생산·가격·현금 회수 조건을 나눠 관리해야 합니다.",
+      "role": "supporting_execution_context",
+      "origin": "company_performance",
+      "rationale": "과거 자사 실적은 외부 변화가 아니라 미얀마 비용 회수와 Senex 가격 민감도를 보여주는 노출 근거다.",
+      "source": {"source_id": "SRC-20260819-73A730DD", "source_type": "company_ir", "publisher": "POSCO INTERNATIONAL", "reliability": "primary", "published_at": "2024-10-30"},
+      "claim_audit": {"count": 14, "active": 14},
+      "concentration_cluster": "posco_energy_portfolio_performance",
+      "recommended_rank": {"surface": "supporting_execution_context", "position": 4},
+      "migration_action": "remove_from_core_signal_ranking_and_use_as_historical_asset_sensitivity",
+      "supports_core_signal_ids": ["SIG-C5958F0A0B3B", "SIG-F0DF50590831"],
+      "editorial_rewrite": null
+    },
+    {
+      "signal_id": "SIG-748B3CDABD5B",
+      "insight_id": "INS-FADFA96C4E46",
+      "current_title": "Senex Atlas 1호 가스처리시설 시운전 착수",
+      "current_sentence": "포스코인터내셔널이 2024년 12월 Atlas 1호 가스처리시설과 연결 가스관의 시운전을 시작했으므로, 2·3호기 가동과 고객 청구가 확인될 때까지 2025년 증산 매출을 확정 실적으로 보지 않아야 합니다.",
+      "role": "supporting_execution_context",
+      "origin": "company_execution",
+      "rationale": "자사 설비 시운전은 외부 시장 변화가 아니라 생산능력과 상업화 단계의 실행 상태다.",
+      "source": {"source_id": "SRC-20260819-21B1AAAB", "source_type": "company_release", "publisher": "POSCO INTERNATIONAL", "reliability": "primary", "published_at": "2024-12-04"},
+      "claim_audit": {"count": 14, "active": 14},
+      "concentration_cluster": "senex_atlas_execution",
+      "recommended_rank": {"surface": "supporting_execution_context", "position": 5},
+      "migration_action": "remove_from_core_signal_ranking_and_link_as_capacity_readiness_evidence",
+      "supports_core_signal_ids": ["SIG-0B6C56D8B4D8", "SIG-934ECBF9D82E"],
+      "editorial_rewrite": null
+    },
+    {
+      "signal_id": "SIG-029E3B2DAA47",
+      "insight_id": "INS-4F2DD61C177F",
+      "current_title": "Senex Atlas·Roma North 1단계 확장시설 개장",
+      "current_sentence": "Senex가 10억 호주달러 규모의 Atlas·Roma North 1단계 확장시설과 160개가 넘는 생산정을 공개했으므로, 포스코인터내셔널은 연 60페타줄(PJ) 목표보다 후속 시설 가동·고객 인도·현금 회수를 순서대로 확인해야 합니다.",
+      "role": "supporting_execution_context",
+      "origin": "company_execution",
+      "rationale": "Senex의 시설 개장은 외부 시장 변화가 아니라 공급능력과 투자 집행의 단계 확인이다.",
+      "source": {"source_id": "SRC-20260819-F3EBEB9A", "source_type": "company_release", "publisher": "Senex Energy", "reliability": "primary", "published_at": "2024-11-25"},
+      "claim_audit": {"count": 14, "active": 14},
+      "concentration_cluster": "senex_atlas_execution",
+      "recommended_rank": {"surface": "supporting_execution_context", "position": 6},
+      "migration_action": "remove_from_core_signal_ranking_and_link_as_capacity_and_capex_evidence",
+      "supports_core_signal_ids": ["SIG-0B6C56D8B4D8", "SIG-934ECBF9D82E"],
+      "editorial_rewrite": null
+    }
+  ],
+  "concentration_summary": [
+    {"cluster": "australia_south_supply_and_transport", "core_external_count": 4, "supporting_count": 0, "note": "현재 외부 Signal의 가장 큰 편중. 4건 중 3건은 대상 기간 또는 대응 기한이 지나 최신 전망과 실적 대조가 필요하다."},
+    {"cluster": "senex_atlas_execution", "core_external_count": 0, "supporting_count": 3, "note": "모두 핵심 목록에서 제외하고 호주 수급·정책 Signal의 노출 근거로 연결한다."},
+    {"cluster": "posco_energy_portfolio_performance", "core_external_count": 0, "supporting_count": 2, "note": "외부 충격의 손익 민감도와 자산별 상쇄 여부를 설명하는 근거로 사용한다."},
+    {"cluster": "global_lng_security_and_shipping", "core_external_count": 1, "supporting_count": 0, "note": "현재성이 높아 최상위 핵심 Signal로 유지한다."},
+    {"cluster": "global_lng_supply_and_arbitrage", "core_external_count": 1, "supporting_count": 0, "note": "2025년 전망을 최신 2026년 실적으로 재검증해야 한다."},
+    {"cluster": "australia_domestic_gas_policy", "core_external_count": 1, "supporting_count": 0, "note": "최종 제도 설계와 예외가 다음 갱신 지점이다."},
+    {"cluster": "korea_power_market_policy", "core_external_count": 1, "supporting_count": 0, "note": "후속 천연가스 수급계획과 용량시장 결과를 확인해야 한다."},
+    {"cluster": "posco_energy_plan_and_capex", "core_external_count": 0, "supporting_count": 1, "note": "외부 Signal의 영향액을 계산할 계획 기준선으로만 사용한다."}
+  ],
+  "identified_coverage_gaps": [
+    "미얀마 가스전의 지정학·대금회수·제재·환율처럼 회사 밖에서 시작되는 최신 신호",
+    "LNG 장기계약 가격지표와 현물·유가연동 가격 차이",
+    "LNG선 운임·보험료·터미널 슬롯과 광양 조달·재판매의 연결",
+    "호주 외 경쟁 가스공급자 증산·계약 행동",
+    "국내 발전·열병합 용량시장 후속 입찰 결과와 실제 보상 구조",
+    "메탄·탄소 규제가 가스 생산·운송 원가와 계약조건에 미치는 변화"
+  ],
+  "implementation_notes": [
+    "이 manifest는 제안 파일이며 .system/signals, .system/insights, .system/claims, .system/source-records를 수정하지 않는다.",
+    "현행 schema에는 role/origin/supporting link가 없으므로 실제 적용 전 data-contract와 validator를 먼저 확장한다.",
+    "supporting_execution_context는 삭제나 status 비활성화가 아니라 핵심 Signal 순위에서 제외하고 상세 페이지의 노출·실행 근거로 연결하는 표현 계층이다.",
+    "기한이 지난 외부 Signal은 최신 원문으로 재검증하기 전 현재 핵심 목록에 다시 올리지 않는다.",
+    "외부 9건의 제안 문구는 기존 Claim·Source에 있는 사실만 사용했다. 실행 6건은 같은 원문만으로 외부 trigger를 만들 수 없어 editorial_rewrite를 null로 두었다."
+  ]
+}

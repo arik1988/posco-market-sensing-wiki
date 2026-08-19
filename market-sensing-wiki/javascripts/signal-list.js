@@ -121,24 +121,63 @@
     return row;
   };
 
+  const createIndexSection = (title, description, entries) => {
+    if (!entries.length) return null;
+
+    const section = createElement("section", "signal-index-section");
+    const heading = createElement("h2", "signal-index-section-title", title);
+    section.append(heading);
+    if (description) {
+      section.append(
+        createElement("p", "signal-index-section-description", description),
+      );
+    }
+
+    const list = createElement("div", "signal-index-list");
+    list.setAttribute("role", "list");
+    list.setAttribute("aria-label", `${title} 목록`);
+    entries.forEach(({ item, sourceRow }) => {
+      const row = createIndexRow(item, sourceRow);
+      if (row) list.append(row);
+    });
+    if (list.childElementCount !== entries.length) return null;
+    section.append(list);
+    return section;
+  };
+
   const enhanceIndex = (script, payload) => {
     const scope = script.closest(".md-content__inner") || document;
-    if (scope.querySelector(".signal-index-list")) return true;
+    if (scope.querySelector(".signal-index-groups")) return true;
     const table = findIndexTable(scope);
     if (!table || !Array.isArray(payload.items)) return false;
 
     const sourceRows = Array.from(table.tBodies[0]?.rows || []);
     if (!sourceRows.length || sourceRows.length !== payload.items.length) return false;
 
-    const list = createElement("div", "signal-index-list");
-    list.setAttribute("role", "list");
-    list.setAttribute("aria-label", "마켓 시그널 목록");
+    const groups = { core: [], execution: [] };
     payload.items.forEach((item, index) => {
-      const row = createIndexRow(item, sourceRows[index]);
-      if (row) list.append(row);
+      const entry = { item, sourceRow: sourceRows[index] };
+      if (item.signal_role === "execution_context") {
+        groups.execution.push(entry);
+      } else {
+        groups.core.push(entry);
+      }
     });
-    if (list.childElementCount !== sourceRows.length) return false;
-    tableHost(table).replaceWith(list);
+
+    const container = createElement("div", "signal-index-groups");
+    const coreSection = createIndexSection("핵심 시장신호", "", groups.core);
+    const executionSection = createIndexSection(
+      "실행·노출 확인",
+      "회사 발표·실적을 외부 시장신호의 노출과 실행 상태를 확인하는 근거로 모았습니다.",
+      groups.execution,
+    );
+    [coreSection, executionSection].filter(Boolean).forEach((section) => {
+      container.append(section);
+    });
+    if (container.querySelectorAll(".signal-index-row").length !== sourceRows.length) {
+      return false;
+    }
+    tableHost(table).replaceWith(container);
     return true;
   };
 

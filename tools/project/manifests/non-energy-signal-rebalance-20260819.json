@@ -1,0 +1,314 @@
+{
+  "schema_version": 1,
+  "scope": "기존 40개 Signal 중 에너지 제외 철강·리튬 25개",
+  "classification_basis": "외부 시장·정책·경쟁사 변화는 core_market_signal, POSCO 자체 투자·실적·계획·프로젝트 이행은 execution_context로 분류",
+  "rank_tier_definition": {
+    "tier_1": "핵심 외부 신호. 직접적이고 현재적인 의사결정 영향을 가지며 목록 상단 노출 대상",
+    "tier_2": "보조 외부 신호. 조건부·계획 단계이거나 동일 클러스터의 후속 신호가 있어 핵심 신호를 보완",
+    "tier_3": "자사 실행 맥락. 외부 변화가 아니라 노출·대응·실행 상태를 확인하는 보조 자료"
+  },
+  "summary": {
+    "total": 25,
+    "by_business_axis": {
+      "철강": {
+        "total": 11,
+        "core_market_signal": 11,
+        "execution_context": 0
+      },
+      "리튬": {
+        "total": 14,
+        "core_market_signal": 5,
+        "execution_context": 9,
+        "bias_note": "리튬 14건 중 9건이 POSCO홀딩스 자체 투자·실적·계획·프로젝트 이행이어서 외부 마켓센싱보다 자사 실행 모니터링 비중이 높음"
+      }
+    },
+    "by_role": {
+      "core_market_signal": 16,
+      "execution_context": 9
+    },
+    "by_origin": {
+      "external_market": 3,
+      "policy_regulator": 10,
+      "competitor_counterparty": 3,
+      "company_execution": 9
+    },
+    "portfolio_note": "철강은 정책·규제 10건에 집중되어 있고, 리튬은 company_execution 9건에 집중되어 있음. 철강의 고객·경쟁사·가격·원료 신호와 리튬의 외부 정책·고객·공급망 신호 보강이 필요함"
+  },
+  "signals": [
+    {
+      "signal_id": "SIG-A07F1B887CA2",
+      "current_title": "2028년 세계 철강 과잉설비 7억4,500만 톤 전망",
+      "business_axis": "철강",
+      "role": "core_market_signal",
+      "origin": "external_market",
+      "rationale": "OECD가 제시한 세계 설비·수요 불균형은 포스코 외부에서 발생해 가격과 가동률을 직접 압박하는 시장 변화임",
+      "primary_source_type": "government",
+      "concentration_cluster": "global_steel_overcapacity",
+      "rank_tier": "tier_1"
+    },
+    {
+      "signal_id": "SIG-50D67D94CE68",
+      "current_title": "미국 철강 추가관세율 50%로 인상",
+      "business_axis": "철강",
+      "role": "core_market_signal",
+      "origin": "policy_regulator",
+      "rationale": "미국 정부의 확정 관세 인상은 포스코의 미국향 도착원가와 물량 배분을 즉시 바꾸는 외부 규제 변화임",
+      "primary_source_type": "government",
+      "concentration_cluster": "us_steel_trade_barriers",
+      "rank_tier": "tier_1"
+    },
+    {
+      "signal_id": "SIG-C8AF9A1B623E",
+      "current_title": "인도 평강 세이프가드 관세 최대 12% 권고",
+      "business_axis": "철강",
+      "role": "core_market_signal",
+      "origin": "policy_regulator",
+      "rationale": "인도 무역구제 당국의 관세 권고는 외부 규제 변화지만 최종 부과 전 조건부 단계이므로 핵심 신호를 보완하는 위치가 적절함",
+      "primary_source_type": "government",
+      "concentration_cluster": "india_steel_trade_barriers",
+      "rank_tier": "tier_2"
+    },
+    {
+      "signal_id": "SIG-C477DD938B51",
+      "current_title": "중국 신규 철강 설비 교체계획 공시 중단",
+      "business_axis": "철강",
+      "role": "core_market_signal",
+      "origin": "policy_regulator",
+      "rationale": "중국 정부의 설비 교체 승인 경로 중단은 경쟁 공급능력에 영향을 줄 외부 정책 변화이나 실제 생산 감소는 아직 확인되지 않음",
+      "primary_source_type": "government",
+      "concentration_cluster": "china_steel_capacity_policy",
+      "rank_tier": "tier_2"
+    },
+    {
+      "signal_id": "SIG-0A9D118B1909",
+      "current_title": "중국의 2025~2026년 철강 고급화·낙후설비 퇴출 방침",
+      "business_axis": "철강",
+      "role": "core_market_signal",
+      "origin": "policy_regulator",
+      "rationale": "중국 정부의 구조고도화·설비 퇴출 방침은 포스코의 경쟁 제품과 원료 수요에 영향을 줄 외부 정책이나 목표와 실제 이행을 구분해야 함",
+      "primary_source_type": "government",
+      "concentration_cluster": "china_steel_capacity_policy",
+      "rank_tier": "tier_2"
+    },
+    {
+      "signal_id": "SIG-B62618A2EFD8",
+      "current_title": "탄소중립 선도플랜트 지원사업 재공고",
+      "business_axis": "철강",
+      "role": "core_market_signal",
+      "origin": "policy_regulator",
+      "rationale": "한국 정부의 지원사업 공고는 외부 정책 기회이지만 포스코 선정과 금액이 확정되지 않아 투자안의 조건부 보조 신호임",
+      "primary_source_type": "government",
+      "concentration_cluster": "korea_steel_decarbonization_policy",
+      "rank_tier": "tier_2"
+    },
+    {
+      "signal_id": "SIG-652BB1C14590",
+      "current_title": "한국 철강업종 배출권 무상할당 100% 유지",
+      "business_axis": "철강",
+      "role": "core_market_signal",
+      "origin": "policy_regulator",
+      "rationale": "2026~2030년 국내 탄소비용 구조를 바꾸는 확정 외부 규제로 포스코의 감축투자와 배출권 비용 판단에 직접 연결됨",
+      "primary_source_type": "government",
+      "concentration_cluster": "korea_ets_allocation",
+      "rank_tier": "tier_1"
+    },
+    {
+      "signal_id": "SIG-5C3D01947FFB",
+      "current_title": "EU 철강 무관세 수입한도 연 1,830만 톤 확정",
+      "business_axis": "철강",
+      "role": "core_market_signal",
+      "origin": "policy_regulator",
+      "rationale": "EU의 확정 수입한도와 초과관세는 포스코의 유럽 판매량·가격·계약을 직접 바꾸는 현재적 외부 규제임",
+      "primary_source_type": "government",
+      "concentration_cluster": "eu_steel_import_restrictions",
+      "rank_tier": "tier_1"
+    },
+    {
+      "signal_id": "SIG-DD57A408BE89",
+      "current_title": "EU 철강 무관세 쿼터 확대폭 0.1%로 축소",
+      "business_axis": "철강",
+      "role": "core_market_signal",
+      "origin": "policy_regulator",
+      "rationale": "EU 쿼터 운영 강화는 외부 규제 변화지만 2026년 새 수입조치로 이어진 이전 단계이므로 최신 핵심 신호의 맥락으로 활용해야 함",
+      "primary_source_type": "government",
+      "concentration_cluster": "eu_steel_import_restrictions",
+      "rank_tier": "tier_2"
+    },
+    {
+      "signal_id": "SIG-6B84311777B3",
+      "current_title": "EU 철강·금속 행동계획 발표",
+      "business_axis": "철강",
+      "role": "core_market_signal",
+      "origin": "policy_regulator",
+      "rationale": "EU 산업정책 방향은 포스코의 유럽 고객·저탄소 투자 환경을 바꾸는 외부 신호이나 개별 법률·지원·계약으로 확정되기 전 계획 단계임",
+      "primary_source_type": "government",
+      "concentration_cluster": "eu_steel_industrial_policy",
+      "rank_tier": "tier_2"
+    },
+    {
+      "signal_id": "SIG-87F0A3C81E23",
+      "current_title": "EU 탄소국경조정제도 본격 시행",
+      "business_axis": "철강",
+      "role": "core_market_signal",
+      "origin": "policy_regulator",
+      "rationale": "EU 탄소국경조정제도 시행은 제품별 배출량과 고객 부담을 통해 포스코의 유럽 판매이익을 직접 바꾸는 외부 규제임",
+      "primary_source_type": "government",
+      "concentration_cluster": "eu_cbam",
+      "rank_tier": "tier_1"
+    },
+    {
+      "signal_id": "SIG-3F2A4F44D389",
+      "current_title": "IEA의 리튬 가격 반등·투자 급감 진단",
+      "business_axis": "리튬",
+      "role": "core_market_signal",
+      "origin": "external_market",
+      "rationale": "가격 반등과 업계 투자·탐사 감소는 포스코홀딩스 밖에서 형성된 시장 변화로 기존 자산 가치와 신규 투자 기준을 함께 바꿈",
+      "primary_source_type": "government",
+      "concentration_cluster": "global_lithium_supply_investment_cycle",
+      "rank_tier": "tier_1"
+    },
+    {
+      "signal_id": "SIG-62DB257CEA16",
+      "current_title": "IEA의 리튬 단기 공급 여유·2030년대 부족 전망",
+      "business_axis": "리튬",
+      "role": "core_market_signal",
+      "origin": "external_market",
+      "rationale": "단기 공급 여유와 장기 부족 전망은 외부 수급 신호이나 2026년 후속 IEA 진단과 같은 클러스터에 있어 장기 투자 맥락을 보완함",
+      "primary_source_type": "government",
+      "concentration_cluster": "global_lithium_supply_investment_cycle",
+      "rank_tier": "tier_2"
+    },
+    {
+      "signal_id": "SIG-4FC6F602ABF5",
+      "current_title": "칠레 Codelco·SQM 합작사 NovaAndino 출범",
+      "business_axis": "리튬",
+      "role": "core_market_signal",
+      "origin": "competitor_counterparty",
+      "rationale": "주요 경쟁 공급자의 합작사 출범과 국가 수익배분·환경 조건 변화는 남미 공급과 계약 기준을 바꾸는 외부 경쟁사·정책 신호임",
+      "primary_source_type": "government",
+      "concentration_cluster": "chile_lithium_supply_governance",
+      "rank_tier": "tier_1"
+    },
+    {
+      "signal_id": "SIG-A4D20EDE549C",
+      "current_title": "Rio Tinto의 2026년 2분기 리튬 생산 20% 증가",
+      "business_axis": "리튬",
+      "role": "core_market_signal",
+      "origin": "competitor_counterparty",
+      "rationale": "경쟁사의 실제 생산·첫 생산 증가는 포스코홀딩스의 가격·증설·장기계약 판단에 직접 영향을 주는 외부 경쟁 공급 신호임",
+      "primary_source_type": "company_ir",
+      "concentration_cluster": "rio_tinto_lithium_expansion",
+      "rank_tier": "tier_1"
+    },
+    {
+      "signal_id": "SIG-557B19547C16",
+      "current_title": "Rio Tinto의 Arcadium 인수 완료와 2028년 증설 계획",
+      "business_axis": "리튬",
+      "role": "core_market_signal",
+      "origin": "competitor_counterparty",
+      "rationale": "경쟁사의 인수 완료와 공급능력 확대 계획은 외부 경쟁 구도를 바꾸지만 계획 용량이 실제 출하되기 전까지 생산실적 신호를 보완하는 성격임",
+      "primary_source_type": "company_release",
+      "concentration_cluster": "rio_tinto_lithium_expansion",
+      "rank_tier": "tier_2"
+    },
+    {
+      "signal_id": "SIG-AA1311F13FCD",
+      "current_title": "2024년 비현금 손실 약 1.3조원 반영",
+      "business_axis": "리튬",
+      "role": "execution_context",
+      "origin": "company_execution",
+      "rationale": "POSCO홀딩스 자체 연결실적과 손실 반영으로 외부 시장 변화가 아니라 자사 재무 노출과 실행 결과를 확인하는 자료임",
+      "primary_source_type": "company_release",
+      "concentration_cluster": "posco_lithium_financial_performance",
+      "rank_tier": "tier_3"
+    },
+    {
+      "signal_id": "SIG-E12E73720ED1",
+      "current_title": "포스코아르헨티나의 2026년 2분기 첫 흑자",
+      "business_axis": "리튬",
+      "role": "execution_context",
+      "origin": "company_execution",
+      "rationale": "포스코아르헨티나 자체 수익성과 공장 안정화 결과로 외생 시장신호가 아니라 자사 실행 성과와 노출을 확인하는 자료임",
+      "primary_source_type": "company_ir",
+      "concentration_cluster": "posco_lithium_financial_performance",
+      "rank_tier": "tier_3"
+    },
+    {
+      "signal_id": "SIG-C85F0B291DEA",
+      "current_title": "2025년 그룹 투자계획 8.8조원과 아르헨티나 2단계 포함",
+      "business_axis": "리튬",
+      "role": "execution_context",
+      "origin": "company_execution",
+      "rationale": "POSCO홀딩스가 정한 자사 투자계획과 자금배분으로 외부 변화가 아니라 회사 대응·실행 기준선임",
+      "primary_source_type": "company_ir",
+      "concentration_cluster": "posco_lithium_capital_allocation",
+      "rank_tier": "tier_3"
+    },
+    {
+      "signal_id": "SIG-E2291E5912D0",
+      "current_title": "리튬 정제법인 PPLS에 3,280억원 증자",
+      "business_axis": "리튬",
+      "role": "execution_context",
+      "origin": "company_execution",
+      "rationale": "자회사 증자는 POSCO홀딩스의 자체 자금집행으로 외부 마켓 변화가 아니라 실행과 회수 가능성을 추적할 기준선임",
+      "primary_source_type": "company_release",
+      "concentration_cluster": "posco_lithium_capital_allocation",
+      "rank_tier": "tier_3"
+    },
+    {
+      "signal_id": "SIG-EFCFCCCC5A58",
+      "current_title": "비중국 리튬 공급망 활용·선택적 투자 방침",
+      "business_axis": "리튬",
+      "role": "execution_context",
+      "origin": "company_execution",
+      "rationale": "신년사에 담긴 POSCO홀딩스 자체 전략·투자 방침으로 외부 시장신호가 아니라 회사의 대응 의도와 실행 여부를 점검할 맥락임",
+      "primary_source_type": "company_release",
+      "concentration_cluster": "posco_lithium_capital_allocation",
+      "rank_tier": "tier_3"
+    },
+    {
+      "signal_id": "SIG-BD81BF99EDC7",
+      "current_title": "호주·아르헨티나 리튬 자원에 약 1.1조원 투자",
+      "business_axis": "리튬",
+      "role": "execution_context",
+      "origin": "company_execution",
+      "rationale": "POSCO홀딩스가 결정한 자원 투자로 외부 변화 자체가 아니라 회사의 자본배분과 확보 물량 실행을 확인하는 자료임",
+      "primary_source_type": "company_release",
+      "concentration_cluster": "posco_lithium_capital_allocation",
+      "rank_tier": "tier_3"
+    },
+    {
+      "signal_id": "SIG-82BB8B02BF82",
+      "current_title": "미국 유타 직접리튬추출 실증 추진",
+      "business_axis": "리튬",
+      "role": "execution_context",
+      "origin": "company_execution",
+      "rationale": "POSCO홀딩스와 Anson의 자사 실증 추진은 외부 시장 변화보다 기술·프로젝트 실행 상태를 확인하는 자료임",
+      "primary_source_type": "company_release",
+      "concentration_cluster": "posco_lithium_project_execution",
+      "rank_tier": "tier_3"
+    },
+    {
+      "signal_id": "SIG-5481DFF9613F",
+      "current_title": "아르헨티나 리튬 2단계·PPLS 완공 목표 2026년 1분기로 연기",
+      "business_axis": "리튬",
+      "role": "execution_context",
+      "origin": "company_execution",
+      "rationale": "자사 프로젝트 일정 변경은 중요한 노출·실행 정보지만 외생 시장변화가 아니므로 핵심 마켓신호의 영향 확인 자료로 다뤄야 함",
+      "primary_source_type": "company_ir",
+      "concentration_cluster": "posco_lithium_project_execution",
+      "rank_tier": "tier_3"
+    },
+    {
+      "signal_id": "SIG-4A25A18DCE47",
+      "current_title": "호주 리튬 연 3만 톤 협력 검토",
+      "business_axis": "리튬",
+      "role": "execution_context",
+      "origin": "company_execution",
+      "rationale": "POSCO홀딩스가 참여한 협력 검토와 계획 용량으로 외부 경쟁·시장 변화보다 자사 공급망 실행 선택지를 나타냄",
+      "primary_source_type": "company_release",
+      "concentration_cluster": "posco_lithium_project_execution",
+      "rank_tier": "tier_3"
+    }
+  ]
+}

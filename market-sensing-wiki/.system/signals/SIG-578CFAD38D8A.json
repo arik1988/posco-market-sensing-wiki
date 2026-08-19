@@ -1,0 +1,47 @@
+{
+  "schema_version": 2,
+  "signal_id": "SIG-578CFAD38D8A",
+  "sentence": "미국 LNG 공급 증가가 조달 선택권과 판매마진을 반대 방향으로 움직일 수 있어, 포스코인터내셔널은 계약별 도착원가·목적지 전환권·가격전가 시차를 함께 비교해야 합니다.",
+  "signal_type": "수급·가격",
+  "signal_role": "core_market_signal",
+  "signal_origin": "external_market",
+  "insight_id": "INS-16C29842D5E5",
+  "company_ids": [
+    "COM-POSCO-INTERNATIONAL"
+  ],
+  "business_axis": "에너지",
+  "business_impact": {
+    "score": 4,
+    "rationale": "미국산 유연 물량은 LNG 조달원가와 지역 간 재판매 마진, 광양터미널 활용률을 동시에 바꿀 수 있습니다."
+  },
+  "urgency": {
+    "score": 3,
+    "rationale": "2027년 신규 설비 가동 전에 장기계약·현물·유가연동 물량의 가격지표와 목적지 권리를 비교할 시간이 남아 있습니다.",
+    "response_deadline": "2026-10-31"
+  },
+  "assessed_at": "2026-08-19",
+  "assessment_confidence": "medium",
+  "claim_ids": [
+    "CLM-63749255BAFD",
+    "CLM-B075353BF201",
+    "CLM-4F1F2AAEBA5E",
+    "CLM-2A3452FA69B1",
+    "CLM-E9A30E418789",
+    "CLM-CBFF32EF8E70",
+    "CLM-226DA32D8ACF",
+    "CLM-037F6CD1EA50",
+    "CLM-9A8F8F37EDE4",
+    "CLM-25D4403BAD67",
+    "CLM-1149CC2DB28D",
+    "CLM-DD704FB3A999",
+    "CLM-172F052636D0",
+    "CLM-D207D98131C2"
+  ],
+  "source_ids": [
+    "SRC-20260819-198CA198"
+  ],
+  "status": "active",
+  "created_at": "2026-08-19T10:00:52+09:00",
+  "updated_at": "2026-08-19T10:00:52+09:00",
+  "run_id": "energy-external-rebalance-20260819"
+}

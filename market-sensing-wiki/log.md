@@ -2515,3 +2515,175 @@ SIG-067F405D30C8: Senex 증산의 그룹 성장축 승격
 ## [2026-08-19T07:14:29+09:00] audit
 
 0 findings. Report: reports/audits/audit-2026-08-19.md
+
+## [2026-08-19T09:52:46+09:00] audit
+
+0 findings. Report: reports/audits/audit-2026-08-19.md
+
+## [2026-08-19T09:53:02+09:00] audit
+
+0 findings. Report: reports/audits/audit-2026-08-19.md
+
+## [2026-08-19T09:55:11+09:00] add-source
+
+SRC-20260819-943D3138: East coast gas market to be well supplied in Q4 2026, but more investment needed to meet long-term demand
+
+## [2026-08-19T09:55:12+09:00] add-source
+
+SRC-20260819-198CA198: U.S. natural gas exports to grow nearly 30% by 2027 as LNG facilities ramp up
+
+## [2026-08-19T09:55:49+09:00] add-claim
+
+CLM-9094FDCB822B: MKT-ENERGY-ACCC-2027-OUTLOOK / q4_2026_surplus_pj = 13 PJ
+
+## [2026-08-19T09:55:50+09:00] add-claim
+
+CLM-80E5B45A8E36: MKT-ENERGY-ACCC-2027-OUTLOOK / winter_2027_shortfall_risk = Q2 and Q3 2027 if LNG producers export all uncontracted gas
+
+## [2026-08-19T09:55:50+09:00] add-claim
+
+CLM-66713E27351B: MKT-ENERGY-ACCC-2027-OUTLOOK / q4_surplus_comparison = highest forecast Q4 surplus since 2023
+
+## [2026-08-19T09:55:51+09:00] add-claim
+
+CLM-3256D7E14DA6: MKT-ENERGY-ACCC-2027-OUTLOOK / contract_price_direction_q1_2026 = 2027 supply contracts lower than previous quarter and broadly at pre-conflict levels
+
+## [2026-08-19T09:55:51+09:00] add-claim
+
+CLM-F4A71FBF3549: MKT-ENERGY-ACCC-2027-OUTLOOK / qld_lng_resource_control_share = 84%
+
+## [2026-08-19T09:55:52+09:00] add-claim
+
+CLM-4B8ABBD1E400: MKT-ENERGY-ACCC-2027-OUTLOOK / southern_storage_constraint = Iona storage is critical and other unused capacity faces commercial and technical constraints
+
+## [2026-08-19T09:55:52+09:00] add-claim
+
+CLM-63749255BAFD: MKT-ENERGY-US-LNG-2027 / us_lng_export_growth_2026_bcf_d = 1.9 Bcf/d increase to 17.0 Bcf/d average
+
+## [2026-08-19T09:55:53+09:00] add-claim
+
+CLM-B075353BF201: MKT-ENERGY-US-LNG-2027 / us_lng_export_growth_2027 = 9% or 1.5 Bcf/d additional increase
+
+## [2026-08-19T09:55:53+09:00] add-claim
+
+CLM-4F1F2AAEBA5E: MKT-ENERGY-US-LNG-2027 / us_lng_peak_export_capacity = 18.3 Bcf/d
+
+## [2026-08-19T09:55:54+09:00] add-claim
+
+CLM-2A3452FA69B1: MKT-ENERGY-US-LNG-2027 / us_lng_europe_exports_2025 = 10.3 Bcf/d, 68% of U.S. LNG exports
+
+## [2026-08-19T09:55:54+09:00] add-claim
+
+CLM-E9A30E418789: MKT-ENERGY-US-LNG-2027 / us_lng_asia_exports_2025 = 2.5 Bcf/d, down from 4.0 Bcf/d in 2024
+
+## [2026-08-19T10:00:14+09:00] add-claim
+
+CLM-345CC2B6A1F3: MKT-ENERGY-ACCC-2027-OUTLOOK / business_axis = 에너지
+
+## [2026-08-19T10:00:14+09:00] add-claim
+
+CLM-B8398D4C990C: MKT-ENERGY-ACCC-2027-OUTLOOK / business_impact_score_1_to_5 = 5
+
+## [2026-08-19T10:00:15+09:00] add-claim
+
+CLM-F01BF0BD2231: MKT-ENERGY-ACCC-2027-OUTLOOK / business_impact_rationale = 계절별 수급과 남부 저장·운송 제약이 Senex의 계약가격·인도 가능 물량·증산 투자 회수에 직접 연결됩니다.
+
+## [2026-08-19T10:00:15+09:00] add-claim
+
+CLM-EF58D5A814DC: MKT-ENERGY-ACCC-2027-OUTLOOK / urgency_score_1_to_5 = 4
+
+## [2026-08-19T10:00:16+09:00] add-claim
+
+CLM-D732C993562F: MKT-ENERGY-ACCC-2027-OUTLOOK / urgency_rationale = 2026년 9월 ACCC 후속 보고서와 2027년 계약 협상 전에 분기별 판매·저장·운송 선택권을 확정해야 합니다.
+
+## [2026-08-19T10:00:17+09:00] add-claim
+
+CLM-0599E906F6F9: MKT-ENERGY-ACCC-2027-OUTLOOK / assessment_confidence = medium
+
+## [2026-08-19T10:00:17+09:00] add-claim
+
+CLM-10BAFFF10B27: MKT-ENERGY-ACCC-2027-OUTLOOK / assessed_at = 2026-08-19
+
+## [2026-08-19T10:00:18+09:00] add-claim
+
+CLM-DD5B710FE503: MKT-ENERGY-ACCC-2027-OUTLOOK / impact_path = 호주 분기별 수급·남부 저장과 운송 제약 → Senex 계약별 실현가격·인도량 → 포스코인터내셔널 연결이익과 투자 회수
+
+## [2026-08-19T10:00:18+09:00] add-claim
+
+CLM-4EC71594DC26: MKT-ENERGY-ACCC-2027-OUTLOOK / recommended_follow_up = 2026년 9월 ACCC 전망과 Senex 계약별 인도지역·계절 가격식·저장권을 대조
+
+## [2026-08-19T10:00:19+09:00] add-claim
+
+CLM-CBFF32EF8E70: MKT-ENERGY-US-LNG-2027 / business_axis = 에너지
+
+## [2026-08-19T10:00:19+09:00] add-claim
+
+CLM-226DA32D8ACF: MKT-ENERGY-US-LNG-2027 / business_impact_score_1_to_5 = 4
+
+## [2026-08-19T10:00:20+09:00] add-claim
+
+CLM-037F6CD1EA50: MKT-ENERGY-US-LNG-2027 / business_impact_rationale = 미국산 유연 물량은 LNG 조달원가와 지역 간 재판매 마진, 광양터미널 활용률을 동시에 바꿀 수 있습니다.
+
+## [2026-08-19T10:00:20+09:00] add-claim
+
+CLM-9A8F8F37EDE4: MKT-ENERGY-US-LNG-2027 / urgency_score_1_to_5 = 3
+
+## [2026-08-19T10:00:21+09:00] add-claim
+
+CLM-25D4403BAD67: MKT-ENERGY-US-LNG-2027 / urgency_rationale = 2027년 신규 설비 가동 전에 장기계약·현물·유가연동 물량의 가격지표와 목적지 권리를 비교할 시간이 남아 있습니다.
+
+## [2026-08-19T10:00:21+09:00] add-claim
+
+CLM-1149CC2DB28D: MKT-ENERGY-US-LNG-2027 / assessment_confidence = medium
+
+## [2026-08-19T10:00:22+09:00] add-claim
+
+CLM-DD704FB3A999: MKT-ENERGY-US-LNG-2027 / assessed_at = 2026-08-19
+
+## [2026-08-19T10:00:23+09:00] add-claim
+
+CLM-172F052636D0: MKT-ENERGY-US-LNG-2027 / impact_path = 미국 LNG 수출능력 증가 → 아시아 가용 화물·지역 가격차 변화 → 포스코인터내셔널 조달원가·재판매 마진·터미널 활용률
+
+## [2026-08-19T10:00:23+09:00] add-claim
+
+CLM-D207D98131C2: MKT-ENERGY-US-LNG-2027 / recommended_follow_up = 미국산 LNG의 계약별 아시아 도착원가·목적지 전환권·가격전가 시차를 비교
+
+## [2026-08-19T10:00:52+09:00] add-signal
+
+SIG-87E7FDAE469F: 호주 동부의 2027년 겨울 가스 부족 위험
+
+## [2026-08-19T10:00:53+09:00] add-signal
+
+SIG-578CFAD38D8A: 미국 LNG 수출의 2027년까지 30% 증가 전망
+
+## [2026-08-19T10:02:50+09:00] sync-obsidian
+
+42 subjects and 42 sources projected.
+
+## [2026-08-19T10:03:03+09:00] audit
+
+2 findings. Report: reports/audits/audit-2026-08-19.md
+
+## [2026-08-19T10:03:34+09:00] verify-claim
+
+CLM-2A3452FA69B1: added evidence SRC-20260819-198CA198
+
+## [2026-08-19T10:03:35+09:00] verify-claim
+
+CLM-E9A30E418789: added evidence SRC-20260819-198CA198
+
+## [2026-08-19T10:03:47+09:00] audit
+
+0 findings. Report: reports/audits/audit-2026-08-19.md
+
+## [2026-08-19T10:11:07+09:00] sync-obsidian
+
+42 subjects and 42 sources projected.
+
+## [2026-08-19T10:11:20+09:00] audit
+
+0 findings. Report: reports/audits/audit-2026-08-19.md
+
+## [2026-08-19T10:11:45+09:00] audit
+
+0 findings. Report: reports/audits/audit-2026-08-19.md

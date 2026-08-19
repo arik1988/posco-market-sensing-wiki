@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-1149CC2DB28D",
+  "subject_id": "MKT-ENERGY-US-LNG-2027",
+  "predicate": "assessment_confidence",
+  "value": "medium",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-198CA198"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "EIA forecast verified; company contract exposure unavailable",
+      "source_ids": [
+        "SRC-20260819-198CA198"
+      ]
+    }
+  ]
+}

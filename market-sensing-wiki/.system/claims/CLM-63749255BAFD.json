@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-63749255BAFD",
+  "subject_id": "MKT-ENERGY-US-LNG-2027",
+  "predicate": "us_lng_export_growth_2026_bcf_d",
+  "value": "1.9 Bcf/d increase to 17.0 Bcf/d average",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-12-31",
+  "last_verified": "2026-12-31",
+  "source_ids": [
+    "SRC-20260819-198CA198"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-12-31",
+      "action": "created",
+      "reason": "EIA April 2026 forecast",
+      "source_ids": [
+        "SRC-20260819-198CA198"
+      ]
+    }
+  ]
+}

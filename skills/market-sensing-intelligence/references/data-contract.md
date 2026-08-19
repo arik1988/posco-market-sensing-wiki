@@ -18,10 +18,22 @@ Signal의 `signal_type`은 다음 8개 값 중 정확히 하나다.
 - `기술·운영`
 - `재무·실적`
 
+신규 발행 Signal은 `signal_role`과 `signal_origin`도 반드시 가진다.
+
+- `signal_role`: `core_market_signal` 또는 `execution_context`
+- `signal_origin`: `external_market`, `policy_regulator`,
+  `competitor_counterparty`, `company_execution`
+- `core_market_signal`에는 앞의 외부 발생원 세 개만 허용한다.
+- `execution_context`에는 `company_execution`만 허용한다.
+- 대상 회사·자회사의 `company_release`·`company_ir`만 연결된 실행 사실은
+  `core_market_signal`로 저장하지 않는다.
+
 ```json
 {
   "schema_version": 2,
   "signal_type": "정책·규제",
+  "signal_role": "core_market_signal",
+  "signal_origin": "policy_regulator",
   "sentence": "EU 조치로 고객별 계약 갱신일과 가격 전가 범위를 다시 확인해야 합니다.",
   "business_axis": "철강",
   "insight_id": "INS-..."
@@ -31,6 +43,11 @@ Signal의 `signal_type`은 다음 8개 값 중 정확히 하나다.
 사람 화면에서는 `business_axis`와 `signal_type`을 각각 하나의 pill로 표시한다. 회사명,
 점수, 평가일은 pill 분류에 섞지 않는다. 기존 schema v1 Signal은 새 필드를 추정해 조용히
 통과시키지 않고 전체 제안 집합을 검증하는 마이그레이션 도구로 v2로 전환한다.
+
+역할·발생원 필드가 도입되기 전에 만들어진 기존 schema v2 Signal은 기록을 보존하기
+위해 자동 추정하거나 일괄 수정하지 않는다. 이후 `add-signal`이 Signal을 추가한 run에는
+`signal_contract.version=1`을 기록하며, 그 run의 모든 신규 Signal은 두 필드가 필수다.
+따라서 기존 데이터 호환성과 신규 발행 차단을 동시에 유지한다.
 
 사람용 필드는 다음 편집 계약을 함께 만족해야 한다.
 
@@ -348,10 +365,18 @@ Insight·문서급 분석·원문으로 이어진다. 회사·정책·프로젝�
 - 접근 제한 또는 재시도가 있었던 URL의 `access_attempts`
 - 신규·중복·검토 후보 수
 - 신규 Claim 수, 발행한 Signal 수와 Signal ID 목록
+- 신규 발행 run의 `signal_contract`: 계약 버전, 이 계약이 적용되는 `signal_ids`, 사업축별
+  외부 핵심 시그널 최소 비율 0.7, 단일 프로젝트·설비 편중 기준 0.5, 편중 검사를
+  시작하는 Signal 수 3
 
 `results.new_claims`가 1 이상인 저장 작업은 `results.new_signals`와 `signal_ids`를 함께
 기록한다. 읽기 전용 조사나 사용자가 발행을 금지한 작업이 아니라면 Claim을 만들고
 Signal이 0건인 run은 미완료로 감사된다.
+
+`signal_contract.version=1`인 run은 사업축별 active Signal 가운데
+`core_market_signal`이 70% 이상이어야 한다. Signal이 3건 이상이면 Claim의 `PRJ-`와
+`FAC-` subject를 기준으로 한 프로젝트·설비가 과반을 차지하는지도 감사한다. 이 편중
+검사는 일반 시장·정책 subject를 억지로 자산으로 취급하지 않는다.
 
 `access_attempts`는 접근 방식과 실패 원인을 재현할 수 있을 만큼만 기록한다.
 성공한 일반 요청을 모두 기록할 필요는 없지만, 방식 승격·재시도·최종 실패가 발생한

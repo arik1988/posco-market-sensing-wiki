@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "signal_id": "SIG-934ECBF9D82E",
-  "sentence": "AEMO가 Atlas와 Roma North의 추가 처리능력을 반영하고도 2029년부터 호주 남부의 공급 부족이 이어질 수 있다고 전망했으므로, 포스코인터내셔널은 Senex 물량을 장기계약·저장·운송 투자와 묶어 평가해야 합니다.",
+  "sentence": "Atlas와 Roma North의 추가 처리능력을 반영해도 호주 남부의 2029년 공급 부족 전망이 남아, 포스코인터내셔널은 생산량과 남부 고객에게 실제 인도할 물량을 구분해야 합니다.",
   "insight_id": "INS-A3018166C4A9",
   "company_ids": [
     "COM-POSCO-INTERNATIONAL"
@@ -41,5 +41,7 @@
   "created_at": "2026-08-19T00:55:04+09:00",
   "updated_at": "2026-08-19T07:13:54+09:00",
   "run_id": "energy-backfill-20240819-20260819",
-  "signal_type": "수급·가격"
+  "signal_type": "수급·가격",
+  "signal_role": "core_market_signal",
+  "signal_origin": "external_market"
 }

@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "title": "2027년 호주 가스 계절 수급의 Senex 지분 상각 전 영업이익 민감도",
+  "description": "영향 판매량, 계절 가격차, 시장노출 비중, 지분율과 저장·운송 대응비용으로 순영향을 계산합니다.",
+  "as_of": "2026-07-10",
+  "confidence": "low",
+  "notice": "공개 시장전망과 가정에 기반한 예비 계산이며 회사 실제 계약값이나 전망이 아닙니다.",
+  "formula_display": "판매량(PJ) × 계절 가격차(AUD/GJ) × 시장노출 비중 × 지분율 - 저장·운송 대응비용(AUD million)",
+  "variables": [
+    {"id":"sales_pj","label":"영향 판매량","unit":"PJ","min":1,"max":20,"step":1,"default":8,"kind":"assumption","basis":"Senex의 2027년 분기별 계약·판매량 비공개","source_ids":[]},
+    {"id":"price_delta","label":"계절 실현가격 차이","unit":"AUD/GJ","min":-3,"max":6,"step":0.5,"default":2,"kind":"assumption","basis":"ACCC 수급 방향을 금액 민감도로 변환한 가정","source_ids":[]},
+    {"id":"market_exposure","label":"가격 재설정 노출 비중","unit":"share","min":0,"max":1,"step":0.05,"default":0.4,"kind":"assumption","basis":"계약별 가격 재설정 비중 비공개","source_ids":[]},
+    {"id":"ownership","label":"포스코인터내셔널 지분율","unit":"share","min":0.45,"max":0.55,"step":0.001,"default":0.501,"kind":"assumption","basis":"공개 회사자료 재확인 전 민감도 가정","source_ids":[]},
+    {"id":"response_cost","label":"저장·운송 대응비용","unit":"AUD million","min":0,"max":20,"step":1,"default":5,"kind":"assumption","basis":"저장권·운송권 비용 비공개","source_ids":[]}
+  ],
+  "outputs": [
+    {"id":"net_ebitda","label":"포스코인터내셔널 지분 순 상각 전 영업이익 민감도","unit":"AUD million","decimals":1,"primary":true,"expression":{"op":"subtract","args":[{"op":"multiply","args":[{"op":"multiply","args":[{"op":"multiply","args":[{"var":"sales_pj"},{"var":"price_delta"}]},{"var":"market_exposure"}]},{"var":"ownership"}]},{"var":"response_cost"}]}},
+    {"id":"gross_price_effect","label":"대응비용 전 가격효과","unit":"AUD million","decimals":1,"primary":false,"expression":{"op":"multiply","args":[{"op":"multiply","args":[{"op":"multiply","args":[{"var":"sales_pj"},{"var":"price_delta"}]},{"var":"market_exposure"}]},{"var":"ownership"}]}}
+  ],
+  "presets": [
+    {"id":"defensive","label":"방어","values":{"sales_pj":5,"price_delta":-1,"market_exposure":0.25,"ownership":0.501,"response_cost":8}},
+    {"id":"base","label":"기준","values":{"sales_pj":8,"price_delta":2,"market_exposure":0.4,"ownership":0.501,"response_cost":5}},
+    {"id":"pressure","label":"압박","values":{"sales_pj":12,"price_delta":5,"market_exposure":0.65,"ownership":0.501,"response_cost":3}}
+  ]
+}

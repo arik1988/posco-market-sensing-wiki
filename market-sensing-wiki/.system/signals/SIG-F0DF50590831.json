@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "signal_id": "SIG-F0DF50590831",
-  "sentence": "IEA가 2026년 세계 LNG 공급이 7%, 약 400억 세제곱미터 늘 것으로 전망했으므로, 포스코인터내셔널은 고정가격 조달뿐 아니라 목적지 전환권·선박 여력·재판매 가능 물량을 함께 점검해야 합니다.",
+  "sentence": "2026년 세계 LNG 공급이 7% 늘어날 전망이어서, 포스코인터내셔널은 조달가격뿐 아니라 목적지 전환권·선박 여력·재판매 가능 물량이 실제로 늘어나는지를 함께 확인해야 합니다.",
   "insight_id": "INS-ACA34DC08544",
   "company_ids": [
     "COM-POSCO-INTERNATIONAL"
@@ -41,5 +41,7 @@
   "created_at": "2026-08-19T00:55:19+09:00",
   "updated_at": "2026-08-19T07:13:54+09:00",
   "run_id": "energy-backfill-20240819-20260819",
-  "signal_type": "수급·가격"
+  "signal_type": "수급·가격",
+  "signal_role": "core_market_signal",
+  "signal_origin": "external_market"
 }
