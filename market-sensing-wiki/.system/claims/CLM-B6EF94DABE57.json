@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-B6EF94DABE57",
+  "subject_id": "MKT-STEEL-WORLD-DEMAND-REVISION-2026",
+  "predicate": "urgency_rationale",
+  "value": "2026년 하반기 판매계획과 지역별 생산·수출 배분을 다음 분기 전에 다시 검증해야 합니다.",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-4E44C10E"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "계획 재검증 시한 평가",
+      "source_ids": [
+        "SRC-20260819-4E44C10E"
+      ]
+    }
+  ]
+}

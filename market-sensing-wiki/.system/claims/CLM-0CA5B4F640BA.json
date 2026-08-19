@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-0CA5B4F640BA",
+  "subject_id": "MKT-STEEL-WORLD-DEMAND-REVISION-2026",
+  "predicate": "business_axis",
+  "value": "철강",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-04-14",
+  "last_verified": "2026-04-14",
+  "source_ids": [
+    "SRC-20260819-4E44C10E"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-04-14",
+      "action": "created",
+      "reason": "포스코 철강사업 수요·가격 영향",
+      "source_ids": [
+        "SRC-20260819-4E44C10E"
+      ]
+    }
+  ]
+}

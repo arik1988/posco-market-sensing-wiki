@@ -1,0 +1,33 @@
+{
+  "claim_id": "CLM-ECFC912BD0A9",
+  "subject_id": "MKT-LITHIUM-US-45X-PFE-2026",
+  "predicate": "supplier_certification_required",
+  "value": "직접·간접 재료비를 생산비에 포함하려면 공급자 인증 첨부 필요",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-01-07",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-53232380"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-01-07",
+      "action": "created",
+      "reason": "Form 7207 Appendix C 요건",
+      "source_ids": [
+        "SRC-20260819-53232380"
+      ]
+    },
+    {
+      "date": "2026-08-19",
+      "action": "verified",
+      "reason": "2026-08-19 공식 원문 재검증",
+      "source_ids": [
+        "SRC-20260819-53232380"
+      ]
+    }
+  ]
+}

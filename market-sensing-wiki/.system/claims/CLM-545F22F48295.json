@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-545F22F48295",
+  "subject_id": "MKT-LITHIUM-BLACK-MASS-TRADE-2025",
+  "predicate": "china_recycling_capacity_share",
+  "value": "세계 재활용능력의 85% 초과",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-3F479FFE"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "전제변경형 외부 시그널의 검증 사실",
+      "source_ids": [
+        "SRC-20260819-3F479FFE"
+      ]
+    }
+  ]
+}

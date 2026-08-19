@@ -1,0 +1,33 @@
+{
+  "claim_id": "CLM-286EC95D5241",
+  "subject_id": "MKT-LITHIUM-US-45X-PFE-2026",
+  "predicate": "form_7207_revision",
+  "value": "December 2025",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-01-07",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-53232380"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-01-07",
+      "action": "created",
+      "reason": "IRS 공식 양식 지침",
+      "source_ids": [
+        "SRC-20260819-53232380"
+      ]
+    },
+    {
+      "date": "2026-08-19",
+      "action": "verified",
+      "reason": "2026-08-19 공식 원문 재검증",
+      "source_ids": [
+        "SRC-20260819-53232380"
+      ]
+    }
+  ]
+}

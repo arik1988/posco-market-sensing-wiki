@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-FE9119C648F7",
+  "subject_id": "POL-EU-METHANE-IMPORT-2027",
+  "predicate": "urgency_score_1_to_5",
+  "value": "5",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-CE495A5C"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "공식 원문과 반증 근거를 결합한 사업영향 평가",
+      "source_ids": [
+        "SRC-20260819-CE495A5C"
+      ]
+    }
+  ]
+}

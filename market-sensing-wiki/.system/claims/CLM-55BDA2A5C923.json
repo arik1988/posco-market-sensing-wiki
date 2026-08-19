@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-55BDA2A5C923",
+  "subject_id": "POL-EU-METHANE-IMPORT-2027",
+  "predicate": "urgency_rationale",
+  "value": "2027년 1월 요건 시행과 2026년 9월 투명성 데이터베이스 공개 전에 신규·갱신 계약의 증빙 공백을 확인해야 합니다.",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-CE495A5C"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "공식 원문과 반증 근거를 결합한 사업영향 평가",
+      "source_ids": [
+        "SRC-20260819-CE495A5C"
+      ]
+    }
+  ]
+}

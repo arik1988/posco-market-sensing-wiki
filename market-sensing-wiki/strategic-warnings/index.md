@@ -8,4 +8,9 @@
 
 | 단계 | 사업축 | 경고 | 다음 검토 |
 | --- | --- | --- | --- |
+| **경고** | 에너지 | [[strategic-warnings/WRN-ENERGY-EU-METHANE-COMPLIANCE|유럽 LNG 메탄 데이터 권리 확보]]<br>2027년 1월 시행 전 계약별 생산지·검증·데이터권 공백을 확인할 시간이 제한적입니다. | 2026-10-31 |
 | **경고** | 리튬 | [[strategic-warnings/WRN-LITHIUM-HYDROXIDE-MIX|수산화리튬 중심 성장전제 재검증]]<br>LFP가 세계 전기차 배터리의 절반을 넘었고 가격 격차, 원료 선호, 북미 완성차의 양산 전환까지 세 독립 채널에서 같은 제품 믹스 변화가 확인됐습니다. | 2026-09-30 |
+| **경고** | 리튬 | [[strategic-warnings/WRN-LITHIUM-SODIUM-ESS-SUBSTITUTION|ESS용 리튬 수요에 나트륨 대체 반영]]<br>60GWh 계약, 40GWh 증설과 2026년 납품일이 확인돼 ESS 수요모델을 즉시 분리할 필요가 있습니다. | 2026-12-31 |
+| **주의** | 리튬 | [[strategic-warnings/WRN-LITHIUM-BLACK-MASS-FEEDSTOCK|블랙매스 원료확보 조건 재점검]]<br>수입통로는 열렸지만 실제 유럽산 통관량과 가격 프리미엄은 아직 확인이 필요합니다. | 2026-10-31 |
+| **주의** | 철강 | [[strategic-warnings/WRN-STEEL-EU-VOLUME-CARBON-MIX|EU 쿼터를 저탄소 제품가치로 배분]]<br>수입한도는 시행 중이지만 저탄소 수요기준은 입법 제안 단계여서 고객행동과 최종문을 함께 확인해야 합니다. | 2026-12-31 |
+| **관찰** | 철강 | [[strategic-warnings/WRN-STEEL-DRI-PELLET-BOTTLENECK|HyREX 원료 유연성 가치 재평가]]<br>외부 원료 병목은 명확하지만 HyREX의 상업 규모 성능·총원가는 아직 실증이 필요합니다. | 2027-03-31 |

@@ -1,0 +1,35 @@
+{
+  "trend_id": "TRD-LITHIUM-SODIUM-ESS-SUBSTITUTION",
+  "title": "나트륨이온이 ESS에서 상용 공급단계로 이동",
+  "summary": "대형 공급계약, 양산능력과 고객 납품일이 함께 확인됐습니다. 전체 리튬 수요가 아니라 고정형 ESS 수요에서 선택적 대체가 먼저 진행될 수 있습니다.",
+  "business_axis": "리튬",
+  "direction": "strengthening",
+  "first_detected_at": "2026-04-27",
+  "last_observed_at": "2026-06-22",
+  "signal_ids": [
+    "SIG-C09FE799E568"
+  ],
+  "supporting_source_ids": [
+    "SRC-20260819-17C5D778",
+    "SRC-20260819-DBADDD49",
+    "SRC-20260819-3F479FFE"
+  ],
+  "counter_source_ids": [
+    "SRC-20260819-3F479FFE"
+  ],
+  "indicators": [
+    {
+      "label": "나트륨 ESS 상용계약",
+      "baseline": "이전 기준",
+      "current": "60",
+      "unit": "GWh",
+      "observed_at": "2026-04-27",
+      "direction": "변화",
+      "interpretation": "기술 전망이 실제 고객 주문으로 전환됐습니다.",
+      "source_ids": [
+        "SRC-20260819-17C5D778"
+      ]
+    }
+  ],
+  "schema_version": 1
+}

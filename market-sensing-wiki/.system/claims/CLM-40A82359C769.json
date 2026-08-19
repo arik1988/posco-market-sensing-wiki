@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-40A82359C769",
+  "subject_id": "MKT-STEEL-WORLD-DEMAND-REVISION-2026",
+  "predicate": "global_steel_demand_2026_forecast_revision_mt",
+  "value": "-49 Mt",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-04-14",
+  "last_verified": "2026-04-14",
+  "source_ids": [
+    "SRC-20260819-4E44C10E"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-04-14",
+      "action": "created",
+      "reason": "두 worldsteel 전망의 공개 수치 차감",
+      "source_ids": [
+        "SRC-20260819-4E44C10E"
+      ]
+    }
+  ]
+}

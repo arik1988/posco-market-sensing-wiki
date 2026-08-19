@@ -3012,18 +3012,610 @@ CLM-5D15B180D1D9: added evidence SRC-20260819-55D3797D
 
 48 subjects and 46 sources projected.
 
-## [2026-08-19T12:46:13+09:00] audit
-
-0 findings. Report: reports/audits/audit-2026-08-19.md
-
-## [2026-08-19T12:48:02+09:00] audit
-
-0 findings. Report: reports/audits/audit-2026-08-19.md
-
-## [2026-08-19T12:48:37+09:00] audit
-
-0 findings. Report: reports/audits/audit-2026-08-19.md
-
-## [2026-08-19T12:49:35+09:00] sync-obsidian
+## [2026-08-19T12:49:34+09:00] sync-obsidian
 
 48 subjects and 46 sources projected.
+
+## [2026-08-19T16:09:03+09:00] audit
+
+0 findings. Report: reports/audits/audit-2026-08-19.md
+
+## [2026-08-19T16:11:12+09:00] add-source
+
+SRC-20260819-53232380: Instructions for Form 7207 December 2025
+
+## [2026-08-19T16:11:13+09:00] add-source
+
+SRC-20260819-F58609F2: Treasury and IRS guidance on prohibited foreign entity material assistance
+
+## [2026-08-19T16:11:26+09:00] add-source
+
+SRC-20260819-33A52DFC: worldsteel Short Range Outlook October 2025
+
+## [2026-08-19T16:11:26+09:00] add-source
+
+SRC-20260819-4E44C10E: worldsteel Short Range Outlook April 2026
+
+## [2026-08-19T16:12:01+09:00] add-claim
+
+CLM-695849501C11: MKT-STEEL-WORLD-DEMAND-REVISION-2026 / global_steel_demand_2026_oct2025_forecast_mt = 1773 Mt
+
+## [2026-08-19T16:12:02+09:00] add-claim
+
+CLM-0A9B3890063B: MKT-STEEL-WORLD-DEMAND-REVISION-2026 / global_steel_demand_2026_oct2025_growth_forecast = 1.3%
+
+## [2026-08-19T16:12:02+09:00] add-claim
+
+CLM-BF410ACD5CB0: MKT-STEEL-WORLD-DEMAND-REVISION-2026 / global_steel_demand_2026_apr2026_forecast_mt = 1724 Mt
+
+## [2026-08-19T16:12:03+09:00] add-claim
+
+CLM-3B567C6CC4F2: MKT-STEEL-WORLD-DEMAND-REVISION-2026 / global_steel_demand_2026_apr2026_growth_forecast = 0.3%
+
+## [2026-08-19T16:12:04+09:00] add-claim
+
+CLM-40A82359C769: MKT-STEEL-WORLD-DEMAND-REVISION-2026 / global_steel_demand_2026_forecast_revision_mt = -49 Mt
+
+## [2026-08-19T16:12:04+09:00] add-claim
+
+CLM-A3067BB32E11: MKT-STEEL-WORLD-DEMAND-REVISION-2026 / india_steel_demand_2026_forecast = 7.4%
+
+## [2026-08-19T16:12:05+09:00] add-claim
+
+CLM-0CA5B4F640BA: MKT-STEEL-WORLD-DEMAND-REVISION-2026 / business_axis = 철강
+
+## [2026-08-19T16:12:05+09:00] add-claim
+
+CLM-0BCF51478992: MKT-STEEL-WORLD-DEMAND-REVISION-2026 / business_impact_score_1_to_5 = 5
+
+## [2026-08-19T16:12:06+09:00] add-claim
+
+CLM-8D7B9F0C836F: MKT-STEEL-WORLD-DEMAND-REVISION-2026 / business_impact_rationale = 세계 수요 하향과 중국 수요 오차가 제품·지역별 판매량과 가격 방어력 가정을 바꿉니다.
+
+## [2026-08-19T16:12:07+09:00] add-claim
+
+CLM-638628A8CF6A: MKT-STEEL-WORLD-DEMAND-REVISION-2026 / urgency_score_1_to_5 = 4
+
+## [2026-08-19T16:12:07+09:00] add-claim
+
+CLM-B6EF94DABE57: MKT-STEEL-WORLD-DEMAND-REVISION-2026 / urgency_rationale = 2026년 하반기 판매계획과 지역별 생산·수출 배분을 다음 분기 전에 다시 검증해야 합니다.
+
+## [2026-08-19T16:12:08+09:00] add-claim
+
+CLM-9581B7C580EC: MKT-STEEL-WORLD-DEMAND-REVISION-2026 / assessment_confidence = high
+
+## [2026-08-19T16:12:08+09:00] add-claim
+
+CLM-3D541FB9A143: MKT-STEEL-WORLD-DEMAND-REVISION-2026 / assessed_at = 2026-08-19
+
+## [2026-08-19T16:12:09+09:00] add-claim
+
+CLM-1FE5D8D2B514: MKT-STEEL-WORLD-DEMAND-REVISION-2026 / impact_path = 세계·중국 수요 하향 → 수출 경쟁과 재고 압력 → 제품·지역별 가격과 물량 → POSCO 판매이익
+
+## [2026-08-19T16:12:10+09:00] add-claim
+
+CLM-A535DE3F1A35: MKT-STEEL-WORLD-DEMAND-REVISION-2026 / response_deadline = 2026-09-30
+
+## [2026-08-19T16:12:10+09:00] add-claim
+
+CLM-EE0869BD27DA: MKT-STEEL-WORLD-DEMAND-REVISION-2026 / affected_business = POSCO 철강 제품별 판매·수출·생산·원료 구매
+
+## [2026-08-19T16:12:11+09:00] add-claim
+
+CLM-D0654D9A90AF: MKT-STEEL-WORLD-DEMAND-REVISION-2026 / recommended_follow_up = 제품·지역별 2026년 수요전제, 주문잔고, 가격 전가율, 중국산 유입량을 2025년 10월 계획과 대조
+
+## [2026-08-19T16:12:20+09:00] verify-claim
+
+CLM-EE0869BD27DA: added evidence SRC-20260819-4E44C10E
+
+## [2026-08-19T16:12:21+09:00] verify-claim
+
+CLM-D0654D9A90AF: added evidence SRC-20260819-4E44C10E
+
+## [2026-08-19T16:12:37+09:00] add-claim
+
+CLM-C7EAB8771419: MKT-STEEL-WORLD-DEMAND-REVISION-2026 / china_steel_demand_2025_oct2025_forecast = -2.0%
+
+## [2026-08-19T16:12:38+09:00] add-claim
+
+CLM-1F6EA7B40D46: MKT-STEEL-WORLD-DEMAND-REVISION-2026 / china_steel_demand_2025_official_result = -7.1%
+
+## [2026-08-19T16:12:55+09:00] add-source
+
+SRC-20260819-3C4323B0: Section 45X final regulations calculation context
+
+## [2026-08-19T16:13:25+09:00] add-claim
+
+CLM-286EC95D5241: MKT-LITHIUM-US-45X-PFE-2026 / form_7207_revision = December 2025
+
+## [2026-08-19T16:13:25+09:00] add-claim
+
+CLM-F0C5206C7F7D: MKT-LITHIUM-US-45X-PFE-2026 / pfe_restriction_effective_tax_years = tax years beginning after 2025-07-04
+
+## [2026-08-19T16:13:26+09:00] add-claim
+
+CLM-8CD81B10A893: MKT-LITHIUM-US-45X-PFE-2026 / pfe_taxpayer_ineligibility = specified foreign entity 또는 covered foreign-influenced entity는 45X 공제 불가
+
+## [2026-08-19T16:13:26+09:00] add-claim
+
+CLM-4E882F384FCC: MKT-LITHIUM-US-45X-PFE-2026 / material_assistance_rule = 금지 외국기업의 물질적 지원을 받은 적격 부품은 45X 공제 대상에서 제외
+
+## [2026-08-19T16:13:27+09:00] add-claim
+
+CLM-8587453B997A: MKT-LITHIUM-US-45X-PFE-2026 / notice_reliance_period = 2025-07-04 이후 시작 과세연도의 판매분부터 향후 safe-harbour table 공표일까지
+
+## [2026-08-19T16:13:28+09:00] add-claim
+
+CLM-ECFC912BD0A9: MKT-LITHIUM-US-45X-PFE-2026 / supplier_certification_required = 직접·간접 재료비를 생산비에 포함하려면 공급자 인증 첨부 필요
+
+## [2026-08-19T16:13:28+09:00] add-claim
+
+CLM-6019F342650E: MKT-LITHIUM-US-45X-PFE-2026 / qualifying_lithium_form = 탄산리튬 또는 수산화리튬 전환, 또는 리튬 질량순도 99.9% 이상
+
+## [2026-08-19T16:13:29+09:00] add-claim
+
+CLM-9F3330646D4E: MKT-LITHIUM-US-45X-PFE-2026 / critical_mineral_credit_rate = qualifying production cost의 10%
+
+## [2026-08-19T16:13:29+09:00] add-claim
+
+CLM-B42DBCA0FC34: MKT-LITHIUM-US-45X-PFE-2026 / business_axis = 리튬
+
+## [2026-08-19T16:13:30+09:00] add-claim
+
+CLM-D6771A3229DD: MKT-LITHIUM-US-45X-PFE-2026 / business_impact_score_1_to_5 = 5
+
+## [2026-08-19T16:13:30+09:00] add-claim
+
+CLM-31257A37CAC8: MKT-LITHIUM-US-45X-PFE-2026 / business_impact_rationale = 금지 외국기업의 소유·재료·공정 관여 여부가 미국 리튬 생산세액공제와 고객 계약경제성을 바꿉니다.
+
+## [2026-08-19T16:13:31+09:00] add-claim
+
+CLM-2C7316AA338E: MKT-LITHIUM-US-45X-PFE-2026 / urgency_score_1_to_5 = 5
+
+## [2026-08-19T16:13:31+09:00] add-claim
+
+CLM-BB8DDC5362A1: MKT-LITHIUM-US-45X-PFE-2026 / urgency_rationale = 미국 리튬 실증·법인·공급계약을 확정하기 전에 소유구조와 공급자 인증을 점검해야 합니다.
+
+## [2026-08-19T16:13:32+09:00] add-claim
+
+CLM-06CDB9EE2901: MKT-LITHIUM-US-45X-PFE-2026 / assessment_confidence = high
+
+## [2026-08-19T16:13:33+09:00] add-claim
+
+CLM-AB25B59A6CB0: MKT-LITHIUM-US-45X-PFE-2026 / assessed_at = 2026-08-19
+
+## [2026-08-19T16:13:33+09:00] add-claim
+
+CLM-F8161BDCDB09: MKT-LITHIUM-US-45X-PFE-2026 / impact_path = 미국 PFE 판정·물질적 지원 비율 → 45X 적격성과 공급자 인증 → 미국산 리튬 도착원가·고객계약 → POSCO Holdings 투자회수
+
+## [2026-08-19T16:13:34+09:00] add-claim
+
+CLM-E1BE90948F49: MKT-LITHIUM-US-45X-PFE-2026 / response_deadline = 2026-09-30
+
+## [2026-08-19T16:13:34+09:00] add-claim
+
+CLM-C221CDAF373C: MKT-LITHIUM-US-45X-PFE-2026 / affected_business = POSCO Holdings 미국 직접리튬추출 실증, 북미 정제·판매·합작 구조
+
+## [2026-08-19T16:13:35+09:00] add-claim
+
+CLM-90AFB4E862ED: MKT-LITHIUM-US-45X-PFE-2026 / recommended_follow_up = 법인·지분·이사회 권리, 중국계 장비·공정·원재료 비용 비중, 공급자 인증 가능성을 세무·법무·구매가 공동 점검
+
+## [2026-08-19T16:18:06+09:00] add-signal
+
+SIG-E31D64ABA031: 세계 철강 수요 회복 전망 하향
+
+## [2026-08-19T16:18:07+09:00] add-signal
+
+SIG-616AB52ADDF4: 미국 리튬 세액공제의 공급망 요건 강화
+
+## [2026-08-19T16:18:29+09:00] sync-obsidian
+
+50 subjects and 51 sources projected.
+
+## [2026-08-19T16:18:43+09:00] audit
+
+12 findings. Report: reports/audits/audit-2026-08-19.md
+
+## [2026-08-19T16:18:59+09:00] verify-claim
+
+CLM-695849501C11: added evidence SRC-20260819-33A52DFC
+
+## [2026-08-19T16:19:10+09:00] verify-claim
+
+CLM-0A9B3890063B: added evidence SRC-20260819-33A52DFC
+
+## [2026-08-19T16:19:10+09:00] verify-claim
+
+CLM-286EC95D5241: added evidence SRC-20260819-53232380
+
+## [2026-08-19T16:19:11+09:00] verify-claim
+
+CLM-4E882F384FCC: added evidence SRC-20260819-F58609F2
+
+## [2026-08-19T16:19:11+09:00] verify-claim
+
+CLM-6019F342650E: added evidence SRC-20260819-53232380
+
+## [2026-08-19T16:19:12+09:00] verify-claim
+
+CLM-8587453B997A: added evidence SRC-20260819-F58609F2
+
+## [2026-08-19T16:19:13+09:00] verify-claim
+
+CLM-8CD81B10A893: added evidence SRC-20260819-53232380
+
+## [2026-08-19T16:19:13+09:00] verify-claim
+
+CLM-9F3330646D4E: added evidence SRC-20260819-3C4323B0
+
+## [2026-08-19T16:19:14+09:00] verify-claim
+
+CLM-B42DBCA0FC34: added evidence SRC-20260819-F58609F2
+
+## [2026-08-19T16:19:14+09:00] verify-claim
+
+CLM-C7EAB8771419: added evidence SRC-20260819-33A52DFC
+
+## [2026-08-19T16:19:15+09:00] verify-claim
+
+CLM-ECFC912BD0A9: added evidence SRC-20260819-53232380
+
+## [2026-08-19T16:19:15+09:00] verify-claim
+
+CLM-F0C5206C7F7D: added evidence SRC-20260819-53232380
+
+## [2026-08-19T16:19:21+09:00] sync-obsidian
+
+50 subjects and 51 sources projected.
+
+## [2026-08-19T16:19:37+09:00] audit
+
+0 findings. Report: reports/audits/audit-2026-08-19.md
+
+## [2026-08-19T18:44:30+09:00] audit
+
+0 findings. Report: reports/audits/audit-2026-08-19.md
+
+## [2026-08-19T18:54:02+09:00] add-source
+
+SRC-20260819-17C5D778: CATL and HyperStrong sign 60 GWh sodium-ion storage agreement
+
+## [2026-08-19T18:54:03+09:00] add-source
+
+SRC-20260819-DBADDD49: CATL launches TENER Sodium energy storage system
+
+## [2026-08-19T18:54:03+09:00] add-source
+
+SRC-20260819-E9790E38: China Announcement No. 14 of 2025 on recycled black mass imports
+
+## [2026-08-19T18:54:04+09:00] add-source
+
+SRC-20260819-2B84CAB4: GB/T 45203-2024 Recycled black mass for lithium ion battery
+
+## [2026-08-19T18:54:04+09:00] add-source
+
+SRC-20260819-CE5F863E: OECD Steel Outlook 2025: hydrogen DRI raw-material bottleneck
+
+## [2026-08-19T18:54:05+09:00] add-source
+
+SRC-20260819-E8EA9DEC: POSCO HyREX raw-material route
+
+## [2026-08-19T18:54:06+09:00] add-source
+
+SRC-20260819-CE495A5C: EU methane regulation requirements for fossil-fuel imports
+
+## [2026-08-19T18:54:06+09:00] add-source
+
+SRC-20260819-E0FF0193: Industrial Accelerator Act proposal COM(2026)100
+
+## [2026-08-19T18:59:08+09:00] add-claim
+
+CLM-DA71A6D83BEA: MKT-LITHIUM-SODIUM-ESS-2026 / sodium_storage_contract_gwh = 3년간 60 GWh
+
+## [2026-08-19T18:59:08+09:00] add-claim
+
+CLM-7F476A9B2F8F: MKT-LITHIUM-SODIUM-ESS-2026 / first_china_delivery = 2026-09
+
+## [2026-08-19T18:59:09+09:00] add-claim
+
+CLM-6CF41F4D8A1B: MKT-LITHIUM-SODIUM-ESS-2026 / planned_sodium_capacity_gwh = Fuding 40 GWh 추가, Jining 160 GWh 계획
+
+## [2026-08-19T18:59:09+09:00] add-claim
+
+CLM-610E7EF7EE10: MKT-LITHIUM-SODIUM-ESS-2026 / current_sodium_capacity_share = 리튬이온 생산능력의 1% 조금 초과
+
+## [2026-08-19T18:59:09+09:00] add-claim
+
+CLM-A62D1B2DA0B4: MKT-LITHIUM-SODIUM-ESS-2026 / business_axis = 리튬
+
+## [2026-08-19T18:59:10+09:00] add-claim
+
+CLM-D1BF4CA6D5B4: MKT-LITHIUM-SODIUM-ESS-2026 / business_impact_score_1_to_5 = 5
+
+## [2026-08-19T18:59:10+09:00] add-claim
+
+CLM-B3A4C66CD1D2: MKT-LITHIUM-SODIUM-ESS-2026 / business_impact_rationale = ESS가 포스코홀딩스의 중장기 리튬 수요·가격·증설 전제에서 독립적인 대체수요 경로가 될 수 있습니다.
+
+## [2026-08-19T18:59:11+09:00] add-claim
+
+CLM-4AE6F1387C3C: MKT-LITHIUM-SODIUM-ESS-2026 / urgency_score_1_to_5 = 5
+
+## [2026-08-19T18:59:11+09:00] add-claim
+
+CLM-0C5B21B99515: MKT-LITHIUM-SODIUM-ESS-2026 / urgency_rationale = 중국 고객 납품이 2026년 9월로 예정돼 있어 2027년 사업계획과 장기 판매계약 전에 응용처별 수요를 재산정해야 합니다.
+
+## [2026-08-19T18:59:12+09:00] add-claim
+
+CLM-9E220F1F4A82: MKT-LITHIUM-SODIUM-ESS-2026 / assessment_confidence = high
+
+## [2026-08-19T18:59:12+09:00] add-claim
+
+CLM-B9CCC451E177: MKT-LITHIUM-SODIUM-ESS-2026 / assessed_at = 2026-08-19
+
+## [2026-08-19T18:59:13+09:00] add-claim
+
+CLM-64CD843E33FB: MKT-LITHIUM-SODIUM-ESS-2026 / impact_path = 나트륨 ESS 상용계약 → ESS용 리튬이온 점유율 하락 → 응용처별 리튬 수요·가격 변화 → 증설·판매계약 회수기간 변화
+
+## [2026-08-19T18:59:13+09:00] add-claim
+
+CLM-12CFEDEC6CC5: MKT-LITHIUM-SODIUM-ESS-2026 / recommended_follow_up = 전기차·ESS·기타로 분리한 리튬 수요모델과 나트륨 점유율 0·5·15% 민감도를 2026년 말 실제 출하량으로 갱신
+
+## [2026-08-19T18:59:14+09:00] add-signal
+
+SIG-C09FE799E568: 나트륨이온 ESS 60GWh 공급계약 체결
+
+## [2026-08-19T18:59:15+09:00] add-claim
+
+CLM-E02445F10CA3: MKT-LITHIUM-BLACK-MASS-TRADE-2025 / black_mass_import_effective_date = 2025-08-01
+
+## [2026-08-19T18:59:15+09:00] add-claim
+
+CLM-0086CF6B85A3: MKT-LITHIUM-BLACK-MASS-TRADE-2025 / black_mass_customs_code = 3824999996
+
+## [2026-08-19T18:59:16+09:00] add-claim
+
+CLM-14586E4CB975: MKT-LITHIUM-BLACK-MASS-TRADE-2025 / black_mass_standard = GB/T 45203-2024
+
+## [2026-08-19T18:59:16+09:00] add-claim
+
+CLM-545F22F48295: MKT-LITHIUM-BLACK-MASS-TRADE-2025 / china_recycling_capacity_share = 세계 재활용능력의 85% 초과
+
+## [2026-08-19T18:59:17+09:00] add-claim
+
+CLM-977EDCE267DB: MKT-LITHIUM-BLACK-MASS-TRADE-2025 / business_axis = 리튬
+
+## [2026-08-19T18:59:17+09:00] add-claim
+
+CLM-5C36B065C674: MKT-LITHIUM-BLACK-MASS-TRADE-2025 / business_impact_score_1_to_5 = 4
+
+## [2026-08-19T18:59:18+09:00] add-claim
+
+CLM-C86DA7871DD1: MKT-LITHIUM-BLACK-MASS-TRADE-2025 / business_impact_rationale = 고품위 블랙매스의 중국행 경쟁은 유럽 재활용 설비의 원료가격·가동률·회수마진을 동시에 바꿀 수 있습니다.
+
+## [2026-08-19T18:59:19+09:00] add-claim
+
+CLM-DCBCD95DE9A5: MKT-LITHIUM-BLACK-MASS-TRADE-2025 / urgency_score_1_to_5 = 4
+
+## [2026-08-19T18:59:19+09:00] add-claim
+
+CLM-294357841D9E: MKT-LITHIUM-BLACK-MASS-TRADE-2025 / urgency_rationale = 수입제도가 이미 2025년 8월 시행됐으므로 원료 장기계약 갱신 전에 실제 통관량과 가격 프리미엄을 확인해야 합니다.
+
+## [2026-08-19T18:59:20+09:00] add-claim
+
+CLM-3FEB6578FC7E: MKT-LITHIUM-BLACK-MASS-TRADE-2025 / assessment_confidence = medium
+
+## [2026-08-19T18:59:20+09:00] add-claim
+
+CLM-A2641BFB824E: MKT-LITHIUM-BLACK-MASS-TRADE-2025 / assessed_at = 2026-08-19
+
+## [2026-08-19T18:59:21+09:00] add-claim
+
+CLM-6DCA7491EDBF: MKT-LITHIUM-BLACK-MASS-TRADE-2025 / impact_path = 중국 수입 재개 → 고품위 블랙매스 구매자 증가 → 유럽 원료가격·운송방향 변화 → 재활용 설비 가동률·회수마진 변동
+
+## [2026-08-19T18:59:21+09:00] add-claim
+
+CLM-711B17DD307D: MKT-LITHIUM-BLACK-MASS-TRADE-2025 / recommended_follow_up = 중국 세관코드 3824999996의 원산지별 통관량과 공급계약별 소유권·최소물량·가격공식을 2026년 10월까지 대조
+
+## [2026-08-19T18:59:22+09:00] add-signal
+
+SIG-F6C60D414787: 중국의 고품위 블랙매스 수입 재개
+
+## [2026-08-19T18:59:23+09:00] add-claim
+
+CLM-324C9D29A51F: MKT-STEEL-DRI-PELLET-BOTTLENECK / dri_pellet_fe_requirement = Fe 67% 초과, 저불순물
+
+## [2026-08-19T18:59:23+09:00] add-claim
+
+CLM-6101172A9C47: MKT-STEEL-DRI-PELLET-BOTTLENECK / dri_grade_seaborne_share = 현재 해상 철광석 물량의 3~4%
+
+## [2026-08-19T18:59:24+09:00] add-claim
+
+CLM-A849250182A6: MKT-STEEL-DRI-PELLET-BOTTLENECK / hyrex_ore_route = 고품위 펠렛 대신 중·저품위 소결용 분광 직접 사용
+
+## [2026-08-19T18:59:24+09:00] add-claim
+
+CLM-6BFCD5373657: MKT-STEEL-DRI-PELLET-BOTTLENECK / hyrex_current_stage = 실증플랜트 설계·건설
+
+## [2026-08-19T18:59:25+09:00] add-claim
+
+CLM-C2DC9DB32B5E: MKT-STEEL-DRI-PELLET-BOTTLENECK / business_axis = 철강
+
+## [2026-08-19T18:59:26+09:00] add-claim
+
+CLM-FA44A903AC68: MKT-STEEL-DRI-PELLET-BOTTLENECK / business_impact_score_1_to_5 = 5
+
+## [2026-08-19T18:59:26+09:00] add-claim
+
+CLM-538BCEDD142D: MKT-STEEL-DRI-PELLET-BOTTLENECK / business_impact_rationale = 희소한 직접환원용 펠렛 의존도는 경쟁 공정의 원료비·공급안정성을 바꾸고 HyREX의 기술·제휴 가치를 재평가하게 합니다.
+
+## [2026-08-19T18:59:27+09:00] add-claim
+
+CLM-A9A5A3DF3A8F: MKT-STEEL-DRI-PELLET-BOTTLENECK / urgency_score_1_to_5 = 3
+
+## [2026-08-19T18:59:27+09:00] add-claim
+
+CLM-0A3CBE3B8754: MKT-STEEL-DRI-PELLET-BOTTLENECK / urgency_rationale = 상업화 전 실증 지표와 원료 조달전략을 연결해야 하지만 즉시 시장접근을 잃는 규제 시한은 아직 없습니다.
+
+## [2026-08-19T18:59:28+09:00] add-claim
+
+CLM-5520234AFE31: MKT-STEEL-DRI-PELLET-BOTTLENECK / assessment_confidence = medium
+
+## [2026-08-19T18:59:28+09:00] add-claim
+
+CLM-BC90D53E02A6: MKT-STEEL-DRI-PELLET-BOTTLENECK / assessed_at = 2026-08-19
+
+## [2026-08-19T18:59:29+09:00] add-claim
+
+CLM-83511D31641E: MKT-STEEL-DRI-PELLET-BOTTLENECK / impact_path = 고품위 펠렛 희소 → 경쟁 공정 원료 프리미엄·전처리 투자 → HyREX 원료 유연성 가치 변화 → 실증·제휴 투자 우선순위 변화
+
+## [2026-08-19T18:59:30+09:00] add-claim
+
+CLM-9FDFBA6DE401: MKT-STEEL-DRI-PELLET-BOTTLENECK / recommended_follow_up = 샤프트로와 HyREX의 수소·전력·원료·전처리 총원가를 동일 용선 품질 기준으로 비교하는 광종별 검증표 작성
+
+## [2026-08-19T18:59:30+09:00] add-signal
+
+SIG-73C13A4E0FC9: 수소환원제철의 고품위 펠렛 병목
+
+## [2026-08-19T18:59:31+09:00] add-claim
+
+CLM-B248F9D4F9FB: POL-EU-METHANE-IMPORT-2027 / methane_mrv_effective_date = 2027-01-01
+
+## [2026-08-19T18:59:31+09:00] add-claim
+
+CLM-A548853D1D96: POL-EU-METHANE-IMPORT-2027 / methane_contract_scope = 2024-08-04 이후 체결·갱신 계약
+
+## [2026-08-19T18:59:32+09:00] add-claim
+
+CLM-6C18E0F704AA: POL-EU-METHANE-IMPORT-2027 / methane_mrv_requirement = 동등한 MRV 또는 OGMP 2.0 Level 5와 검증
+
+## [2026-08-19T18:59:33+09:00] add-claim
+
+CLM-AFC0DA92D79F: POL-EU-METHANE-IMPORT-2027 / methane_database_launch = 2026-09 예정
+
+## [2026-08-19T18:59:34+09:00] add-claim
+
+CLM-2130D89243F3: POL-EU-METHANE-IMPORT-2027 / business_axis = 에너지
+
+## [2026-08-19T18:59:34+09:00] add-claim
+
+CLM-C2AA1278C344: POL-EU-METHANE-IMPORT-2027 / business_impact_score_1_to_5 = 4
+
+## [2026-08-19T18:59:35+09:00] add-claim
+
+CLM-D1364A1E0BE9: POL-EU-METHANE-IMPORT-2027 / business_impact_rationale = 메탄 데이터와 검증권은 LNG의 유럽 목적지 전환 가능성과 트레이딩 선택권 가치에 직접 영향을 줄 수 있습니다.
+
+## [2026-08-19T18:59:35+09:00] add-claim
+
+CLM-FE9119C648F7: POL-EU-METHANE-IMPORT-2027 / urgency_score_1_to_5 = 5
+
+## [2026-08-19T18:59:36+09:00] add-claim
+
+CLM-55BDA2A5C923: POL-EU-METHANE-IMPORT-2027 / urgency_rationale = 2027년 1월 요건 시행과 2026년 9월 투명성 데이터베이스 공개 전에 신규·갱신 계약의 증빙 공백을 확인해야 합니다.
+
+## [2026-08-19T18:59:37+09:00] add-claim
+
+CLM-48813DC3BBC7: POL-EU-METHANE-IMPORT-2027 / assessment_confidence = high
+
+## [2026-08-19T18:59:37+09:00] add-claim
+
+CLM-F1DDA65D3600: POL-EU-METHANE-IMPORT-2027 / assessed_at = 2026-08-19
+
+## [2026-08-19T18:59:38+09:00] add-claim
+
+CLM-0FC07022C81C: POL-EU-METHANE-IMPORT-2027 / impact_path = EU 메탄 검증요건 → 생산지·가스전별 증빙과 계약상 데이터권 필요 → 유럽 목적지 전환 가능 물량 분화 → 트레이딩 마진·조달 가치 변화
+
+## [2026-08-19T18:59:38+09:00] add-claim
+
+CLM-E51A1989256E: POL-EU-METHANE-IMPORT-2027 / recommended_follow_up = 계약별 체결·갱신일, 생산지, OGMP 보고수준, 독립검증, 데이터 감사권을 2026년 10월까지 한 표로 점검
+
+## [2026-08-19T18:59:39+09:00] add-signal
+
+SIG-1BC42A78C68E: EU LNG 수입의 메탄 검증요건 시행 임박
+
+## [2026-08-19T18:59:40+09:00] add-claim
+
+CLM-D8DD08219276: POL-EU-STEEL-VOLUME-CARBON-2026 / eu_tariff_free_quota = 연 18.3 Mt
+
+## [2026-08-19T18:59:40+09:00] add-claim
+
+CLM-5F2FD49C1739: POL-EU-STEEL-VOLUME-CARBON-2026 / eu_quota_cut_vs_2024 = 47% 축소
+
+## [2026-08-19T18:59:41+09:00] add-claim
+
+CLM-ABA95100D2E5: POL-EU-STEEL-VOLUME-CARBON-2026 / eu_out_of_quota_duty = 50%
+
+## [2026-08-19T18:59:41+09:00] add-claim
+
+CLM-8D4615A185CB: POL-EU-STEEL-VOLUME-CARBON-2026 / iaa_steel_requirement_scope = 자동차·건설 공공조달·지원의 저탄소 철강 기준 제안
+
+## [2026-08-19T18:59:42+09:00] add-claim
+
+CLM-8626A94DE857: POL-EU-STEEL-VOLUME-CARBON-2026 / business_axis = 철강
+
+## [2026-08-19T18:59:43+09:00] add-claim
+
+CLM-23EC50F355CB: POL-EU-STEEL-VOLUME-CARBON-2026 / business_impact_score_1_to_5 = 5
+
+## [2026-08-19T18:59:43+09:00] add-claim
+
+CLM-245D0A510C8C: POL-EU-STEEL-VOLUME-CARBON-2026 / business_impact_rationale = 수입쿼터 희소성과 저탄소 조달수요의 결합은 같은 쿼터 1톤의 제품·고객별 마진과 인증투자 가치를 크게 다르게 만듭니다.
+
+## [2026-08-19T18:59:44+09:00] add-claim
+
+CLM-797801731079: POL-EU-STEEL-VOLUME-CARBON-2026 / urgency_score_1_to_5 = 4
+
+## [2026-08-19T18:59:44+09:00] add-claim
+
+CLM-D9328AC74BD6: POL-EU-STEEL-VOLUME-CARBON-2026 / urgency_rationale = 수입조치는 이미 시행 중이고 저탄소 법안은 협상 중이므로 2027년 판매계획과 고객계약 전에 통합 배분기준이 필요합니다.
+
+## [2026-08-19T18:59:45+09:00] add-claim
+
+CLM-964C19020A2A: POL-EU-STEEL-VOLUME-CARBON-2026 / assessment_confidence = medium
+
+## [2026-08-19T18:59:46+09:00] add-claim
+
+CLM-73854B6D3FF0: POL-EU-STEEL-VOLUME-CARBON-2026 / assessed_at = 2026-08-19
+
+## [2026-08-19T18:59:46+09:00] add-claim
+
+CLM-2B567F7B7B60: POL-EU-STEEL-VOLUME-CARBON-2026 / impact_path = 무관세 수입량 축소 + 저탄소 조달기준 → 희소 쿼터의 제품별 가치 차등 → 수출 믹스·가격·인증 투자 재배분
+
+## [2026-08-19T18:59:47+09:00] add-claim
+
+CLM-A855B3923B27: POL-EU-STEEL-VOLUME-CARBON-2026 / recommended_follow_up = EU 고객별 쿼터 사용 가능량·제품 탄소강도·가격 가산분·인증비용을 결합한 쿼터 1톤당 순마진 순위표 작성
+
+## [2026-08-19T18:59:48+09:00] add-signal
+
+SIG-EFB4A11676A9: EU 철강 수입축소와 저탄소 조달기준 결합
+
+## [2026-08-19T19:03:25+09:00] upsert-strategic-watch
+
+WRN-LITHIUM-SODIUM-ESS-SUBSTITUTION: ESS용 리튬 수요에 나트륨 대체 반영
+
+## [2026-08-19T19:03:25+09:00] upsert-strategic-watch
+
+WRN-LITHIUM-BLACK-MASS-FEEDSTOCK: 블랙매스 원료확보 조건 재점검
+
+## [2026-08-19T19:03:26+09:00] upsert-strategic-watch
+
+WRN-STEEL-DRI-PELLET-BOTTLENECK: HyREX 원료 유연성 가치 재평가
+
+## [2026-08-19T19:03:26+09:00] upsert-strategic-watch
+
+WRN-ENERGY-EU-METHANE-COMPLIANCE: 유럽 LNG 메탄 데이터 권리 확보
+
+## [2026-08-19T19:03:26+09:00] upsert-strategic-watch
+
+WRN-STEEL-EU-VOLUME-CARBON-MIX: EU 쿼터를 저탄소 제품가치로 배분
+
+## [2026-08-19T19:03:32+09:00] sync-obsidian
+
+55 subjects and 59 sources projected.
+
+## [2026-08-19T19:04:01+09:00] audit
+
+0 findings. Report: reports/audits/audit-2026-08-19.md
+
+## [2026-08-19T19:07:28+09:00] audit
+
+0 findings. Report: reports/audits/audit-2026-08-19.md

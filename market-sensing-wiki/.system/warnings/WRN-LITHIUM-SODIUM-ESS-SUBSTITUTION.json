@@ -1,0 +1,40 @@
+{
+  "warning_id": "WRN-LITHIUM-SODIUM-ESS-SUBSTITUTION",
+  "title": "ESS용 리튬 수요에 나트륨 대체 반영",
+  "business_axis": "리튬",
+  "thesis_id": "THS-LITHIUM-SODIUM-ESS-SUBSTITUTION",
+  "level": "warning",
+  "status": "active",
+  "first_raised_at": "2026-08-19",
+  "last_reviewed_at": "2026-08-19",
+  "next_review_at": "2026-12-31",
+  "rationale": "60GWh 계약, 40GWh 증설과 2026년 납품일이 확인돼 ESS 수요모델을 즉시 분리할 필요가 있습니다.",
+  "persistence_rule": "반증 조건이 충족되거나 사람이 근거를 기록해 종료하기 전까지 유지하고 다음 검토일에 지표를 갱신합니다.",
+  "escalation_rules": [
+    "2026년 누적 인도가 1GWh 이상입니다.",
+    "2027년 해외 납품이 계획대로 시작됩니다."
+  ],
+  "deescalation_rules": [
+    "60GWh 계약이 취소 또는 장기 지연됩니다.",
+    "나트륨 ESS의 총소유비용이 LFP보다 높게 유지됩니다."
+  ],
+  "decision_question": "2030년 리튬 수요계획에서 ESS의 나트륨 전환율을 독립 변수로 반영할 것인가?",
+  "decision_deadline": "2026-12-31",
+  "owner": "포스코홀딩스 리튬사업·전략·마케팅",
+  "actions": [
+    "응용처별 리튬 수요모델을 분리합니다.",
+    "나트륨 점유율별 증설·판매계약 민감도를 계산합니다."
+  ],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "raised",
+      "to_level": "warning",
+      "added_signal_ids": [
+        "SIG-C09FE799E568"
+      ],
+      "rationale": "60GWh 계약, 40GWh 증설과 2026년 납품일이 확인돼 ESS 수요모델을 즉시 분리할 필요가 있습니다."
+    }
+  ],
+  "schema_version": 1
+}

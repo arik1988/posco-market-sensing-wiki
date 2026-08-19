@@ -1,0 +1,53 @@
+{
+  "schema_version": 2,
+  "signal_id": "SIG-E31D64ABA031",
+  "sentence": "세계 수요 회복 폭과 중국 수요가 예상보다 약해, 포스코는 제품·지역별 주문잔고와 가격 전가율을 기준으로 하반기 판매·생산계획을 다시 계산해야 합니다.",
+  "signal_type": "수급·가격",
+  "signal_role": "core_market_signal",
+  "signal_origin": "external_market",
+  "insight_id": "INS-67727E88D2ED",
+  "company_ids": [
+    "COM-POSCO"
+  ],
+  "business_axis": "철강",
+  "business_impact": {
+    "score": 5,
+    "rationale": "세계 수요 하향과 중국 수요 오차가 제품·지역별 판매량과 가격 방어력 가정을 바꿉니다."
+  },
+  "urgency": {
+    "score": 4,
+    "rationale": "2026년 하반기 판매계획과 지역별 생산·수출 배분을 다음 분기 전에 다시 검증해야 합니다.",
+    "response_deadline": "2026-09-30"
+  },
+  "assessed_at": "2026-08-19",
+  "assessment_confidence": "high",
+  "claim_ids": [
+    "CLM-695849501C11",
+    "CLM-0A9B3890063B",
+    "CLM-BF410ACD5CB0",
+    "CLM-3B567C6CC4F2",
+    "CLM-40A82359C769",
+    "CLM-C7EAB8771419",
+    "CLM-1F6EA7B40D46",
+    "CLM-A3067BB32E11",
+    "CLM-0CA5B4F640BA",
+    "CLM-8D7B9F0C836F",
+    "CLM-0BCF51478992",
+    "CLM-638628A8CF6A",
+    "CLM-B6EF94DABE57",
+    "CLM-9581B7C580EC",
+    "CLM-3D541FB9A143",
+    "CLM-1FE5D8D2B514",
+    "CLM-A535DE3F1A35",
+    "CLM-EE0869BD27DA",
+    "CLM-D0654D9A90AF"
+  ],
+  "source_ids": [
+    "SRC-20260819-33A52DFC",
+    "SRC-20260819-4E44C10E"
+  ],
+  "status": "active",
+  "created_at": "2026-08-19T16:18:06+09:00",
+  "updated_at": "2026-08-19T16:18:06+09:00",
+  "run_id": "one-year-adaptive-20260819"
+}

@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-90AFB4E862ED",
+  "subject_id": "MKT-LITHIUM-US-45X-PFE-2026",
+  "predicate": "recommended_follow_up",
+  "value": "법인·지분·이사회 권리, 중국계 장비·공정·원재료 비용 비중, 공급자 인증 가능성을 세무·법무·구매가 공동 점검",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-F58609F2"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "적격성 확인 후속 작업",
+      "source_ids": [
+        "SRC-20260819-F58609F2"
+      ]
+    }
+  ]
+}

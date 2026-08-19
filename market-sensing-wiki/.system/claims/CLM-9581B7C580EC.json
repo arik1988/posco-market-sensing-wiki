@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-9581B7C580EC",
+  "subject_id": "MKT-STEEL-WORLD-DEMAND-REVISION-2026",
+  "predicate": "assessment_confidence",
+  "value": "high",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-4E44C10E"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "동일 기관의 전후 공식 전망으로 간극 확인",
+      "source_ids": [
+        "SRC-20260819-4E44C10E"
+      ]
+    }
+  ]
+}

@@ -227,6 +227,12 @@ class MarketSensingTests(unittest.TestCase):
                 signal_type="정책·규제",
                 signal_role="core_market_signal",
                 signal_origin="policy_regulator",
+                baseline_assumption="EU 판매량은 고객 수요와 가격경쟁력만으로 결정된다는 전제입니다.",
+                observed_break="무관세 쿼터 축소가 고객 수요와 무관하게 판매 가능 물량을 제한합니다.",
+                decision_change="고객별 판매계획을 쿼터와 가격 전가 가능 범위에 맞춰 다시 배분해야 합니다.",
+                surprise_pattern="market_access_rule",
+                surprise_score=4,
+                falsification_check="한국산 품목별 쿼터가 기존 판매계획을 모두 수용하는지 확인합니다.",
                 paragraph=(
                     "정부가 2027년부터 적용할 새 정책을 발표해 수입 철강의 도착원가가 "
                     "달라집니다. 포스코는 고객별 계약 갱신일과 가격 전가 가능 범위를 "
@@ -269,6 +275,13 @@ class MarketSensingTests(unittest.TestCase):
             encoding="utf-8"
         )
         self.assertIn("## 왜 중요한가", page)
+        self.assertIn("기존 전제를 무엇이 깨는가", page)
+        signal = market_sensing.read_json(
+            self.root / ".system" / "signals" / f"{created['signal_id']}.json"
+        )
+        self.assertEqual(
+            signal["assumption_challenge"]["pattern"], "market_access_rule"
+        )
         self.assertIn("## 상세 분석", page)
         self.assertIn("## 원문", page)
         self.assertNotIn("전체 읽기", page)

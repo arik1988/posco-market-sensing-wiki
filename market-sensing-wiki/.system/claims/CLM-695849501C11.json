@@ -1,0 +1,33 @@
+{
+  "claim_id": "CLM-695849501C11",
+  "subject_id": "MKT-STEEL-WORLD-DEMAND-REVISION-2026",
+  "predicate": "global_steel_demand_2026_oct2025_forecast_mt",
+  "value": "1773 Mt",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2025-10-13",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-33A52DFC"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2025-10-13",
+      "action": "created",
+      "reason": "worldsteel 2025년 10월 공식 전망",
+      "source_ids": [
+        "SRC-20260819-33A52DFC"
+      ]
+    },
+    {
+      "date": "2026-08-19",
+      "action": "verified",
+      "reason": "2026-08-19 원문 재검증",
+      "source_ids": [
+        "SRC-20260819-33A52DFC"
+      ]
+    }
+  ]
+}

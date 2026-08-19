@@ -24,6 +24,9 @@
    프로젝트명·현지어·기술 동의어를 조합하고, 공식 출처와 실패 신호를 먼저 검색한다.
    후보는 동시에 `core_market_signal`과 `execution_context`로 구분한다. 대상 회사가
    무엇을 했다는 발표는 외부 변화 발견 건수에 포함하지 않는다.
+   회사명 없는 쿼리로 대체수요·시장접근 규칙·원료 병목·무역흐름 역전·정책 결합·
+   고객행동 간극을 먼저 찾고, `기존 전제 → 전제를 깨는 행동 → 바꿀 결정`이 성립하는
+   후보를 우선 검증한다.
 5. 잠재 사업영향·긴급성·불확실성·미확인 경과·변화 가능성이 높고 예상 비용이 낮은
    coverage cell부터 예산을 배정한다. 반복 재인용과 영향 경로가 약한 셀은 축소한다.
 6. 후보마다 본문, 게시일, 발행자, 원 URL을 확인한다. 설비 형태·공정 구성을
@@ -242,6 +245,9 @@ HTML 하단 출처 카드로 연결되며, 출처 레코드의 웹 URL과 보관
    --analysis-file <파일>`로 Signal과 Insight를 생성한다. 제목은 관측 변화, 한 문장
    필드는 사업 시사점으로 분리한다. 회사 자체 발표만 근거인 실행 사실은
    `execution_context/company_execution`으로만 발행한다.
+   외부 핵심 시그널은 `--baseline-assumption`, `--observed-break`,
+   `--decision-change`, `--surprise-pattern`, `--surprise-score`,
+   `--falsification-check`를 함께 제공한다.
 4. 정량화 가능한 Signal이면 공개정보·대용변수·AI 가정을 구분한 What-if JSON을 작성하고
    `set-impact-estimate --signal-id <ID> --estimate-file <파일>`로 연결한다. 기준 추정액,
    가격·물량·원가·대응비용 구성효과, 방어·기준·압박 프리셋을 확인한다.

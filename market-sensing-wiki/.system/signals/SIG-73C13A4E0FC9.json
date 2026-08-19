@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "signal_id": "SIG-73C13A4E0FC9",
+  "sentence": "포스코는 HyREX의 중·저품위 분광 활용이 상업 규모에서 입증되는지를 수소가격과 별도의 경쟁우위로 평가해 실증·제휴 투자기준에 반영해야 합니다.",
+  "signal_type": "기술·운영",
+  "signal_role": "core_market_signal",
+  "signal_origin": "external_market",
+  "assumption_challenge": {
+    "schema_version": 1,
+    "baseline_assumption": "수소환원제철 경쟁력은 주로 청정수소 가격과 환원·용융 설비효율로 결정된다는 전제입니다.",
+    "observed_break": "다수 공정이 요구하는 철 67% 초과 저불순물 펠렛이 해상 철광석의 3~4%뿐이라는 원료 병목이 확인됐습니다.",
+    "decision_change": "HyREX 실증의 광종별 총원가와 품질을 경쟁 샤프트로의 펠렛 프리미엄까지 포함해 기술제휴·투자기준으로 사용해야 합니다.",
+    "pattern": "input_bottleneck",
+    "surprise_score": 5,
+    "falsification_check": "고품위 펠렛 공급이 충분히 확대되거나 HyREX의 추가 전력·슬래그 비용이 원료 절감보다 큰지 확인합니다."
+  },
+  "insight_id": "INS-5FF08F9E4DB6",
+  "company_ids": [
+    "COM-POSCO"
+  ],
+  "business_axis": "철강",
+  "business_impact": {
+    "score": 5,
+    "rationale": "희소한 직접환원용 펠렛 의존도는 경쟁 공정의 원료비·공급안정성을 바꾸고 HyREX의 기술·제휴 가치를 재평가하게 합니다."
+  },
+  "urgency": {
+    "score": 3,
+    "rationale": "상업화 전 실증 지표와 원료 조달전략을 연결해야 하지만 즉시 시장접근을 잃는 규제 시한은 아직 없습니다.",
+    "response_deadline": "2027-03-31"
+  },
+  "assessed_at": "2026-08-19",
+  "assessment_confidence": "medium",
+  "claim_ids": [
+    "CLM-324C9D29A51F",
+    "CLM-6101172A9C47",
+    "CLM-A849250182A6",
+    "CLM-6BFCD5373657",
+    "CLM-C2DC9DB32B5E",
+    "CLM-FA44A903AC68",
+    "CLM-538BCEDD142D",
+    "CLM-A9A5A3DF3A8F",
+    "CLM-0A3CBE3B8754",
+    "CLM-5520234AFE31",
+    "CLM-BC90D53E02A6",
+    "CLM-83511D31641E",
+    "CLM-9FDFBA6DE401"
+  ],
+  "source_ids": [
+    "SRC-20260819-CE5F863E",
+    "SRC-20260819-E8EA9DEC"
+  ],
+  "status": "active",
+  "created_at": "2026-08-19T18:59:30+09:00",
+  "updated_at": "2026-08-19T18:59:30+09:00",
+  "run_id": "2026-08-19-assumption-breaking-scout"
+}

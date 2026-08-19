@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-8D7B9F0C836F",
+  "subject_id": "MKT-STEEL-WORLD-DEMAND-REVISION-2026",
+  "predicate": "business_impact_rationale",
+  "value": "세계 수요 하향과 중국 수요 오차가 제품·지역별 판매량과 가격 방어력 가정을 바꿉니다.",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-4E44C10E"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "공개 전망을 포스코 영향 경로로 분석",
+      "source_ids": [
+        "SRC-20260819-4E44C10E"
+      ]
+    }
+  ]
+}

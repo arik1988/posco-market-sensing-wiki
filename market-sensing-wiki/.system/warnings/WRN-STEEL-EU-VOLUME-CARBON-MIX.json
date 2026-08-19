@@ -1,0 +1,40 @@
+{
+  "warning_id": "WRN-STEEL-EU-VOLUME-CARBON-MIX",
+  "title": "EU 쿼터를 저탄소 제품가치로 배분",
+  "business_axis": "철강",
+  "thesis_id": "THS-STEEL-EU-VOLUME-CARBON-MIX",
+  "level": "watch",
+  "status": "active",
+  "first_raised_at": "2026-08-19",
+  "last_reviewed_at": "2026-08-19",
+  "next_review_at": "2026-12-31",
+  "rationale": "수입한도는 시행 중이지만 저탄소 수요기준은 입법 제안 단계여서 고객행동과 최종문을 함께 확인해야 합니다.",
+  "persistence_rule": "반증 조건이 충족되거나 사람이 근거를 기록해 종료하기 전까지 유지하고 다음 검토일에 지표를 갱신합니다.",
+  "escalation_rules": [
+    "최종 법률이 역외 저탄소강의 조달 참여를 유지합니다.",
+    "주요 고객이 저탄소 가격 가산분을 제시합니다."
+  ],
+  "deescalation_rules": [
+    "저탄소 철강 기준이 최종문에서 삭제됩니다.",
+    "포스코 제품이 조달대상에서 제외됩니다."
+  ],
+  "decision_question": "EU 쿼터 1톤당 순마진과 탄소조달자격을 기준으로 제품·고객 우선순위를 바꿀 것인가?",
+  "decision_deadline": "2026-12-31",
+  "owner": "포스코 글로벌마케팅·통상·저탄소전략",
+  "actions": [
+    "쿼터 1톤당 제품·고객별 순마진을 계산합니다.",
+    "고객 조달요건과 제품 탄소강도를 계약계획에 연결합니다."
+  ],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "raised",
+      "to_level": "watch",
+      "added_signal_ids": [
+        "SIG-EFB4A11676A9"
+      ],
+      "rationale": "수입한도는 시행 중이지만 저탄소 수요기준은 입법 제안 단계여서 고객행동과 최종문을 함께 확인해야 합니다."
+    }
+  ],
+  "schema_version": 1
+}

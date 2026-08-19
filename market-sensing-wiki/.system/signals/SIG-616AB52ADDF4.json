@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "signal_id": "SIG-616AB52ADDF4",
+  "sentence": "금지 외국기업의 소유·재료·공정 관여가 미국 생산세액공제를 줄일 수 있어, 포스코홀딩스는 실증·계약 전에 법인구조와 공급자별 비용·인증을 확인해야 합니다.",
+  "signal_type": "정책·규제",
+  "signal_role": "core_market_signal",
+  "signal_origin": "policy_regulator",
+  "insight_id": "INS-BDEC76B6A4BE",
+  "company_ids": [
+    "COM-POSCO-HOLDINGS"
+  ],
+  "business_axis": "리튬",
+  "business_impact": {
+    "score": 5,
+    "rationale": "금지 외국기업의 소유·재료·공정 관여 여부가 미국 리튬 생산세액공제와 고객 계약경제성을 바꿉니다."
+  },
+  "urgency": {
+    "score": 5,
+    "rationale": "미국 리튬 실증·법인·공급계약을 확정하기 전에 소유구조와 공급자 인증을 점검해야 합니다.",
+    "response_deadline": "2026-09-30"
+  },
+  "assessed_at": "2026-08-19",
+  "assessment_confidence": "high",
+  "claim_ids": [
+    "CLM-286EC95D5241",
+    "CLM-F0C5206C7F7D",
+    "CLM-8CD81B10A893",
+    "CLM-4E882F384FCC",
+    "CLM-8587453B997A",
+    "CLM-ECFC912BD0A9",
+    "CLM-6019F342650E",
+    "CLM-9F3330646D4E",
+    "CLM-B42DBCA0FC34",
+    "CLM-D6771A3229DD",
+    "CLM-31257A37CAC8",
+    "CLM-2C7316AA338E",
+    "CLM-BB8DDC5362A1",
+    "CLM-06CDB9EE2901",
+    "CLM-AB25B59A6CB0",
+    "CLM-F8161BDCDB09",
+    "CLM-E1BE90948F49",
+    "CLM-C221CDAF373C",
+    "CLM-90AFB4E862ED"
+  ],
+  "source_ids": [
+    "SRC-20260819-53232380",
+    "SRC-20260819-F58609F2",
+    "SRC-20260819-3C4323B0"
+  ],
+  "status": "active",
+  "created_at": "2026-08-19T16:18:06+09:00",
+  "updated_at": "2026-08-19T16:18:06+09:00",
+  "run_id": "one-year-adaptive-20260819"
+}

@@ -1,0 +1,29 @@
+{
+  "thesis_id": "THS-STEEL-DRI-PELLET-BOTTLENECK",
+  "title": "HyREX 원료 유연성의 전략가치 상승",
+  "statement": "고품위 펠렛 병목이 지속되고 HyREX 분광 사용이 검증되면 원료비·전처리투자·공급안정성에서 차별성이 커질 수 있습니다.",
+  "strategic_assumption_at_risk": "수소환원제철 경쟁력이 청정수소 가격과 설비효율로 주로 결정된다는 전제",
+  "business_axis": "철강",
+  "company_ids": [
+    "COM-POSCO"
+  ],
+  "trend_ids": [
+    "TRD-STEEL-DRI-PELLET-BOTTLENECK"
+  ],
+  "supporting_signal_ids": [
+    "SIG-73C13A4E0FC9"
+  ],
+  "execution_context_signal_ids": [],
+  "business_impact_path": "펠렛 희소·프리미엄 → 경쟁공정 원가·공급부담 → HyREX 원료 유연성 가치 → 실증·제휴 우선순위 변화",
+  "confidence": "medium",
+  "decision_horizon": "HyREX 실증과 상업화 투자 판단",
+  "counter_evidence": [
+    "HyREX는 아직 상업 규모 생산성·원가를 입증하지 않았습니다.",
+    "고품위 펠렛 신규 공급이 병목을 완화할 수 있습니다."
+  ],
+  "falsification_conditions": [
+    "HyREX의 추가 전력·슬래그 비용이 원료 절감보다 큽니다.",
+    "직접환원용 펠렛 공급과 프리미엄이 빠르게 정상화됩니다."
+  ],
+  "schema_version": 1
+}

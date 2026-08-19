@@ -50,6 +50,7 @@ CLAIM_STATUS = {"active", "superseded", "disputed", "cancelled", "stale"}
 CLAIM_CONFIDENCE = {"high", "medium", "low"}
 SIGNAL_SCHEMA_VERSION = 2
 INSIGHT_SCHEMA_VERSION = 1
+ASSUMPTION_CHALLENGE_SCHEMA_VERSION = 1
 SIGNAL_TYPES = (
     "정책·규제",
     "수급·가격",
@@ -85,6 +86,20 @@ RUN_SIGNAL_CONTRACT = {
     "minimum_core_market_ratio": 0.7,
     "single_asset_concentration_threshold": 0.5,
     "single_asset_minimum_signals": 3,
+}
+RUN_DISCOVERY_CONTRACT = {
+    "version": 1,
+    "required_for_roles": ["core_market_signal"],
+}
+SURPRISE_PATTERNS = {
+    "substitute_demand",
+    "market_access_rule",
+    "input_bottleneck",
+    "trade_flow_reversal",
+    "policy_collision",
+    "customer_behavior_gap",
+    "cost_curve_break",
+    "timing_gap",
 }
 TARGET_COMPANY_SOURCE_TERMS = {
     "COM-POSCO": ("posco", "포스코"),
@@ -4340,6 +4355,33 @@ def validate_signal_copy(title: str, sentence: str, summary: str) -> None:
         )
 
 
+def validate_assumption_challenge(value: Any) -> dict[str, Any]:
+    """Validate the decision-oriented record that makes a core Signal surprising."""
+    if not isinstance(value, dict):
+        raise ValueError("core market Signal requires an assumption_challenge object")
+    if value.get("schema_version") != ASSUMPTION_CHALLENGE_SCHEMA_VERSION:
+        raise ValueError("assumption_challenge schema_version must be 1")
+    for field in (
+        "baseline_assumption",
+        "observed_break",
+        "decision_change",
+        "falsification_check",
+    ):
+        text = re.sub(r"\s+", " ", str(value.get(field) or "")).strip()
+        if not 20 <= len(text) <= 300:
+            raise ValueError(f"assumption_challenge.{field} must be 20-300 characters")
+    pattern = str(value.get("pattern") or "")
+    if pattern not in SURPRISE_PATTERNS:
+        raise ValueError(
+            "assumption_challenge.pattern must be one of "
+            + ", ".join(sorted(SURPRISE_PATTERNS))
+        )
+    score = value.get("surprise_score")
+    if not isinstance(score, int) or score not in range(1, 6):
+        raise ValueError("assumption_challenge.surprise_score must be an integer from 1 to 5")
+    return value
+
+
 IMPACT_EXPRESSION_OPERATIONS = {"add", "subtract", "multiply", "divide", "negate"}
 IMPACT_INPUT_KINDS = {"verified", "derived", "assumption"}
 
@@ -4496,6 +4538,19 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
     signal_role, signal_origin = validate_signal_classification(
         getattr(args, "signal_role", None), getattr(args, "signal_origin", None)
     )
+    assumption_challenge = None
+    if signal_role == "core_market_signal":
+        assumption_challenge = validate_assumption_challenge(
+            {
+                "schema_version": ASSUMPTION_CHALLENGE_SCHEMA_VERSION,
+                "baseline_assumption": getattr(args, "baseline_assumption", None),
+                "observed_break": getattr(args, "observed_break", None),
+                "decision_change": getattr(args, "decision_change", None),
+                "pattern": getattr(args, "surprise_pattern", None),
+                "surprise_score": getattr(args, "surprise_score", None),
+                "falsification_check": getattr(args, "falsification_check", None),
+            }
+        )
 
     claim_ids = list(dict.fromkeys(args.claim_id))
     claims_by_id = _records_by_id(claim_records(root), "claim_id")
@@ -4541,6 +4596,7 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
     proposed_signal = {
         "signal_role": signal_role,
         "signal_origin": signal_origin,
+        "assumption_challenge": assumption_challenge,
         "source_ids": source_ids,
         "company_ids": company_ids,
     }
@@ -4612,6 +4668,7 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
         "signal_type": signal_type,
         "signal_role": signal_role,
         "signal_origin": signal_origin,
+        "assumption_challenge": assumption_challenge,
         "insight_id": insight_id,
         "company_ids": company_ids,
         "business_axis": args.business_axis.strip(),
@@ -4644,6 +4701,14 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
         dict.fromkeys([*signal_contract.get("signal_ids", []), signal_id])
     )
     run_record["signal_contract"] = signal_contract
+    if signal_role == "core_market_signal":
+        discovery_contract = dict(
+            run_record.get("discovery_contract") or RUN_DISCOVERY_CONTRACT
+        )
+        discovery_contract["signal_ids"] = list(
+            dict.fromkeys([*discovery_contract.get("signal_ids", []), signal_id])
+        )
+        run_record["discovery_contract"] = discovery_contract
     run_record.setdefault("results", {})["new_signals"] = len(published_signal_ids)
     write_json(run_path, run_record)
     sync_obsidian_store(root)
@@ -7278,6 +7343,22 @@ def signal_page_lines(
     ]
     if urgency.get("response_deadline"):
         lines.append(f"- **대응 시한:** {markdown_cell(urgency['response_deadline'])}")
+    assumption = signal.get("assumption_challenge")
+    if isinstance(assumption, dict):
+        lines.extend(
+            [
+                "",
+                '!!! warning "기존 전제를 무엇이 깨는가"',
+                "",
+                f"    **기존 전제:** {markdown_cell(assumption.get('baseline_assumption') or '-')}",
+                "",
+                f"    **전제를 깨는 관측:** {markdown_cell(assumption.get('observed_break') or '-')}",
+                "",
+                f"    **바꿀 결정:** {markdown_cell(assumption.get('decision_change') or '-')}",
+                "",
+                f"    **반증 확인:** {markdown_cell(assumption.get('falsification_check') or '-')}",
+            ]
+        )
     lines.extend(["", *impact_estimate_block_lines(insight.get("impact_estimate"))])
     lines.extend(
         [
@@ -9154,6 +9235,19 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
                     f"{signal_id}: core market Signal relies only on target-company "
                     "releases; use execution_context or add independent external evidence"
                 )
+        discovery_contract = (
+            audit_runs_by_id.get(run_id, {}).get("discovery_contract")
+            if run_id
+            else None
+        )
+        discovery_signal_ids = {
+            str(item) for item in (discovery_contract or {}).get("signal_ids", [])
+        }
+        if signal_id in discovery_signal_ids:
+            try:
+                validate_assumption_challenge(signal.get("assumption_challenge"))
+            except ValueError as exc:
+                findings["signal_quality"].append(f"{signal_id}: {exc}")
         insight_id = str(signal.get("insight_id") or "")
         if not insight_id or insight_id not in insights:
             findings["signal_integrity"].append(
@@ -9816,6 +9910,27 @@ def build_parser() -> argparse.ArgumentParser:
     signal_parser.add_argument(
         "--signal-origin", choices=SIGNAL_ORIGINS, required=True,
         help="Where the observed change originated; must be compatible with signal-role.",
+    )
+    signal_parser.add_argument(
+        "--baseline-assumption",
+        help="Current business assumption challenged by a core market Signal.",
+    )
+    signal_parser.add_argument(
+        "--observed-break",
+        help="Verified observation that weakens the baseline assumption.",
+    )
+    signal_parser.add_argument(
+        "--decision-change",
+        help="Specific decision that should change if the observation persists.",
+    )
+    signal_parser.add_argument(
+        "--surprise-pattern", choices=sorted(SURPRISE_PATTERNS),
+        help="Controlled pattern used to diversify assumption-breaking discovery.",
+    )
+    signal_parser.add_argument("--surprise-score", type=int)
+    signal_parser.add_argument(
+        "--falsification-check",
+        help="One concrete check that would weaken or reject this interpretation.",
     )
     signal_parser.add_argument("--paragraph", required=True)
     signal_parser.add_argument(

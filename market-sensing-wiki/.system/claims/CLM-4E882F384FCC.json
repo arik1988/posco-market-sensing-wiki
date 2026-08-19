@@ -1,0 +1,33 @@
+{
+  "claim_id": "CLM-4E882F384FCC",
+  "subject_id": "MKT-LITHIUM-US-45X-PFE-2026",
+  "predicate": "material_assistance_rule",
+  "value": "금지 외국기업의 물질적 지원을 받은 적격 부품은 45X 공제 대상에서 제외",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-02-12",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-F58609F2"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-02-12",
+      "action": "created",
+      "reason": "IRS Notice 2026-15 발표",
+      "source_ids": [
+        "SRC-20260819-F58609F2"
+      ]
+    },
+    {
+      "date": "2026-08-19",
+      "action": "verified",
+      "reason": "2026-08-19 공식 원문 재검증",
+      "source_ids": [
+        "SRC-20260819-F58609F2"
+      ]
+    }
+  ]
+}

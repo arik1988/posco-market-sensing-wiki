@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-324C9D29A51F",
+  "subject_id": "MKT-STEEL-DRI-PELLET-BOTTLENECK",
+  "predicate": "dri_pellet_fe_requirement",
+  "value": "Fe 67% 초과, 저불순물",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-CE5F863E"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "전제변경형 외부 시그널의 검증 사실",
+      "source_ids": [
+        "SRC-20260819-CE5F863E"
+      ]
+    }
+  ]
+}

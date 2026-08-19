@@ -1,0 +1,22 @@
+{
+  "source_id": "SRC-20260819-CE5F863E",
+  "title": "OECD Steel Outlook 2025: hydrogen DRI raw-material bottleneck",
+  "url": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2025/05/oecd-steel-outlook-2025_bf2b6109/28b61a5e-en.pdf",
+  "canonical_url": "https://www.oecd.org/content/dam/oecd/en/publications/reports/2025/05/oecd-steel-outlook-2025_bf2b6109/28b61a5e-en.pdf",
+  "publisher": "OECD",
+  "published_at": "2025-05-20",
+  "collected_at": "2026-08-19",
+  "source_type": "academic",
+  "language": "en",
+  "reliability": "primary",
+  "content_sha256": "ce5f863eaf54a1a91f467cc2325b2a5fd0bcbc00d98d7b554f9597375a303017",
+  "academic": {
+    "kind": "research_report",
+    "peer_review_status": "unknown"
+  },
+  "raw_sha256": "635fd8b13bc3a6347251d0940cd4f48e47e05d0082dd85c238e1b41746d086d2",
+  "raw_path": ".system/raw/SRC-20260819-CE5F863E.md",
+  "previous_version": null,
+  "supporting_sources": [],
+  "images": []
+}

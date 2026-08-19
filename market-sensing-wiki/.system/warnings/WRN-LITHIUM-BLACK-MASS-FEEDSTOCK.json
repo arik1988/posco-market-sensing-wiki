@@ -1,0 +1,40 @@
+{
+  "warning_id": "WRN-LITHIUM-BLACK-MASS-FEEDSTOCK",
+  "title": "블랙매스 원료확보 조건 재점검",
+  "business_axis": "리튬",
+  "thesis_id": "THS-LITHIUM-BLACK-MASS-FEEDSTOCK",
+  "level": "watch",
+  "status": "active",
+  "first_raised_at": "2026-08-19",
+  "last_reviewed_at": "2026-08-19",
+  "next_review_at": "2026-10-31",
+  "rationale": "수입통로는 열렸지만 실제 유럽산 통관량과 가격 프리미엄은 아직 확인이 필요합니다.",
+  "persistence_rule": "반증 조건이 충족되거나 사람이 근거를 기록해 종료하기 전까지 유지하고 다음 검토일에 지표를 갱신합니다.",
+  "escalation_rules": [
+    "유럽산 중국행 통관량과 가격 프리미엄이 증가합니다.",
+    "공장 원료확보율이 내부 계획보다 10%p 이상 낮아집니다."
+  ],
+  "deescalation_rules": [
+    "EU 수출규제가 중국행을 제한합니다.",
+    "장기계약이 목표 가동률의 원료를 확보합니다."
+  ],
+  "decision_question": "재활용 증설보다 장기 원료소유권과 최소물량 확보를 우선할 것인가?",
+  "decision_deadline": "2026-10-31",
+  "owner": "포스코홀딩스 이차전지소재·재활용·구매",
+  "actions": [
+    "계약별 물질 소유권·최소물량·가격공식을 점검합니다.",
+    "원료가격 상승과 가동률 하락의 마진 민감도를 계산합니다."
+  ],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "raised",
+      "to_level": "watch",
+      "added_signal_ids": [
+        "SIG-F6C60D414787"
+      ],
+      "rationale": "수입통로는 열렸지만 실제 유럽산 통관량과 가격 프리미엄은 아직 확인이 필요합니다."
+    }
+  ],
+  "schema_version": 1
+}

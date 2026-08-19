@@ -1,0 +1,40 @@
+{
+  "warning_id": "WRN-ENERGY-EU-METHANE-COMPLIANCE",
+  "title": "유럽 LNG 메탄 데이터 권리 확보",
+  "business_axis": "에너지",
+  "thesis_id": "THS-ENERGY-EU-METHANE-COMPLIANCE",
+  "level": "warning",
+  "status": "active",
+  "first_raised_at": "2026-08-19",
+  "last_reviewed_at": "2026-08-19",
+  "next_review_at": "2026-10-31",
+  "rationale": "2027년 1월 시행 전 계약별 생산지·검증·데이터권 공백을 확인할 시간이 제한적입니다.",
+  "persistence_rule": "반증 조건이 충족되거나 사람이 근거를 기록해 종료하기 전까지 유지하고 다음 검토일에 지표를 갱신합니다.",
+  "escalation_rules": [
+    "주요 EU 수입국이 Level 5 검증을 통관에 적용합니다.",
+    "계약 포트폴리오에서 데이터권 공백 물량이 확인됩니다."
+  ],
+  "deescalation_rules": [
+    "전 물량의 검증·감사권 충족이 확인됩니다.",
+    "회원국 지침이 해당 계약을 명시적으로 유예합니다."
+  ],
+  "decision_question": "신규·갱신 LNG 계약의 가격심사에 메탄 데이터·감사권과 유럽 전환 가능성을 의무 반영할 것인가?",
+  "decision_deadline": "2026-10-31",
+  "owner": "포스코인터내셔널 LNG사업·트레이딩·법무",
+  "actions": [
+    "계약별 갱신일·생산지·검증수준·감사권을 매핑합니다.",
+    "신규 계약 표준조항에 데이터 제공과 위반책임을 넣습니다."
+  ],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "raised",
+      "to_level": "warning",
+      "added_signal_ids": [
+        "SIG-1BC42A78C68E"
+      ],
+      "rationale": "2027년 1월 시행 전 계약별 생산지·검증·데이터권 공백을 확인할 시간이 제한적입니다."
+    }
+  ],
+  "schema_version": 1
+}

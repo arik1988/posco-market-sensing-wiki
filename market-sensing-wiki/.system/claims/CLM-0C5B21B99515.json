@@ -1,0 +1,29 @@
+{
+  "claim_id": "CLM-0C5B21B99515",
+  "subject_id": "MKT-LITHIUM-SODIUM-ESS-2026",
+  "predicate": "urgency_rationale",
+  "value": "중국 고객 납품이 2026년 9월로 예정돼 있어 2027년 사업계획과 장기 판매계약 전에 응용처별 수요를 재산정해야 합니다.",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-17C5D778",
+    "SRC-20260819-DBADDD49",
+    "SRC-20260819-3F479FFE"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "공식 원문과 반증 근거를 결합한 사업영향 평가",
+      "source_ids": [
+        "SRC-20260819-17C5D778",
+        "SRC-20260819-DBADDD49",
+        "SRC-20260819-3F479FFE"
+      ]
+    }
+  ]
+}

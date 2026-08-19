@@ -1,0 +1,27 @@
+{
+  "claim_id": "CLM-23EC50F355CB",
+  "subject_id": "POL-EU-STEEL-VOLUME-CARBON-2026",
+  "predicate": "business_impact_score_1_to_5",
+  "value": "5",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260818-5C2CEB19",
+    "SRC-20260819-E0FF0193"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "공식 원문과 반증 근거를 결합한 사업영향 평가",
+      "source_ids": [
+        "SRC-20260818-5C2CEB19",
+        "SRC-20260819-E0FF0193"
+      ]
+    }
+  ]
+}

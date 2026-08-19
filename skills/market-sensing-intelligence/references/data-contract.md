@@ -28,6 +28,18 @@ Signal의 `signal_type`은 다음 8개 값 중 정확히 하나다.
 - 대상 회사·자회사의 `company_release`·`company_ir`만 연결된 실행 사실은
   `core_market_signal`로 저장하지 않는다.
 
+신규 `core_market_signal`은 `assumption_challenge` schema v1도 필수다.
+
+- `baseline_assumption`: 현재 계획이 암묵적으로 전제하는 수요·원료·접근·원가 조건
+- `observed_break`: 그 전제를 약화시키는 검증된 외부 행동 또는 규칙
+- `decision_change`: 관측이 지속될 때 실제로 바꿀 제품·계약·투자·운영 판단
+- `pattern`: 허용된 8개 전제변경 패턴 중 하나
+- `surprise_score`: 기존 정보와 결정의 거리를 나타내는 1~5점. 흥미 점수가 아님
+- `falsification_check`: 이 해석을 약화시키거나 폐기할 구체적 확인 한 가지
+
+`add-signal`이 외부 핵심 시그널을 발행하면 run의 `discovery_contract.version=1`과
+적용 Signal ID를 기록한다. `audit`은 계약 대상 Signal에서 이 구조의 누락을 오류로 본다.
+
 ```json
 {
   "schema_version": 2,

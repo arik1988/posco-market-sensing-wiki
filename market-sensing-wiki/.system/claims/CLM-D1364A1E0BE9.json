@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-D1364A1E0BE9",
+  "subject_id": "POL-EU-METHANE-IMPORT-2027",
+  "predicate": "business_impact_rationale",
+  "value": "메탄 데이터와 검증권은 LNG의 유럽 목적지 전환 가능성과 트레이딩 선택권 가치에 직접 영향을 줄 수 있습니다.",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-CE495A5C"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "공식 원문과 반증 근거를 결합한 사업영향 평가",
+      "source_ids": [
+        "SRC-20260819-CE495A5C"
+      ]
+    }
+  ]
+}

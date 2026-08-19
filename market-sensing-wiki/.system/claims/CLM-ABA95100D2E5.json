@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-ABA95100D2E5",
+  "subject_id": "POL-EU-STEEL-VOLUME-CARBON-2026",
+  "predicate": "eu_out_of_quota_duty",
+  "value": "50%",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260818-5C2CEB19"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "전제변경형 외부 시그널의 검증 사실",
+      "source_ids": [
+        "SRC-20260818-5C2CEB19"
+      ]
+    }
+  ]
+}

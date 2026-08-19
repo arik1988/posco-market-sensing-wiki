@@ -1,0 +1,33 @@
+{
+  "claim_id": "CLM-8CD81B10A893",
+  "subject_id": "MKT-LITHIUM-US-45X-PFE-2026",
+  "predicate": "pfe_taxpayer_ineligibility",
+  "value": "specified foreign entity 또는 covered foreign-influenced entity는 45X 공제 불가",
+  "status": "active",
+  "confidence": "high",
+  "first_seen": "2026-01-07",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-53232380"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-01-07",
+      "action": "created",
+      "reason": "IRS 공식 금지 외국기업 제한",
+      "source_ids": [
+        "SRC-20260819-53232380"
+      ]
+    },
+    {
+      "date": "2026-08-19",
+      "action": "verified",
+      "reason": "2026-08-19 공식 원문 재검증",
+      "source_ids": [
+        "SRC-20260819-53232380"
+      ]
+    }
+  ]
+}

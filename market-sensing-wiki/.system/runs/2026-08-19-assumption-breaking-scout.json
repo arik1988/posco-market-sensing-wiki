@@ -1,0 +1,204 @@
+{
+  "run_id": "2026-08-19-assumption-breaking-scout",
+  "status": "success",
+  "started_at": "2026-08-19T19:05:00+09:00",
+  "completed_at": "2026-08-19T20:10:00+09:00",
+  "scope": {
+    "purpose": "세 사업축의 기존 전략가정을 깨는 외부 행동과 정책 결합 탐색",
+    "company": "POSCO Group",
+    "date_from": "2024-08-19",
+    "date_to": "2026-08-19"
+  },
+  "queries": [
+    "sodium ion storage commercial contract delivery capacity",
+    "recycled black mass import reopening quality standard",
+    "hydrogen DRI pellet quality bottleneck seaborne share",
+    "EU methane importer MRV contract renewal 2027",
+    "EU steel import quota low carbon procurement proposal"
+  ],
+  "source_ids": [
+    "SRC-20260819-17C5D778",
+    "SRC-20260819-DBADDD49",
+    "SRC-20260819-3F479FFE",
+    "SRC-20260819-E9790E38",
+    "SRC-20260819-2B84CAB4",
+    "SRC-20260819-CE5F863E",
+    "SRC-20260819-E8EA9DEC",
+    "SRC-20260819-CE495A5C",
+    "SRC-20260818-5C2CEB19",
+    "SRC-20260819-E0FF0193"
+  ],
+  "claim_ids": [
+    "CLM-DA71A6D83BEA",
+    "CLM-7F476A9B2F8F",
+    "CLM-6CF41F4D8A1B",
+    "CLM-610E7EF7EE10",
+    "CLM-A62D1B2DA0B4",
+    "CLM-D1BF4CA6D5B4",
+    "CLM-B3A4C66CD1D2",
+    "CLM-4AE6F1387C3C",
+    "CLM-0C5B21B99515",
+    "CLM-9E220F1F4A82",
+    "CLM-B9CCC451E177",
+    "CLM-64CD843E33FB",
+    "CLM-12CFEDEC6CC5",
+    "CLM-E02445F10CA3",
+    "CLM-0086CF6B85A3",
+    "CLM-14586E4CB975",
+    "CLM-545F22F48295",
+    "CLM-977EDCE267DB",
+    "CLM-5C36B065C674",
+    "CLM-C86DA7871DD1",
+    "CLM-DCBCD95DE9A5",
+    "CLM-294357841D9E",
+    "CLM-3FEB6578FC7E",
+    "CLM-A2641BFB824E",
+    "CLM-6DCA7491EDBF",
+    "CLM-711B17DD307D",
+    "CLM-324C9D29A51F",
+    "CLM-6101172A9C47",
+    "CLM-A849250182A6",
+    "CLM-6BFCD5373657",
+    "CLM-C2DC9DB32B5E",
+    "CLM-FA44A903AC68",
+    "CLM-538BCEDD142D",
+    "CLM-A9A5A3DF3A8F",
+    "CLM-0A3CBE3B8754",
+    "CLM-5520234AFE31",
+    "CLM-BC90D53E02A6",
+    "CLM-83511D31641E",
+    "CLM-9FDFBA6DE401",
+    "CLM-B248F9D4F9FB",
+    "CLM-A548853D1D96",
+    "CLM-6C18E0F704AA",
+    "CLM-AFC0DA92D79F",
+    "CLM-2130D89243F3",
+    "CLM-C2AA1278C344",
+    "CLM-D1364A1E0BE9",
+    "CLM-FE9119C648F7",
+    "CLM-55BDA2A5C923",
+    "CLM-48813DC3BBC7",
+    "CLM-F1DDA65D3600",
+    "CLM-0FC07022C81C",
+    "CLM-E51A1989256E",
+    "CLM-D8DD08219276",
+    "CLM-5F2FD49C1739",
+    "CLM-ABA95100D2E5",
+    "CLM-8D4615A185CB",
+    "CLM-8626A94DE857",
+    "CLM-23EC50F355CB",
+    "CLM-245D0A510C8C",
+    "CLM-797801731079",
+    "CLM-D9328AC74BD6",
+    "CLM-964C19020A2A",
+    "CLM-73854B6D3FF0",
+    "CLM-2B567F7B7B60",
+    "CLM-A855B3923B27"
+  ],
+  "signal_ids": [
+    "SIG-C09FE799E568",
+    "SIG-F6C60D414787",
+    "SIG-73C13A4E0FC9",
+    "SIG-1BC42A78C68E",
+    "SIG-EFB4A11676A9"
+  ],
+  "failed_urls": [],
+  "results": {
+    "new_sources": 8,
+    "new_claims": 65,
+    "new_signals": 5
+  },
+  "coverage": {
+    "scope": {
+      "business_axes": [
+        "철강",
+        "리튬",
+        "에너지"
+      ],
+      "impact_paths": [
+        "수요",
+        "원료",
+        "시장접근",
+        "계약",
+        "제품믹스"
+      ],
+      "signal_types": [
+        "기술·운영",
+        "공급망·물류",
+        "정책·규제"
+      ],
+      "markets": [
+        "중국",
+        "EU",
+        "세계"
+      ],
+      "date_from": "2024-08-19",
+      "date_to": "2026-08-19"
+    },
+    "assumption_patterns_checked": [
+      "substitute_demand",
+      "trade_flow_reversal",
+      "input_bottleneck",
+      "market_access_rule",
+      "policy_collision"
+    ],
+    "cells_checked": [
+      "리튬×수요×대체기술×세계",
+      "리튬×원료×무역흐름×중국·EU",
+      "철강×원가×원료병목×세계",
+      "에너지×계약×시장접근×EU",
+      "철강×제품믹스×정책결합×EU"
+    ],
+    "channel_coverage": [
+      "경쟁사 실제 계약",
+      "국제기구",
+      "정부·규제",
+      "대상회사 기술설명"
+    ],
+    "high_risk_gaps": [
+      "CATL 60GWh 계약의 실제 고객 인도량",
+      "유럽산 블랙매스의 중국 세관 통관량과 가격",
+      "HyREX 광종별 상업규모 총현금원가",
+      "포스코인터내셔널 LNG 계약별 메탄 데이터 권리",
+      "EU 산업가속법의 최종 저탄소 철강 기준"
+    ],
+    "stop_reason": "다섯 후보 모두 1차 원문과 반대 또는 한계 근거를 확인했으며 남은 핵심 빈칸을 다음 트리거로 전환",
+    "next_triggers": [
+      "2026년 말 CATL 실제 출하량",
+      "중국 3824999996 원산지별 통계",
+      "HyREX 실증 운전결과",
+      "2026년 9월 EU 메탄 투명성 데이터베이스",
+      "Industrial Accelerator Act 최종 합의"
+    ],
+    "limitations": [
+      "회사 내부 계약·원가·고객별 노출은 공개정보로 확인하지 못함",
+      "중국 블랙매스 실제 무역흐름과 EU 법안 최종문은 아직 미확정"
+    ]
+  },
+  "signal_contract": {
+    "version": 1,
+    "minimum_core_market_ratio": 0.7,
+    "single_asset_concentration_threshold": 0.5,
+    "single_asset_minimum_signals": 3,
+    "signal_ids": [
+      "SIG-C09FE799E568",
+      "SIG-F6C60D414787",
+      "SIG-73C13A4E0FC9",
+      "SIG-1BC42A78C68E",
+      "SIG-EFB4A11676A9"
+    ]
+  },
+  "discovery_contract": {
+    "version": 1,
+    "required_for_roles": [
+      "core_market_signal"
+    ],
+    "signal_ids": [
+      "SIG-C09FE799E568",
+      "SIG-F6C60D414787",
+      "SIG-73C13A4E0FC9",
+      "SIG-1BC42A78C68E",
+      "SIG-EFB4A11676A9"
+    ]
+  }
+}
