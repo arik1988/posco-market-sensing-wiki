@@ -3616,6 +3616,38 @@ WRN-STEEL-EU-VOLUME-CARBON-MIX: EU 쿼터를 저탄소 제품가치로 배분
 
 0 findings. Report: reports/audits/audit-2026-08-19.md
 
-## [2026-08-19T19:07:28+09:00] audit
+## [2026-08-19T19:56:40+09:00] upsert-strategic-watch
+
+WRN-ENERGY-EU-METHANE-COMPLIANCE: 2027년부터 LNG도 ‘메탄 여권’이 필요하다, 유럽 판매선택권의 숨은 공백
+
+## [2026-08-19T19:56:41+09:00] upsert-strategic-watch
+
+WRN-LITHIUM-BLACK-MASS-FEEDSTOCK: 중국이 블랙매스를 다시 빨아들인다, 재활용 원료 확보전의 판이 바뀐다
+
+## [2026-08-19T19:56:41+09:00] upsert-strategic-watch
+
+WRN-LITHIUM-HYDROXIDE-MIX: 전기차는 늘어도 수산화리튬은 덜 팔릴 수 있다, LFP가 바꾼 성장공식
+
+## [2026-08-19T19:56:42+09:00] upsert-strategic-watch
+
+WRN-LITHIUM-SODIUM-ESS-SUBSTITUTION: ESS의 리튬 공식이 깨지기 시작했다, 나트륨이온 60GWh 계약의 의미
+
+## [2026-08-19T19:56:42+09:00] upsert-strategic-watch
+
+WRN-STEEL-DRI-PELLET-BOTTLENECK: 수소환원제철의 병목은 수소가 아니라 철광석일 수 있다
+
+## [2026-08-19T19:56:42+09:00] upsert-strategic-watch
+
+WRN-STEEL-EU-VOLUME-CARBON-MIX: EU 철강 쿼터 1톤의 값이 달라진다, 물량보다 고객을 골라야 할 때
+
+## [2026-08-19T19:57:42+09:00] sync-obsidian
+
+55 subjects and 59 sources projected.
+
+## [2026-08-19T19:57:57+09:00] audit
+
+0 findings. Report: reports/audits/audit-2026-08-19.md
+
+## [2026-08-19T20:01:34+09:00] audit
 
 0 findings. Report: reports/audits/audit-2026-08-19.md

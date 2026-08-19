@@ -76,11 +76,29 @@ SIGNAL_ROLE_ORIGINS = {
     },
     "execution_context": {"company_execution"},
 }
-STRATEGIC_WATCH_SCHEMA_VERSION = 1
+STRATEGIC_WATCH_SCHEMA_VERSION = 2
 TREND_DIRECTIONS = {"strengthening", "stable", "weakening", "mixed"}
 THESIS_CONFIDENCE = {"high", "medium", "low"}
 WARNING_LEVELS = ("observe", "watch", "warning", "critical")
 WARNING_STATUSES = {"active", "closed"}
+STRATEGIC_ISSUE_DIRECTIONS = {"opportunity", "risk", "mixed"}
+STRATEGIC_ISSUE_TIMELINE_KINDS = {
+    "event",
+    "publication",
+    "effective",
+    "milestone",
+    "decision",
+    "monitoring",
+}
+STRATEGIC_ISSUE_SECTION_ROLES = (
+    "market_change",
+    "assumption_shift",
+    "business_impact",
+    "recommendation",
+    "evidence",
+    "monitoring",
+    "limitations",
+)
 RUN_SIGNAL_CONTRACT = {
     "version": 1,
     "minimum_core_market_ratio": 0.7,
@@ -3246,7 +3264,7 @@ STORE_AGENTS = """# Market Sensing Intelligence 저장소 지침
   흔들면 `upsert-strategic-watch`로 `구조적 추세 → 위협받는 전략가정 → 지속 경고`를
   연결하세요. 경고는 사람의 명시적 종료 또는 반증 근거가 쌓이기 전까지 삭제하지 말고,
   다음 검토일과 강화·완화 조건 및 판단 이력을 유지하세요.
-- 전략 경고는 지지 근거만 모으지 말고 반대 근거와 반증 조건을 함께 기록하세요. 경고
+- 핵심 전략 이슈는 지지 근거만 모으지 말고 반대 근거와 재검토 조건을 함께 기록하세요. 이슈
   단계는 기사 수가 아니라 서로 독립적인 근거 채널, 추세의 지속성, 사업 영향 경로 및
   의사결정 시한으로 판단하세요.
 - 정량화 가능한 Signal은 공개정보와 합리적 대용변수를 사용해 영향액을 숫자로 먼저
@@ -3965,6 +3983,72 @@ def validate_strategic_watch_manifest(
         "owner",
     ):
         _required_text(warning, field, warning_id)
+    if warning.get("issue_direction") not in STRATEGIC_ISSUE_DIRECTIONS:
+        raise ValueError(
+            f"{warning_id}: invalid issue_direction {warning.get('issue_direction')!r}"
+        )
+    executive_summary = _required_text(warning, "executive_summary", warning_id)
+    if len(executive_summary) < 120:
+        raise ValueError(f"{warning_id}: executive_summary must be at least 120 characters")
+    next_milestone = _required_text(warning, "next_milestone", warning_id)
+    if len(next_milestone) < 8:
+        raise ValueError(f"{warning_id}: next_milestone is too short")
+    timeline = warning.get("timeline")
+    if not isinstance(timeline, list) or len(timeline) < 3:
+        raise ValueError(f"{warning_id}: timeline must contain at least 3 items")
+    for index, item in enumerate(timeline, 1):
+        if not isinstance(item, dict):
+            raise ValueError(f"{warning_id}: timeline item {index} must be an object")
+        label = f"{warning_id}/timeline-{index}"
+        _required_text(item, "date_label", label)
+        _required_text(item, "label", label)
+        kind = _required_text(item, "kind", label)
+        if kind not in STRATEGIC_ISSUE_TIMELINE_KINDS:
+            raise ValueError(f"{label}: invalid kind {kind!r}")
+        ids = _required_text_list(item, "source_ids", label, allow_empty=True)
+        if kind in {"event", "publication", "effective", "milestone"} and not ids:
+            raise ValueError(f"{label}: factual timeline items require source_ids")
+        missing = sorted(set(ids) - set(sources_by_id))
+        if missing:
+            raise ValueError(f"{label}: unknown source_ids {', '.join(missing)}")
+    sections = warning.get("report_sections")
+    if not isinstance(sections, list):
+        raise ValueError(f"{warning_id}: report_sections must be a list")
+    section_by_role: dict[str, dict[str, Any]] = {}
+    generic_headings = {
+        "한눈에 보는 결론",
+        "왜 지금 중요한가",
+        "회사에 미치는 영향",
+        "권고 대응",
+        "근거가 된 시그널",
+        "향후 확인사항",
+        "분석의 전제와 한계",
+    }
+    for index, section in enumerate(sections, 1):
+        if not isinstance(section, dict):
+            raise ValueError(f"{warning_id}: report section {index} must be an object")
+        role = _required_text(section, "role", f"{warning_id}/section-{index}")
+        heading = _required_text(section, "heading", f"{warning_id}/section-{index}")
+        body = _required_text(section, "body", f"{warning_id}/section-{index}")
+        if role not in STRATEGIC_ISSUE_SECTION_ROLES:
+            raise ValueError(f"{warning_id}: invalid report section role {role!r}")
+        if role in section_by_role:
+            raise ValueError(f"{warning_id}: duplicate report section role {role!r}")
+        if heading in generic_headings:
+            raise ValueError(f"{warning_id}: report heading must be contextual, not {heading!r}")
+        if re.search(r"(?:합니다|됩니다|입니다|있습니다)[.!?]?$", heading):
+            raise ValueError(f"{warning_id}: report heading must use report-style noun phrasing")
+        if len(heading) < 8 or len(heading) > 80:
+            raise ValueError(f"{warning_id}: report heading must be 8-80 characters")
+        if role != "evidence" and len(body) < 180:
+            raise ValueError(f"{warning_id}/{role}: body must be at least 180 characters")
+        section_by_role[role] = section
+    if set(section_by_role) != set(STRATEGIC_ISSUE_SECTION_ROLES):
+        missing = sorted(set(STRATEGIC_ISSUE_SECTION_ROLES) - set(section_by_role))
+        raise ValueError(f"{warning_id}: missing report section roles {', '.join(missing)}")
+    total_report_chars = sum(len(str(item.get("body") or "")) for item in sections)
+    if total_report_chars < 2200:
+        raise ValueError(f"{warning_id}: report body must be at least 2200 characters")
     validate_date(str(warning["decision_deadline"]), "decision_deadline")
     for field in ("escalation_rules", "deescalation_rules", "actions"):
         _required_text_list(warning, field, warning_id)
@@ -7466,15 +7550,28 @@ def signal_index_lines(
 
 WARNING_LEVEL_LABELS = {
     "observe": "관찰",
-    "watch": "주의",
-    "warning": "경고",
-    "critical": "심각",
+    "watch": "주목",
+    "warning": "대응 검토",
+    "critical": "즉시 대응",
+}
+STRATEGIC_ISSUE_DIRECTION_LABELS = {
+    "opportunity": "기회",
+    "risk": "위험",
+    "mixed": "기회·위험 혼재",
+}
+STRATEGIC_ISSUE_TIMELINE_LABELS = {
+    "event": "시장 사건",
+    "publication": "공개",
+    "effective": "시행",
+    "milestone": "사업 분기점",
+    "decision": "판단 시한",
+    "monitoring": "확인 시점",
 }
 THESIS_CONFIDENCE_LABELS = {"high": "높음", "medium": "중간", "low": "낮음"}
 WARNING_ACTION_LABELS = {
-    "raised": "최초 경고",
+    "raised": "최초 등록",
     "reviewed": "정기 검토",
-    "closed": "경고 종료",
+    "closed": "이슈 종료",
 }
 
 
@@ -7491,7 +7588,7 @@ def _indicator_display_value(indicator: dict[str, Any]) -> str:
 def _warning_link(warning: dict[str, Any]) -> str:
     return wikilink(
         Path("strategic-warnings") / f"{warning.get('warning_id')}.md",
-        str(warning.get("title") or "전략 경고"),
+        str(warning.get("title") or "핵심 전략 이슈"),
     )
 
 
@@ -7504,68 +7601,33 @@ def strategic_warning_page_lines(
     sources_by_id: dict[str, dict[str, Any]],
 ) -> list[str]:
     level = WARNING_LEVEL_LABELS.get(str(warning.get("level")), "미정")
+    direction = STRATEGIC_ISSUE_DIRECTION_LABELS.get(
+        str(warning.get("issue_direction")), "방향 미정"
+    )
     status = "활성" if warning.get("status") == "active" else "종료"
     lines = [
         GENERATED_MARKER,
         "",
-        f"# {markdown_cell(warning.get('title') or '전략 경고')}",
+        f"# {markdown_cell(warning.get('title') or '핵심 전략 이슈')}",
         "",
-        f'!!! warning "{level} · {status}"',
+        f'!!! warning "{level} · {status} · {direction}"',
         "",
-        f"    **{markdown_cell(warning.get('rationale') or '-')}**",
+        f"    **{markdown_cell(warning.get('executive_summary') or '-')}**",
         "",
-        f"    최초 경고 {markdown_cell(warning.get('first_raised_at') or '-')} · "
-        f"최근 검토 {markdown_cell(warning.get('last_reviewed_at') or '-')} · "
-        f"다음 검토 {markdown_cell(warning.get('next_review_at') or '-')}",
+        f"    다음 사업 분기점: {markdown_cell(warning.get('next_milestone') or '-')}",
         "",
-        "## 무엇이 달라지고 있나",
+        "## 변화가 시작된 시점과 다음 분기점",
         "",
+        "| 시점 | 구분 | 확인된 변화·판단 |",
+        "| --- | --- | --- |",
     ]
-    for trend in trends:
-        lines.extend(
-            [
-                f"### {markdown_cell(trend.get('title') or '구조적 추세')}",
-                "",
-                markdown_cell(trend.get("summary") or "-"),
-                "",
-                "| 관찰 지표 | 현재 확인값 | 기준·방향 | 해석 |",
-                "| --- | --- | --- | --- |",
-            ]
+    for item in warning.get("timeline", []):
+        lines.append(
+            f"| **{markdown_cell(item.get('date_label') or '-')}** "
+            f"| {STRATEGIC_ISSUE_TIMELINE_LABELS.get(str(item.get('kind')), '-')} "
+            f"| {markdown_cell(item.get('label') or '-')} |"
         )
-        for indicator in trend.get("indicators", []):
-            baseline = str(indicator.get("baseline") or "기준 없음")
-            direction = str(indicator.get("direction") or "")
-            lines.append(
-                f"| {markdown_cell(indicator.get('label') or '-')} "
-                f"| **{markdown_cell(_indicator_display_value(indicator))}** "
-                f"| {markdown_cell(baseline)}{(' · ' + markdown_cell(direction)) if direction else ''} "
-                f"| {markdown_cell(indicator.get('interpretation') or '-')} |"
-            )
-        lines.append("")
 
-    lines.extend(
-        [
-            "## 흔들리는 전략가정",
-            "",
-            f"**{markdown_cell(thesis.get('strategic_assumption_at_risk') or '-')}**",
-            "",
-            markdown_cell(thesis.get("statement") or "-"),
-            "",
-            f"- **사업 영향 경로:** {markdown_cell(thesis.get('business_impact_path') or '-')}",
-            f"- **판단 기간:** {markdown_cell(thesis.get('decision_horizon') or '-')}",
-            f"- **판단 신뢰도:** {THESIS_CONFIDENCE_LABELS.get(str(thesis.get('confidence')), '-')}",
-            "",
-            "## 지금 내려야 할 판단",
-            "",
-            f"### {markdown_cell(warning.get('decision_question') or '-')}",
-            "",
-            f"- **권고 판단 시한:** {markdown_cell(warning.get('decision_deadline') or '-')}",
-            f"- **권고 담당:** {markdown_cell(warning.get('owner') or '-')}",
-            "",
-        ]
-    )
-    lines.extend(f"- {markdown_cell(item)}" for item in warning.get("actions", []))
-    lines.extend(["", "## 이 경고를 만든 시그널", ""])
     signal_ids = list(
         dict.fromkeys(
             [
@@ -7576,46 +7638,76 @@ def strategic_warning_page_lines(
             + [str(signal_id) for signal_id in thesis.get("execution_context_signal_ids", [])]
         )
     )
-    for signal_id in signal_ids:
-        signal = signals_by_id.get(signal_id)
-        if not signal:
+    section_by_role = {
+        str(section.get("role")): section for section in warning.get("report_sections", [])
+    }
+    for role in STRATEGIC_ISSUE_SECTION_ROLES:
+        section = section_by_role.get(role)
+        if not section:
             continue
-        insight = insights_by_id.get(str(signal.get("insight_id")), {})
-        label = insight.get("title") or signal.get("sentence") or signal_id
-        context_label = (
-            " · 회사 노출 확인"
-            if signal_id in set(thesis.get("execution_context_signal_ids", []))
-            else ""
-        )
-        lines.append(
-            f"- {wikilink(Path('signals') / f'{signal_id}.md', str(label))} · "
-            f"영향 {(signal.get('business_impact') or {}).get('score', '-')}/5 · "
-            f"긴급 {(signal.get('urgency') or {}).get('score', '-')}/5{context_label}"
-        )
-    if not signal_ids:
-        lines.append("- 연결된 시그널이 없습니다.")
+        lines.extend(["", f"## {section['heading']}", "", str(section["body"]).strip(), ""])
+        if role == "business_impact":
+            lines.extend(
+                [
+                    f"- **영향 경로:** {markdown_cell(thesis.get('business_impact_path') or '-')}",
+                    f"- **판단 기간:** {markdown_cell(thesis.get('decision_horizon') or '-')}",
+                    f"- **분석 신뢰도:** {THESIS_CONFIDENCE_LABELS.get(str(thesis.get('confidence')), '-')}",
+                    "",
+                ]
+            )
+        elif role == "recommendation":
+            lines.extend(
+                [
+                    f"- **판단 과제:** {markdown_cell(warning.get('decision_question') or '-')}",
+                    f"- **권고 시한:** {markdown_cell(warning.get('decision_deadline') or '-')}",
+                    f"- **권고 담당:** {markdown_cell(warning.get('owner') or '-')}",
+                    "",
+                ]
+            )
+            lines.extend(f"- {markdown_cell(item)}" for item in warning.get("actions", []))
+            lines.append("")
+        elif role == "evidence":
+            for signal_id in signal_ids:
+                signal = signals_by_id.get(signal_id)
+                if not signal:
+                    continue
+                insight = insights_by_id.get(str(signal.get("insight_id")), {})
+                label = insight.get("title") or signal.get("sentence") or signal_id
+                context_label = (
+                    " · 회사 노출 확인"
+                    if signal_id in set(thesis.get("execution_context_signal_ids", []))
+                    else ""
+                )
+                lines.append(
+                    f"- {wikilink(Path('signals') / f'{signal_id}.md', str(label))} · "
+                    f"영향 {(signal.get('business_impact') or {}).get('score', '-')}/5 · "
+                    f"긴급 {(signal.get('urgency') or {}).get('score', '-')}/5{context_label}"
+                )
+            if not signal_ids:
+                lines.append("- 연결된 시그널이 없습니다.")
+            lines.append("")
+        elif role == "monitoring":
+            lines.extend(["| 확인 방향 | 구체적 변화 |", "| --- | --- |"])
+            for item in warning.get("escalation_rules", []):
+                lines.append(f"| 이슈 강도 상승 | {markdown_cell(item)} |")
+            for item in warning.get("deescalation_rules", []):
+                lines.append(f"| 이슈 강도 완화 | {markdown_cell(item)} |")
+            for item in thesis.get("falsification_conditions", []):
+                lines.append(f"| 기존 해석 재검토 | {markdown_cell(item)} |")
+            lines.append("")
 
-    lines.extend(["", "## 반대 근거와 해제 조건", "", "### 아직 남아 있는 반대 근거", ""])
-    lines.extend(f"- {markdown_cell(item)}" for item in thesis.get("counter_evidence", []))
-    lines.extend(["", "### 경고가 틀렸다고 판단할 조건", ""])
-    lines.extend(
-        f"- {markdown_cell(item)}" for item in thesis.get("falsification_conditions", [])
-    )
-    lines.extend(["", "### 경고 강화 조건", ""])
-    lines.extend(f"- {markdown_cell(item)}" for item in warning.get("escalation_rules", []))
-    lines.extend(["", "### 경고 완화 조건", ""])
-    lines.extend(f"- {markdown_cell(item)}" for item in warning.get("deescalation_rules", []))
     lines.extend(
         [
+            '??? info "문서 관리 정보"',
             "",
-            '??? info "경고 유지 원칙"',
+            f"    등록 {markdown_cell(warning.get('first_raised_at') or '-')} · "
+            f"최근 확인 {markdown_cell(warning.get('last_reviewed_at') or '-')} · "
+            f"다음 모니터링 {markdown_cell(warning.get('next_review_at') or '-')}",
             "",
-            f"    {markdown_cell(warning.get('persistence_rule') or '-')}",
+            f"    **지속 관찰 원칙:** {markdown_cell(warning.get('persistence_rule') or '-')}",
             "",
-            "## 판단 이력",
-            "",
-            "| 날짜 | 조치 | 단계 변화 | 판단 근거 |",
-            "| --- | --- | --- | --- |",
+            "    | 날짜 | 조치 | 단계 변화 | 판단 근거 |",
+            "    | --- | --- | --- | --- |",
         ]
     )
     for event in reversed(warning.get("history", [])):
@@ -7629,7 +7721,7 @@ def strategic_warning_page_lines(
             )
         ) or "-"
         lines.append(
-            f"| {markdown_cell(event.get('date') or '-')} | "
+            f"    | {markdown_cell(event.get('date') or '-')} | "
             f"{WARNING_ACTION_LABELS.get(str(event.get('action')), markdown_cell(event.get('action') or '-'))} "
             f"| {markdown_cell(transition)} | {markdown_cell(event.get('rationale') or '-')} |"
         )
@@ -7642,7 +7734,7 @@ def strategic_warning_page_lines(
             + list(trend.get("counter_source_ids", []))
         )
     )
-    lines.extend(["", "## 원문 근거", ""])
+    lines.extend(["", "## 확인한 원문", ""])
     for source_id in source_ids:
         source = sources_by_id.get(source_id)
         if not source:
@@ -7671,28 +7763,29 @@ def strategic_warning_index_lines(warnings: list[dict[str, Any]]) -> list[str]:
     lines = [
         GENERATED_MARKER,
         "",
-        "# 전략 경고",
+        "# 핵심 전략 이슈",
         "",
-        "여러 시그널이 같은 방향으로 누적되어 기존 사업전제를 흔드는 사안입니다. "
-        "새 기사가 없어도 반증되거나 사람이 종료할 때까지 계속 표시됩니다.",
+        "서로 다른 시그널을 연결했을 때 기존 사업전제나 투자 우선순위를 바꿀 수 있는 "
+        "기회와 위험을 선별합니다. 새 기사가 없어도 사업적 의미가 해소될 때까지 계속 추적합니다.",
         "",
-        "## 활성 경고",
+        "## 현재 추적 중인 이슈",
         "",
-        "| 단계 | 사업축 | 경고 | 다음 검토 |",
-        "| --- | --- | --- | --- |",
+        "| 상태 | 방향 | 사업축 | 핵심 전략 이슈 | 다음 사업 분기점 |",
+        "| --- | --- | --- | --- | --- |",
     ]
     for warning in active:
         lines.append(
             f"| **{WARNING_LEVEL_LABELS.get(str(warning.get('level')), '-')}** "
+            f"| {STRATEGIC_ISSUE_DIRECTION_LABELS.get(str(warning.get('issue_direction')), '-')} "
             f"| {markdown_cell(warning.get('business_axis') or '-')} "
             f"| {_warning_link(warning)}<br>{markdown_cell(warning.get('rationale') or '-')} "
-            f"| {markdown_cell(warning.get('next_review_at') or '-')} |"
+            f"| {markdown_cell(warning.get('next_milestone') or '-')} |"
         )
     if not active:
-        lines.append("| - | - | 현재 활성 전략 경고가 없습니다. | - |")
+        lines.append("| - | - | - | 현재 추적 중인 핵심 전략 이슈가 없습니다. | - |")
     closed = [item for item in warnings if item.get("status") == "closed"]
     if closed:
-        lines.extend(["", "## 종료된 경고", ""])
+        lines.extend(["", "## 추적을 마친 이슈", ""])
         lines.extend(f"- {_warning_link(item)}" for item in closed)
     return lines
 
@@ -8227,7 +8320,7 @@ def sync_obsidian_store(root: Path) -> dict[str, Any]:
         "철강·리튬·에너지 사업의 의사결정에 영향을 줄 외부 변화를 선별해 "
         "한 문장부터 원문까지 단계적으로 보여줍니다.",
         "",
-        "## 지금 봐야 할 전략 경고",
+        "## 지금 봐야 할 핵심 전략 이슈",
         "",
     ]
     for warning in active_warnings:
@@ -8246,10 +8339,10 @@ def sync_obsidian_store(root: Path) -> dict[str, Any]:
             ]
         )
     if not active_warnings:
-        index_lines.extend(["현재 활성 전략 경고가 없습니다.", ""])
+        index_lines.extend(["현재 추적 중인 핵심 전략 이슈가 없습니다.", ""])
     index_lines.extend(
         [
-        "[[strategic-warnings/index|전체 전략 경고 보기 →]]",
+        "[[strategic-warnings/index|전체 핵심 전략 이슈 보기 →]]",
         "",
         "## 지금 볼 시그널",
         "",
@@ -8304,7 +8397,7 @@ def sync_obsidian_store(root: Path) -> dict[str, Any]:
             "",
             '??? note "근거 저장 현황"',
             "",
-            f"    **활성 전략 경고 {len(active_warnings)}건** · "
+            f"    **핵심 전략 이슈 {len(active_warnings)}건** · "
             f"**{len(signals)}개 시그널** · **{len(sources)}개 원문** · "
             f"**{len(claims)}개 검증 항목** · [[REVIEW|사람 검토 대기]] "
             f"**{len(pending_records)}건**",

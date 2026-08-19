@@ -105,7 +105,7 @@ Insight의 선택 필드 `impact_estimate`는 MkDocs와 향후 웹 프로그램�
 - 결과는 회사 실제 전망이 아니라 공개정보 기반 예비 추정임을 `notice`에 밝힌다.
 - 동일한 시장가격·물량 충격을 공유하는 Signal은 독립 금액처럼 합산하지 않는다.
 
-## 구조적 추세·전략가정·지속 경고
+## 구조적 추세·전략가정·핵심 전략 이슈
 
 반복되는 외부 Signal이 동일한 전략가정을 흔들 때 다음 세 레코드를 분리 저장한다.
 
@@ -113,11 +113,15 @@ Insight의 선택 필드 `impact_estimate`는 MkDocs와 향후 웹 프로그램�
   수치 indicator
 - `.system/theses/THS-*.json`: 위협받는 전략가정, 사업 영향 경로, 판단 기간, 반대 근거,
   반증 조건
-- `.system/warnings/WRN-*.json`: 단계·상태, 최초·최근·다음 검토일, 강화·완화 규칙,
-  판단 질문·조치·변경 이력
+- `.system/warnings/WRN-*.json`: 내부 호환 ID, 단계·상태·기회/위험 방향, 문서 제목과
+  요약, 사건·시행·사업 판단 시간축, 자연어 보고서 절, 판단 질문·조치·변경 이력
 
-세 레코드는 schema version 1이며 `upsert-strategic-watch`로 함께 검증·저장한다. 활성
-Warning은 명시적 review 없이 삭제하거나 종료하지 않으며 변경은 history에 append한다.
+세 레코드는 schema version 2이며 `upsert-strategic-watch`로 함께 검증·저장한다. 활성
+레코드는 명시적 review 없이 삭제하거나 종료하지 않으며 변경은 history에 append한다.
+보고서 절은 `market_change`, `assumption_shift`, `business_impact`, `recommendation`,
+`evidence`, `monitoring`, `limitations` 역할을 각각 한 번 갖는다. 화면 소제목은 역할명을
+복사하지 않고 이슈에 맞는 명사구로 쓰며 본문 합계는 2,200자 이상이다. `timeline`은
+최소 3개이고 사실 시점에는 Source ID를 연결한다.
 
 ## 목차
 

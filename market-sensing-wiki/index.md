@@ -4,43 +4,43 @@
 
 철강·리튬·에너지 사업의 의사결정에 영향을 줄 외부 변화를 선별해 한 문장부터 원문까지 단계적으로 보여줍니다.
 
-## 지금 봐야 할 전략 경고
+## 지금 봐야 할 핵심 전략 이슈
 
-!!! warning "경고 · 에너지"
+!!! warning "대응 검토 · 에너지"
 
-    **[[strategic-warnings/WRN-ENERGY-EU-METHANE-COMPLIANCE|유럽 LNG 메탄 데이터 권리 확보]]**
+    **[[strategic-warnings/WRN-ENERGY-EU-METHANE-COMPLIANCE|2027년부터 LNG도 ‘메탄 여권’이 필요하다, 유럽 판매선택권의 숨은 공백]]**
 
     2027년 1월 시행 전 계약별 생산지·검증·데이터권 공백을 확인할 시간이 제한적입니다.
 
     다음 검토: 2026-10-31 · 판단 시한: 2026-10-31
 
-!!! warning "경고 · 리튬"
+!!! warning "대응 검토 · 리튬"
 
-    **[[strategic-warnings/WRN-LITHIUM-HYDROXIDE-MIX|수산화리튬 중심 성장전제 재검증]]**
+    **[[strategic-warnings/WRN-LITHIUM-HYDROXIDE-MIX|전기차는 늘어도 수산화리튬은 덜 팔릴 수 있다, LFP가 바꾼 성장공식]]**
 
     LFP가 세계 전기차 배터리의 절반을 넘었고 가격 격차, 원료 선호, 북미 완성차의 양산 전환까지 세 독립 채널에서 같은 제품 믹스 변화가 확인됐습니다.
 
     다음 검토: 2026-09-30 · 판단 시한: 2026-10-31
 
-!!! warning "경고 · 리튬"
+!!! warning "대응 검토 · 리튬"
 
-    **[[strategic-warnings/WRN-LITHIUM-SODIUM-ESS-SUBSTITUTION|ESS용 리튬 수요에 나트륨 대체 반영]]**
+    **[[strategic-warnings/WRN-LITHIUM-SODIUM-ESS-SUBSTITUTION|ESS의 리튬 공식이 깨지기 시작했다, 나트륨이온 60GWh 계약의 의미]]**
 
     60GWh 계약, 40GWh 증설과 2026년 납품일이 확인돼 ESS 수요모델을 즉시 분리할 필요가 있습니다.
 
     다음 검토: 2026-12-31 · 판단 시한: 2026-12-31
 
-!!! warning "주의 · 리튬"
+!!! warning "주목 · 리튬"
 
-    **[[strategic-warnings/WRN-LITHIUM-BLACK-MASS-FEEDSTOCK|블랙매스 원료확보 조건 재점검]]**
+    **[[strategic-warnings/WRN-LITHIUM-BLACK-MASS-FEEDSTOCK|중국이 블랙매스를 다시 빨아들인다, 재활용 원료 확보전의 판이 바뀐다]]**
 
     수입통로는 열렸지만 실제 유럽산 통관량과 가격 프리미엄은 아직 확인이 필요합니다.
 
     다음 검토: 2026-10-31 · 판단 시한: 2026-10-31
 
-!!! warning "주의 · 철강"
+!!! warning "주목 · 철강"
 
-    **[[strategic-warnings/WRN-STEEL-EU-VOLUME-CARBON-MIX|EU 쿼터를 저탄소 제품가치로 배분]]**
+    **[[strategic-warnings/WRN-STEEL-EU-VOLUME-CARBON-MIX|EU 철강 쿼터 1톤의 값이 달라진다, 물량보다 고객을 골라야 할 때]]**
 
     수입한도는 시행 중이지만 저탄소 수요기준은 입법 제안 단계여서 고객행동과 최종문을 함께 확인해야 합니다.
 
@@ -48,13 +48,13 @@
 
 !!! warning "관찰 · 철강"
 
-    **[[strategic-warnings/WRN-STEEL-DRI-PELLET-BOTTLENECK|HyREX 원료 유연성 가치 재평가]]**
+    **[[strategic-warnings/WRN-STEEL-DRI-PELLET-BOTTLENECK|수소환원제철의 병목은 수소가 아니라 철광석일 수 있다]]**
 
     외부 원료 병목은 명확하지만 HyREX의 상업 규모 성능·총원가는 아직 실증이 필요합니다.
 
     다음 검토: 2027-03-31 · 판단 시한: 2027-03-31
 
-[[strategic-warnings/index|전체 전략 경고 보기 →]]
+[[strategic-warnings/index|전체 핵심 전략 이슈 보기 →]]
 
 ## 지금 볼 시그널
 
@@ -84,7 +84,7 @@
 
 ??? note "근거 저장 현황"
 
-    **활성 전략 경고 6건** · **51개 시그널** · **59개 원문** · **660개 검증 항목** · [[REVIEW|사람 검토 대기]] **0건**
+    **핵심 전략 이슈 6건** · **51개 시그널** · **59개 원문** · **660개 검증 항목** · [[REVIEW|사람 검토 대기]] **0건**
 
 ## 상세 보고서
 

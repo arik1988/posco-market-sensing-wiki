@@ -362,8 +362,15 @@ class MarketSensingTests(unittest.TestCase):
                 "run_id": "test-run",
             },
         )
+        long_section_body = (
+            "공식 근거에서 확인한 시장 변화와 회사의 가격·물량·원가·계약·투자 경로를 "
+            "구분해 설명합니다. 단일 기사나 추상적인 중요성 판단에 머물지 않고 기준시점, "
+            "이전 전제와 달라진 점, 내부에서 확인할 데이터와 판단 시한을 함께 기록합니다. "
+            "공개정보만으로 알 수 없는 계약조건과 설비원가는 결론의 한계로 남기고, 후속 "
+            "지표가 바뀌면 이슈 강도와 권고안을 다시 검토합니다. "
+        ) * 2
         manifest = {
-            "schema_version": 1,
+            "schema_version": 2,
             "trend": {
                 "trend_id": "TRD-TEST",
                 "title": "시장구성 전환",
@@ -403,11 +410,33 @@ class MarketSensingTests(unittest.TestCase):
             },
             "warning": {
                 "warning_id": "WRN-TEST",
-                "title": "기존 성장전제 재검증",
+                "title": "시장은 커져도 기존 제품은 덜 팔릴 수 있다, 바뀐 성장공식",
                 "business_axis": "리튬",
                 "thesis_id": "THS-TEST",
                 "level": "warning",
                 "status": "active",
+                "issue_direction": "mixed",
+                "executive_summary": (
+                    "독립된 외부 근거가 같은 시장구성 변화를 가리키고 있어 기존 제품이 "
+                    "시장 평균만큼 성장한다는 전제를 다시 확인해야 합니다. 제품별 수요와 "
+                    "설비 전환능력을 분리해 계약·가동률·투자 회수기간을 재산정해야 합니다."
+                    " 후속 시장지표와 내부 계약자료를 함께 확인해 권고 강도를 조정합니다."
+                ),
+                "next_milestone": "2026년 10월 제품별 사업계획 재산정",
+                "timeline": [
+                    {"date_label": "2026년 8월 1일", "kind": "event", "label": "시장구성 변화 최초 확인", "source_ids": ["SRC-TEST"]},
+                    {"date_label": "2026년 8월 19일", "kind": "publication", "label": "공식 시장자료 갱신", "source_ids": ["SRC-TEST"]},
+                    {"date_label": "2026년 10월 31일", "kind": "decision", "label": "제품별 계획 판단 시한", "source_ids": []},
+                ],
+                "report_sections": [
+                    {"role": "market_change", "heading": "시장구성 전환이 시작된 배경", "body": long_section_body},
+                    {"role": "assumption_shift", "heading": "시장 평균 성장률과 제품 성장률의 분리", "body": long_section_body},
+                    {"role": "business_impact", "heading": "계약과 가동률을 거쳐 손익으로 이어지는 경로", "body": long_section_body},
+                    {"role": "recommendation", "heading": "제품별 사업계획 재산정과 판단 시한", "body": long_section_body},
+                    {"role": "evidence", "heading": "독립 근거가 같은 방향을 가리키는 이유", "body": long_section_body},
+                    {"role": "monitoring", "heading": "후속 시장지표와 내부 계약의 확인선", "body": long_section_body},
+                    {"role": "limitations", "heading": "공개정보로 확인할 수 없는 계약 경계", "body": long_section_body},
+                ],
                 "first_raised_at": "2026-08-19",
                 "last_reviewed_at": "2026-08-19",
                 "next_review_at": "2026-09-30",
@@ -438,8 +467,12 @@ class MarketSensingTests(unittest.TestCase):
         page = (self.root / "strategic-warnings" / "WRN-TEST.md").read_text(
             encoding="utf-8"
         )
-        self.assertIn("흔들리는 전략가정", page)
-        self.assertIn("반대 근거와 해제 조건", page)
+        self.assertIn("핵심 전략 이슈", (self.root / "strategic-warnings" / "index.md").read_text(encoding="utf-8"))
+        self.assertIn("변화가 시작된 시점과 다음 분기점", page)
+        self.assertIn("시장구성 전환이 시작된 배경", page)
+        self.assertIn("문서 관리 정보", page)
+        self.assertNotIn("흔들리는 전략가정", page)
+        self.assertNotIn("반대 근거와 해제 조건", page)
         trace = market_sensing.trace_strategic_warning(
             Namespace(root=str(self.root), warning_id="WRN-TEST", depth=4)
         )
@@ -1062,7 +1095,7 @@ class MarketSensingTests(unittest.TestCase):
         self.assertEqual(config["nav"][0], {"홈": "index.md"})
         self.assertEqual(
             config["nav"][1],
-            {"전략 경고": [{"전체 경고": "strategic-warnings/index.md"}]},
+            {"핵심 전략 이슈": [{"전체 이슈": "strategic-warnings/index.md"}]},
         )
         self.assertEqual(
             config["nav"][2],

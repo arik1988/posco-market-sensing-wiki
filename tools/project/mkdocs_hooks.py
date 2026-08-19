@@ -232,7 +232,7 @@ def on_config(config: Any) -> Any:
     warning_index = root / "strategic-warnings" / "index.md"
     if warning_index.is_file():
         nav.append(
-            {"전략 경고": [{"전체 경고": "strategic-warnings/index.md"}, *warnings]}
+            {"핵심 전략 이슈": [{"전체 이슈": "strategic-warnings/index.md"}, *warnings]}
         )
 
     signals = _pages(root, "signals/SIG-*.md")
