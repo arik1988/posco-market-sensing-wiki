@@ -60,7 +60,8 @@ class MarketSensingTests(unittest.TestCase):
         self.assertIn("상세 분석을 별도 보고서 링크 하나로 대신", template)
         for heading in (
             "의사결정급 Insight 계약",
-            "판단 질문과 잠정 결론",
+            "### 판단 질문",
+            "### 잠정 결론",
             "통념과 확인된 간극",
             "확인된 변화와 시점",
             "사업 시나리오",
@@ -72,6 +73,9 @@ class MarketSensingTests(unittest.TestCase):
             "여러 Signal을 현안으로 묶는 기준",
         ):
             self.assertIn(heading, template)
+        self.assertIn("3~5개의 결론형 `##` 주요 장", agents)
+        self.assertIn("`###` 하위 장", agents)
+        self.assertIn("semantic HTML과 중첩 목차", skill)
         for contract in (
             "판단을 바꾸는 간극",
             "확정·폐기할 반증 조건",

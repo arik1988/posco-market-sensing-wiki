@@ -119,6 +119,12 @@ python skills/market-sensing-intelligence/scripts/market_sensing.py --help
 
 마켓센싱의 기본 연결은 `Signal → Insight → Claim → Source → Archive`이다.
 
+보고서 작성 정본은 하나의 `analysis_markdown`이다. LLM은 HTML이나 UI용 섹션 배열을
+출력하지 않는다. 구조화된 Signal 제목은 MyPIN 화면에서 `h1`이 되므로 본문에서
+반복하지 않고, 본문의 주요 장은 `##`, 하위 장은 `###`, 필요한 세부 장은 `####`로
+작성한다. 제목 레벨을 건너뛰지 않으며 MyPIN은 이 계층을 semantic HTML과 중첩 목차로
+그대로 렌더링한다. MkDocs 투영본은 같은 Markdown 정본의 호환 산출물이다.
+
 사람이 보는 Signal 제목·사업 시사점·문단은 `references/editorial-style.md`를 따른다.
 제목은 신문 헤드라인이 아니라 관측된 외부 변화 자체를 짧고 평이한 사실형으로 쓴다.
 회사명·말줄임표·핵심 사업결과를 매번 제목에 함께 넣지 않고, 사업영향과 달라지는 판단은
