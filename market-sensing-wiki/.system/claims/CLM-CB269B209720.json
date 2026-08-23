@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-CB269B209720",
+  "subject_id": "MKT-STRATEGIC-MINERALS-POLICY-2026",
+  "predicate": "supporting_source_5",
+  "value": "Commission launches platform to aggregate demand of raw materials and boost diversification",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-04-13",
+  "last_verified": "2026-04-13",
+  "source_ids": [
+    "SRC-20260820-AB7177A3"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-04-13",
+      "action": "created",
+      "reason": "Vercel 공개 Signal SIG-58262BC4861B와 배포 Source 페이지에서 복구한 주장입니다.",
+      "source_ids": [
+        "SRC-20260820-AB7177A3"
+      ]
+    }
+  ]
+}

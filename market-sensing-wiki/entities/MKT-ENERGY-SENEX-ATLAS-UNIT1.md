@@ -80,15 +80,6 @@
 - Claim ID: `CLM-54817381683E`
 - 근거: [[sources/SRC-20260819-21B1AAAB|SRC-20260819-21B1AAAB]]
 
-### `response_deadline`
-
-**2025-04-15**
-
-- 최근 검증: 2026-08-19
-- 신뢰도: `medium`
-- Claim ID: `CLM-3F3A758CF0BC`
-- 근거: [[sources/SRC-20260819-21B1AAAB|SRC-20260819-21B1AAAB]]
-
 ### `affected_business`
 
 **Senex upstream·처리시설·호주 동부 가스 판매**
@@ -132,6 +123,15 @@
 - 최근 검증: 2026-08-19
 - 신뢰도: `high`
 - Claim ID: `CLM-F3B45A1363AC`
+- 근거: [[sources/SRC-20260819-21B1AAAB|SRC-20260819-21B1AAAB]]
+
+### `response_deadline`
+
+**2025-04-15**
+
+- 최근 검증: 2026-08-19
+- 신뢰도: `medium`
+- Claim ID: `CLM-3F3A758CF0BC`
 - 근거: [[sources/SRC-20260819-21B1AAAB|SRC-20260819-21B1AAAB]]
 
 

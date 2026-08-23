@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://posco.example/schemas/market-sensing-quantification-packet-v1.json",
+  "title": "Market Sensing Signal quantification packet",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "decision", "assessed_at"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "decision": {"enum": ["modeled", "omitted"]},
+    "assessed_at": {"type": "string", "format": "date"},
+    "impact_estimate": {"$ref": "#/$defs/impact_estimate"},
+    "omission": {"$ref": "#/$defs/omission"}
+  },
+  "oneOf": [
+    {
+      "properties": {"decision": {"const": "modeled"}},
+      "required": ["impact_estimate"],
+      "not": {"required": ["omission"]}
+    },
+    {
+      "properties": {"decision": {"const": "omitted"}},
+      "required": ["omission"],
+      "not": {"required": ["impact_estimate"]}
+    }
+  ],
+  "$defs": {
+    "expression": {
+      "oneOf": [
+        {"type": "number"},
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["var"],
+          "properties": {"var": {"type": "string", "pattern": "^[a-z][a-z0-9_]{1,48}$"}}
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["op", "args"],
+          "properties": {
+            "op": {"enum": ["add", "subtract", "multiply", "divide", "negate"]},
+            "args": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/expression"}}
+          }
+        }
+      ]
+    },
+    "variable": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "unit", "min", "max", "step", "default", "kind", "basis", "source_ids"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]{1,48}$"},
+        "label": {"type": "string", "minLength": 1},
+        "unit": {"type": "string", "minLength": 1},
+        "min": {"type": "number"},
+        "max": {"type": "number"},
+        "step": {"type": "number", "exclusiveMinimum": 0},
+        "default": {"type": "number"},
+        "kind": {"enum": ["verified", "derived", "assumption"]},
+        "basis": {"type": "string", "minLength": 1},
+        "source_ids": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "unit", "primary", "expression"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]{1,48}$"},
+        "label": {"type": "string", "minLength": 1},
+        "unit": {"type": "string", "minLength": 1},
+        "decimals": {"type": "integer", "minimum": 0, "maximum": 3},
+        "primary": {"type": "boolean"},
+        "expression": {"$ref": "#/$defs/expression"}
+      }
+    },
+    "preset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "label", "values"],
+      "properties": {
+        "id": {"type": "string"},
+        "label": {"type": "string", "minLength": 1},
+        "values": {"type": "object", "additionalProperties": {"type": "number"}}
+      }
+    },
+    "impact_estimate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "title", "description", "as_of", "confidence", "notice", "formula_display", "variables", "outputs", "presets"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "title": {"type": "string", "minLength": 1},
+        "description": {"type": "string", "minLength": 1},
+        "as_of": {"type": "string", "format": "date"},
+        "confidence": {"enum": ["high", "medium", "low"]},
+        "notice": {"type": "string", "minLength": 1},
+        "formula_display": {"type": "string", "minLength": 1},
+        "variables": {"type": "array", "minItems": 3, "maxItems": 8, "items": {"$ref": "#/$defs/variable"}},
+        "outputs": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/output"}},
+        "presets": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/preset"}}
+      }
+    },
+    "omission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reason_code", "rationale", "required_inputs", "reconsider_when"],
+      "properties": {
+        "reason_code": {
+          "enum": ["no_grounded_exposure_basis", "non_financial_decision_signal", "double_counting_risk", "insufficient_causal_model"]
+        },
+        "rationale": {"type": "string", "minLength": 40, "maxLength": 500},
+        "required_inputs": {"type": "array", "minItems": 1, "maxItems": 6, "items": {"type": "string", "minLength": 5, "maxLength": 160}},
+        "reconsider_when": {"type": "string", "minLength": 20, "maxLength": 300}
+      }
+    }
+  }
+}

@@ -80,15 +80,6 @@
 - Claim ID: `CLM-1FE5D8D2B514`
 - 근거: [[sources/SRC-20260819-4E44C10E|SRC-20260819-4E44C10E]]
 
-### `response_deadline`
-
-**2026-09-30**
-
-- 최근 검증: 2026-08-19
-- 신뢰도: `medium`
-- Claim ID: `CLM-A535DE3F1A35`
-- 근거: [[sources/SRC-20260819-4E44C10E|SRC-20260819-4E44C10E]]
-
 ### `affected_business`
 
 **POSCO 철강 제품별 판매·수출·생산·원료 구매**
@@ -177,6 +168,15 @@
 - 최근 검증: 2026-04-14
 - 신뢰도: `high`
 - Claim ID: `CLM-A3067BB32E11`
+- 근거: [[sources/SRC-20260819-4E44C10E|SRC-20260819-4E44C10E]]
+
+### `response_deadline`
+
+**2026-09-30**
+
+- 최근 검증: 2026-08-19
+- 신뢰도: `medium`
+- Claim ID: `CLM-A535DE3F1A35`
 - 근거: [[sources/SRC-20260819-4E44C10E|SRC-20260819-4E44C10E]]
 
 

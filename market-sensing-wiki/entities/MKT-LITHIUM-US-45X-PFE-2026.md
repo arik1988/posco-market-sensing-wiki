@@ -80,15 +80,6 @@
 - Claim ID: `CLM-F8161BDCDB09`
 - 근거: [[sources/SRC-20260819-F58609F2|SRC-20260819-F58609F2]]
 
-### `response_deadline`
-
-**2026-09-30**
-
-- 최근 검증: 2026-08-19
-- 신뢰도: `medium`
-- Claim ID: `CLM-E1BE90948F49`
-- 근거: [[sources/SRC-20260819-F58609F2|SRC-20260819-F58609F2]]
-
 ### `affected_business`
 
 **POSCO Holdings 미국 직접리튬추출 실증, 북미 정제·판매·합작 구조**
@@ -169,6 +160,15 @@
 - 신뢰도: `high`
 - Claim ID: `CLM-6019F342650E`
 - 근거: [[sources/SRC-20260819-53232380|SRC-20260819-53232380]]
+
+### `response_deadline`
+
+**2026-09-30**
+
+- 최근 검증: 2026-08-19
+- 신뢰도: `medium`
+- Claim ID: `CLM-E1BE90948F49`
+- 근거: [[sources/SRC-20260819-F58609F2|SRC-20260819-F58609F2]]
 
 ### `supplier_certification_required`
 

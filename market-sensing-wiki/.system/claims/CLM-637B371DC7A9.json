@@ -1,0 +1,29 @@
+{
+  "claim_id": "CLM-637B371DC7A9",
+  "subject_id": "MKT-US-RARE-EARTH-GUARANTEE-2025",
+  "predicate": "impact_path",
+  "value": "확인된 외부 변화가 공급·고객·계약 조건을 거쳐 사업 판단을 바꾸는 경로를 배포 분석에서 복구했습니다.",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2025-07-10",
+  "last_verified": "2025-07-10",
+  "source_ids": [
+    "SRC-20260819-832D09DF",
+    "SRC-20260819-A690FC34",
+    "SRC-20260819-FCC90074"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2025-07-10",
+      "action": "created",
+      "reason": "Vercel 공개 Signal SIG-C68CC1899242와 배포 Source 페이지에서 복구한 주장입니다.",
+      "source_ids": [
+        "SRC-20260819-832D09DF",
+        "SRC-20260819-A690FC34",
+        "SRC-20260819-FCC90074"
+      ]
+    }
+  ]
+}

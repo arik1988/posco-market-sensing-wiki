@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-1AADE04407D7",
+  "subject_id": "MKT-STEEL-US-QUALIFICATION-2026",
+  "predicate": "impact_path",
+  "value": "85% 미국 용해·주조 기준 → 자본재 적격 판정 → 주문별 관세·조달조건 → 생산경로 선택",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-20",
+  "last_verified": "2026-08-20",
+  "source_ids": [
+    "SRC-20260820-9C0937F2"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-20",
+      "action": "created",
+      "reason": "Vercel Source 연결 메모의 필드 경계를 보정한 복구 주장입니다.",
+      "source_ids": [
+        "SRC-20260820-9C0937F2"
+      ]
+    }
+  ]
+}

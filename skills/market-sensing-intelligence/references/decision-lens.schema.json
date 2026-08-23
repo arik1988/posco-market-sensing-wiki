@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/market-sensing/decision-lens.schema.json",
+  "title": "Market Sensing Decision Lens",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "primary_direction",
+    "opportunity",
+    "risk",
+    "opportunity_cost",
+    "decision_trigger"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "primary_direction": {
+      "enum": ["opportunity", "risk", "mixed"]
+    },
+    "opportunity": { "$ref": "#/$defs/side" },
+    "risk": { "$ref": "#/$defs/side" },
+    "opportunity_cost": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 500
+    },
+    "decision_trigger": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 500
+    }
+  },
+  "$defs": {
+    "side": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["condition", "business_effect", "action"],
+      "properties": {
+        "condition": { "type": "string", "minLength": 10, "maxLength": 300 },
+        "business_effect": { "type": "string", "minLength": 10, "maxLength": 300 },
+        "action": { "type": "string", "minLength": 10, "maxLength": 300 }
+      }
+    }
+  }
+}

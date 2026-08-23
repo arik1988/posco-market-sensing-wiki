@@ -1,0 +1,106 @@
+{
+  "deployment": "https://posco-market-sensing-wiki.vercel.app",
+  "run_id": "2026-08-22-vercel-deployment-recovery",
+  "mappings": [
+    {
+      "remote_signal_id": "SIG-35E375530293",
+      "local_signal_id": "SIG-440808B98C75",
+      "remote_business_axis": "전략광물",
+      "local_business_axis": "리튬",
+      "source_ids": [
+        "SRC-20260819-D582BFD0",
+        "SRC-20260819-F6BAAD4C"
+      ]
+    },
+    {
+      "remote_signal_id": "SIG-58262BC4861B",
+      "local_signal_id": "SIG-95C60D58286B",
+      "remote_business_axis": "전략광물",
+      "local_business_axis": "리튬",
+      "source_ids": [
+        "SRC-20260819-832D09DF",
+        "SRC-20260819-A690FC34",
+        "SRC-20260819-FCC90074",
+        "SRC-20260820-81B7BC4C",
+        "SRC-20260820-AB7177A3",
+        "SRC-20260820-CEB5626F",
+        "SRC-20260820-4CEBE4D7"
+      ]
+    },
+    {
+      "remote_signal_id": "SIG-7A04B05EA7F7",
+      "local_signal_id": "SIG-17D3234177F3",
+      "remote_business_axis": "전략광물",
+      "local_business_axis": "리튬",
+      "source_ids": [
+        "SRC-20260819-195732B5"
+      ]
+    },
+    {
+      "remote_signal_id": "SIG-7A55EC61FBC5",
+      "local_signal_id": "SIG-98F169B2AB51",
+      "remote_business_axis": "철강",
+      "local_business_axis": "철강",
+      "source_ids": [
+        "SRC-20260820-20BC2262"
+      ]
+    },
+    {
+      "remote_signal_id": "SIG-C68CC1899242",
+      "local_signal_id": "SIG-7F07A935A42A",
+      "remote_business_axis": "전략광물",
+      "local_business_axis": "리튬",
+      "source_ids": [
+        "SRC-20260819-832D09DF",
+        "SRC-20260819-A690FC34",
+        "SRC-20260819-FCC90074"
+      ]
+    },
+    {
+      "remote_signal_id": "SIG-DE2981C00725",
+      "local_signal_id": "SIG-3F5D05727225",
+      "remote_business_axis": "철강",
+      "local_business_axis": "철강",
+      "source_ids": [
+        "SRC-20260820-9C0937F2"
+      ]
+    },
+    {
+      "remote_signal_id": "SIG-ECBFAFB863BF",
+      "local_signal_id": "SIG-3F45DABCFFAC",
+      "remote_business_axis": "전략광물",
+      "local_business_axis": "리튬",
+      "source_ids": [
+        "SRC-20260819-AFB27A7E",
+        "SRC-20260819-745DCE52"
+      ]
+    }
+  ],
+  "remote_source_to_local": {
+    "SRC-20260819-052832C0": "SRC-20260819-195732B5",
+    "SRC-20260819-0692EE56": "SRC-20260819-832D09DF",
+    "SRC-20260819-1D416335": "SRC-20260819-AFB27A7E",
+    "SRC-20260819-67D8D329": "SRC-20260819-A690FC34",
+    "SRC-20260819-6BAE3360": "SRC-20260819-D582BFD0",
+    "SRC-20260819-8AC9B06A": "SRC-20260819-745DCE52",
+    "SRC-20260819-F04174E5": "SRC-20260819-FCC90074",
+    "SRC-20260819-F35BD3B2": "SRC-20260819-F6BAAD4C",
+    "SRC-20260820-214114A4": "SRC-20260820-9C0937F2",
+    "SRC-20260820-422EE636": "SRC-20260820-20BC2262",
+    "SRC-20260820-C228E651": "SRC-20260820-81B7BC4C",
+    "SRC-20260820-E5D2140D": "SRC-20260820-AB7177A3",
+    "SRC-20260820-F778010D": "SRC-20260820-CEB5626F",
+    "SRC-20260820-FF867E92": "SRC-20260820-4CEBE4D7"
+  },
+  "repaired_claims": [
+    {"old_claim_id": "CLM-57C49CEA779E", "new_claim_id": "CLM-56958409A20B", "subject_id": "POL-CN-RARE-EARTH-CONTROLS-2025", "predicate": "impact_path"},
+    {"old_claim_id": "CLM-7A6C54FBD794", "new_claim_id": "CLM-2B09380CE6DC", "subject_id": "MKT-STRATEGIC-MINERALS-POLICY-2026", "predicate": "impact_path"},
+    {"old_claim_id": "CLM-395DC14466D6", "new_claim_id": "CLM-280EA12D30EB", "subject_id": "MKT-STRATEGIC-MINERALS-POLICY-2026", "predicate": "recommended_follow_up"},
+    {"old_claim_id": "CLM-D0E9983066AD", "new_claim_id": "CLM-383BEFEF1714", "subject_id": "POL-KR-RARE-EARTH-2026", "predicate": "impact_path"},
+    {"old_claim_id": "CLM-1F192702A949", "new_claim_id": "CLM-44E7DFA83F02", "subject_id": "POL-UK-STEEL-TRADE-2026", "predicate": "impact_path"},
+    {"old_claim_id": "CLM-70103BB9E9B5", "new_claim_id": "CLM-F592EAAB9B17", "subject_id": "MKT-US-RARE-EARTH-GUARANTEE-2025", "predicate": "recommended_follow_up"},
+    {"old_claim_id": "CLM-599E5579C6CC", "new_claim_id": "CLM-1AADE04407D7", "subject_id": "MKT-STEEL-US-QUALIFICATION-2026", "predicate": "impact_path"},
+    {"old_claim_id": "CLM-AB8688063363", "new_claim_id": "CLM-A58B9796CB50", "subject_id": "MKT-TUNGSTEN-SUPPLY-CONTROL-2025", "predicate": "impact_path"},
+    {"old_claim_id": "CLM-BDB8B3C79179", "new_claim_id": "CLM-84D377164F5F", "subject_id": "MKT-TUNGSTEN-SUPPLY-CONTROL-2025", "predicate": "recommended_follow_up"}
+  ]
+}

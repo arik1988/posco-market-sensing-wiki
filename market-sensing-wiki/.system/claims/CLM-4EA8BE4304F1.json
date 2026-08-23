@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-4EA8BE4304F1",
+  "subject_id": "MKT-TUNGSTEN-SUPPLY-CONTROL-2025",
+  "predicate": "supporting_source_1",
+  "value": "Mineral Commodity Summaries 2026: Tungsten",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-02-06",
+  "last_verified": "2026-02-06",
+  "source_ids": [
+    "SRC-20260819-AFB27A7E"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-02-06",
+      "action": "created",
+      "reason": "Vercel 공개 Signal SIG-ECBFAFB863BF와 배포 Source 페이지에서 복구한 주장입니다.",
+      "source_ids": [
+        "SRC-20260819-AFB27A7E"
+      ]
+    }
+  ]
+}

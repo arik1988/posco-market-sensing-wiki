@@ -3,10 +3,10 @@ cd /d "%~dp0"
 set "WIKI_ROOT=%CD%"
 set "PROJECT_TOOLS=%CD%\tools\project"
 
-where python >nul 2>&1
+call "%PROJECT_TOOLS%\resolve_python.bat"
 if errorlevel 1 (
-  echo [ERROR] Python was not found.
-  echo Install Python 3 and run installer.bat again.
+  echo [ERROR] A working Python 3 interpreter was not found.
+  echo Install Python 3.10 or newer and run installer.bat again.
   pause
   exit /b 1
 )
@@ -20,7 +20,7 @@ if errorlevel 1 (
 )
 
 echo Installing packages required by the MkDocs wiki...
-python -m pip install -r "%PROJECT_TOOLS%\requirements-docs.txt"
+"%WIKI_PYTHON%" -m pip install -r "%PROJECT_TOOLS%\requirements-docs.txt"
 if errorlevel 1 (
   echo.
   echo [ERROR] Package installation failed.

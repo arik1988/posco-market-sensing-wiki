@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-E30CA43FD28B",
+  "subject_id": "POL-KR-RARE-EARTH-2026",
+  "predicate": "recommended_follow_up",
+  "value": "원문 조건과 실제 고객·공급망 데이터를 대조할 후속 확인표를 작성합니다.",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-195732B5"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "Vercel 공개 Signal SIG-7A04B05EA7F7와 배포 Source 페이지에서 복구한 주장입니다.",
+      "source_ids": [
+        "SRC-20260819-195732B5"
+      ]
+    }
+  ]
+}

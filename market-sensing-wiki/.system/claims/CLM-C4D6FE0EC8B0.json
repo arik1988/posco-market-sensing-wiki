@@ -1,0 +1,45 @@
+{
+  "claim_id": "CLM-C4D6FE0EC8B0",
+  "subject_id": "POL-CN-RARE-EARTH-CONTROLS-2025",
+  "predicate": "business_impact_rationale",
+  "value": "4월의 7개 희토류 관련 통제는 유지되고 10월 추가조치는 2026년 11월 10일까지 중단돼, 포스코홀딩스는 전면통제로 단정하지 말고 원소·품목·효력일별 고객 노출과 대체공급 준비를 나눠야 합니다.",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-D582BFD0",
+    "SRC-20260819-F6BAAD4C"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "Vercel 공개 Signal SIG-35E375530293와 배포 Source 페이지에서 복구한 주장입니다.",
+      "source_ids": [
+        "SRC-20260819-D582BFD0",
+        "SRC-20260819-F6BAAD4C"
+      ]
+    },
+    {
+      "date": "2026-08-19",
+      "action": "verified",
+      "reason": "Vercel 공개 Signal SIG-35E375530293와 배포 Source 페이지에서 복구한 주장입니다.",
+      "source_ids": [
+        "SRC-20260819-D582BFD0",
+        "SRC-20260819-F6BAAD4C"
+      ]
+    },
+    {
+      "date": "2026-08-19",
+      "action": "verified",
+      "reason": "Vercel 공개 Signal SIG-35E375530293와 배포 Source 페이지에서 복구한 주장입니다.",
+      "source_ids": [
+        "SRC-20260819-D582BFD0",
+        "SRC-20260819-F6BAAD4C"
+      ]
+    }
+  ]
+}

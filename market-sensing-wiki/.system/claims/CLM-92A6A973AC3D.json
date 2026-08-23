@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-92A6A973AC3D",
+  "subject_id": "POL-UK-STEEL-TRADE-2026",
+  "predicate": "recommended_follow_up",
+  "value": "영국향 품목·고객별 잔여 쿼터와 초과관세 귀속을 확인합니다. · 원문 근거",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-20",
+  "last_verified": "2026-08-20",
+  "source_ids": [
+    "SRC-20260820-20BC2262"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-20",
+      "action": "created",
+      "reason": "Vercel 공개 Signal SIG-7A55EC61FBC5와 배포 Source 페이지에서 복구한 주장입니다.",
+      "source_ids": [
+        "SRC-20260820-20BC2262"
+      ]
+    }
+  ]
+}

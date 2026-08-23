@@ -1,0 +1,56 @@
+{
+  "schema_version": 2,
+  "signal_id": "SIG-440808B98C75",
+  "sentence": "포스코홀딩스는 중국 희토류 규제를 전면 시행으로 단정하지 말고 4월 유지품목과 10월 중단품목을 나눠 11월 후속결정 전에 대체공급을 준비해야 합니다.",
+  "signal_type": "정책·규제",
+  "signal_role": "core_market_signal",
+  "signal_origin": "policy_regulator",
+  "assumption_challenge": {
+    "schema_version": 1,
+    "baseline_assumption": "중국이 2025년에 발표한 희토류 수출통제는 현재 모두 같은 범위와 강도로 시행되고 있습니다.",
+    "observed_break": "4월 7개 희토류 관련 통제는 유지되지만 10월 추가 품목·장비·기술 통제는 2026년 11월 10일까지 중단됐습니다.",
+    "decision_change": "전면통제 가정에서 원소·품목·효력일별 노출관리와 11월 후속결정별 계약·투자 대응으로 바꿉니다.",
+    "pattern": "policy_collision",
+    "surprise_score": 4,
+    "falsification_check": "4월 제18호까지 공식 중단 또는 폐지됐는지와 국내 고객이 유지통제품목에 실제로 노출되는지 확인합니다."
+  },
+  "insight_id": "INS-D056AFCF5AE9",
+  "company_ids": [
+    "COM-POSCO-HOLDINGS"
+  ],
+  "business_axis": "리튬",
+  "business_impact": {
+    "score": 5,
+    "rationale": "4월의 7개 희토류 관련 통제는 유지되고 10월 추가조치는 2026년 11월 10일까지 중단돼, 포스코홀딩스는 전면통제로 단정하지 말고 원소·품목·효력일별 고객 노출과 대체공급 준비를 나눠야 합니다."
+  },
+  "urgency": {
+    "score": 5,
+    "rationale": "추가조치 중단 종료가 2026년 11월 10일로 예정돼 있어 그 전에 고객 품목코드·재고·대체공급 승인기간과 재개 시 대응안을 확정해야 합니다.",
+    "response_deadline": null
+  },
+  "assessed_at": "2026-08-19",
+  "assessment_confidence": "medium",
+  "claim_ids": [
+    "CLM-254E6CB34703",
+    "CLM-84091FC60BD6",
+    "CLM-C4D6FE0EC8B0",
+    "CLM-73697330BCA5",
+    "CLM-7249A2614FA8",
+    "CLM-C69D9141BC71",
+    "CLM-D9BF0D3837EB",
+    "CLM-56958409A20B",
+    "CLM-82361A32CAFC",
+    "CLM-4FCA52170CB2",
+    "CLM-B1CBAA3D7525",
+    "CLM-D23E0ECEC6AA",
+    "CLM-3E026FC594CB"
+  ],
+  "source_ids": [
+    "SRC-20260819-D582BFD0",
+    "SRC-20260819-F6BAAD4C"
+  ],
+  "status": "active",
+  "created_at": "2026-08-22T09:31:57+09:00",
+  "updated_at": "2026-08-22T09:31:57+09:00",
+  "run_id": "2026-08-22-vercel-deployment-recovery"
+}

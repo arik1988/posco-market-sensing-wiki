@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-C4AA31BD4508",
+  "subject_id": "MKT-STRATEGIC-MINERALS-POLICY-2026",
+  "predicate": "supporting_source_6",
+  "value": "Critical Minerals Production Tax Incentive",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-07-01",
+  "last_verified": "2026-07-01",
+  "source_ids": [
+    "SRC-20260820-CEB5626F"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-07-01",
+      "action": "created",
+      "reason": "Vercel 공개 Signal SIG-58262BC4861B와 배포 Source 페이지에서 복구한 주장입니다.",
+      "source_ids": [
+        "SRC-20260820-CEB5626F"
+      ]
+    }
+  ]
+}

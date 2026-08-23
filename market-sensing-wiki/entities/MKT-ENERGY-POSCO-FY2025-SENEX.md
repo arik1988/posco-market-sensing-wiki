@@ -80,15 +80,6 @@
 - Claim ID: `CLM-4AB470AE7EB6`
 - 근거: [[sources/SRC-20260819-207A826E|SRC-20260819-207A826E]]
 
-### `response_deadline`
-
-**2026-03-31**
-
-- 최근 검증: 2026-08-19
-- 신뢰도: `medium`
-- Claim ID: `CLM-40B4073E568E`
-- 근거: [[sources/SRC-20260819-207A826E|SRC-20260819-207A826E]]
-
 ### `affected_business`
 
 **Senex LNG·POSCO International energy value chain**
@@ -123,6 +114,15 @@
 - 최근 검증: 2026-08-19
 - 신뢰도: `high`
 - Claim ID: `CLM-EBC191CA5D7C`
+- 근거: [[sources/SRC-20260819-207A826E|SRC-20260819-207A826E]]
+
+### `response_deadline`
+
+**2026-03-31**
+
+- 최근 검증: 2026-08-19
+- 신뢰도: `medium`
+- Claim ID: `CLM-40B4073E568E`
 - 근거: [[sources/SRC-20260819-207A826E|SRC-20260819-207A826E]]
 
 ### `senex_2026_plan`

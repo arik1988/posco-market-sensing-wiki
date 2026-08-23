@@ -80,15 +80,6 @@
 - Claim ID: `CLM-0AFAD8332F59`
 - 근거: [[sources/SRC-20260819-2FA37997|SRC-20260819-2FA37997]]
 
-### `response_deadline`
-
-**2025-09-15**
-
-- 최근 검증: 2026-08-19
-- 신뢰도: `medium`
-- Claim ID: `CLM-0839FB0EFC45`
-- 근거: [[sources/SRC-20260819-2FA37997|SRC-20260819-2FA37997]]
-
 ### `affected_business`
 
 **LNG 조달·전용선·터미널·trading**
@@ -132,6 +123,15 @@
 - 최근 검증: 2026-08-19
 - 신뢰도: `high`
 - Claim ID: `CLM-7BEAA3ACF2AC`
+- 근거: [[sources/SRC-20260819-2FA37997|SRC-20260819-2FA37997]]
+
+### `response_deadline`
+
+**2025-09-15**
+
+- 최근 검증: 2026-08-19
+- 신뢰도: `medium`
+- Claim ID: `CLM-0839FB0EFC45`
 - 근거: [[sources/SRC-20260819-2FA37997|SRC-20260819-2FA37997]]
 
 

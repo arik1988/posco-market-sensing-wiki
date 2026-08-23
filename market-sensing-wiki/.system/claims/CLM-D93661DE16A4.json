@@ -1,0 +1,43 @@
+{
+  "claim_id": "CLM-D93661DE16A4",
+  "subject_id": "POL-CN-RARE-EARTH-CONTROLS-2025",
+  "predicate": "business_axis",
+  "value": "전략광물",
+  "status": "superseded",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-D582BFD0",
+    "SRC-20260819-F6BAAD4C"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "Vercel 공개 Signal SIG-35E375530293와 배포 Source 페이지에서 복구한 주장입니다.",
+      "source_ids": [
+        "SRC-20260819-D582BFD0",
+        "SRC-20260819-F6BAAD4C"
+      ]
+    },
+    {
+      "date": "2026-08-19",
+      "action": "verified",
+      "reason": "Vercel 공개 Signal SIG-35E375530293와 배포 Source 페이지에서 복구한 주장입니다.",
+      "source_ids": [
+        "SRC-20260819-D582BFD0",
+        "SRC-20260819-F6BAAD4C"
+      ]
+    },
+    {
+      "date": "2026-08-22",
+      "action": "status_changed",
+      "from": "active",
+      "to": "superseded",
+      "reason": "배포본의 전략광물 표시를 현재 저장소의 포스코홀딩스 공식 사업축인 리튬으로 정규화합니다. 원래 표시는 복구 원문 맥락으로 보존합니다."
+    }
+  ]
+}

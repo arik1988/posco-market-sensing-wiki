@@ -80,15 +80,6 @@
 - Claim ID: `CLM-A9BF59B5BC76`
 - 근거: [[sources/SRC-20260819-72A89CB9|SRC-20260819-72A89CB9]]
 
-### `response_deadline`
-
-**2025-04-15**
-
-- 최근 검증: 2026-08-19
-- 신뢰도: `medium`
-- Claim ID: `CLM-B1B45E7A568F`
-- 근거: [[sources/SRC-20260819-72A89CB9|SRC-20260819-72A89CB9]]
-
 ### `affected_business`
 
 **Senex 국내가스 판매·CAPEX 회수**
@@ -132,6 +123,15 @@
 - 최근 검증: 2026-08-19
 - 신뢰도: `high`
 - Claim ID: `CLM-32E04FDC784E`
+- 근거: [[sources/SRC-20260819-72A89CB9|SRC-20260819-72A89CB9]]
+
+### `response_deadline`
+
+**2025-04-15**
+
+- 최근 검증: 2026-08-19
+- 신뢰도: `medium`
+- Claim ID: `CLM-B1B45E7A568F`
 - 근거: [[sources/SRC-20260819-72A89CB9|SRC-20260819-72A89CB9]]
 
 

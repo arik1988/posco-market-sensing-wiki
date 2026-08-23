@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-AAFA9575AE50",
+  "subject_id": "POL-UK-STEEL-TRADE-2026",
+  "predicate": "supporting_source_1",
+  "value": "UK's steel trade measure from 1 July 2026",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-07-22",
+  "last_verified": "2026-07-22",
+  "source_ids": [
+    "SRC-20260820-20BC2262"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-07-22",
+      "action": "created",
+      "reason": "Vercel 공개 Signal SIG-7A55EC61FBC5와 배포 Source 페이지에서 복구한 주장입니다.",
+      "source_ids": [
+        "SRC-20260820-20BC2262"
+      ]
+    }
+  ]
+}

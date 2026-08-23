@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "run_id": "2026-08-22-vercel-deployment-recovery",
+  "started_at": "2026-08-22T09:27:43+09:00",
+  "finished_at": "2026-08-22T09:33:38+09:00",
+  "mode": "deployment_recovery",
+  "scope": {
+    "deployment": "https://posco-market-sensing-wiki.vercel.app",
+    "signal_ids": [
+      "SIG-35E375530293",
+      "SIG-58262BC4861B",
+      "SIG-7A04B05EA7F7",
+      "SIG-7A55EC61FBC5",
+      "SIG-C68CC1899242",
+      "SIG-DE2981C00725",
+      "SIG-ECBFAFB863BF"
+    ]
+  },
+  "query": "recover seven Signal pages visible in the Vercel deployment but absent from Git refs",
+  "access_attempts": [
+    {
+      "url": "https://posco-market-sensing-wiki.vercel.app",
+      "status": 200,
+      "method": "public_html_recovery"
+    }
+  ],
+  "signal_ids": [
+    "SIG-440808B98C75",
+    "SIG-95C60D58286B",
+    "SIG-17D3234177F3",
+    "SIG-98F169B2AB51",
+    "SIG-7F07A935A42A",
+    "SIG-3F5D05727225",
+    "SIG-3F45DABCFFAC"
+  ],
+  "results": {
+    "new_sources": 14,
+    "new_claims": 82,
+    "new_signals": 7,
+    "repaired_claims": 9,
+    "replaced_claim_edges": 9
+  },
+  "signal_contract": {
+    "version": 1,
+    "signal_ids": [
+      "SIG-440808B98C75",
+      "SIG-95C60D58286B",
+      "SIG-17D3234177F3",
+      "SIG-98F169B2AB51",
+      "SIG-7F07A935A42A",
+      "SIG-3F5D05727225",
+      "SIG-3F45DABCFFAC"
+    ]
+  },
+  "discovery_contract": {
+    "version": 1,
+    "signal_ids": [
+      "SIG-440808B98C75",
+      "SIG-95C60D58286B",
+      "SIG-17D3234177F3",
+      "SIG-98F169B2AB51",
+      "SIG-7F07A935A42A",
+      "SIG-3F5D05727225",
+      "SIG-3F45DABCFFAC"
+    ]
+  }
+}

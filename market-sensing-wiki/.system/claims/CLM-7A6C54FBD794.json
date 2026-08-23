@@ -1,0 +1,45 @@
+{
+  "claim_id": "CLM-7A6C54FBD794",
+  "subject_id": "MKT-STRATEGIC-MINERALS-POLICY-2026",
+  "predicate": "impact_path",
+  "value": "가격·구매·가공비 정책지원 → 프로젝트 가격·물량·자본비 하방 축소 → 단계투자 NPV와 진입순서 변경 · 원문 근거 recommended follow up: 후보광종별 고객 최소구매·가격하방·정책 적격성·철회비용 비교표 작성 · 원문 근거 business impact rationale: 가격·물량·자본비 하방을 누가 부담하는지가 신규 광종의 투자순서와 NPV를 직접 바꿉니다. · 원문 근거",
+  "status": "superseded",
+  "confidence": "medium",
+  "first_seen": "2025-07-10",
+  "last_verified": "2025-07-10",
+  "source_ids": [
+    "SRC-20260819-832D09DF",
+    "SRC-20260819-A690FC34",
+    "SRC-20260819-FCC90074",
+    "SRC-20260820-81B7BC4C",
+    "SRC-20260820-AB7177A3",
+    "SRC-20260820-CEB5626F",
+    "SRC-20260820-4CEBE4D7"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2025-07-10",
+      "action": "created",
+      "reason": "Vercel 공개 Signal SIG-58262BC4861B와 배포 Source 페이지에서 복구한 주장입니다.",
+      "source_ids": [
+        "SRC-20260819-832D09DF",
+        "SRC-20260819-A690FC34",
+        "SRC-20260819-FCC90074",
+        "SRC-20260820-81B7BC4C",
+        "SRC-20260820-AB7177A3",
+        "SRC-20260820-CEB5626F",
+        "SRC-20260820-4CEBE4D7"
+      ]
+    },
+    {
+      "date": "2026-08-22",
+      "action": "status_changed",
+      "from": "active",
+      "to": "superseded",
+      "reason": "배포 Source의 연결된 판단 근거에서 필드 경계를 다시 파싱했습니다."
+    }
+  ],
+  "superseded_by": "CLM-2B09380CE6DC"
+}

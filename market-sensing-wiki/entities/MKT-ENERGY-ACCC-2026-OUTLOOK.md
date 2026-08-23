@@ -80,15 +80,6 @@
 - Claim ID: `CLM-E0864EFA247A`
 - 근거: [[sources/SRC-20260819-4F098D9C|SRC-20260819-4F098D9C]]
 
-### `response_deadline`
-
-**2025-09-01**
-
-- 최근 검증: 2026-08-19
-- 신뢰도: `medium`
-- Claim ID: `CLM-489C60614453`
-- 근거: [[sources/SRC-20260819-4F098D9C|SRC-20260819-4F098D9C]]
-
 ### `affected_business`
 
 **Senex·가스 trading·호주 동부 고객계약**
@@ -132,6 +123,15 @@
 - 최근 검증: 2026-08-19
 - 신뢰도: `high`
 - Claim ID: `CLM-06395C7D715A`
+- 근거: [[sources/SRC-20260819-4F098D9C|SRC-20260819-4F098D9C]]
+
+### `response_deadline`
+
+**2025-09-01**
+
+- 최근 검증: 2026-08-19
+- 신뢰도: `medium`
+- Claim ID: `CLM-489C60614453`
 - 근거: [[sources/SRC-20260819-4F098D9C|SRC-20260819-4F098D9C]]
 
 

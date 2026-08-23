@@ -1,0 +1,36 @@
+{
+  "claim_id": "CLM-82361A32CAFC",
+  "subject_id": "POL-CN-RARE-EARTH-CONTROLS-2025",
+  "predicate": "recommended_follow_up",
+  "value": "4월 유지통제와 10월 중단통제를 원소·화합물·자석·기술 코드별로 구분하고 국내 고객의 수입액·재고일수·품질승인 기간을 2026년 9월까지 확인 · 원문 근거",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-D582BFD0",
+    "SRC-20260819-F6BAAD4C"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "Vercel 공개 Signal SIG-35E375530293와 배포 Source 페이지에서 복구한 주장입니다.",
+      "source_ids": [
+        "SRC-20260819-D582BFD0",
+        "SRC-20260819-F6BAAD4C"
+      ]
+    },
+    {
+      "date": "2026-08-19",
+      "action": "verified",
+      "reason": "Vercel 공개 Signal SIG-35E375530293와 배포 Source 페이지에서 복구한 주장입니다.",
+      "source_ids": [
+        "SRC-20260819-D582BFD0",
+        "SRC-20260819-F6BAAD4C"
+      ]
+    }
+  ]
+}

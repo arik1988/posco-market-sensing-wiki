@@ -1,0 +1,29 @@
+{
+  "claim_id": "CLM-140780F2D021",
+  "subject_id": "MKT-US-RARE-EARTH-GUARANTEE-2025",
+  "predicate": "urgency_rationale",
+  "value": "10년 계약과 전략사업 선정이 이미 진행돼 후발 진입자는 판매처·정책금융·허용국가 조건을 광산 인수 전에 확보해야 선택권을 잃지 않습니다.",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-832D09DF",
+    "SRC-20260819-A690FC34",
+    "SRC-20260819-FCC90074"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "Vercel 공개 Signal SIG-C68CC1899242와 배포 Source 페이지에서 복구한 주장입니다.",
+      "source_ids": [
+        "SRC-20260819-832D09DF",
+        "SRC-20260819-A690FC34",
+        "SRC-20260819-FCC90074"
+      ]
+    }
+  ]
+}

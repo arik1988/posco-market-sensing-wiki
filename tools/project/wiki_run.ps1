@@ -8,6 +8,45 @@ $MkDocsConfig = Join-Path $ProjectTools "mkdocs.yml"
 $WikiAddress = "0.0.0.0:8000"
 $LocalUrl = "http://127.0.0.1:8000/"
 
+function Get-PythonExecutable {
+    $candidates = @()
+    if ($env:WIKI_PYTHON) {
+        $candidates += $env:WIKI_PYTHON
+    }
+    $candidates += @(
+        (Join-Path $env:LOCALAPPDATA "Programs\Python\Python314\python.exe"),
+        (Join-Path $env:LOCALAPPDATA "Programs\Python\Python313\python.exe"),
+        (Join-Path $env:USERPROFILE ".openharness-venv\Scripts\python.exe")
+    )
+    foreach ($root in @(
+        (Join-Path $env:LOCALAPPDATA "Programs\Python"),
+        $env:ProgramFiles
+    )) {
+        if (Test-Path -LiteralPath $root) {
+            $candidates += @(
+                Get-ChildItem -LiteralPath $root -Directory -Filter "Python*" -ErrorAction SilentlyContinue |
+                    Sort-Object Name -Descending |
+                    ForEach-Object { Join-Path $_.FullName "python.exe" }
+            )
+        }
+    }
+    $command = Get-Command python -All -ErrorAction SilentlyContinue
+    if ($command) {
+        $candidates += @($command | ForEach-Object { $_.Source })
+    }
+
+    foreach ($candidate in ($candidates | Where-Object { $_ } | Select-Object -Unique)) {
+        if (-not (Test-Path -LiteralPath $candidate)) {
+            continue
+        }
+        & $candidate -c "import sys" 2>$null
+        if ($LASTEXITCODE -eq 0) {
+            return $candidate
+        }
+    }
+    throw "A working Python 3 interpreter was not found."
+}
+
 function Test-WikiHardResetInput {
     param(
         [char]$Character = [char]0,
@@ -46,7 +85,7 @@ function Stop-ExistingWikiServers {
 }
 
 function Start-WikiServer {
-    $python = (Get-Command python -ErrorAction Stop).Source
+    $python = Get-PythonExecutable
     $startInfo = [System.Diagnostics.ProcessStartInfo]::new()
     $startInfo.FileName = $python
     $startInfo.Arguments = (

@@ -1,0 +1,27 @@
+{
+  "claim_id": "CLM-00FE5703D916",
+  "subject_id": "MKT-TUNGSTEN-SUPPLY-CONTROL-2025",
+  "predicate": "observed_change",
+  "value": "중국 상무부와 해관총서는 2025년 2월 4일부터 일부 텅스텐 제품·합금과 관련 생산기술을 허가 대상에 포함했습니다. USGS는 2025년 중국 생산을 6만7천 톤, 세계 생산을 8만5천 톤으로 추정했습니다. 중국은 세계 텅스텐 광산생산의 약 79%를 차지했으며, 로테르담 65% 정광 가격은 톤 단위당 266달러에서 551달러로, APT는 331달러에서 675달러로 상승했습니다. 이 변화는 수출통제 이후의 시장 동향이지만 가격상승 전부를 통제 하나의 효과로 단정할 수는 없습니다.",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-02-06",
+  "last_verified": "2026-02-06",
+  "source_ids": [
+    "SRC-20260819-AFB27A7E",
+    "SRC-20260819-745DCE52"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-02-06",
+      "action": "created",
+      "reason": "Vercel 공개 Signal SIG-ECBFAFB863BF와 배포 Source 페이지에서 복구한 주장입니다.",
+      "source_ids": [
+        "SRC-20260819-AFB27A7E",
+        "SRC-20260819-745DCE52"
+      ]
+    }
+  ]
+}

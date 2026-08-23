@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-C4A35EA2AD61",
+  "subject_id": "MKT-STEEL-US-QUALIFICATION-2026",
+  "predicate": "assessed_at",
+  "value": "2026-08-20",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-20",
+  "last_verified": "2026-08-20",
+  "source_ids": [
+    "SRC-20260820-9C0937F2"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-20",
+      "action": "created",
+      "reason": "Vercel 공개 Signal SIG-DE2981C00725와 배포 Source 페이지에서 복구한 주장입니다.",
+      "source_ids": [
+        "SRC-20260820-9C0937F2"
+      ]
+    }
+  ]
+}

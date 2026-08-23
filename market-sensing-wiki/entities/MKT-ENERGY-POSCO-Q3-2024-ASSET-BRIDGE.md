@@ -80,15 +80,6 @@
 - Claim ID: `CLM-2C81B88FE8B2`
 - 근거: [[sources/SRC-20260819-73A730DD|SRC-20260819-73A730DD]]
 
-### `response_deadline`
-
-**2025-01-31**
-
-- 최근 검증: 2026-08-19
-- 신뢰도: `medium`
-- Claim ID: `CLM-CA670E77990C`
-- 근거: [[sources/SRC-20260819-73A730DD|SRC-20260819-73A730DD]]
-
 ### `affected_business`
 
 **Myanmar gas field·Senex·LNG terminal·power generation**
@@ -123,6 +114,15 @@
 - 최근 검증: 2026-08-19
 - 신뢰도: `high`
 - Claim ID: `CLM-71E083BBB1A6`
+- 근거: [[sources/SRC-20260819-73A730DD|SRC-20260819-73A730DD]]
+
+### `response_deadline`
+
+**2025-01-31**
+
+- 최근 검증: 2026-08-19
+- 신뢰도: `medium`
+- Claim ID: `CLM-CA670E77990C`
 - 근거: [[sources/SRC-20260819-73A730DD|SRC-20260819-73A730DD]]
 
 ### `senex_q3_2024_operating_profit`

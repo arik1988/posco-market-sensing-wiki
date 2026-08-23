@@ -1,0 +1,27 @@
+{
+  "claim_id": "CLM-A58B9796CB50",
+  "subject_id": "MKT-TUNGSTEN-SUPPLY-CONTROL-2025",
+  "predicate": "impact_path",
+  "value": "중국 생산집중·수출허가 → 비중국 정광·APT 공급 부족과 가격상승 → 텅스텐 광산·중간재·재활용 진입의 계약가치와 투자회수조건 변화",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2026-08-19",
+  "last_verified": "2026-08-19",
+  "source_ids": [
+    "SRC-20260819-AFB27A7E",
+    "SRC-20260819-745DCE52"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2026-08-19",
+      "action": "created",
+      "reason": "Vercel Source 연결 메모의 필드 경계를 보정한 복구 주장입니다.",
+      "source_ids": [
+        "SRC-20260819-AFB27A7E",
+        "SRC-20260819-745DCE52"
+      ]
+    }
+  ]
+}

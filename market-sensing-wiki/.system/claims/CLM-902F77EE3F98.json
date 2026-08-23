@@ -1,0 +1,25 @@
+{
+  "claim_id": "CLM-902F77EE3F98",
+  "subject_id": "MKT-STRATEGIC-MINERALS-POLICY-2026",
+  "predicate": "supporting_source_4",
+  "value": "POSCO Holdings strengthens future competitiveness through localized research strategy for critical minerals",
+  "status": "active",
+  "confidence": "medium",
+  "first_seen": "2025-06-09",
+  "last_verified": "2025-06-09",
+  "source_ids": [
+    "SRC-20260820-81B7BC4C"
+  ],
+  "supersedes": [],
+  "coexists_with": [],
+  "history": [
+    {
+      "date": "2025-06-09",
+      "action": "created",
+      "reason": "Vercel 공개 Signal SIG-58262BC4861B와 배포 Source 페이지에서 복구한 주장입니다.",
+      "source_ids": [
+        "SRC-20260820-81B7BC4C"
+      ]
+    }
+  ]
+}

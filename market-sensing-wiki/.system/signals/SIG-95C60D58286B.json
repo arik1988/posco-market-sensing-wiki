@@ -1,0 +1,66 @@
+{
+  "schema_version": 2,
+  "signal_id": "SIG-95C60D58286B",
+  "sentence": "포스코홀딩스는 신규 전략광물 자산보다 고객 최소구매·가격하방·정책금융을 묶은 계약 패키지를 먼저 확보해야 합니다.",
+  "signal_type": "정책·규제",
+  "signal_role": "core_market_signal",
+  "signal_origin": "policy_regulator",
+  "assumption_challenge": {
+    "schema_version": 1,
+    "baseline_assumption": "신규 전략광물 진입은 유망 광종과 자산을 먼저 고른 뒤 정책지원과 고객을 붙이는 순서입니다.",
+    "observed_break": "미국·G7·EU·호주가 가격하한·장기구매·공동구매·가공비 세액상계를 결합하며 프로젝트의 가격·물량·자본비 하방을 정책으로 분담하기 시작했습니다.",
+    "decision_change": "후보 광종보다 고객 최소구매·가격하방·정책 적격성·철회비용을 묶은 상업조건을 먼저 비교해야 합니다.",
+    "pattern": "cost_curve_break",
+    "surprise_score": 4,
+    "falsification_check": "발표된 지원수단이 개별 프로젝트 계약으로 이어지는지와 지원조건 반영 NPV가 무지원 대안보다 높은지 확인합니다."
+  },
+  "insight_id": "INS-36A55676658E",
+  "company_ids": [
+    "COM-POSCO-HOLDINGS"
+  ],
+  "business_axis": "리튬",
+  "business_impact": {
+    "score": 5,
+    "rationale": "가격·물량·자본비 하방을 누가 부담하는지가 신규 광종의 투자순서와 NPV를 직접 바꿉니다."
+  },
+  "urgency": {
+    "score": 4,
+    "rationale": "G7·EU 첫 계약과 호주 2027년 시행 전에 고객 구매권과 정책 적격성을 선점해야 합니다.",
+    "response_deadline": null
+  },
+  "assessed_at": "2026-08-20",
+  "assessment_confidence": "medium",
+  "claim_ids": [
+    "CLM-C77B717B21EB",
+    "CLM-A1CA75A7342E",
+    "CLM-BE7608E438AF",
+    "CLM-E67769D63E89",
+    "CLM-311B2FB09311",
+    "CLM-EC6E9559D4D6",
+    "CLM-73DE3D4E382B",
+    "CLM-2B09380CE6DC",
+    "CLM-280EA12D30EB",
+    "CLM-D333514A6094",
+    "CLM-9B15BAB7094A",
+    "CLM-3DA0730752B8",
+    "CLM-928D6AB1F539",
+    "CLM-20BE074AF627",
+    "CLM-902F77EE3F98",
+    "CLM-CB269B209720",
+    "CLM-C4AA31BD4508",
+    "CLM-BF9BE6AF0ADE"
+  ],
+  "source_ids": [
+    "SRC-20260819-832D09DF",
+    "SRC-20260819-A690FC34",
+    "SRC-20260819-FCC90074",
+    "SRC-20260820-81B7BC4C",
+    "SRC-20260820-AB7177A3",
+    "SRC-20260820-CEB5626F",
+    "SRC-20260820-4CEBE4D7"
+  ],
+  "status": "active",
+  "created_at": "2026-08-22T09:32:18+09:00",
+  "updated_at": "2026-08-22T09:32:18+09:00",
+  "run_id": "2026-08-22-vercel-deployment-recovery"
+}

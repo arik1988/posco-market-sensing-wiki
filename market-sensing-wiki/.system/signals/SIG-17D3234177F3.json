@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "signal_id": "SIG-17D3234177F3",
+  "sentence": "포스코홀딩스는 희토류를 단일 사업으로 묶기보다 17종과 공급망 단계를 나눠 정책지원·수요계약 적합성이 높은 후보부터 선별해야 합니다.",
+  "signal_type": "정책·규제",
+  "signal_role": "core_market_signal",
+  "signal_origin": "policy_regulator",
+  "assumption_challenge": {
+    "schema_version": 1,
+    "baseline_assumption": "정부 요청 원소가 확정되기 전에는 전략광물 신규진입 후보 선별을 시작하기 어렵습니다.",
+    "observed_break": "정부가 희토류 17종 전체와 광산개발부터 제품생산까지를 지원 범위로 열고 2026년 정책금융을 확대했습니다.",
+    "decision_change": "특정 원소 확정 대기에서 17종·가치사슬 단계별 정책 적격성 및 앵커 수요 선별로 검토순서를 바꿉니다.",
+    "pattern": "policy_collision",
+    "surprise_score": 4,
+    "falsification_check": "정부의 실제 지원공고가 희토류 전 주기 중 포스코홀딩스가 참여할 수 없는 일부 분야로 제한되는지 확인합니다."
+  },
+  "insight_id": "INS-6398B5A82FA0",
+  "company_ids": [
+    "COM-POSCO-HOLDINGS"
+  ],
+  "business_axis": "리튬",
+  "business_impact": {
+    "score": 4,
+    "rationale": "희토류 17종 전체와 공급망 전 주기가 정책지원 범위에 들어가 포스코홀딩스가 광산 지분보다 분리·정제·재자원화까지 진입대안을 넓혀 비교할 근거가 생겼습니다."
+  },
+  "urgency": {
+    "score": 4,
+    "rationale": "2026년 확대된 융자와 신규 펀드의 사업 공고 전에 대상 광물·가치사슬·파트너 후보를 정리해야 정책창구를 활용할 수 있습니다.",
+    "response_deadline": null
+  },
+  "assessed_at": "2026-08-19",
+  "assessment_confidence": "medium",
+  "claim_ids": [
+    "CLM-70615116DC60",
+    "CLM-885043AD098A",
+    "CLM-F5B2EF05CE53",
+    "CLM-4E67817E113F",
+    "CLM-9D4A50904EE1",
+    "CLM-EBCF9B3AE0B5",
+    "CLM-A18785D3F682",
+    "CLM-383BEFEF1714",
+    "CLM-E30CA43FD28B",
+    "CLM-BFAD63AC3168",
+    "CLM-D6026D5F8053",
+    "CLM-811AEC45A817"
+  ],
+  "source_ids": [
+    "SRC-20260819-195732B5"
+  ],
+  "status": "active",
+  "created_at": "2026-08-22T09:32:32+09:00",
+  "updated_at": "2026-08-22T09:32:32+09:00",
+  "run_id": "2026-08-22-vercel-deployment-recovery"
+}

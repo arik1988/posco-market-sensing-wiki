@@ -1,0 +1,58 @@
+{
+  "schema_version": 2,
+  "signal_id": "SIG-7F07A935A42A",
+  "sentence": "포스코홀딩스는 전략광물 자산을 먼저 고르기보다 정책금융·가격보호·최소구매를 묶을 수 있는 사업구조를 신규진입의 선행조건으로 삼아야 합니다.",
+  "signal_type": "고객·계약",
+  "signal_role": "core_market_signal",
+  "signal_origin": "policy_regulator",
+  "assumption_challenge": {
+    "schema_version": 1,
+    "baseline_assumption": "전략광물 신규진입의 핵심은 유망 광산이나 가공자산을 먼저 확보한 뒤 정부지원과 판매처를 붙이는 것입니다.",
+    "observed_break": "미국은 희토류 사업에 지분·대출·10년 가격하한·10년 구매계약을 함께 제공했고 EU는 희토류·텅스텐을 포함한 전략사업을 역내외에서 선정했습니다.",
+    "decision_change": "자산 선확보에서 정책 적격성·앵커 수요·가격보호를 먼저 설계한 뒤 자산과 가치사슬 단계를 고르는 계약선행형 심사로 바꿉니다.",
+    "pattern": "cost_curve_break",
+    "surprise_score": 4,
+    "falsification_check": "포스코홀딩스 후보사업에서 실제 정책계약과 고객 최소구매가 확보되지 않거나 지배구조 제한의 비용이 지원가치를 넘는지 확인합니다."
+  },
+  "insight_id": "INS-B4DB33194A82",
+  "company_ids": [
+    "COM-POSCO-HOLDINGS"
+  ],
+  "business_axis": "리튬",
+  "business_impact": {
+    "score": 5,
+    "rationale": "미국은 희토류 분리·자석 사업에 지분·대출·가격하한·장기구매를 묶었고 EU는 희토류·텅스텐 사업을 전략사업으로 선정해, 신규진입은 광물 보유보다 정책·수요 계약을 먼저 확보하는 구조가 중요해졌습니다."
+  },
+  "urgency": {
+    "score": 4,
+    "rationale": "10년 계약과 전략사업 선정이 이미 진행돼 후발 진입자는 판매처·정책금융·허용국가 조건을 광산 인수 전에 확보해야 선택권을 잃지 않습니다.",
+    "response_deadline": null
+  },
+  "assessed_at": "2026-08-19",
+  "assessment_confidence": "medium",
+  "claim_ids": [
+    "CLM-20B79A785CDE",
+    "CLM-19A6D9A6F998",
+    "CLM-15FA22FC052C",
+    "CLM-95A134C47A7A",
+    "CLM-140780F2D021",
+    "CLM-88F1162A6071",
+    "CLM-85B4835CAAB7",
+    "CLM-637B371DC7A9",
+    "CLM-F592EAAB9B17",
+    "CLM-CAAA3631CFAB",
+    "CLM-40F888B9A742",
+    "CLM-538110E96CB0",
+    "CLM-1D782C9684BD",
+    "CLM-68A401C2B9D3"
+  ],
+  "source_ids": [
+    "SRC-20260819-832D09DF",
+    "SRC-20260819-A690FC34",
+    "SRC-20260819-FCC90074"
+  ],
+  "status": "active",
+  "created_at": "2026-08-22T09:33:05+09:00",
+  "updated_at": "2026-08-22T09:33:05+09:00",
+  "run_id": "2026-08-22-vercel-deployment-recovery"
+}

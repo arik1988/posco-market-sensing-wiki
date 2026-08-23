@@ -80,15 +80,6 @@
 - Claim ID: `CLM-9FDD027A0AD6`
 - 근거: [[sources/SRC-20260819-FE4320CB|SRC-20260819-FE4320CB]]
 
-### `response_deadline`
-
-**2025-04-30**
-
-- 최근 검증: 2026-08-19
-- 신뢰도: `medium`
-- Claim ID: `CLM-723133635CB1`
-- 근거: [[sources/SRC-20260819-FE4320CB|SRC-20260819-FE4320CB]]
-
 ### `affected_business`
 
 **LNG terminal·power generation·trading**
@@ -132,6 +123,15 @@
 - 최근 검증: 2026-08-19
 - 신뢰도: `high`
 - Claim ID: `CLM-9A8C0E0B5870`
+- 근거: [[sources/SRC-20260819-FE4320CB|SRC-20260819-FE4320CB]]
+
+### `response_deadline`
+
+**2025-04-30**
+
+- 최근 검증: 2026-08-19
+- 신뢰도: `medium`
+- Claim ID: `CLM-723133635CB1`
 - 근거: [[sources/SRC-20260819-FE4320CB|SRC-20260819-FE4320CB]]
 
 

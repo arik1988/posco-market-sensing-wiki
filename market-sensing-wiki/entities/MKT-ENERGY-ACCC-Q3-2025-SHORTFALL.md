@@ -80,15 +80,6 @@
 - Claim ID: `CLM-A618955006BD`
 - 근거: [[sources/SRC-20260819-0270DC5A|SRC-20260819-0270DC5A]]
 
-### `response_deadline`
-
-**2025-05-31**
-
-- 최근 검증: 2026-08-19
-- 신뢰도: `medium`
-- Claim ID: `CLM-92477F97037B`
-- 근거: [[sources/SRC-20260819-0270DC5A|SRC-20260819-0270DC5A]]
-
 ### `affected_business`
 
 **Senex 국내가스 판매·LNG trading**
@@ -132,6 +123,15 @@
 - 최근 검증: 2026-08-19
 - 신뢰도: `high`
 - Claim ID: `CLM-85A594E4B589`
+- 근거: [[sources/SRC-20260819-0270DC5A|SRC-20260819-0270DC5A]]
+
+### `response_deadline`
+
+**2025-05-31**
+
+- 최근 검증: 2026-08-19
+- 신뢰도: `medium`
+- Claim ID: `CLM-92477F97037B`
 - 근거: [[sources/SRC-20260819-0270DC5A|SRC-20260819-0270DC5A]]
 
 

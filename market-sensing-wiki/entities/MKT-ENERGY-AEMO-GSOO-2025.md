@@ -80,15 +80,6 @@
 - Claim ID: `CLM-AE6522D1BADB`
 - 근거: [[sources/SRC-20260819-B694DC74|SRC-20260819-B694DC74]]
 
-### `response_deadline`
-
-**2025-05-31**
-
-- 최근 검증: 2026-08-19
-- 신뢰도: `medium`
-- Claim ID: `CLM-B1025DC7042F`
-- 근거: [[sources/SRC-20260819-B694DC74|SRC-20260819-B694DC74]]
-
 ### `affected_business`
 
 **Senex·호주 동부 가스·저장·전송**
@@ -114,6 +105,15 @@
 - 최근 검증: 2026-08-19
 - 신뢰도: `high`
 - Claim ID: `CLM-0C4E06F3E26C`
+- 근거: [[sources/SRC-20260819-B694DC74|SRC-20260819-B694DC74]]
+
+### `response_deadline`
+
+**2025-05-31**
+
+- 최근 검증: 2026-08-19
+- 신뢰도: `medium`
+- Claim ID: `CLM-B1025DC7042F`
 - 근거: [[sources/SRC-20260819-B694DC74|SRC-20260819-B694DC74]]
 
 ### `southern_peak_shortfall_start`

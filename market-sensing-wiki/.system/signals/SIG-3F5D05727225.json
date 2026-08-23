@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "signal_id": "SIG-3F5D05727225",
+  "sentence": "포스코는 미국 자본재 주문별 용해·주조 증빙 가능성을 확인한 뒤 수출과 현지조달 경로를 선택해야 합니다.",
+  "signal_type": "정책·규제",
+  "signal_role": "core_market_signal",
+  "signal_origin": "policy_regulator",
+  "assumption_challenge": {
+    "schema_version": 1,
+    "baseline_assumption": "미국 자본재 주문은 제품가격과 일반 관세율을 맞추면 기존 생산경로로 수주할 수 있습니다.",
+    "observed_break": "일부 자본재의 우대관세에 철강 함량 중 미국 용해·주조 85% 이상이라는 생산자격이 추가됐습니다.",
+    "decision_change": "주문별 적용품목·철강 함량·용해주조 증빙을 먼저 확인하고 적격 생산경로별 원가와 납기를 비교해야 합니다.",
+    "pattern": "market_access_rule",
+    "surprise_score": 4,
+    "falsification_check": "적용품목이 포스코 고객 주문과 겹치는지와 세관이 요구하는 증빙 범위를 확인합니다."
+  },
+  "insight_id": "INS-6AE907423257",
+  "company_ids": [
+    "COM-POSCO"
+  ],
+  "business_axis": "철강",
+  "business_impact": {
+    "score": 4,
+    "rationale": "미국 자본재 주문의 적격 판정이 수출 가능 경로와 고객 협상조건을 직접 바꿉니다."
+  },
+  "urgency": {
+    "score": 4,
+    "rationale": "85% 용해·주조 기준이 이미 적용 중이며 제도는 2027년 말까지 이어집니다.",
+    "response_deadline": null
+  },
+  "assessed_at": "2026-08-20",
+  "assessment_confidence": "medium",
+  "claim_ids": [
+    "CLM-3051AA205BA6",
+    "CLM-4873D4D7B804",
+    "CLM-96C6791F3255",
+    "CLM-52A4BD5A041A",
+    "CLM-1D7EE8EA60F2",
+    "CLM-933301028F21",
+    "CLM-C4A35EA2AD61",
+    "CLM-1AADE04407D7",
+    "CLM-B43925FB932D",
+    "CLM-F76D1D3AF857",
+    "CLM-D1242343006E",
+    "CLM-5E7462B42938"
+  ],
+  "source_ids": [
+    "SRC-20260820-9C0937F2"
+  ],
+  "status": "active",
+  "created_at": "2026-08-22T09:33:21+09:00",
+  "updated_at": "2026-08-22T09:33:21+09:00",
+  "run_id": "2026-08-22-vercel-deployment-recovery"
+}

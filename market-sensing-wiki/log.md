@@ -3651,3 +3651,635 @@ WRN-STEEL-EU-VOLUME-CARBON-MIX: EU 철강 쿼터 1톤의 값이 달라진다, �
 ## [2026-08-19T20:01:34+09:00] audit
 
 0 findings. Report: reports/audits/audit-2026-08-19.md
+
+## [2026-08-22T09:08:06+09:00] audit
+
+0 findings. Report: reports/audits/audit-2026-08-22.md
+
+## [2026-08-22T09:27:29+09:00] add-source
+
+SRC-20260819-195732B5: 희토류 17종 전체 핵심광물 지정과 공급망 종합대책
+
+## [2026-08-22T09:27:30+09:00] add-source
+
+SRC-20260819-832D09DF: MP Materials 8-K: U.S. Department of Defense rare earth partnership
+
+## [2026-08-22T09:27:31+09:00] add-source
+
+SRC-20260819-AFB27A7E: Mineral Commodity Summaries 2026: Tungsten
+
+## [2026-08-22T09:27:32+09:00] add-source
+
+SRC-20260819-A690FC34: Selected strategic projects under the Critical Raw Materials Act
+
+## [2026-08-22T09:27:33+09:00] add-source
+
+SRC-20260819-D582BFD0: 중국 2025년 10월 추가 수출통제의 한시 중단
+
+## [2026-08-22T09:27:34+09:00] add-source
+
+SRC-20260819-745DCE52: 중국 텅스텐 등 관련 품목 수출통제
+
+## [2026-08-22T09:27:35+09:00] add-source
+
+SRC-20260819-FCC90074: Office of Strategic Capital first loan for MP Materials heavy rare earth separation
+
+## [2026-08-22T09:27:36+09:00] add-source
+
+SRC-20260819-F6BAAD4C: 중국 일부 희토류 관련 품목 수출통제
+
+## [2026-08-22T09:27:38+09:00] add-source
+
+SRC-20260820-9C0937F2: Further Adjusting the Tariff Regimes for Imports of Aluminum, Steel, and Copper
+
+## [2026-08-22T09:27:39+09:00] add-source
+
+SRC-20260820-20BC2262: UK's steel trade measure from 1 July 2026
+
+## [2026-08-22T09:27:40+09:00] add-source
+
+SRC-20260820-81B7BC4C: POSCO Holdings strengthens future competitiveness through localized research strategy for critical minerals
+
+## [2026-08-22T09:27:41+09:00] add-source
+
+SRC-20260820-AB7177A3: Commission launches platform to aggregate demand of raw materials and boost diversification
+
+## [2026-08-22T09:27:42+09:00] add-source
+
+SRC-20260820-CEB5626F: Critical Minerals Production Tax Incentive
+
+## [2026-08-22T09:27:43+09:00] add-source
+
+SRC-20260820-4CEBE4D7: Roadmap to Promote Standards-based Markets for Critical Minerals
+
+## [2026-08-22T09:27:44+09:00] add-claim
+
+CLM-D93661DE16A4: POL-CN-RARE-EARTH-CONTROLS-2025 / business_axis = 전략광물
+
+## [2026-08-22T09:27:45+09:00] add-claim
+
+CLM-84091FC60BD6: POL-CN-RARE-EARTH-CONTROLS-2025 / business_impact_score_1_to_5 = 5
+
+## [2026-08-22T09:27:47+09:00] add-claim
+
+CLM-C4D6FE0EC8B0: POL-CN-RARE-EARTH-CONTROLS-2025 / business_impact_rationale = 4월의 7개 희토류 관련 통제는 유지되고 10월 추가조치는 2026년 11월 10일까지 중단돼, 포스코홀딩스는 전면통제로 단정하지 말고 원소·품목·효력일별 고객 노출과 대체공급 준비를 나눠야 합니다.
+
+## [2026-08-22T09:27:48+09:00] add-claim
+
+CLM-73697330BCA5: POL-CN-RARE-EARTH-CONTROLS-2025 / urgency_score_1_to_5 = 5
+
+## [2026-08-22T09:27:49+09:00] add-claim
+
+CLM-7249A2614FA8: POL-CN-RARE-EARTH-CONTROLS-2025 / urgency_rationale = 추가조치 중단 종료가 2026년 11월 10일로 예정돼 있어 그 전에 고객 품목코드·재고·대체공급 승인기간과 재개 시 대응안을 확정해야 합니다.
+
+## [2026-08-22T09:27:50+09:00] add-claim
+
+CLM-C69D9141BC71: POL-CN-RARE-EARTH-CONTROLS-2025 / assessment_confidence = medium
+
+## [2026-08-22T09:27:51+09:00] add-claim
+
+CLM-D9BF0D3837EB: POL-CN-RARE-EARTH-CONTROLS-2025 / assessed_at = 2026-08-19
+
+## [2026-08-22T09:27:52+09:00] add-claim
+
+CLM-4FCA52170CB2: POL-CN-RARE-EARTH-CONTROLS-2025 / observed_change = 2025년 4월 4일 중국은 사마륨·가돌리늄·터븀·디스프로슘·루테튬·스칸듐·이트륨 관련 7개 희토류 품목에 수출허가를 시행했습니다. 2025년 10월 9일에는 더 넓은 품목·장비·원료·역외 물품·기술에 추가조치를 발표했습니다. 그러나 2025년 11월 7일 제70호 공고는 10월 추가조치 여섯 건을 2026년 11월 10일까지 중단했습니다. 중단 목록에는 4월 제18호 공고가 들어 있지 않습니다. 현재 상태는 일부 통제 유지와 추가통제 중단이 병존합니다.
+
+## [2026-08-22T09:27:53+09:00] add-claim
+
+CLM-B1CBAA3D7525: POL-CN-RARE-EARTH-CONTROLS-2025 / published_at = 2025-11-07
+
+## [2026-08-22T09:27:55+09:00] add-claim
+
+CLM-D23E0ECEC6AA: POL-CN-RARE-EARTH-CONTROLS-2025 / supporting_source_1 = 중국 2025년 10월 추가 수출통제의 한시 중단
+
+## [2026-08-22T09:27:56+09:00] add-claim
+
+CLM-3E026FC594CB: POL-CN-RARE-EARTH-CONTROLS-2025 / supporting_source_2 = 중국 일부 희토류 관련 품목 수출통제
+
+## [2026-08-22T09:29:58+09:00] verify-claim
+
+CLM-D93661DE16A4: added evidence SRC-20260819-D582BFD0, SRC-20260819-F6BAAD4C
+
+## [2026-08-22T09:29:59+09:00] verify-claim
+
+CLM-84091FC60BD6: added evidence SRC-20260819-D582BFD0, SRC-20260819-F6BAAD4C
+
+## [2026-08-22T09:30:00+09:00] verify-claim
+
+CLM-C4D6FE0EC8B0: added evidence SRC-20260819-D582BFD0, SRC-20260819-F6BAAD4C
+
+## [2026-08-22T09:30:01+09:00] verify-claim
+
+CLM-73697330BCA5: added evidence SRC-20260819-D582BFD0, SRC-20260819-F6BAAD4C
+
+## [2026-08-22T09:30:02+09:00] verify-claim
+
+CLM-7249A2614FA8: added evidence SRC-20260819-D582BFD0, SRC-20260819-F6BAAD4C
+
+## [2026-08-22T09:30:04+09:00] verify-claim
+
+CLM-C69D9141BC71: added evidence SRC-20260819-D582BFD0, SRC-20260819-F6BAAD4C
+
+## [2026-08-22T09:30:05+09:00] verify-claim
+
+CLM-D9BF0D3837EB: added evidence SRC-20260819-D582BFD0, SRC-20260819-F6BAAD4C
+
+## [2026-08-22T09:30:06+09:00] add-claim
+
+CLM-57C49CEA779E: POL-CN-RARE-EARTH-CONTROLS-2025 / impact_path = 4월 희토류 통제 유지·10월 추가조치 한시 중단 → 품목별 허가·납기 위험과 준비기간 병존 → 고객 재고·장기구매·대체공급 계약 → 포스코홀딩스 후보사업 우선순위 변화 · 원문 근거 urgency rationale: 추가조치 중단 종료가 2026년 11월 10일로 예정돼 있어 그 전에 고객 품목코드·재고·대체공급 승인기간과 재개 시 대응안을 확정해야 합니다. · 원문 근거 urgency score 1 to 5: 5 · 원문 근거 business impact score 1 to 5: 5 · 원문 근거 april control effective date: 2025-04-04 · 원문 근거 assessment confidence: high · 원문 근거 business impact rationale: 4월의 7개 희토류 관련 통제는 유지되고 10월 추가조치는 2026년 11월 10일까지 중단돼, 포스코홀딩스는 전면통제로 단정하지 말고 원소·품목·효력일별 고객 노출과 대체공급 준비를 나눠야 합니다. · 원문 근거 april control elements: 사마륨·가돌리늄·터븀·디스프로슘·루테튬·스칸듐·이트륨 · 원문 근거 business axis: 전략광물 · 원문 근거 assessed at: 2026-08-19 · 원문 근거 suspended announcements: 2025년 제55·56·57·58·61·62호 · 원문 근거 recommended follow up: 4월 유지통제와 10월 중단통제를 원소·화합물·자석·기술 코드별로 구분하고 국내 고객의 수입액·재고일수·품질승인 기간을 2026년 9월까지 확인 · 원문 근거
+
+## [2026-08-22T09:30:07+09:00] add-claim
+
+CLM-82361A32CAFC: POL-CN-RARE-EARTH-CONTROLS-2025 / recommended_follow_up = 4월 유지통제와 10월 중단통제를 원소·화합물·자석·기술 코드별로 구분하고 국내 고객의 수입액·재고일수·품질승인 기간을 2026년 9월까지 확인 · 원문 근거
+
+## [2026-08-22T09:30:08+09:00] verify-claim
+
+CLM-4FCA52170CB2: added evidence SRC-20260819-D582BFD0, SRC-20260819-F6BAAD4C
+
+## [2026-08-22T09:30:09+09:00] verify-claim
+
+CLM-B1CBAA3D7525: added evidence SRC-20260819-D582BFD0, SRC-20260819-F6BAAD4C
+
+## [2026-08-22T09:30:10+09:00] verify-claim
+
+CLM-D23E0ECEC6AA: added evidence SRC-20260819-D582BFD0
+
+## [2026-08-22T09:30:11+09:00] verify-claim
+
+CLM-3E026FC594CB: added evidence SRC-20260819-F6BAAD4C
+
+## [2026-08-22T09:31:44+09:00] add-claim
+
+CLM-254E6CB34703: POL-CN-RARE-EARTH-CONTROLS-2025 / business_axis = 리튬
+
+## [2026-08-22T09:31:45+09:00] verify-claim
+
+CLM-84091FC60BD6: added evidence SRC-20260819-D582BFD0, SRC-20260819-F6BAAD4C
+
+## [2026-08-22T09:31:46+09:00] verify-claim
+
+CLM-C4D6FE0EC8B0: added evidence SRC-20260819-D582BFD0, SRC-20260819-F6BAAD4C
+
+## [2026-08-22T09:31:47+09:00] verify-claim
+
+CLM-73697330BCA5: added evidence SRC-20260819-D582BFD0, SRC-20260819-F6BAAD4C
+
+## [2026-08-22T09:31:48+09:00] verify-claim
+
+CLM-7249A2614FA8: added evidence SRC-20260819-D582BFD0, SRC-20260819-F6BAAD4C
+
+## [2026-08-22T09:31:49+09:00] verify-claim
+
+CLM-C69D9141BC71: added evidence SRC-20260819-D582BFD0, SRC-20260819-F6BAAD4C
+
+## [2026-08-22T09:31:50+09:00] verify-claim
+
+CLM-D9BF0D3837EB: added evidence SRC-20260819-D582BFD0, SRC-20260819-F6BAAD4C
+
+## [2026-08-22T09:31:51+09:00] verify-claim
+
+CLM-57C49CEA779E: added evidence SRC-20260819-D582BFD0, SRC-20260819-F6BAAD4C
+
+## [2026-08-22T09:31:52+09:00] verify-claim
+
+CLM-82361A32CAFC: added evidence SRC-20260819-D582BFD0, SRC-20260819-F6BAAD4C
+
+## [2026-08-22T09:31:54+09:00] verify-claim
+
+CLM-4FCA52170CB2: added evidence SRC-20260819-D582BFD0, SRC-20260819-F6BAAD4C
+
+## [2026-08-22T09:31:55+09:00] verify-claim
+
+CLM-B1CBAA3D7525: added evidence SRC-20260819-D582BFD0, SRC-20260819-F6BAAD4C
+
+## [2026-08-22T09:31:56+09:00] verify-claim
+
+CLM-D23E0ECEC6AA: added evidence SRC-20260819-D582BFD0
+
+## [2026-08-22T09:31:57+09:00] verify-claim
+
+CLM-3E026FC594CB: added evidence SRC-20260819-F6BAAD4C
+
+## [2026-08-22T09:31:58+09:00] add-signal
+
+SIG-440808B98C75: 중국 추가 희토류 통제 2026년 11월까지 중단
+
+## [2026-08-22T09:31:59+09:00] add-claim
+
+CLM-C77B717B21EB: MKT-STRATEGIC-MINERALS-POLICY-2026 / business_axis = 리튬
+
+## [2026-08-22T09:32:00+09:00] add-claim
+
+CLM-A1CA75A7342E: MKT-STRATEGIC-MINERALS-POLICY-2026 / business_impact_score_1_to_5 = 5
+
+## [2026-08-22T09:32:01+09:00] add-claim
+
+CLM-BE7608E438AF: MKT-STRATEGIC-MINERALS-POLICY-2026 / business_impact_rationale = 가격·물량·자본비 하방을 누가 부담하는지가 신규 광종의 투자순서와 NPV를 직접 바꿉니다.
+
+## [2026-08-22T09:32:02+09:00] add-claim
+
+CLM-E67769D63E89: MKT-STRATEGIC-MINERALS-POLICY-2026 / urgency_score_1_to_5 = 4
+
+## [2026-08-22T09:32:03+09:00] add-claim
+
+CLM-311B2FB09311: MKT-STRATEGIC-MINERALS-POLICY-2026 / urgency_rationale = G7·EU 첫 계약과 호주 2027년 시행 전에 고객 구매권과 정책 적격성을 선점해야 합니다.
+
+## [2026-08-22T09:32:04+09:00] add-claim
+
+CLM-EC6E9559D4D6: MKT-STRATEGIC-MINERALS-POLICY-2026 / assessment_confidence = medium
+
+## [2026-08-22T09:32:06+09:00] add-claim
+
+CLM-73DE3D4E382B: MKT-STRATEGIC-MINERALS-POLICY-2026 / assessed_at = 2026-08-20
+
+## [2026-08-22T09:32:07+09:00] add-claim
+
+CLM-7A6C54FBD794: MKT-STRATEGIC-MINERALS-POLICY-2026 / impact_path = 가격·구매·가공비 정책지원 → 프로젝트 가격·물량·자본비 하방 축소 → 단계투자 NPV와 진입순서 변경 · 원문 근거 recommended follow up: 후보광종별 고객 최소구매·가격하방·정책 적격성·철회비용 비교표 작성 · 원문 근거 business impact rationale: 가격·물량·자본비 하방을 누가 부담하는지가 신규 광종의 투자순서와 NPV를 직접 바꿉니다. · 원문 근거
+
+## [2026-08-22T09:32:08+09:00] add-claim
+
+CLM-395DC14466D6: MKT-STRATEGIC-MINERALS-POLICY-2026 / recommended_follow_up = 후보광종별 고객 최소구매·가격하방·정책 적격성·철회비용 비교표 작성 · 원문 근거 business impact rationale: 가격·물량·자본비 하방을 누가 부담하는지가 신규 광종의 투자순서와 NPV를 직접 바꿉니다. · 원문 근거
+
+## [2026-08-22T09:32:09+09:00] add-claim
+
+CLM-D333514A6094: MKT-STRATEGIC-MINERALS-POLICY-2026 / observed_change = 2025년 7월 미국 국방부는 MP Materials에 지분 4억 달러, 대출 1억5천만 달러, 10년 NdPr 가격하한 110달러/kg, 10년 구매계약을 결합했습니다. 10월 G7은 가격하한·장기구매·차액계약·공급기반 가격책정 같은 수단을 공식 로드맵에 올렸습니다. 2026년 4월 EU는 수요·공급자 연결, 공동구매, 비축을 위한 Raw Materials Mechanism을 열었고, 호주는 2027년 7월부터 적격 가공·정제비의 10%를 세액상계하는 제도를 시행할 예정입니다. 서로 다른 정부가 보조금 한 번이 아니라 가격, 구매, 금융, 가공비를 묶는 방향으로 수렴하고 있습니다.
+
+## [2026-08-22T09:32:10+09:00] add-claim
+
+CLM-9B15BAB7094A: MKT-STRATEGIC-MINERALS-POLICY-2026 / published_at = 2025-07-10
+
+## [2026-08-22T09:32:11+09:00] add-claim
+
+CLM-3DA0730752B8: MKT-STRATEGIC-MINERALS-POLICY-2026 / supporting_source_1 = MP Materials 8-K: U.S. Department of Defense rare earth partnership
+
+## [2026-08-22T09:32:12+09:00] add-claim
+
+CLM-928D6AB1F539: MKT-STRATEGIC-MINERALS-POLICY-2026 / supporting_source_2 = Selected strategic projects under the Critical Raw Materials Act
+
+## [2026-08-22T09:32:13+09:00] add-claim
+
+CLM-20BE074AF627: MKT-STRATEGIC-MINERALS-POLICY-2026 / supporting_source_3 = Office of Strategic Capital first loan for MP Materials heavy rare earth separation
+
+## [2026-08-22T09:32:14+09:00] add-claim
+
+CLM-902F77EE3F98: MKT-STRATEGIC-MINERALS-POLICY-2026 / supporting_source_4 = POSCO Holdings strengthens future competitiveness through localized research strategy for critical minerals
+
+## [2026-08-22T09:32:15+09:00] add-claim
+
+CLM-CB269B209720: MKT-STRATEGIC-MINERALS-POLICY-2026 / supporting_source_5 = Commission launches platform to aggregate demand of raw materials and boost diversification
+
+## [2026-08-22T09:32:16+09:00] add-claim
+
+CLM-C4AA31BD4508: MKT-STRATEGIC-MINERALS-POLICY-2026 / supporting_source_6 = Critical Minerals Production Tax Incentive
+
+## [2026-08-22T09:32:17+09:00] add-claim
+
+CLM-BF9BE6AF0ADE: MKT-STRATEGIC-MINERALS-POLICY-2026 / supporting_source_7 = Roadmap to Promote Standards-based Markets for Critical Minerals
+
+## [2026-08-22T09:32:19+09:00] add-signal
+
+SIG-95C60D58286B: 전략광물 지원이 가격·구매·가공비 보전으로 확대
+
+## [2026-08-22T09:32:20+09:00] add-claim
+
+CLM-70615116DC60: POL-KR-RARE-EARTH-2026 / business_axis = 리튬
+
+## [2026-08-22T09:32:21+09:00] add-claim
+
+CLM-885043AD098A: POL-KR-RARE-EARTH-2026 / business_impact_score_1_to_5 = 4
+
+## [2026-08-22T09:32:22+09:00] add-claim
+
+CLM-F5B2EF05CE53: POL-KR-RARE-EARTH-2026 / business_impact_rationale = 희토류 17종 전체와 공급망 전 주기가 정책지원 범위에 들어가 포스코홀딩스가 광산 지분보다 분리·정제·재자원화까지 진입대안을 넓혀 비교할 근거가 생겼습니다.
+
+## [2026-08-22T09:32:23+09:00] add-claim
+
+CLM-4E67817E113F: POL-KR-RARE-EARTH-2026 / urgency_score_1_to_5 = 4
+
+## [2026-08-22T09:32:24+09:00] add-claim
+
+CLM-9D4A50904EE1: POL-KR-RARE-EARTH-2026 / urgency_rationale = 2026년 확대된 융자와 신규 펀드의 사업 공고 전에 대상 광물·가치사슬·파트너 후보를 정리해야 정책창구를 활용할 수 있습니다.
+
+## [2026-08-22T09:32:25+09:00] add-claim
+
+CLM-EBCF9B3AE0B5: POL-KR-RARE-EARTH-2026 / assessment_confidence = medium
+
+## [2026-08-22T09:32:26+09:00] add-claim
+
+CLM-A18785D3F682: POL-KR-RARE-EARTH-2026 / assessed_at = 2026-08-19
+
+## [2026-08-22T09:32:28+09:00] add-claim
+
+CLM-D0E9983066AD: POL-KR-RARE-EARTH-2026 / impact_path = 정부 지정·정책금융 확대 → 후보광물과 공급망 단계별 지원가능성 상승 → 포스코홀딩스의 신규진입 방식·파트너·투자순서 변경 · 원문 근거 assessment confidence: high · 원문 근거 urgency score 1 to 5: 4 · 원문 근거 supply chain scope: 광산개발·분리정제·제품생산 전 주기 · 원문 근거 designated scope: 희토류 17종 전체 · 원문 근거 business impact score 1 to 5: 4 · 원문 근거 business axis: 전략광물 · 원문 근거 urgency rationale: 2026년 확대된 융자와 신규 펀드의 사업 공고 전에 대상 광물·가치사슬·파트너 후보를 정리해야 정책창구를 활용할 수 있습니다. · 원문 근거 assessed at: 2026-08-19 · 원문 근거 overseas resource loan budget krw: 675억원 · 원문 근거 overseas resource loan support ratio: 최대 70% · 원문 근거 business impact rationale: 희토류 17종 전체와 공급망 전 주기가 정책지원 범위에 들어가 포스코홀딩스가 광산 지분보다 분리·정제·재자원화까지 진입대안을 넓혀 비교할 근거가 생겼습니다. · 원문 근거
+
+## [2026-08-22T09:32:29+09:00] add-claim
+
+CLM-E30CA43FD28B: POL-KR-RARE-EARTH-2026 / recommended_follow_up = 원문 조건과 실제 고객·공급망 데이터를 대조할 후속 확인표를 작성합니다.
+
+## [2026-08-22T09:32:30+09:00] add-claim
+
+CLM-BFAD63AC3168: POL-KR-RARE-EARTH-2026 / observed_change = 산업통상부는 2026년 2월 5일 희토류 17종 전체를 핵심광물로 지정하고, 광산개발·분리정제·제품생산까지 전 주기 대응을 강화한다고 발표했습니다. 같은 발표에서 2026년 해외자원개발 융자 예산을 675억 원으로 확대하고 지원비율을 최대 70%로 높였으며, 생산시설 투자 보조·재자원화 규제 합리화·연구개발 로드맵과 펀드를 추진한다고 밝혔습니다. 이는 정책 발표와 예산 방향이며 개별 사업자 선정 결과는 아닙니다.
+
+## [2026-08-22T09:32:31+09:00] add-claim
+
+CLM-D6026D5F8053: POL-KR-RARE-EARTH-2026 / published_at = 2026-02-05
+
+## [2026-08-22T09:32:32+09:00] add-claim
+
+CLM-811AEC45A817: POL-KR-RARE-EARTH-2026 / supporting_source_1 = 희토류 17종 전체 핵심광물 지정과 공급망 종합대책
+
+## [2026-08-22T09:32:33+09:00] add-signal
+
+SIG-17D3234177F3: 희토류 17종 전체 핵심광물 지정
+
+## [2026-08-22T09:32:34+09:00] add-claim
+
+CLM-94CD0EB4E938: POL-UK-STEEL-TRADE-2026 / business_axis = 철강
+
+## [2026-08-22T09:32:35+09:00] add-claim
+
+CLM-40C5D7668260: POL-UK-STEEL-TRADE-2026 / business_impact_score_1_to_5 = 4
+
+## [2026-08-22T09:32:37+09:00] add-claim
+
+CLM-6FDC2D3BB690: POL-UK-STEEL-TRADE-2026 / business_impact_rationale = 무관세 쿼터 51% 축소와 초과분 50% 관세가 영국향 판매물량과 계약마진을 직접 제한합니다.
+
+## [2026-08-22T09:32:38+09:00] add-claim
+
+CLM-E6B9B73FC41B: POL-UK-STEEL-TRADE-2026 / urgency_score_1_to_5 = 5
+
+## [2026-08-22T09:32:39+09:00] add-claim
+
+CLM-A235A7D5AE4D: POL-UK-STEEL-TRADE-2026 / urgency_rationale = 영국 조치가 2026년 7월 1일부터 시행돼 계약별 잔여 쿼터와 관세 귀속을 즉시 확인해야 합니다.
+
+## [2026-08-22T09:32:40+09:00] add-claim
+
+CLM-821382F16DDD: POL-UK-STEEL-TRADE-2026 / assessment_confidence = medium
+
+## [2026-08-22T09:32:41+09:00] add-claim
+
+CLM-F800B59874E5: POL-UK-STEEL-TRADE-2026 / assessed_at = 2026-08-20
+
+## [2026-08-22T09:32:42+09:00] add-claim
+
+CLM-1F192702A949: POL-UK-STEEL-TRADE-2026 / impact_path = 무관세 쿼터 51% 축소 → 초과분 50% 관세 → 고객별 도착원가·판매량 → 영국향 계약 재배분 · 원문 근거 recommended follow up: 영국향 품목·고객별 잔여 쿼터와 초과관세 귀속을 확인합니다. · 원문 근거
+
+## [2026-08-22T09:32:43+09:00] add-claim
+
+CLM-92A6A973AC3D: POL-UK-STEEL-TRADE-2026 / recommended_follow_up = 영국향 품목·고객별 잔여 쿼터와 초과관세 귀속을 확인합니다. · 원문 근거
+
+## [2026-08-22T09:32:44+09:00] add-claim
+
+CLM-9DE59EAEF403: POL-UK-STEEL-TRADE-2026 / observed_change = 영국은 2026년 7월부터 철강 무관세 쿼터를 51% 줄이고 초과분에 50% 관세를 적용했습니다. 포스코는 영국향 총수요보다 품목·고객별 쿼터 순번과 관세 귀속을 기준으로 판매물량과 가격을 다시 배분해야 합니다.
+
+## [2026-08-22T09:32:45+09:00] add-claim
+
+CLM-9FFB20F3C03C: POL-UK-STEEL-TRADE-2026 / published_at = 2026-07-22
+
+## [2026-08-22T09:32:47+09:00] add-claim
+
+CLM-AAFA9575AE50: POL-UK-STEEL-TRADE-2026 / supporting_source_1 = UK's steel trade measure from 1 July 2026
+
+## [2026-08-22T09:32:48+09:00] add-signal
+
+SIG-98F169B2AB51: 영국 철강 무관세 쿼터 51% 축소
+
+## [2026-08-22T09:32:49+09:00] add-claim
+
+CLM-20B79A785CDE: MKT-US-RARE-EARTH-GUARANTEE-2025 / business_axis = 리튬
+
+## [2026-08-22T09:32:50+09:00] add-claim
+
+CLM-19A6D9A6F998: MKT-US-RARE-EARTH-GUARANTEE-2025 / business_impact_score_1_to_5 = 5
+
+## [2026-08-22T09:32:52+09:00] add-claim
+
+CLM-15FA22FC052C: MKT-US-RARE-EARTH-GUARANTEE-2025 / business_impact_rationale = 미국은 희토류 분리·자석 사업에 지분·대출·가격하한·장기구매를 묶었고 EU는 희토류·텅스텐 사업을 전략사업으로 선정해, 신규진입은 광물 보유보다 정책·수요 계약을 먼저 확보하는 구조가 중요해졌습니다.
+
+## [2026-08-22T09:32:53+09:00] add-claim
+
+CLM-95A134C47A7A: MKT-US-RARE-EARTH-GUARANTEE-2025 / urgency_score_1_to_5 = 4
+
+## [2026-08-22T09:32:54+09:00] add-claim
+
+CLM-140780F2D021: MKT-US-RARE-EARTH-GUARANTEE-2025 / urgency_rationale = 10년 계약과 전략사업 선정이 이미 진행돼 후발 진입자는 판매처·정책금융·허용국가 조건을 광산 인수 전에 확보해야 선택권을 잃지 않습니다.
+
+## [2026-08-22T09:32:55+09:00] add-claim
+
+CLM-88F1162A6071: MKT-US-RARE-EARTH-GUARANTEE-2025 / assessment_confidence = medium
+
+## [2026-08-22T09:32:57+09:00] add-claim
+
+CLM-85B4835CAAB7: MKT-US-RARE-EARTH-GUARANTEE-2025 / assessed_at = 2026-08-19
+
+## [2026-08-22T09:32:58+09:00] add-claim
+
+CLM-637B371DC7A9: MKT-US-RARE-EARTH-GUARANTEE-2025 / impact_path = 확인된 외부 변화가 공급·고객·계약 조건을 거쳐 사업 판단을 바꾸는 경로를 배포 분석에서 복구했습니다.
+
+## [2026-08-22T09:32:59+09:00] add-claim
+
+CLM-70103BB9E9B5: MKT-US-RARE-EARTH-GUARANTEE-2025 / recommended_follow_up = 후보광물별로 한국·미국·EU 정책 적격성, 앵커 수요처, 가격하한 또는 최소구매 가능성, 허용국가·지배구조 조건을 한 장의 진입조건표로 작성 · 원문 근거 business impact rationale: 미국은 희토류 분리·자석 사업에 지분·대출·가격하한·장기구매를 묶었고 EU는 희토류·텅스텐 사업을 전략사업으로 선정해, 신규진입은 광물 보유보다 정책·수요 계약을 먼저 확보하는 구조가 중요해졌습니다. · 원문 근거 dod equity investment usd: 400000000 · 원문 근거 urgency rationale: 10년 계약과 전략사업 선정이 이미 진행돼 후발 진입자는 판매처·정책금융·허용국가 조건을 광산 인수 전에 확보해야 선택권을 잃지 않습니다. · 원문 근거 eu strategic project materials: 희토류·텅스텐 포함 14개 원자재 · 원문 근거 assessment confidence: high · 원문 근거 urgency score 1 to 5: 4 · 원문 근거 magnet offtake term years: 10 · 원문 근거 ndpr price floor usd per kg: 110 · 원문 근거
+
+## [2026-08-22T09:33:00+09:00] add-claim
+
+CLM-CAAA3631CFAB: MKT-US-RARE-EARTH-GUARANTEE-2025 / observed_change = MP Materials는 2025년 7월 미국 국방부와 4억 달러 우선주 투자, 사마륨 분리능력 확대용 1억5천만 달러 대출, NdPr kg당 110달러의 10년 가격보호, 신규 자석공장의 10년 구매계약을 체결했다고 SEC에 공시했습니다. 미국 국방부는 2025년 8월 1억5천만 달러 대출 실행을 별도로 확인했습니다. EU 집행위원회는 2025년 3월 역내, 6월 역외 핵심원자재 전략사업을 승인했고 대상 원자재에 희토류와 텅스텐을 포함했습니다. 사업 선정과 지원은 실행 기회를 높이지만 각 설비의 상업가동과 수익성을 보증하지는 않습니다.
+
+## [2026-08-22T09:33:01+09:00] add-claim
+
+CLM-40F888B9A742: MKT-US-RARE-EARTH-GUARANTEE-2025 / published_at = 2025-07-10
+
+## [2026-08-22T09:33:02+09:00] add-claim
+
+CLM-538110E96CB0: MKT-US-RARE-EARTH-GUARANTEE-2025 / supporting_source_1 = MP Materials 8-K: U.S. Department of Defense rare earth partnership
+
+## [2026-08-22T09:33:04+09:00] add-claim
+
+CLM-1D782C9684BD: MKT-US-RARE-EARTH-GUARANTEE-2025 / supporting_source_2 = Selected strategic projects under the Critical Raw Materials Act
+
+## [2026-08-22T09:33:05+09:00] add-claim
+
+CLM-68A401C2B9D3: MKT-US-RARE-EARTH-GUARANTEE-2025 / supporting_source_3 = Office of Strategic Capital first loan for MP Materials heavy rare earth separation
+
+## [2026-08-22T09:33:06+09:00] add-signal
+
+SIG-7F07A935A42A: 미국, 희토류 공급망에 10년 가격·구매 보장
+
+## [2026-08-22T09:33:08+09:00] add-claim
+
+CLM-3051AA205BA6: MKT-STEEL-US-QUALIFICATION-2026 / business_axis = 철강
+
+## [2026-08-22T09:33:09+09:00] add-claim
+
+CLM-4873D4D7B804: MKT-STEEL-US-QUALIFICATION-2026 / business_impact_score_1_to_5 = 4
+
+## [2026-08-22T09:33:10+09:00] add-claim
+
+CLM-96C6791F3255: MKT-STEEL-US-QUALIFICATION-2026 / business_impact_rationale = 미국 자본재 주문의 적격 판정이 수출 가능 경로와 고객 협상조건을 직접 바꿉니다.
+
+## [2026-08-22T09:33:11+09:00] add-claim
+
+CLM-52A4BD5A041A: MKT-STEEL-US-QUALIFICATION-2026 / urgency_score_1_to_5 = 4
+
+## [2026-08-22T09:33:12+09:00] add-claim
+
+CLM-1D7EE8EA60F2: MKT-STEEL-US-QUALIFICATION-2026 / urgency_rationale = 85% 용해·주조 기준이 이미 적용 중이며 제도는 2027년 말까지 이어집니다.
+
+## [2026-08-22T09:33:13+09:00] add-claim
+
+CLM-933301028F21: MKT-STEEL-US-QUALIFICATION-2026 / assessment_confidence = medium
+
+## [2026-08-22T09:33:14+09:00] add-claim
+
+CLM-C4A35EA2AD61: MKT-STEEL-US-QUALIFICATION-2026 / assessed_at = 2026-08-20
+
+## [2026-08-22T09:33:16+09:00] add-claim
+
+CLM-599E5579C6CC: MKT-STEEL-US-QUALIFICATION-2026 / impact_path = 85% 미국 용해·주조 기준 → 자본재 적격 판정 → 주문별 관세·조달조건 → 생산경로 선택 · 원문 근거 recommended follow up: 미국 자본재 고객 주문별 철강 원산지·용해주조 인증 가능성을 확인합니다. · 원문 근거
+
+## [2026-08-22T09:33:17+09:00] add-claim
+
+CLM-B43925FB932D: MKT-STEEL-US-QUALIFICATION-2026 / recommended_follow_up = 미국 자본재 고객 주문별 철강 원산지·용해주조 인증 가능성을 확인합니다. · 원문 근거
+
+## [2026-08-22T09:33:18+09:00] add-claim
+
+CLM-F76D1D3AF857: MKT-STEEL-US-QUALIFICATION-2026 / observed_change = 미국은 일부 자본재의 우대관세 조건에 철강 함량 중 미국 용해·주조 85% 이상 기준을 적용했습니다. 포스코는 평균 관세율보다 주문별 적용품목과 인증 가능성을 먼저 확인해 기존 수출과 현지조달 경로를 나눠야 합니다.
+
+## [2026-08-22T09:33:20+09:00] add-claim
+
+CLM-D1242343006E: MKT-STEEL-US-QUALIFICATION-2026 / published_at = 2026-06-01
+
+## [2026-08-22T09:33:21+09:00] add-claim
+
+CLM-5E7462B42938: MKT-STEEL-US-QUALIFICATION-2026 / supporting_source_1 = Further Adjusting the Tariff Regimes for Imports of Aluminum, Steel, and Copper
+
+## [2026-08-22T09:33:22+09:00] add-signal
+
+SIG-3F5D05727225: 미국 자본재에 85% 자국 용해·주조 기준 적용
+
+## [2026-08-22T09:33:23+09:00] add-claim
+
+CLM-6C1417085BF6: MKT-TUNGSTEN-SUPPLY-CONTROL-2025 / business_axis = 리튬
+
+## [2026-08-22T09:33:24+09:00] add-claim
+
+CLM-BA47DAF76029: MKT-TUNGSTEN-SUPPLY-CONTROL-2025 / business_impact_score_1_to_5 = 5
+
+## [2026-08-22T09:33:26+09:00] add-claim
+
+CLM-CBD4B7239969: MKT-TUNGSTEN-SUPPLY-CONTROL-2025 / business_impact_rationale = 중국의 세계 광산생산 비중 약 79%와 수출허가제가 겹친 뒤 국제가격이 두 배 안팎 올라, 텅스텐은 국가안보성과 비중국 공급 프리미엄을 함께 검증할 우선 후보입니다.
+
+## [2026-08-22T09:33:27+09:00] add-claim
+
+CLM-C23C77CA044A: MKT-TUNGSTEN-SUPPLY-CONTROL-2025 / urgency_score_1_to_5 = 4
+
+## [2026-08-22T09:33:28+09:00] add-claim
+
+CLM-4D40B23D0FD6: MKT-TUNGSTEN-SUPPLY-CONTROL-2025 / urgency_rationale = 수출통제가 이미 시행 중이고 2025년 가격상승이 확인돼, 대체 공급원·정광·APT·재활용 중 어느 단계가 병목인지 즉시 확인할 필요가 있습니다.
+
+## [2026-08-22T09:33:29+09:00] add-claim
+
+CLM-227BEABD31D0: MKT-TUNGSTEN-SUPPLY-CONTROL-2025 / assessment_confidence = medium
+
+## [2026-08-22T09:33:30+09:00] add-claim
+
+CLM-2A6F62B343D8: MKT-TUNGSTEN-SUPPLY-CONTROL-2025 / assessed_at = 2026-08-19
+
+## [2026-08-22T09:33:31+09:00] add-claim
+
+CLM-AB8688063363: MKT-TUNGSTEN-SUPPLY-CONTROL-2025 / impact_path = 중국 생산집중·수출허가 → 비중국 정광·APT 공급 부족과 가격상승 → 텅스텐 광산·중간재·재활용 진입의 계약가치와 투자회수조건 변화 · 원문 근거 business impact score 1 to 5: 5 · 원문 근거 urgency score 1 to 5: 4 · 원문 근거 business impact rationale: 중국의 세계 광산생산 비중 약 79%와 수출허가제가 겹친 뒤 국제가격이 두 배 안팎 올라, 텅스텐은 국가안보성과 비중국 공급 프리미엄을 함께 검증할 우선 후보입니다. · 원문 근거 world mine production 2025 t: 85000 · 원문 근거 controlled scope: 일부 텅스텐 제품·합금·생산기술 · 원문 근거 china mine production 2025 t: 67000 · 원문 근거 rotterdam concentrate price 2025: mtu당 266달러에서 551달러 · 원문 근거
+
+## [2026-08-22T09:33:32+09:00] add-claim
+
+CLM-BDB8B3C79179: MKT-TUNGSTEN-SUPPLY-CONTROL-2025 / recommended_follow_up = 국내 초경공구·방산·반도체 수요기업의 품목별 수입의존도와 장기구매 의향을 확인하고 광산·APT·재활용 세 단계의 진입경제성을 동일 기준으로 비교 · 원문 근거 impact path: 중국 생산집중·수출허가 → 비중국 정광·APT 공급 부족과 가격상승 → 텅스텐 광산·중간재·재활용 진입의 계약가치와 투자회수조건 변화 · 원문 근거 business impact score 1 to 5: 5 · 원문 근거 urgency score 1 to 5: 4 · 원문 근거 business impact rationale: 중국의 세계 광산생산 비중 약 79%와 수출허가제가 겹친 뒤 국제가격이 두 배 안팎 올라, 텅스텐은 국가안보성과 비중국 공급 프리미엄을 함께 검증할 우선 후보입니다. · 원문 근거 world mine production 2025 t: 85000 · 원문 근거 controlled scope: 일부 텅스텐 제품·합금·생산기술 · 원문 근거 china mine production 2025 t: 67000 · 원문 근거 rotterdam concentrate price 2025: mtu당 266달러에서 551달러 · 원문 근거
+
+## [2026-08-22T09:33:33+09:00] add-claim
+
+CLM-00FE5703D916: MKT-TUNGSTEN-SUPPLY-CONTROL-2025 / observed_change = 중국 상무부와 해관총서는 2025년 2월 4일부터 일부 텅스텐 제품·합금과 관련 생산기술을 허가 대상에 포함했습니다. USGS는 2025년 중국 생산을 6만7천 톤, 세계 생산을 8만5천 톤으로 추정했습니다. 중국은 세계 텅스텐 광산생산의 약 79%를 차지했으며, 로테르담 65% 정광 가격은 톤 단위당 266달러에서 551달러로, APT는 331달러에서 675달러로 상승했습니다. 이 변화는 수출통제 이후의 시장 동향이지만 가격상승 전부를 통제 하나의 효과로 단정할 수는 없습니다.
+
+## [2026-08-22T09:33:35+09:00] add-claim
+
+CLM-BFB6BA5FBCD4: MKT-TUNGSTEN-SUPPLY-CONTROL-2025 / published_at = 2026-02-06
+
+## [2026-08-22T09:33:36+09:00] add-claim
+
+CLM-4EA8BE4304F1: MKT-TUNGSTEN-SUPPLY-CONTROL-2025 / supporting_source_1 = Mineral Commodity Summaries 2026: Tungsten
+
+## [2026-08-22T09:33:37+09:00] add-claim
+
+CLM-CD826FBBB58E: MKT-TUNGSTEN-SUPPLY-CONTROL-2025 / supporting_source_2 = 중국 텅스텐 등 관련 품목 수출통제
+
+## [2026-08-22T09:33:38+09:00] add-signal
+
+SIG-3F45DABCFFAC: 중국 텅스텐 통제 뒤 국제가격 급등
+
+## [2026-08-22T09:34:25+09:00] audit
+
+28 findings. Report: reports/audits/audit-2026-08-22.md
+
+## [2026-08-22T09:40:18+09:00] add-claim
+
+CLM-56958409A20B: POL-CN-RARE-EARTH-CONTROLS-2025 / impact_path = 4월 희토류 통제 유지·10월 추가조치 한시 중단 → 품목별 허가·납기 위험과 준비기간 병존 → 고객 재고·장기구매·대체공급 계약 → 포스코홀딩스 후보사업 우선순위 변화
+
+## [2026-08-22T09:40:19+09:00] add-claim
+
+CLM-2B09380CE6DC: MKT-STRATEGIC-MINERALS-POLICY-2026 / impact_path = 가격·구매·가공비 정책지원 → 프로젝트 가격·물량·자본비 하방 축소 → 단계투자 NPV와 진입순서 변경
+
+## [2026-08-22T09:40:20+09:00] add-claim
+
+CLM-280EA12D30EB: MKT-STRATEGIC-MINERALS-POLICY-2026 / recommended_follow_up = 후보광종별 고객 최소구매·가격하방·정책 적격성·철회비용 비교표 작성
+
+## [2026-08-22T09:40:21+09:00] add-claim
+
+CLM-383BEFEF1714: POL-KR-RARE-EARTH-2026 / impact_path = 정부 지정·정책금융 확대 → 후보광물과 공급망 단계별 지원가능성 상승 → 포스코홀딩스의 신규진입 방식·파트너·투자순서 변경
+
+## [2026-08-22T09:40:22+09:00] add-claim
+
+CLM-44E7DFA83F02: POL-UK-STEEL-TRADE-2026 / impact_path = 무관세 쿼터 51% 축소 → 초과분 50% 관세 → 고객별 도착원가·판매량 → 영국향 계약 재배분
+
+## [2026-08-22T09:40:23+09:00] add-claim
+
+CLM-F592EAAB9B17: MKT-US-RARE-EARTH-GUARANTEE-2025 / recommended_follow_up = 후보광물별로 한국·미국·EU 정책 적격성, 앵커 수요처, 가격하한 또는 최소구매 가능성, 허용국가·지배구조 조건을 한 장의 진입조건표로 작성
+
+## [2026-08-22T09:40:24+09:00] add-claim
+
+CLM-1AADE04407D7: MKT-STEEL-US-QUALIFICATION-2026 / impact_path = 85% 미국 용해·주조 기준 → 자본재 적격 판정 → 주문별 관세·조달조건 → 생산경로 선택
+
+## [2026-08-22T09:40:25+09:00] add-claim
+
+CLM-A58B9796CB50: MKT-TUNGSTEN-SUPPLY-CONTROL-2025 / impact_path = 중국 생산집중·수출허가 → 비중국 정광·APT 공급 부족과 가격상승 → 텅스텐 광산·중간재·재활용 진입의 계약가치와 투자회수조건 변화
+
+## [2026-08-22T09:40:27+09:00] add-claim
+
+CLM-84D377164F5F: MKT-TUNGSTEN-SUPPLY-CONTROL-2025 / recommended_follow_up = 국내 초경공구·방산·반도체 수요기업의 품목별 수입의존도와 장기구매 의향을 확인하고 광산·APT·재활용 세 단계의 진입경제성을 동일 기준으로 비교
+
+## [2026-08-22T09:41:05+09:00] audit
+
+33 findings. Report: reports/audits/audit-2026-08-22.md
+
+## [2026-08-22T09:42:26+09:00] audit
+
+24 findings. Report: reports/audits/audit-2026-08-22.md
+
+## [2026-08-22T10:56:33+09:00] audit
+
+24 findings. Report: reports/audits/audit-2026-08-22.md
+
+## [2026-08-22T11:00:39+09:00] audit
+
+24 findings. Report: reports/audits/audit-2026-08-22.md
+
+## [2026-08-23T11:46:53+09:00] audit
+
+24 findings. Report: reports/audits/audit-2026-08-23.md
+
+## [2026-08-23T11:58:58+09:00] sync-obsidian
+
+62 subjects and 73 sources projected.
+
+## [2026-08-23T12:00:12+09:00] audit
+
+24 findings. Report: reports/audits/audit-2026-08-23.md
+
+## [2026-08-23T13:15:41+09:00] audit
+
+24 findings. Report: reports/audits/audit-2026-08-23.md

@@ -80,15 +80,6 @@
 - Claim ID: `CLM-A8CA5879DDC6`
 - 근거: [[sources/SRC-20260819-F3EBEB9A|SRC-20260819-F3EBEB9A]]
 
-### `response_deadline`
-
-**2025-02-15**
-
-- 최근 검증: 2026-08-19
-- 신뢰도: `medium`
-- Claim ID: `CLM-F34F733E5C46`
-- 근거: [[sources/SRC-20260819-F3EBEB9A|SRC-20260819-F3EBEB9A]]
-
 ### `affected_business`
 
 **Senex upstream·호주 동부 국내가스**
@@ -105,6 +96,15 @@
 - 최근 검증: 2026-08-19
 - 신뢰도: `medium`
 - Claim ID: `CLM-DD2EC29FCE11`
+- 근거: [[sources/SRC-20260819-F3EBEB9A|SRC-20260819-F3EBEB9A]]
+
+### `response_deadline`
+
+**2025-02-15**
+
+- 최근 검증: 2026-08-19
+- 신뢰도: `medium`
+- Claim ID: `CLM-F34F733E5C46`
 - 근거: [[sources/SRC-20260819-F3EBEB9A|SRC-20260819-F3EBEB9A]]
 
 ### `senex_expansion_capex`
