@@ -8,6 +8,8 @@
 4. 충돌 처리
 5. 사람 검토 기준
 6. 이미지 선정과 권리
+7. Claim 교차검증과 신선도
+8. Source modality와 Evidence 승격
 
 ## 1. 출처 우선순위
 
@@ -114,3 +116,54 @@
   사용하지 않고 `ai_reconstruction`으로 명시한다.
 - 이미지의 시각적 해석이 새로운 기술 주장을 만들면 본문·캡션 등 별도 텍스트
   근거로 검증한 뒤 Claim을 생성한다.
+
+## 7. Claim 교차검증과 신선도
+
+근거 표는 Source 수가 아니라 Claim별 검증 상태를 보여준다.
+
+- `single`: 한 개의 원출처 계보만 Claim을 지지한다.
+- `independent`: 서로 독립된 원출처 둘 이상이 같은 Claim을 지지한다.
+- `conflicted`: 독립 출처 사이에 값·범위·시점 충돌이 해결되지 않았다.
+- `unknown`: 원출처 계보 또는 검증 상태를 판정할 정보가 부족하다.
+
+멀티 출처는 Claim의 신뢰도를 강화하지만 Signal 발행 조건은 아니다. 단독 속보나 권위
+있는 1차 자료 한 건으로 확인된 Claim도 일반 Signal에 즉시 연결할 수 있다. 이때 별도의
+경고나 `추가 검증 중` 진행 상태를 만들지 않고 근거 영역에 `단일 출처`라고만 표시한다.
+독립 원출처가 같은 Claim에 추가되면 Signal을 새로 만들지 않고 기존 Claim의 상태 표시를
+`독립 교차확인`으로 바꾼다. `conflicted`는 `출처 상충`으로 표시한다.
+
+Source의 `reliability`와 Claim의 교차검증 상태는 독립된 축이다. 정부 공고·법정 공시처럼
+신뢰도 높은 1차 자료도 원출처 계보가 하나면 `single`이며, 출처 수가 늘었다는 이유만으로
+Claim `confidence`를 자동 상향하지 않는다.
+
+통신사 기사, 보도자료 배포본, 이를 거의 그대로 옮긴 기사 여러 건은 URL이 달라도 하나의
+원출처 계보입니다. 같은 기관의 요약본과 본문도 독립 검증으로 세지 않습니다. 반면 정부
+집행 자료, 고객·경쟁사의 실제 행동, 물리적 생산·출하 자료처럼 생성 주체와 관측 방식이
+독립적이면 별도 검증 채널이 될 수 있습니다.
+
+신선도는 평가일에 임의로 입력하는 등급이 아니라 확인 가능한 날짜에서 파생합니다.
+
+- 사건 수치·상태 Claim은 `assessed_at - last_verified_at`을 우선 사용합니다.
+- 원문 자체의 경과일을 보여줄 때는 `assessed_at - published_at`을 사용합니다.
+- `published_at` 또는 `last_verified_at`이 없으면 일수를 추정하지 않고 `미확인`으로 둡니다.
+- 날짜 계산의 기준 필드와 기준일을 함께 보존해 화면과 감사 결과가 같은 값을 내게 합니다.
+
+Source의 `primary/secondary`, 문서 유형, 사내·외부 공개 범위, 발행·수집·평가 시점은 서로
+다른 메타데이터입니다. 해시는 원문 무결성 확인용 내부 정보이며 일반 MyPIN 화면에서는
+노출하지 않습니다. 원문 URL과 접근 가능한 보관 원문은 Claim에서 끊기지 않게 연결합니다.
+
+## 8. Source modality와 Evidence 승격
+
+모든 Source는 발행주체·문서종류인 `source_type`과 별도로 다음 `source_modality` 하나를
+필수로 가진다.
+
+- `MARKET`: 가격, FX, 생산, 재고, 운임 등 정형 시장 관측
+- `DOCUMENT`: 뉴스, 공시, 정책, 법령, 리포트, 논문
+- `PHYSICAL`: AIS, 위성, 센서 등 물리 활동 관측
+- `ATTENTION`: Google Trends 등 관심·검색·담론 강도 관측
+
+정형값은 `ObservationVersion`, 행위·정책·상태 전이는 `EventVersion`, 문장에서 검증한
+원자 사실은 `ClaimVersion`으로 만든다. 세 Evidence는 Source modality를 그대로 상속하며
+서로 다른 modality를 한 Claim이나 Event로 섞지 않는다. 모두 Signal보다 먼저 하나 이상의
+`risk_factor_id`에 연결한다. 동일 사건을 다루는 여러 Source를 합쳤다는 이유만으로 Signal을
+새로 만들지 않고, 기존 canonical change의 Evidence 버전 또는 Signal version을 추가한다.

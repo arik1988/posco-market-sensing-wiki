@@ -36,13 +36,25 @@
     ].filter((diagram) => !diagram.querySelector("svg"));
   }
 
+  function quoteFlowchartNodeLabels(source) {
+    return source.replace(/\b([A-Za-z][A-Za-z0-9_]*)\[([^\]\n]+)\]/gu, (match, id, label) => {
+      const trimmed = label.trim();
+      if (/^(["']).*\1$/u.test(trimmed)) return match;
+      return `${id}["${trimmed.replace(/"/gu, "#quot;")}"]`;
+    });
+  }
+
   function renderPendingDiagrams(root = document) {
     rendering = rendering
       .then(async () => {
         for (const diagram of pendingDiagrams(root)) {
           try {
+            diagram.textContent = quoteFlowchartNodeLabels(diagram.textContent || "");
             await window.mermaid.run({ nodes: [diagram] });
           } catch (error) {
+            diagram.classList.add("mermaid-render-failed");
+            diagram.setAttribute("role", "alert");
+            diagram.textContent = "영향 경로 도식을 표시하지 못했습니다.";
             console.error("Mermaid diagram rendering failed.", error);
           }
         }

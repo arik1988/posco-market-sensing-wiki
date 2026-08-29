@@ -41,17 +41,30 @@
     return context;
   };
 
-  const createScore = (label, value) => {
+  let scoreRationaleId = 0;
+
+  const createScore = (label, assessment) => {
+    const value = assessment?.score;
+    const rationale = String(assessment?.rationale || "").trim();
     if (value === undefined || value === null || value === "") return null;
     const group = createElement("div", "signal-score");
     const term = createElement("dt", "signal-score-label", label);
     const description = createElement("dd", "signal-score-value");
-    description.setAttribute("aria-label", `${label} ${value}점, 5점 만점`);
+    description.setAttribute("aria-label", `${label} ${value}점, 10점 만점`);
     description.append(
       createElement("strong", "", value),
-      createElement("span", "signal-score-total", "/5"),
+      createElement("span", "signal-score-total", "/10"),
     );
     group.append(term, description);
+    if (rationale) {
+      const tooltip = createElement("span", "signal-score-rationale", rationale);
+      tooltip.id = `signal-score-rationale-${++scoreRationaleId}`;
+      tooltip.setAttribute("role", "tooltip");
+      group.classList.add("signal-score-with-rationale");
+      group.tabIndex = 0;
+      group.setAttribute("aria-describedby", tooltip.id);
+      group.append(tooltip);
+    }
     return group;
   };
 
@@ -68,17 +81,23 @@
     if (urgency) scores.append(urgency);
     if (scores.childElementCount) evaluation.append(scores);
 
-    if (item.assessed_at) {
+    const dates = createElement("div", "signal-row-dates");
+    [
+      ["감지일", item.detected_at],
+      ["평가일", item.assessed_at],
+    ].forEach(([label, value]) => {
+      if (!value) return;
       const date = createElement("div", "signal-assessed-at");
       date.append(
-        createElement("span", "signal-context-label", "평가일"),
+        createElement("span", "signal-context-label", label),
         document.createTextNode(" "),
       );
-      const time = createElement("time", "", item.assessed_at);
-      time.dateTime = item.assessed_at;
+      const time = createElement("time", "", value);
+      time.dateTime = value;
       date.append(time);
-      evaluation.append(date);
-    }
+      dates.append(date);
+    });
+    if (dates.childElementCount) evaluation.append(dates);
     return evaluation;
   };
 
@@ -145,6 +164,88 @@
     return section;
   };
 
+  const localIsoDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const createDateFilter = (onChange) => {
+    const toolbar = createElement("section", "signal-index-toolbar");
+    toolbar.setAttribute("aria-label", "감지일 필터");
+
+    const filter = createElement("div", "signal-date-filter");
+    filter.append(createElement("strong", "signal-date-filter-title", "감지일"));
+
+    const createDateField = (labelText, ariaLabel) => {
+      const label = createElement("label", "signal-date-field");
+      label.append(createElement("span", "", labelText));
+      const input = createElement("input");
+      input.type = "date";
+      input.setAttribute("aria-label", ariaLabel);
+      label.append(input);
+      return { label, input };
+    };
+    const from = createDateField("시작", "감지일 시작");
+    const to = createDateField("종료", "감지일 종료");
+    const separator = createElement("span", "signal-date-separator", "~");
+    filter.append(from.label, separator, to.label);
+
+    const presets = createElement("div", "signal-date-presets");
+    presets.setAttribute("aria-label", "감지일 빠른 선택");
+    const presetButtons = [];
+    [
+      ["최근 1일", 1],
+      ["최근 1주일", 7],
+      ["최근 1개월", 30],
+    ].forEach(([label, days]) => {
+      const button = createElement("button", "signal-date-preset", label);
+      button.type = "button";
+      button.setAttribute("aria-pressed", "false");
+      button.addEventListener("click", () => {
+        const end = new Date();
+        const start = new Date(end.getFullYear(), end.getMonth(), end.getDate());
+        start.setDate(start.getDate() - (days - 1));
+        from.input.value = localIsoDate(start);
+        to.input.value = localIsoDate(end);
+        presetButtons.forEach((candidate) => {
+          candidate.setAttribute("aria-pressed", String(candidate === button));
+        });
+        onChange(from.input.value, to.input.value);
+      });
+      presetButtons.push(button);
+      presets.append(button);
+    });
+    const reset = createElement("button", "signal-date-reset", "전체");
+    reset.type = "button";
+    reset.addEventListener("click", () => {
+      from.input.value = "";
+      to.input.value = "";
+      presetButtons.forEach((button) => button.setAttribute("aria-pressed", "false"));
+      onChange("", "");
+    });
+    presets.append(reset);
+    filter.append(presets);
+
+    const status = createElement("div", "signal-filter-status");
+    const summary = createElement("span", "signal-filter-summary");
+    summary.setAttribute("aria-live", "polite");
+    const error = createElement("span", "signal-filter-error");
+    error.setAttribute("role", "alert");
+    status.append(summary, error);
+    toolbar.append(filter, status);
+
+    const manualChange = () => {
+      presetButtons.forEach((button) => button.setAttribute("aria-pressed", "false"));
+      onChange(from.input.value, to.input.value);
+    };
+    from.input.addEventListener("change", manualChange);
+    to.input.addEventListener("change", manualChange);
+
+    return { toolbar, summary, error };
+  };
+
   const enhanceIndex = (script, payload) => {
     const scope = script.closest(".md-content__inner") || document;
     if (scope.querySelector(".signal-index-groups")) return true;
@@ -154,30 +255,63 @@
     const sourceRows = Array.from(table.tBodies[0]?.rows || []);
     if (!sourceRows.length || sourceRows.length !== payload.items.length) return false;
 
-    const groups = { core: [], execution: [] };
-    payload.items.forEach((item, index) => {
-      const entry = { item, sourceRow: sourceRows[index] };
-      if (item.signal_role === "execution_context") {
-        groups.execution.push(entry);
-      } else {
-        groups.core.push(entry);
-      }
-    });
-
+    const entries = payload.items.map((item, index) => ({
+      item,
+      sourceRow: sourceRows[index],
+    }));
+    const wrapper = createElement("div", "signal-index-explorer");
     const container = createElement("div", "signal-index-groups");
-    const coreSection = createIndexSection("핵심 시장신호", "", groups.core);
-    const executionSection = createIndexSection(
-      "실행·노출 확인",
-      "회사 발표·실적을 외부 시장신호의 노출과 실행 상태를 확인하는 근거로 모았습니다.",
-      groups.execution,
-    );
-    [coreSection, executionSection].filter(Boolean).forEach((section) => {
-      container.append(section);
-    });
+
+    const render = (from, to) => {
+      container.replaceChildren();
+      filter.error.textContent = "";
+      const invalidRange = from && to && from > to;
+      const visible = invalidRange
+        ? []
+        : entries.filter(({ item }) => {
+            const detectedAt = item.detected_at || item.assessed_at || "";
+            if (!detectedAt) return !from && !to;
+            return (!from || detectedAt >= from) && (!to || detectedAt <= to);
+          });
+      if (invalidRange) {
+        filter.error.textContent = "시작일은 종료일보다 늦을 수 없습니다.";
+      }
+      filter.summary.textContent = `전체 ${entries.length}건 중 ${visible.length}건`;
+
+      const groups = { core: [], execution: [] };
+      visible.forEach((entry) => {
+        if (entry.item.signal_role === "execution_context") {
+          groups.execution.push(entry);
+        } else {
+          groups.core.push(entry);
+        }
+      });
+      const coreSection = createIndexSection("핵심 시장신호", "", groups.core);
+      const executionSection = createIndexSection(
+        "실행·노출 확인",
+        "회사 발표·실적을 외부 시장신호의 노출과 실행 상태를 확인하는 근거로 모았습니다.",
+        groups.execution,
+      );
+      [coreSection, executionSection].filter(Boolean).forEach((section) => {
+        container.append(section);
+      });
+      if (!container.childElementCount && !invalidRange) {
+        container.append(
+          createElement(
+            "p",
+            "signal-index-empty",
+            "선택한 감지일 범위에 해당하는 Signal이 없습니다.",
+          ),
+        );
+      }
+    };
+    const filter = createDateFilter(render);
+    wrapper.append(filter.toolbar, container);
+    render("", "");
     if (container.querySelectorAll(".signal-index-row").length !== sourceRows.length) {
       return false;
     }
-    tableHost(table).replaceWith(container);
+    tableHost(table).replaceWith(wrapper);
     return true;
   };
 

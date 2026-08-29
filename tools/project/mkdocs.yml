@@ -1,7 +1,7 @@
 site_name: 포스코그룹 마켓센싱
 site_url: https://market-sensing-ai-wiki.vercel.app
-site_description: 철강·리튬·에너지 3대 사업축의 근거 기반 Market Sensing Wiki
-docs_dir: ../../market-sensing-wiki
+site_description: 포스코 패밀리 우선 기업 사업축의 근거 기반 Market Sensing Wiki
+docs_dir: wiki-docs
 site_dir: site
 use_directory_urls: true
 strict: true
@@ -46,6 +46,7 @@ extra_javascript:
   - javascripts/contextual-navigation.js
   - javascripts/signal-list.js
   - javascripts/impact-simulator.js
+  - javascripts/research-control-loader.js
 
 markdown_extensions:
   - admonition
@@ -54,6 +55,8 @@ markdown_extensions:
   - tables
   - toc
   - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
@@ -69,6 +72,7 @@ markdown_extensions:
 exclude_docs: |
   .system/
   config/
+  data/
   projects/
   reports/audits/
   AGENTS.md

@@ -5,8 +5,10 @@ $ErrorActionPreference = "Stop"
 $ProjectTools = Split-Path -Parent $MyInvocation.MyCommand.Path
 $WikiRoot = (Resolve-Path (Join-Path $ProjectTools "..\..")).Path
 $MkDocsConfig = Join-Path $ProjectTools "mkdocs.yml"
-$WikiAddress = "0.0.0.0:8000"
-$LocalUrl = "http://127.0.0.1:8000/"
+$WikiPort = 8200
+$ResearchAgentPort = 8201
+$WikiAddress = "0.0.0.0:$WikiPort"
+$LocalUrl = "http://127.0.0.1:$WikiPort/"
 
 function Get-PythonExecutable {
     $candidates = @()
@@ -67,7 +69,58 @@ function Stop-WikiProcessTree {
     if ($ServerProcessId -le 0) {
         return
     }
-    & taskkill.exe /PID $ServerProcessId /T /F *> $null
+
+    # Some managed Windows environments block external process-kill utilities
+    # even when the current user owns the target process. Snapshot the process
+    # tree and stop it with PowerShell's native process API instead.
+    $processes = @(
+        Get-CimInstance Win32_Process -ErrorAction SilentlyContinue
+    )
+    $pendingProcessIds = [System.Collections.Generic.Stack[int]]::new()
+    $pendingProcessIds.Push($ServerProcessId)
+    $processIds = [System.Collections.Generic.List[int]]::new()
+    $seenProcessIds = @{}
+
+    while ($pendingProcessIds.Count -gt 0) {
+        $processId = $pendingProcessIds.Pop()
+        if ($seenProcessIds.ContainsKey($processId)) {
+            continue
+        }
+        $seenProcessIds[$processId] = $true
+        $processIds.Add($processId)
+
+        foreach ($child in $processes) {
+            if ([int]$child.ParentProcessId -eq $processId) {
+                $pendingProcessIds.Push([int]$child.ProcessId)
+            }
+        }
+    }
+
+    for ($index = $processIds.Count - 1; $index -ge 0; $index--) {
+        $processId = $processIds[$index]
+        Stop-Process -Id $processId -Force -ErrorAction SilentlyContinue
+    }
+
+    try {
+        Wait-Process -Id $ServerProcessId -Timeout 5 -ErrorAction Stop
+    }
+    catch {
+        if (Get-Process -Id $ServerProcessId -ErrorAction SilentlyContinue) {
+            throw "Wiki server process $ServerProcessId could not be stopped."
+        }
+    }
+}
+
+function Get-ResearchAgentPythonExecutable {
+    $candidate = Join-Path $WikiRoot ".venv-agent\Scripts\python.exe"
+    if (-not (Test-Path -LiteralPath $candidate)) {
+        throw "The project-local AI research environment is missing. Run wiki_run.bat."
+    }
+    & $candidate -c "import deepagents, langchain_openai, openai_codex" 2>$null
+    if ($LASTEXITCODE -ne 0) {
+        throw "The project-local AI research environment is incomplete. Run wiki_run.bat."
+    }
+    return $candidate
 }
 
 function Stop-ExistingWikiServers {
@@ -76,7 +129,7 @@ function Stop-ExistingWikiServers {
             Where-Object {
                 $_.Name -eq "python.exe" -and
                 $_.CommandLine -match "mkdocs\s+serve" -and
-                $_.CommandLine -match "0\.0\.0\.0:8000"
+                $_.CommandLine -match ([regex]::Escape($WikiAddress))
             }
     )
     foreach ($server in $servers) {
@@ -97,6 +150,80 @@ function Start-WikiServer {
     $startInfo.RedirectStandardInput = $true
 
     return [System.Diagnostics.Process]::Start($startInfo)
+}
+
+function Start-ResearchAgentServer {
+    $python = Get-ResearchAgentPythonExecutable
+    $startInfo = [System.Diagnostics.ProcessStartInfo]::new()
+    $startInfo.FileName = $python
+    $startInfo.Arguments = "-m tools.research_agent.server"
+    $startInfo.WorkingDirectory = $WikiRoot
+    $startInfo.UseShellExecute = $false
+    return [System.Diagnostics.Process]::Start($startInfo)
+}
+
+function Wait-ResearchAgentReady {
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Diagnostics.Process]$Server,
+        [int]$TimeoutSeconds = 60
+    )
+
+    $deadline = [DateTime]::UtcNow.AddSeconds($TimeoutSeconds)
+    while ([DateTime]::UtcNow -lt $deadline) {
+        if ($Server.HasExited) {
+            throw "AI research server exited before becoming ready with code $($Server.ExitCode)."
+        }
+        try {
+            $response = Invoke-WebRequest `
+                -UseBasicParsing `
+                -Uri "http://127.0.0.1:$ResearchAgentPort/health" `
+                -TimeoutSec 1
+            if ($response.StatusCode -eq 200) {
+                return
+            }
+        }
+        catch {
+            # Python imports can take a few seconds on the first run.
+        }
+        Start-Sleep -Milliseconds 100
+    }
+    throw "AI research server did not become ready within $TimeoutSeconds seconds."
+}
+
+function Wait-WikiServerReady {
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Diagnostics.Process]$Server,
+        [string]$Url = $LocalUrl,
+        [int]$TimeoutSeconds = 60
+    )
+
+    $deadline = [DateTime]::UtcNow.AddSeconds($TimeoutSeconds)
+    while ([DateTime]::UtcNow -lt $deadline) {
+        if ($Server.HasExited) {
+            throw (
+                "Wiki server exited before becoming ready " +
+                "with code $($Server.ExitCode)."
+            )
+        }
+
+        try {
+            $response = Invoke-WebRequest `
+                -UseBasicParsing `
+                -Uri $Url `
+                -TimeoutSec 1
+            if ($response.StatusCode -ge 200 -and $response.StatusCode -lt 400) {
+                return
+            }
+        }
+        catch {
+            # The server can refuse connections while MkDocs builds the site.
+        }
+        Start-Sleep -Milliseconds 100
+    }
+
+    throw "Wiki server did not become ready within $TimeoutSeconds seconds."
 }
 
 function Get-WikiLanIPv4Address {
@@ -121,7 +248,7 @@ function Get-WikiBrowserUrl {
     param($LanAddress)
 
     if ($null -ne $LanAddress) {
-        return "http://${LanAddress}:8000/"
+        return "http://${LanAddress}:$WikiPort/"
     }
     return $LocalUrl
 }
@@ -135,7 +262,7 @@ function Start-WikiLauncher {
     Write-Host "Starting the Steel Technology Intelligence wiki..."
     Write-Host "Local URL: $LocalUrl"
     if ($null -ne $lanAddress) {
-        Write-Host "Intranet URL: http://${lanAddress}:8000/"
+        Write-Host "Intranet URL: http://${lanAddress}:$WikiPort/"
     }
     Write-Host "Other users on the same network can open the intranet URL."
     Write-Host "If Windows Firewall asks, allow Python on private networks."
@@ -143,12 +270,20 @@ function Start-WikiLauncher {
     Write-Host ""
 
     $server = $null
+    $researchAgent = $null
     $openBrowser = $true
     try {
+        Write-Host "Starting the standalone AI research server..."
+        $researchAgent = Start-ResearchAgentServer
+        Wait-ResearchAgentReady -Server $researchAgent
         while ($true) {
             $server = Start-WikiServer
             if ($openBrowser) {
-                Start-Process $browserUrl
+                Write-Host "Waiting for the wiki server to become ready..."
+                Wait-WikiServerReady -Server $server -Url $LocalUrl
+                # The AI research API is intentionally loopback-only. Open the
+                # local URL while continuing to advertise the read-only LAN URL.
+                Start-Process $LocalUrl
                 $openBrowser = $false
             }
 
@@ -189,6 +324,9 @@ function Start-WikiLauncher {
     finally {
         if ($null -ne $server -and -not $server.HasExited) {
             Stop-WikiProcessTree -ServerProcessId $server.Id
+        }
+        if ($null -ne $researchAgent -and -not $researchAgent.HasExited) {
+            Stop-WikiProcessTree -ServerProcessId $researchAgent.Id
         }
     }
 }

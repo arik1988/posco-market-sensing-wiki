@@ -541,9 +541,9 @@ def apply_recovery(root: Path, signals: list[dict[str, Any]], sources: dict[str,
         )
         claim_specs = [
             ("business_axis", signal["axis"], assessed_at, local_source_ids),
-            ("business_impact_score_1_to_5", str(signal["impact"]), assessed_at, local_source_ids),
+            ("business_impact_score_1_to_10", str(int(signal["impact"]) * 2 - 1), assessed_at, local_source_ids),
             ("business_impact_rationale", signal["impact_rationale"], assessed_at, local_source_ids),
-            ("urgency_score_1_to_5", str(signal["urgency"]), assessed_at, local_source_ids),
+            ("urgency_score_1_to_10", str(int(signal["urgency"]) * 2 - 1), assessed_at, local_source_ids),
             ("urgency_rationale", signal["urgency_rationale"], assessed_at, local_source_ids),
             ("assessment_confidence", "medium", assessed_at, local_source_ids),
             ("assessed_at", assessed_at, assessed_at, local_source_ids),
@@ -590,8 +590,8 @@ def apply_recovery(root: Path, signals: list[dict[str, Any]], sources: dict[str,
                 surprise_score=signal["surprise_score"], falsification_check=signal["falsification_check"],
                 paragraph=signal["summary"], document_path=None, analysis_file=str(analysis_path), impact_estimate_file=None,
                 company_id=[signal["company_id"]], business_axis=signal["axis"], claim_id=claim_ids,
-                business_impact_score=signal["impact"], business_impact_rationale=signal["impact_rationale"],
-                urgency_score=signal["urgency"], urgency_rationale=signal["urgency_rationale"], response_deadline=None,
+                business_impact_score=int(signal["impact"]) * 2 - 1, business_impact_rationale=signal["impact_rationale"],
+                urgency_score=int(signal["urgency"]) * 2 - 1, urgency_rationale=signal["urgency_rationale"], response_deadline=None,
                 assessed_at=signal["assessed_at"], assessment_confidence="medium",
             )
         )

@@ -5,34 +5,22 @@ $ErrorActionPreference = "Stop"
 ) "tools\project\wiki_run.ps1")
 $script:WikiAddress = "127.0.0.1:18081"
 
-function Wait-TestWikiReady {
-    foreach ($attempt in 1..40) {
-        try {
-            $response = Invoke-WebRequest `
-                -UseBasicParsing `
-                -Uri "http://127.0.0.1:18081/" `
-                -TimeoutSec 1
-            if ($response.StatusCode -eq 200) {
-                return
-            }
-        }
-        catch {
-        }
-        Start-Sleep -Milliseconds 250
-    }
-    throw "The test Wiki server did not become ready."
-}
-
 $firstServer = Start-WikiServer
 $secondServer = $null
 try {
-    Wait-TestWikiReady
+    Wait-WikiServerReady `
+        -Server $firstServer `
+        -Url "http://127.0.0.1:18081/" `
+        -TimeoutSeconds 15
     $firstId = $firstServer.Id
     Stop-WikiProcessTree -ServerProcessId $firstId
     $firstServer = $null
 
     $secondServer = Start-WikiServer
-    Wait-TestWikiReady
+    Wait-WikiServerReady `
+        -Server $secondServer `
+        -Url "http://127.0.0.1:18081/" `
+        -TimeoutSeconds 15
     if ($secondServer.Id -eq $firstId) {
         throw "The hard reset did not create a new process."
     }

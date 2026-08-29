@@ -19,7 +19,14 @@ import market_sensing  # noqa: E402
 AXIS_COMPANY = {
     "철강": "COM-POSCO",
     "리튬": "COM-POSCO-HOLDINGS",
+    "전략광물": "COM-POSCO-HOLDINGS",
     "에너지": "COM-POSCO-INTERNATIONAL",
+    "식량·팜": "COM-POSCO-INTERNATIONAL",
+    "건설·인프라": "COM-POSCO-ENC",
+    "이차전지소재": "COM-POSCO-FUTURE-M",
+    "철강·원료 물류": "COM-POSCO-FLOW",
+    "구동모터코아·강건재가공": "COM-POSCO-MOBILITY-SOLUTION",
+    "도금·컬러강판": "COM-POSCO-STEELEON",
 }
 
 
@@ -186,13 +193,18 @@ def apply_proposals(proposals: list[dict[str, Any]], wiki_root: Path, backup: Pa
                 "title": insight.get("title"),
                 "summary": insight.get("summary"),
                 "analysis_markdown": insight.get("analysis_markdown"),
+                "analysis_structured": insight.get("analysis_structured"),
             }
         )
         signal["schema_version"] = market_sensing.SIGNAL_SCHEMA_VERSION
         signal["signal_type"] = signal_type
         signal["sentence"] = proposal["sentence"]
         signal["updated_at"] = now
-        insight["schema_version"] = market_sensing.INSIGHT_SCHEMA_VERSION
+        insight["schema_version"] = (
+            market_sensing.INSIGHT_SCHEMA_VERSION
+            if insight.get("analysis_structured") is not None
+            else market_sensing.LEGACY_INSIGHT_SCHEMA_VERSION
+        )
         insight["title"] = proposal["title"]
         insight["summary"] = proposal["summary"]
         insight["analysis_markdown"] = proposal["analysis_markdown"]

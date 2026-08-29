@@ -1,4 +1,9 @@
 .vercel
 .env*
+.venv-agent/
 __pycache__/
 *.pyc
+*.db
+!market-sensing-wiki/data/market_sensing.db
+*.db-wal
+*.db-shm

@@ -285,11 +285,28 @@
     });
   }
 
-  if (typeof document$ !== "undefined") {
-    document$.subscribe(enhanceImpactSimulators);
-  } else if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", enhanceImpactSimulators);
-  } else {
-    enhanceImpactSimulators();
+  let enhancementScheduled = false;
+
+  function scheduleImpactEnhancement() {
+    if (enhancementScheduled) return;
+    enhancementScheduled = true;
+    requestAnimationFrame(() => {
+      enhancementScheduled = false;
+      enhanceImpactSimulators();
+    });
   }
+
+  if (typeof document$ !== "undefined") {
+    document$.subscribe(scheduleImpactEnhancement);
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", scheduleImpactEnhancement);
+  } else {
+    scheduleImpactEnhancement();
+  }
+
+  new MutationObserver(scheduleImpactEnhancement).observe(document.documentElement, {
+    childList: true,
+    subtree: true,
+  });
 })();

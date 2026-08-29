@@ -43,10 +43,25 @@ if ($source -cmatch "Press r to hard reset\.") {
 if ($source -notmatch 'RedirectStandardInput = \$true') {
     throw "MkDocs must not consume the launcher control key."
 }
+if ($source -match 'taskkill\.exe') {
+    throw "The launcher must not depend on taskkill.exe."
+}
+if ($source -notmatch 'Stop-Process -Id \$processId -Force') {
+    throw "The launcher must use PowerShell-native process termination."
+}
+if ($source -notmatch 'Wait-WikiServerReady -Server \$server -Url \$LocalUrl') {
+    throw "The launcher must wait for HTTP readiness before opening the browser."
+}
+if ($source -notmatch '(?s)Wait-WikiServerReady -Server \$server -Url \$LocalUrl.*Start-Process \$LocalUrl') {
+    throw "The local browser must open only after the wiki and loopback AI server are ready."
+}
+if ($source -notmatch 'Wait-ResearchAgentReady -Server \$researchAgent') {
+    throw "The launcher must wait for the standalone AI research API."
+}
 
 $intranetUrl = Get-WikiBrowserUrl `
     -LanAddress ([System.Net.IPAddress]::Parse("10.20.30.40"))
-if ($intranetUrl -ne "http://10.20.30.40:8000/") {
+if ($intranetUrl -ne "http://10.20.30.40:8200/") {
     throw "The browser must use the detected intranet URL by default."
 }
 

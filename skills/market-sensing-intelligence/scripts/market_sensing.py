@@ -13,8 +13,8 @@ import shutil
 import sys
 import tempfile
 import time
-from collections import defaultdict
-from datetime import date, datetime
+from collections import Counter, defaultdict
+from datetime import date, datetime, timedelta
 from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any
@@ -22,6 +22,46 @@ from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 from urllib.request import Request, urlopen
 
 from report_html import render_report_html
+from signal_analytics import (
+    SOURCE_MODALITIES,
+    build_signal_bundle,
+    event_version,
+    observation_version,
+    validate_modality,
+    validate_risk_factor,
+)
+from sqlite_store import (
+    append_operation_log,
+    collection_for_directory,
+    connection_scope as sqlite_connection_scope,
+    database_path,
+    delete_record,
+    get_artifact,
+    get_binary_asset,
+    get_settings,
+    get_source_content,
+    infer_root_and_collection,
+    initialize as initialize_sqlite,
+    integrity as sqlite_integrity,
+    list_artifacts,
+    list_logical_json,
+    online_backup,
+    put_artifact,
+    put_binary_asset,
+    put_claim_version,
+    put_event_version,
+    put_observation_version,
+    put_risk_factor,
+    put_risk_factor_links,
+    put_signal_analytics_bundle,
+    put_source_asset,
+    put_settings,
+    put_source_content,
+    read_logical_json,
+    record_exists,
+    transaction as sqlite_transaction,
+    write_logical_json,
+)
 
 
 SOURCE_TYPES = {
@@ -48,8 +88,70 @@ ACADEMIC_KINDS = {
 PEER_REVIEW_STATUSES = {"peer_reviewed", "not_peer_reviewed", "unknown"}
 CLAIM_STATUS = {"active", "superseded", "disputed", "cancelled", "stale"}
 CLAIM_CONFIDENCE = {"high", "medium", "low"}
-SIGNAL_SCHEMA_VERSION = 2
-INSIGHT_SCHEMA_VERSION = 1
+SOURCE_SCHEMA_VERSION = 2
+CLAIM_SCHEMA_VERSION = 2
+SIGNAL_SCHEMA_VERSION = 4
+SIGNAL_SCORE_MAX = 10
+LEGACY_INSIGHT_SCHEMA_VERSION = 1
+INSIGHT_SCHEMA_VERSION = 3
+STRUCTURED_ANALYSIS_SCHEMA_VERSION = 3
+LEGACY_STRUCTURED_ANALYSIS_SCHEMA_VERSION = 1
+SUPPORTED_STRUCTURED_ANALYSIS_SCHEMA_VERSIONS = {1, 2, 3}
+STRUCTURED_ANALYSIS_DISPLAY_TYPES = {"text", "list", "table", "flow"}
+STRUCTURED_ANALYSIS_LEGACY_REQUIRED_KEYS = {
+    "decision_question",
+    "provisional_conclusion",
+    "verified_change",
+    "impact_path",
+    "scenarios",
+    "monitoring_indicators",
+    "falsification_condition",
+    "decision_outputs",
+    "limitations",
+}
+STRUCTURED_ANALYSIS_REQUIRED_KEYS = {
+    "decision_question",
+    "provisional_conclusion",
+    "verified_change",
+    "impact_path",
+    "scenarios",
+    "monitoring_indicators",
+    "falsification_condition",
+    "decision_outputs",
+    "limitations",
+    "opportunity",
+    "risk",
+    "opportunity_cost",
+    "quantification_decision",
+    "escalation_triggers",
+    "deescalation_triggers",
+    "timing",
+    "baseline_assumption",
+    "decision_change",
+    "internal_data",
+    "owner",
+    "detection_trigger",
+}
+STRUCTURED_ANALYSIS_MID_SCORE_REQUIRED_KEYS = {
+    "secondary_effects",
+    "response_options",
+    "sensitivity_drivers",
+    "execution_sequence",
+}
+STRUCTURED_ANALYSIS_HIGH_SCORE_REQUIRED_KEYS = {
+    "delay_loss",
+    "reversibility",
+    "strongest_counterevidence",
+    "decision_authority",
+    "confirmed_deadline_or_condition",
+}
+STRUCTURED_ANALYSIS_REQUIRED_SECTION_KEYS = {
+    "scenarios",
+    "business_impact",
+    "key_drivers",
+    "evidence",
+    "falsification_actions",
+}
 ASSUMPTION_CHALLENGE_SCHEMA_VERSION = 1
 SIGNAL_TYPES = (
     "정책·규제",
@@ -76,38 +178,32 @@ SIGNAL_ROLE_ORIGINS = {
     },
     "execution_context": {"company_execution"},
 }
-STRATEGIC_WATCH_SCHEMA_VERSION = 2
-TREND_DIRECTIONS = {"strengthening", "stable", "weakening", "mixed"}
-THESIS_CONFIDENCE = {"high", "medium", "low"}
-WARNING_LEVELS = ("observe", "watch", "warning", "critical")
-WARNING_STATUSES = {"active", "closed"}
-STRATEGIC_ISSUE_DIRECTIONS = {"opportunity", "risk", "mixed"}
-STRATEGIC_ISSUE_TIMELINE_KINDS = {
-    "event",
-    "publication",
-    "effective",
-    "milestone",
-    "decision",
-    "monitoring",
-}
-STRATEGIC_ISSUE_SECTION_ROLES = (
-    "market_change",
-    "assumption_shift",
-    "business_impact",
-    "recommendation",
-    "evidence",
-    "monitoring",
-    "limitations",
-)
 RUN_SIGNAL_CONTRACT = {
-    "version": 1,
+    "version": 2,
     "minimum_core_market_ratio": 0.7,
     "single_asset_concentration_threshold": 0.5,
     "single_asset_minimum_signals": 3,
+    "minimum_signals_per_axis": 3,
+    "minimum_observation_band_ratio": 0.2,
+    "minimum_management_band_ratio": 0.2,
+    "maximum_executive_band_ratio": 0.5,
+    "maximum_single_score_ratio": 0.5,
 }
 RUN_DISCOVERY_CONTRACT = {
     "version": 1,
     "required_for_roles": ["core_market_signal"],
+}
+RUN_RESEARCH_CONTRACT_VERSION = 4
+RESEARCH_CELL_STATUSES = {"pending", "covered", "no_change", "blocked"}
+RESEARCH_CANDIDATE_DISPOSITIONS = {"published_signal", "watchlist", "rejected"}
+RESEARCH_EVIDENCE_CHANNELS = {
+    "company_action",
+    "government_action",
+    "physical_action",
+    "counterparty_action",
+    "failure_signal",
+    "follow_up_execution",
+    "local_official",
 }
 SURPRISE_PATTERNS = {
     "substitute_demand",
@@ -127,18 +223,54 @@ TARGET_COMPANY_SOURCE_TERMS = {
         "포스코인터내셔널",
         "senex",
     ),
+    "COM-POSCO-ENC": ("posco e&c", "posco enc", "포스코이앤씨", "포스코건설"),
+    "COM-POSCO-FUTURE-M": ("posco future m", "포스코퓨처엠", "포스코케미칼"),
+    "COM-POSCO-FLOW": ("posco flow", "포스코플로우"),
+    "COM-POSCO-MOBILITY-SOLUTION": (
+        "posco mobility solution",
+        "포스코모빌리티솔루션",
+    ),
+    "COM-POSCO-STEELEON": ("posco steeleon", "포스코스틸리온"),
 }
 COMPANY_OWNED_SOURCE_TYPES = {"company_release", "company_ir"}
-MARKET_SENSING_AXES = {
-    "COM-POSCO": "철강",
-    "COM-POSCO-HOLDINGS": "리튬",
-    "COM-POSCO-INTERNATIONAL": "에너지",
+MARKET_SENSING_COMPANY_AXES = {
+    "COM-POSCO": ("철강",),
+    "COM-POSCO-HOLDINGS": ("리튬", "전략광물"),
+    "COM-POSCO-INTERNATIONAL": (
+        "에너지",
+        "식량·팜",
+    ),
+    "COM-POSCO-ENC": ("건설·인프라",),
+    "COM-POSCO-FUTURE-M": ("이차전지소재",),
+    "COM-POSCO-FLOW": ("철강·원료 물류",),
+    "COM-POSCO-MOBILITY-SOLUTION": ("구동모터코아·강건재가공",),
+    "COM-POSCO-STEELEON": ("도금·컬러강판",),
 }
+COMPANY_NAME_TO_ID = {
+    "POSCO": "COM-POSCO",
+    "POSCO Holdings": "COM-POSCO-HOLDINGS",
+    "POSCO International": "COM-POSCO-INTERNATIONAL",
+    "POSCO E&C": "COM-POSCO-ENC",
+    "POSCO Future M": "COM-POSCO-FUTURE-M",
+    "POSCO Flow": "COM-POSCO-FLOW",
+    "POSCO Mobility Solution": "COM-POSCO-MOBILITY-SOLUTION",
+    "POSCO Steeleon": "COM-POSCO-STEELEON",
+}
+MARKET_SENSING_AXES = {
+    company_id: axes[0] for company_id, axes in MARKET_SENSING_COMPANY_AXES.items()
+}
+ALL_MARKET_SENSING_AXES = frozenset(
+    axis for axes in MARKET_SENSING_COMPANY_AXES.values() for axis in axes
+)
+
+
+def company_supports_business_axis(company_id: str, business_axis: str) -> bool:
+    return business_axis in MARKET_SENSING_COMPANY_AXES.get(company_id, ())
 REQUIRED_SIGNAL_PREDICATES = {
     "business_axis",
-    "business_impact_score_1_to_5",
+    "business_impact_score_1_to_10",
     "business_impact_rationale",
-    "urgency_score_1_to_5",
+    "urgency_score_1_to_10",
     "urgency_rationale",
     "assessment_confidence",
     "assessed_at",
@@ -1761,6 +1893,18 @@ TECHNOLOGY_NAVIGATION_GROUPS = (
     ),
 )
 PREDICATE_LABELS = {
+    "business_impact_score_1_to_10": "사업영향도",
+    "business_impact_rationale": "사업영향도 근거",
+    "urgency_score_1_to_10": "긴급도",
+    "urgency_rationale": "긴급도 근거",
+    "assessment_confidence": "평가 신뢰도",
+    "assessed_at": "평가일",
+    "impact_path": "영향 경로",
+    "recommended_follow_up": "권고 후속조치",
+    "global_ev_battery_deployment_2025": "2025년 세계 전기차 배터리 사용량",
+    "global_lfp_ev_battery_share_2025": "2025년 세계 LFP 비중",
+    "global_lfp_ev_battery_share_2024": "2024년 세계 LFP 비중",
+    "lfp_pack_price_discount_vs_nmc_2025": "LFP 팩의 NMC 대비 가격 격차",
     "zesty_hydrogen_flash_reduction_status": "ZESTY 수소 플래시 환원 현황",
     "hisarna_cyclone_smelting_reduction_status": "HIsarna 사이클론 용융환원 현황",
     "project_status": "프로젝트 상태",
@@ -2596,6 +2740,17 @@ CLAIM_STATUS_LABELS = {
     "cancelled": "취소",
     "stale": "재검증 필요",
 }
+CLAIM_CROSS_VALIDATION_LABELS = {
+    "single": "단일 출처",
+    "independent": "독립 교차확인",
+    "conflicted": "출처 상충",
+    "unknown": "근거 미확인",
+}
+CROSS_VALIDATION_EXCLUDED_PREDICATES = REQUIRED_SIGNAL_PREDICATES | {
+    "affected_business",
+    "collected_at",
+    "response_deadline",
+}
 CLAIM_ACTION_LABELS = {
     "created": "신규 확인",
     "verified": "재검증",
@@ -2617,10 +2772,13 @@ SOURCE_RECORDS_DIR = Path(".system/source-records")
 SOURCE_CANDIDATES_DIR = Path(".system/source-candidates")
 CLAIMS_DIR = Path(".system/claims")
 SIGNALS_DIR = Path(".system/signals")
+SIGNAL_VERSIONS_DIR = Path(".system/signal-versions")
 INSIGHTS_DIR = Path(".system/insights")
-TRENDS_DIR = Path(".system/trends")
-THESES_DIR = Path(".system/theses")
-WARNINGS_DIR = Path(".system/warnings")
+RISK_FACTORS_DIR = Path(".system/risk-factors")
+OBSERVATIONS_DIR = Path(".system/observations")
+EVENTS_DIR = Path(".system/events")
+COMPANY_IMPACTS_DIR = Path(".system/company-impacts")
+SCENARIOS_DIR = Path(".system/scenarios")
 PENDING_REVIEWS_DIR = Path(".system/reviews/pending")
 RESOLVED_REVIEWS_DIR = Path(".system/reviews/resolved")
 RUNS_DIR = Path(".system/runs")
@@ -2893,6 +3051,16 @@ def raw_sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def source_media_type(data: bytes) -> str:
+    if data.startswith(b"%PDF-"):
+        return "application/pdf"
+    try:
+        data.decode("utf-8")
+    except UnicodeDecodeError:
+        return "application/octet-stream"
+    return "text/markdown"
+
+
 def safe_slug(value: str, limit: int = 80) -> str:
     slug = re.sub(r"[^a-z0-9가-힣]+", "-", value.casefold()).strip("-")
     return (slug[:limit].rstrip("-") or "item")
@@ -2937,10 +3105,33 @@ def replace_with_retry(temp_name: str, path: Path, attempts: int = 10) -> None:
 
 
 def write_json(path: Path, value: dict[str, Any]) -> None:
+    if write_logical_json(path, value):
+        inferred = infer_root_and_collection(path)
+        if inferred is not None:
+            root, collection = inferred
+            if collection == "sources" and value.get("schema_version") == SOURCE_SCHEMA_VERSION:
+                put_source_asset(root, value)
+            elif collection == "claims" and value.get("claim_version_id"):
+                put_claim_version(root, value)
+            elif collection == "observations" and value.get("observation_version_id"):
+                put_observation_version(root, value)
+            elif collection == "events" and value.get("event_version_id"):
+                put_event_version(root, value)
+        return
+    if path.name == "watchlist.json" and path.parent.name == "config":
+        put_settings(path.parent.parent, "watchlist", value)
+        return
     atomic_write_text(path, json.dumps(value, ensure_ascii=False, indent=2) + "\n")
 
 
 def read_json(path: Path) -> dict[str, Any]:
+    logical = read_logical_json(path)
+    if logical is not None:
+        return logical
+    if path.name == "watchlist.json" and path.parent.name == "config":
+        settings = get_settings(path.parent.parent, "watchlist")
+        if settings is not None:
+            return settings
     with path.open("r", encoding="utf-8") as handle:
         value = json.load(handle)
     if not isinstance(value, dict):
@@ -2949,17 +3140,16 @@ def read_json(path: Path) -> dict[str, Any]:
 
 
 def load_json_objects(directory: Path) -> list[tuple[Path, dict[str, Any]]]:
+    logical = list_logical_json(directory)
+    if logical is not None:
+        return logical
     if not directory.exists():
         return []
     return [(path, read_json(path)) for path in sorted(directory.glob("*.json"))]
 
 
 def append_log(root: Path, operation: str, detail: str) -> None:
-    log_path = root / "log.md"
-    if not log_path.exists():
-        atomic_write_text(log_path, "# Market Sensing Intelligence Log\n")
-    with log_path.open("a", encoding="utf-8", newline="\n") as handle:
-        handle.write(f"\n## [{timestamp()}] {operation}\n\n{detail}\n")
+    append_operation_log(root, timestamp(), operation, detail)
 
 
 def emit(value: dict[str, Any]) -> None:
@@ -2972,17 +3162,11 @@ def emit(value: dict[str, Any]) -> None:
 
 def require_store(root: Path) -> Path:
     resolved = root.resolve()
-    required = [
-        resolved / "config" / "watchlist.json",
-        resolved / SOURCE_RECORDS_DIR,
-        resolved / CLAIMS_DIR,
-        resolved / PENDING_REVIEWS_DIR,
-    ]
-    missing = [str(path) for path in required if not path.exists()]
-    if missing:
+    db_path = database_path(resolved)
+    if not db_path.is_file():
         raise ValueError(
-            "Not a market-sensing-intelligence store. Run scaffold first. Missing: "
-            + ", ".join(missing)
+            "Not a market-sensing-intelligence SQLite store. Run scaffold or "
+            f"migrate-to-sqlite first. Missing: {db_path}"
         )
     sync_settings_store(resolved)
     return resolved
@@ -2991,7 +3175,16 @@ def require_store(root: Path) -> Path:
 def default_watchlist() -> dict[str, Any]:
     return {
         "schema_version": 1,
-        "companies": ["POSCO", "POSCO Holdings", "POSCO International"],
+        "companies": [
+            "POSCO",
+            "POSCO Holdings",
+            "POSCO International",
+            "POSCO E&C",
+            "POSCO Future M",
+            "POSCO Flow",
+            "POSCO Mobility Solution",
+            "POSCO Steeleon",
+        ],
         "technologies": [],
         "projects": [],
         "countries": [],
@@ -3042,18 +3235,34 @@ WIKI_SETTINGS_TEMPLATE = """# 포스코그룹 마켓센싱 관심사 설정
 
 - 포스코 철강사업에 직접적인 영향을 주는 외부 변화
 - 포스코홀딩스 리튬사업에 직접적인 영향을 주는 외부 변화
+- 포스코홀딩스 전략광물사업의 신규 진입·조달·가공·투자 조건을 바꾸는 외부 변화
 - 포스코인터내셔널 에너지사업에 직접적인 영향을 주는 외부 변화
+- 포스코인터내셔널 식량·팜사업의 곡물 생산·가공·유통·트레이딩과 팜 농장·정제,
+  바이오연료 원료 조달 조건을 바꾸는 외부 변화
+- 포스코이앤씨 건설·인프라사업에 직접적인 영향을 주는 외부 변화
+- 포스코퓨처엠 이차전지소재사업에 직접적인 영향을 주는 외부 변화
+- 포스코플로우 철강·원료 물류사업에 직접적인 영향을 주는 외부 변화
+- 포스코모빌리티솔루션 구동모터코아·강건재가공사업에 직접적인 영향을 주는 외부 변화
+- 포스코스틸리온 도금·컬러강판사업에 직접적인 영향을 주는 외부 변화
+- 사용자가 조사 기간만 제시하면 모든 우선 기업을 자동 점검하고, 유효한 변화가 없는 회사는 Signal을 강제하지 않음
 - 대상 회사를 직접 언급하지 않더라도 사업 영향 경로가 명확한 외부 변화
 - 사업영향도와 긴급도에 기반한 정보 가치 판단
-- 사업영향도와 긴급도는 각각 1~5점으로 평가하고 점수 근거와 평가 신뢰도를 함께 제시
+- 사업영향도와 긴급도는 각각 1~10점으로 평가하고 점수 근거와 평가 신뢰도를 함께 제시
+- 회사 영향 경로가 확인되면 중요도가 낮아도 1~4점 관찰 Signal로 발행
+- 8점은 상한이 아니며 전사 범위·즉시성·지연 손실·불가역성이 확인되면 10점 부여
 - 조사일, 원문 발표일, 사건 발생일, 효력 발생일을 서로 구분하고 확인되지 않은 날짜는 추정하지 않음
-- 사업 판단이나 대응을 바꿀 가능성이 낮고 영향 경로가 불명확한 단순 산업 동향은 제외
+- 회사 영향 경로가 불명확한 단순 산업 동향은 제외
 
 ## 우선 기업
 
 - POSCO
 - POSCO Holdings
 - POSCO International
+- POSCO E&C
+- POSCO Future M
+- POSCO Flow
+- POSCO Mobility Solution
+- POSCO Steeleon
 
 ## 우선 기술
 
@@ -3070,9 +3279,9 @@ WIKI_SETTINGS_TEMPLATE = """# 포스코그룹 마켓센싱 관심사 설정
 - event_date
 - effective_date
 - assessed_at
-- business_impact_score_1_to_5
+- business_impact_score_1_to_10
 - business_impact_rationale
-- urgency_score_1_to_5
+- urgency_score_1_to_10
 - urgency_rationale
 - assessment_confidence
 - impact_path
@@ -3121,8 +3330,8 @@ WIKI_SETTINGS_TEMPLATE = """# 포스코그룹 마켓센싱 관심사 설정
 - 조사일시, 원문 발표일, 사건 발생일, 효력 발생일
 - 발생한 사건과 확인된 사실
 - 사업에 영향을 미치는 구체적인 경로
-- 사업영향도 1~5점과 판단 근거
-- 긴급도 1~5점, 대응 필요 시점과 판단 근거
+- 사업영향도 1~10점과 판단 근거
+- 긴급도 1~10점, 대응 필요 시점과 판단 근거
 - 평가 시각과 평가 신뢰도
 - 임직원이 확인할 후속 관찰 항목
 - 사실, 출처의 주장, AI 분석의 구분
@@ -3208,13 +3417,16 @@ def effective_settings(root: Path) -> dict[str, Any]:
 def sync_settings_store(root: Path) -> dict[str, Any]:
     markdown_path = settings_path_for(root)
     json_path = root / "config" / "watchlist.json"
-    if not markdown_path.is_file() or not json_path.is_file():
+    current = get_settings(root, "watchlist")
+    if current is None:
+        current = default_watchlist()
+        put_settings(root, "watchlist", current)
+    if not markdown_path.is_file():
         return {
             "changed": False,
             "markdown": str(markdown_path),
-            "json": str(json_path),
+            "database": str(database_path(root)),
         }
-    current = read_json(json_path)
     updated = {**current, **parse_markdown_settings(markdown_path)}
     changed = updated != current
     if changed:
@@ -3222,16 +3434,16 @@ def sync_settings_store(root: Path) -> dict[str, Any]:
     return {
         "changed": changed,
         "markdown": str(markdown_path),
-        "json": str(json_path),
+        "database": str(database_path(root)),
     }
 
 
 def sync_settings(args: argparse.Namespace) -> dict[str, Any]:
     root = Path(args.root).resolve()
-    if not (root / "config" / "watchlist.json").is_file():
+    if not database_path(root).is_file():
         raise ValueError(
-            "Not a market-sensing-intelligence store. Run scaffold first. Missing: "
-            + str(root / "config" / "watchlist.json")
+            "Not a market-sensing-intelligence SQLite store. Run scaffold first. Missing: "
+            + str(database_path(root))
         )
     result = sync_settings_store(root)
     return {"action": "settings_synced", **result}
@@ -3244,11 +3456,39 @@ def show_settings(args: argparse.Namespace) -> dict[str, Any]:
 
 STORE_AGENTS = """# Market Sensing Intelligence 저장소 지침
 
+- 이 저장소의 최종 산출물은 MkDocs 사이트나 GUI가 아니라 단일 SQLite 스냅샷
+  `data/market_sensing.db`입니다. 조사·검증·구조화·발행 결과와 근거 계보를 이 파일 안에
+  완결된 데이터 계약으로 저장하세요.
+- 이 SQLite 스냅샷은 별도 Codex 프로젝트 `WX_Hackathon_2026`의 MyPIN이 importer로 읽는
+  입력 파일입니다. 스키마·데이터·관계·무결성·이식 가능성을 최우선으로 검증하고,
+  소비 프로젝트가 파일 하나만으로 필요한 내용을 재현할 수 있게 하세요.
+- 모든 영속 저장과 다른 프로그램으로의 전달은 `data/market_sensing.db` 파일 하나로
+  끝내세요. 기계가 재사용할 내용은 가능한 한 자유서술 문자열보다 DB 안의
+  `payload_json` 등 JSON 필드에 명시적인 키·타입·배열·객체로 구조화하고, 식별·검색·
+  관계·무결성 값은 정규 SQLite 컬럼으로 보존하세요. Markdown은 사람용 표현이 필요할
+  때만 DB TEXT에 병행하며 구조화 JSON을 대신하지 않습니다. JSON·Markdown 파일은
+  임시 명령 입력으로만 사용하고 영속 산출물로 남기지 마세요.
+- MkDocs 브라우저와 GUI는 SQLite 결과를 사람이 확인하는 중간 검증면입니다. 화면에만
+  반영되거나 MyPIN importer가 읽을 수 없는 변경은 완료가 아니며, 브라우저 확인으로
+  SQLite 저장과 무결성 검증을 대신하지 마세요.
+- 사용자의 조사·Signal·저장·화면·검증 요구는 특정 문서 한 건의 수동 편집이 아니라
+  Skill의 재현 가능한 공통 동작 변경으로 해석하세요. 특정 Signal은 수용 테스트 사례로
+  사용하되, 사용자가 예외 범위를 명시하지 않는 한 ID·제목·주제를 하드코딩하지 말고
+  다른 조사에도 같은 공용 명령·스키마·렌더러·검증이 적용되게 하세요. 사실 결론 자체는
+  해당 Signal 근거에만 귀속하세요.
 - 조사·검색·보고 전에 상위 `WIKI-SETTINGS.md`를 읽으세요.
+- `조사해`, `조사만 해줘`는 모두 Source·Claim·Signal 발행과 검증까지 수행하세요.
+  `저장하지 말 것`, `읽기 전용`, `초안만`이 명시된 경우에만 저장을 생략하세요.
 - 조사 결과를 저장하는 작업은 Source·Claim에서 끝내지 말고 `add-signal`로 관측 변화
-  제목, 변화 유형, 사업 시사점, 문단 Insight, 문서급 상세 분석을 연결한 뒤 MkDocs
+  제목, 변화 유형, 사업 시사점, 문단 Insight, UI용 구조화 분석 JSON, 읽기용 산문 분석을
+  연결한 뒤 MkDocs
   화면까지 검증하세요.
-- Signal 상세 분석은 같은 페이지에 인라인 표시하며 별도 보고서 링크로 대신하지 마세요.
+- 구조화 분석은 `analysis_structured`, 산문은 `analysis_markdown`으로 같은 SQLite Insight
+  `payload_json`에 저장하며 별도 보고서 링크로 대신하지 마세요.
+- Signal 상세는 제목·분류 배지 바로 다음부터 구조화/산문 탭을 시작하세요. 구조화 탭은
+  시나리오·사업 영향·키 드라이버·근거와 시점·반증과 다음 행동을 JSON 필드로 렌더링하고,
+  산문 탭은 고정 목차를 덧붙이지 않은 자연스러운 리서치 본문을 그대로 렌더링하세요.
+  연결 원문만 탭 아래 공통 영역에 둡니다.
 - Signal 작성 전 `../skills/market-sensing-intelligence/references/signal-analysis-template.md`를 읽으세요.
 - Signal 제목·사업 시사점·문단 작성 전
   `../skills/market-sensing-intelligence/references/editorial-style.md`를 읽고 평이한
@@ -3260,13 +3500,6 @@ STORE_AGENTS = """# Market Sensing Intelligence 저장소 지침
 - 외부 시장·정책·경쟁사·거래상대 변화는 `core_market_signal`, 대상 회사의 투자·증산·
   실적·공정 진척은 `execution_context/company_execution`으로 분리하세요. 회사 자체 발표만
   근거인 실행 사실을 core로 발행하지 말고, run×사업축마다 core 비중 70% 이상을 유지하세요.
-- 단발 Signal로 끝내지 마세요. 서로 독립적인 외부 Signal이 같은 전략가정을 반복해서
-  흔들면 `upsert-strategic-watch`로 `구조적 추세 → 위협받는 전략가정 → 지속 경고`를
-  연결하세요. 경고는 사람의 명시적 종료 또는 반증 근거가 쌓이기 전까지 삭제하지 말고,
-  다음 검토일과 강화·완화 조건 및 판단 이력을 유지하세요.
-- 핵심 전략 이슈는 지지 근거만 모으지 말고 반대 근거와 재검토 조건을 함께 기록하세요. 이슈
-  단계는 기사 수가 아니라 서로 독립적인 근거 채널, 추세의 지속성, 사업 영향 경로 및
-  의사결정 시한으로 판단하세요.
 - 정량화 가능한 Signal은 공개정보와 합리적 대용변수를 사용해 영향액을 숫자로 먼저
   제시하고 방어·기준·압박 시나리오를 만드세요. 핵심 가정 3~8개는 근거·단위·범위를
   가진 슬라이더와 직접입력으로 조정되게 하고 `set-impact-estimate`로 연결하세요.
@@ -3287,7 +3520,7 @@ STORE_AGENTS = """# Market Sensing Intelligence 저장소 지침
 
 TREND_REPORT_INDEX = """# 동향 보고서
 
-> 마지막 기준일 이후 새로 확인되거나 달라진 3대 사업축에 영향을 주는 외부 변화만
+> 마지막 기준일 이후 새로 확인되거나 달라진 우선 기업의 사업축에 영향을 주는 외부 변화만
 > 모아 보는 변화 중심 브리프입니다.
 
 !!! abstract "현재 발행 상태"
@@ -3328,76 +3561,29 @@ TREND_REPORT_INDEX = """# 동향 보고서
 
 def scaffold(root: Path) -> dict[str, Any]:
     root = root.resolve()
-    directories = [
-        "config",
-        RAW_DIR.as_posix(),
-        SOURCE_RECORDS_DIR.as_posix(),
-        SOURCE_CANDIDATES_DIR.as_posix(),
-        (SOURCE_CANDIDATES_DIR / "resolved").as_posix(),
-        CLAIMS_DIR.as_posix(),
-        SIGNALS_DIR.as_posix(),
-        INSIGHTS_DIR.as_posix(),
-        TRENDS_DIR.as_posix(),
-        THESES_DIR.as_posix(),
-        WARNINGS_DIR.as_posix(),
-        PENDING_REVIEWS_DIR.as_posix(),
-        RESOLVED_REVIEWS_DIR.as_posix(),
-        RUNS_DIR.as_posix(),
-        "companies",
-        "technologies",
-        "projects",
-        "entities",
-        "sources",
-        "events",
-        "signals",
-        "strategic-warnings",
-        "reports/briefs",
-        "reports/audits",
-    ]
+    root.mkdir(parents=True, exist_ok=True)
     created: list[str] = []
-    for relative in directories:
-        path = root / relative
-        if not path.exists():
-            path.mkdir(parents=True, exist_ok=True)
-            created.append(relative)
-
-    seed_files: dict[str, str] = {
-        "AGENTS.md": STORE_AGENTS,
-        "REVIEW.md": GENERATED_MARKER + "\n\n# Review Queue\n",
-        "index.md": (
-            GENERATED_MARKER
-            + "\n\n# 포스코그룹 마켓센싱\n"
-        ),
-        "reports/index.md": TREND_REPORT_INDEX,
-        "log.md": "# Market Sensing Intelligence Log\n",
-        "config/watchlist.json": json.dumps(
-            default_watchlist(), ensure_ascii=False, indent=2
-        )
-        + "\n",
-    }
-    for relative, content in seed_files.items():
-        path = root / relative
-        if not path.exists():
-            atomic_write_text(path, content)
-            created.append(relative)
+    db_path = database_path(root)
+    database_existed = db_path.exists()
+    initialize_sqlite(root)
+    if not database_existed:
+        created.append(str(db_path.relative_to(root)))
+    if get_settings(root, "watchlist") is None:
+        put_settings(root, "watchlist", default_watchlist())
+        created.append("sqlite:wiki_settings/watchlist")
 
     settings_path = settings_path_for(root)
     if not settings_path.exists():
         atomic_write_text(settings_path, WIKI_SETTINGS_TEMPLATE)
         created.append("../WIKI-SETTINGS.md")
 
-    for relative in directories:
-        keep = root / relative / ".gitkeep"
-        if not any((root / relative).iterdir()):
-            atomic_write_text(keep, "")
-
-    projection = sync_obsidian_store(root)
     append_log(root, "scaffold", "Created or verified the market sensing intelligence store.")
     return {
         "action": "scaffolded",
         "root": str(root),
+        "database": str(db_path),
         "created": created,
-        "obsidian": projection,
+        "storage": "sqlite",
     }
 
 
@@ -3407,9 +3593,10 @@ def source_records(root: Path) -> list[tuple[Path, dict[str, Any]]]:
 
 def source_record_by_id(root: Path, source_id: str) -> tuple[Path, dict[str, Any]]:
     path = root / SOURCE_RECORDS_DIR / f"{source_id}.json"
-    if not path.exists():
+    record = read_logical_json(path)
+    if record is None:
         raise ValueError(f"Unknown source ID: {source_id}")
-    return path, read_json(path)
+    return path, record
 
 
 def token_set(text: str) -> set[str]:
@@ -3434,10 +3621,10 @@ def near_duplicate_candidates(
         title_score = SequenceMatcher(
             None, normalize_text(title), normalize_text(record.get("title", ""))
         ).ratio()
-        raw_path = root / str(record.get("raw_path", ""))
         content_score = 0.0
-        if raw_path.exists():
-            existing = raw_path.read_text(encoding="utf-8", errors="replace")
+        existing_bytes = get_source_content(root, str(record.get("source_id", "")))
+        if existing_bytes is not None:
+            existing = existing_bytes.decode("utf-8", errors="replace")
             content_score = jaccard(incoming_tokens, token_set(existing))
         if content_score >= 0.90 or (title_score >= 0.90 and content_score >= 0.72):
             candidates.append(
@@ -3456,9 +3643,11 @@ def near_duplicate_candidates(
 
 def next_source_id(collected_at: str, content_hash: str, records_dir: Path) -> str:
     compact_date = collected_at.replace("-", "")
+    inferred = collection_for_directory(records_dir)
+    root = inferred[0] if inferred else records_dir.parent.parent
     for length in (8, 10, 12, 16, 32, 64):
         source_id = f"SRC-{compact_date}-{content_hash[:length].upper()}"
-        if not (records_dir / f"{source_id}.json").exists():
+        if not record_exists(root, "sources", source_id):
             return source_id
     raise RuntimeError("Could not allocate a unique source ID")
 
@@ -3514,14 +3703,20 @@ def create_duplicate_review(
     content_hash: str,
 ) -> dict[str, Any]:
     review_id = f"REV-DUP-{content_hash[:12].upper()}"
-    candidate_path = root / SOURCE_CANDIDATES_DIR / f"{review_id}.md"
-    if not candidate_path.exists():
-        shutil.copyfile(content_path, candidate_path)
+    candidate_text = content_path.read_text(encoding="utf-8", errors="replace")
+    put_artifact(
+        root,
+        review_id,
+        "source_candidate",
+        str(metadata.get("title") or review_id),
+        markdown_text=candidate_text,
+        metadata={"content_sha256": content_hash},
+    )
     review = {
         "review_id": review_id,
         "type": "duplicate_candidate",
         "created_at": timestamp(),
-        "candidate_path": candidate_path.relative_to(root).as_posix(),
+        "candidate_artifact_id": review_id,
         "candidate": metadata,
         "possible_duplicates": candidates,
         "allowed_decisions": ["supporting", "accept-new", "reject"],
@@ -3553,6 +3748,7 @@ def add_source(args: argparse.Namespace) -> dict[str, Any]:
     collected_at = validate_date(args.collected_at, "collected_at") or today()
     if args.source_type not in SOURCE_TYPES:
         raise ValueError(f"Invalid source_type: {args.source_type}")
+    source_modality = validate_modality(getattr(args, "source_modality", None))
     if args.reliability not in SOURCE_RELIABILITY:
         raise ValueError(f"Invalid reliability: {args.reliability}")
     academic = academic_metadata(args)
@@ -3576,9 +3772,10 @@ def add_source(args: argparse.Namespace) -> dict[str, Any]:
         )
 
     raw_bytes = content_path.read_bytes()
-    content = raw_bytes.decode("utf-8", errors="replace")
-    content_hash = normalized_sha256(content)
     byte_hash = raw_sha256(raw_bytes)
+    media_type = source_media_type(raw_bytes)
+    content = raw_bytes.decode("utf-8") if media_type.startswith("text/") else ""
+    content_hash = normalized_sha256(content) if content else byte_hash
     records = source_records(root)
 
     for _, record in records:
@@ -3607,8 +3804,13 @@ def add_source(args: argparse.Namespace) -> dict[str, Any]:
         else None
     )
 
-    candidates = near_duplicate_candidates(root, args.title, content, records)
+    candidates = (
+        near_duplicate_candidates(root, args.title, content, records)
+        if content
+        else []
+    )
     metadata = {
+        "schema_version": SOURCE_SCHEMA_VERSION,
         "title": args.title,
         "url": args.url,
         "canonical_url": canonical_url,
@@ -3616,9 +3818,11 @@ def add_source(args: argparse.Namespace) -> dict[str, Any]:
         "published_at": args.published_at,
         "collected_at": collected_at,
         "source_type": args.source_type,
+        "source_modality": source_modality,
         "language": args.language,
         "reliability": args.reliability,
         "content_sha256": content_hash,
+        "media_type": media_type,
         **({"academic": academic} if academic else {}),
     }
     if candidates and not args.force:
@@ -3628,19 +3832,18 @@ def add_source(args: argparse.Namespace) -> dict[str, Any]:
 
     records_dir = root / SOURCE_RECORDS_DIR
     source_id = next_source_id(collected_at, content_hash, records_dir)
-    raw_relative = RAW_DIR / f"{source_id}.md"
-    raw_path = root / raw_relative
-    shutil.copyfile(content_path, raw_path)
     record = {
         "source_id": source_id,
         **metadata,
         "raw_sha256": byte_hash,
-        "raw_path": raw_relative.as_posix(),
+        "raw_ref": f"sqlite:wiki_source_contents:{source_id}",
         "previous_version": previous_version,
         "supporting_sources": [],
         "images": [],
     }
     write_json(records_dir / f"{source_id}.json", record)
+    put_source_asset(root, record)
+    put_source_content(root, source_id, raw_bytes, media_type=media_type)
     sync_obsidian_store(root)
     append_log(
         root,
@@ -3651,7 +3854,7 @@ def add_source(args: argparse.Namespace) -> dict[str, Any]:
     return {
         "action": "created",
         "source_id": source_id,
-        "raw_path": raw_relative.as_posix(),
+        "raw_ref": record["raw_ref"],
         "previous_version": previous_version,
     }
 
@@ -3790,10 +3993,23 @@ def add_image(args: argparse.Namespace) -> dict[str, Any]:
             "media_id": media_id,
         }
 
-    local_relative: Path | None = None
+    local_ref: str | None = None
     if data is not None and extension is not None:
-        local_relative = MEDIA_DIR / args.source_id / f"{media_id}{extension}"
-        atomic_write_bytes(root / local_relative, data)
+        media_type = {
+            ".png": "image/png",
+            ".jpg": "image/jpeg",
+            ".gif": "image/gif",
+            ".webp": "image/webp",
+        }[extension]
+        put_binary_asset(
+            root,
+            media_id,
+            data,
+            source_id=args.source_id,
+            media_type=media_type,
+            metadata={"extension": extension},
+        )
+        local_ref = f"sqlite:wiki_binary_assets:{media_id}"
 
     images.append(
         {
@@ -3808,7 +4024,7 @@ def add_image(args: argparse.Namespace) -> dict[str, Any]:
             "rights_note": str(args.rights_note).strip(),
             "collected_at": today(),
             "content_sha256": fingerprint if data is not None else None,
-            "local_path": local_relative.as_posix() if local_relative else None,
+            "local_ref": local_ref,
             **({"subject_ids": subject_ids} if subject_ids else {}),
             **({"display_width": display_width} if display_width else {}),
             **(
@@ -3829,7 +4045,7 @@ def add_image(args: argparse.Namespace) -> dict[str, Any]:
         "action": "image_added",
         "source_id": args.source_id,
         "media_id": media_id,
-        "local_path": local_relative.as_posix() if local_relative else None,
+        "local_ref": local_ref,
     }
 
 
@@ -3850,287 +4066,132 @@ def signal_records(root: Path) -> list[tuple[Path, dict[str, Any]]]:
     return load_json_objects(root / SIGNALS_DIR)
 
 
+def signal_version_records(root: Path) -> list[tuple[Path, dict[str, Any]]]:
+    return load_json_objects(root / SIGNAL_VERSIONS_DIR)
+
+
 def insight_records(root: Path) -> list[tuple[Path, dict[str, Any]]]:
     return load_json_objects(root / INSIGHTS_DIR)
 
 
-def trend_records(root: Path) -> list[tuple[Path, dict[str, Any]]]:
-    return load_json_objects(root / TRENDS_DIR)
+def risk_factor_records(root: Path) -> list[tuple[Path, dict[str, Any]]]:
+    return load_json_objects(root / RISK_FACTORS_DIR)
 
 
-def thesis_records(root: Path) -> list[tuple[Path, dict[str, Any]]]:
-    return load_json_objects(root / THESES_DIR)
+def observation_records(root: Path) -> list[tuple[Path, dict[str, Any]]]:
+    return load_json_objects(root / OBSERVATIONS_DIR)
 
 
-def warning_records(root: Path) -> list[tuple[Path, dict[str, Any]]]:
-    return load_json_objects(root / WARNINGS_DIR)
+def event_records(root: Path) -> list[tuple[Path, dict[str, Any]]]:
+    return load_json_objects(root / EVENTS_DIR)
 
 
-def _required_text(record: dict[str, Any], field: str, record_id: str) -> str:
-    value = str(record.get(field) or "").strip()
-    if not value:
-        raise ValueError(f"{record_id}: missing {field}")
-    return value
-
-
-def _required_text_list(
-    record: dict[str, Any], field: str, record_id: str, *, allow_empty: bool = False
-) -> list[str]:
-    value = record.get(field)
-    if not isinstance(value, list) or any(
-        not isinstance(item, str) or not item.strip() for item in value
-    ):
-        raise ValueError(f"{record_id}: {field} must be a list of non-empty strings")
-    if not value and not allow_empty:
-        raise ValueError(f"{record_id}: {field} must not be empty")
-    return [item.strip() for item in value]
-
-
-def validate_strategic_watch_manifest(
-    root: Path, manifest: dict[str, Any]
-) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
-    if int(manifest.get("schema_version") or 0) != STRATEGIC_WATCH_SCHEMA_VERSION:
-        raise ValueError(
-            f"strategic watch schema_version must be {STRATEGIC_WATCH_SCHEMA_VERSION}"
-        )
-    trend = manifest.get("trend")
-    thesis = manifest.get("thesis")
-    warning = manifest.get("warning")
-    if not all(isinstance(item, dict) for item in (trend, thesis, warning)):
-        raise ValueError("strategic watch manifest requires trend, thesis, and warning objects")
-    assert isinstance(trend, dict) and isinstance(thesis, dict) and isinstance(warning, dict)
-
-    trend_id = _required_text(trend, "trend_id", "trend")
-    thesis_id = _required_text(thesis, "thesis_id", "thesis")
-    warning_id = _required_text(warning, "warning_id", "warning")
-    for value, prefix in ((trend_id, "TRD-"), (thesis_id, "THS-"), (warning_id, "WRN-")):
-        if not value.startswith(prefix):
-            raise ValueError(f"{value}: ID must start with {prefix}")
-    for record in (trend, thesis, warning):
-        record["schema_version"] = STRATEGIC_WATCH_SCHEMA_VERSION
-        _required_text(record, "title", str(record.get("trend_id") or record.get("thesis_id") or record.get("warning_id")))
-
-    axis = _required_text(trend, "business_axis", trend_id)
-    if axis not in set(MARKET_SENSING_AXES.values()):
-        raise ValueError(f"{trend_id}: invalid business_axis {axis!r}")
-    if thesis.get("business_axis") != axis or warning.get("business_axis") != axis:
-        raise ValueError("trend, thesis, and warning business_axis values must match")
-    if trend.get("direction") not in TREND_DIRECTIONS:
-        raise ValueError(f"{trend_id}: invalid direction {trend.get('direction')!r}")
-    for field in ("first_detected_at", "last_observed_at"):
-        validate_date(_required_text(trend, field, trend_id), field)
-    signal_ids = _required_text_list(trend, "signal_ids", trend_id)
-    supporting_sources = _required_text_list(trend, "supporting_source_ids", trend_id)
-    counter_sources = _required_text_list(
-        trend, "counter_source_ids", trend_id, allow_empty=True
-    )
-    signals_by_id = _records_by_id(signal_records(root), "signal_id")
-    sources_by_id = _records_by_id(source_records(root), "source_id")
-    unknown_signals = sorted(set(signal_ids) - set(signals_by_id))
-    unknown_sources = sorted(set(supporting_sources + counter_sources) - set(sources_by_id))
-    if unknown_signals:
-        raise ValueError(f"{trend_id}: unknown signal_ids {', '.join(unknown_signals)}")
-    if unknown_sources:
-        raise ValueError(f"{trend_id}: unknown source_ids {', '.join(unknown_sources)}")
-    indicators = trend.get("indicators")
-    if not isinstance(indicators, list) or not indicators:
-        raise ValueError(f"{trend_id}: indicators must not be empty")
-    for index, indicator in enumerate(indicators, 1):
-        if not isinstance(indicator, dict):
-            raise ValueError(f"{trend_id}: indicator {index} must be an object")
-        label = f"{trend_id}/indicator-{index}"
-        for field in ("label", "current", "unit", "observed_at", "interpretation"):
-            _required_text(indicator, field, label)
-        validate_date(str(indicator["observed_at"]), "indicator observed_at")
-        ids = _required_text_list(indicator, "source_ids", label)
-        missing = sorted(set(ids) - set(sources_by_id))
-        if missing:
-            raise ValueError(f"{label}: unknown source_ids {', '.join(missing)}")
-
-    _required_text(thesis, "statement", thesis_id)
-    _required_text(thesis, "strategic_assumption_at_risk", thesis_id)
-    _required_text(thesis, "business_impact_path", thesis_id)
-    _required_text(thesis, "decision_horizon", thesis_id)
-    if thesis.get("confidence") not in THESIS_CONFIDENCE:
-        raise ValueError(f"{thesis_id}: invalid confidence {thesis.get('confidence')!r}")
-    if _required_text_list(thesis, "trend_ids", thesis_id) != [trend_id]:
-        raise ValueError(f"{thesis_id}: trend_ids must contain this manifest's {trend_id}")
-    _required_text_list(thesis, "supporting_signal_ids", thesis_id)
-    context_signal_ids = _required_text_list(
-        thesis, "execution_context_signal_ids", thesis_id, allow_empty=True
-    )
-    missing_context = sorted(set(context_signal_ids) - set(signals_by_id))
-    if missing_context:
-        raise ValueError(
-            f"{thesis_id}: unknown execution_context_signal_ids {', '.join(missing_context)}"
-        )
-    _required_text_list(thesis, "counter_evidence", thesis_id)
-    _required_text_list(thesis, "falsification_conditions", thesis_id)
-
-    if warning.get("thesis_id") != thesis_id:
-        raise ValueError(f"{warning_id}: thesis_id must be {thesis_id}")
-    if warning.get("level") not in WARNING_LEVELS:
-        raise ValueError(f"{warning_id}: invalid level {warning.get('level')!r}")
-    if warning.get("status") not in WARNING_STATUSES:
-        raise ValueError(f"{warning_id}: invalid status {warning.get('status')!r}")
-    for field in ("first_raised_at", "last_reviewed_at", "next_review_at"):
-        validate_date(_required_text(warning, field, warning_id), field)
-    for field in (
-        "rationale",
-        "persistence_rule",
-        "decision_question",
-        "decision_deadline",
-        "owner",
-    ):
-        _required_text(warning, field, warning_id)
-    if warning.get("issue_direction") not in STRATEGIC_ISSUE_DIRECTIONS:
-        raise ValueError(
-            f"{warning_id}: invalid issue_direction {warning.get('issue_direction')!r}"
-        )
-    executive_summary = _required_text(warning, "executive_summary", warning_id)
-    if len(executive_summary) < 120:
-        raise ValueError(f"{warning_id}: executive_summary must be at least 120 characters")
-    next_milestone = _required_text(warning, "next_milestone", warning_id)
-    if len(next_milestone) < 8:
-        raise ValueError(f"{warning_id}: next_milestone is too short")
-    timeline = warning.get("timeline")
-    if not isinstance(timeline, list) or len(timeline) < 3:
-        raise ValueError(f"{warning_id}: timeline must contain at least 3 items")
-    for index, item in enumerate(timeline, 1):
-        if not isinstance(item, dict):
-            raise ValueError(f"{warning_id}: timeline item {index} must be an object")
-        label = f"{warning_id}/timeline-{index}"
-        _required_text(item, "date_label", label)
-        _required_text(item, "label", label)
-        kind = _required_text(item, "kind", label)
-        if kind not in STRATEGIC_ISSUE_TIMELINE_KINDS:
-            raise ValueError(f"{label}: invalid kind {kind!r}")
-        ids = _required_text_list(item, "source_ids", label, allow_empty=True)
-        if kind in {"event", "publication", "effective", "milestone"} and not ids:
-            raise ValueError(f"{label}: factual timeline items require source_ids")
-        missing = sorted(set(ids) - set(sources_by_id))
-        if missing:
-            raise ValueError(f"{label}: unknown source_ids {', '.join(missing)}")
-    sections = warning.get("report_sections")
-    if not isinstance(sections, list):
-        raise ValueError(f"{warning_id}: report_sections must be a list")
-    section_by_role: dict[str, dict[str, Any]] = {}
-    generic_headings = {
-        "한눈에 보는 결론",
-        "왜 지금 중요한가",
-        "회사에 미치는 영향",
-        "권고 대응",
-        "근거가 된 시그널",
-        "향후 확인사항",
-        "분석의 전제와 한계",
+def verify_risk_factor_ids(root: Path, risk_factor_ids: list[str]) -> None:
+    known = {
+        str(record.get("risk_factor_id"))
+        for _, record in risk_factor_records(root)
+        if record.get("status") == "active"
     }
-    for index, section in enumerate(sections, 1):
-        if not isinstance(section, dict):
-            raise ValueError(f"{warning_id}: report section {index} must be an object")
-        role = _required_text(section, "role", f"{warning_id}/section-{index}")
-        heading = _required_text(section, "heading", f"{warning_id}/section-{index}")
-        body = _required_text(section, "body", f"{warning_id}/section-{index}")
-        if role not in STRATEGIC_ISSUE_SECTION_ROLES:
-            raise ValueError(f"{warning_id}: invalid report section role {role!r}")
-        if role in section_by_role:
-            raise ValueError(f"{warning_id}: duplicate report section role {role!r}")
-        if heading in generic_headings:
-            raise ValueError(f"{warning_id}: report heading must be contextual, not {heading!r}")
-        if re.search(r"(?:합니다|됩니다|입니다|있습니다)[.!?]?$", heading):
-            raise ValueError(f"{warning_id}: report heading must use report-style noun phrasing")
-        if len(heading) < 8 or len(heading) > 80:
-            raise ValueError(f"{warning_id}: report heading must be 8-80 characters")
-        if role != "evidence" and len(body) < 180:
-            raise ValueError(f"{warning_id}/{role}: body must be at least 180 characters")
-        section_by_role[role] = section
-    if set(section_by_role) != set(STRATEGIC_ISSUE_SECTION_ROLES):
-        missing = sorted(set(STRATEGIC_ISSUE_SECTION_ROLES) - set(section_by_role))
-        raise ValueError(f"{warning_id}: missing report section roles {', '.join(missing)}")
-    total_report_chars = sum(len(str(item.get("body") or "")) for item in sections)
-    if total_report_chars < 2200:
-        raise ValueError(f"{warning_id}: report body must be at least 2200 characters")
-    validate_date(str(warning["decision_deadline"]), "decision_deadline")
-    for field in ("escalation_rules", "deescalation_rules", "actions"):
-        _required_text_list(warning, field, warning_id)
-    history = warning.get("history")
-    if not isinstance(history, list) or not history:
-        raise ValueError(f"{warning_id}: history must not be empty")
-    for index, event in enumerate(history, 1):
-        if not isinstance(event, dict):
-            raise ValueError(f"{warning_id}: history event {index} must be an object")
-        validate_date(_required_text(event, "date", warning_id), "history date")
-        _required_text(event, "action", warning_id)
-        _required_text(event, "rationale", warning_id)
-    return trend, thesis, warning
+    missing = sorted(set(risk_factor_ids) - known)
+    if missing:
+        raise ValueError("Unknown active risk factor IDs: " + ", ".join(missing))
 
 
-def upsert_strategic_watch(args: argparse.Namespace) -> dict[str, Any]:
+def add_risk_factor(args: argparse.Namespace) -> dict[str, Any]:
     root = require_store(Path(args.root))
-    manifest = read_json(Path(args.watch_file).resolve())
-    trend, thesis, warning = validate_strategic_watch_manifest(root, manifest)
-    records = (
-        (root / TRENDS_DIR / f"{trend['trend_id']}.json", trend),
-        (root / THESES_DIR / f"{thesis['thesis_id']}.json", thesis),
-        (root / WARNINGS_DIR / f"{warning['warning_id']}.json", warning),
-    )
-    originals = {path: path.read_bytes() if path.exists() else None for path, _ in records}
-    try:
-        for path, record in records:
-            write_json(path, record)
-    except OSError:
-        for path, content in originals.items():
-            if content is None:
-                path.unlink(missing_ok=True)
-            else:
-                path.write_bytes(content)
-        raise
-    sync_obsidian_store(root)
-    append_log(root, "upsert-strategic-watch", f"{warning['warning_id']}: {warning['title']}")
-    return {
-        "action": "strategic_watch_upserted",
-        "trend_id": trend["trend_id"],
-        "thesis_id": thesis["thesis_id"],
-        "warning_id": warning["warning_id"],
-        "level": warning["level"],
-    }
-
-
-def review_strategic_warning(args: argparse.Namespace) -> dict[str, Any]:
-    root = require_store(Path(args.root))
-    path = root / WARNINGS_DIR / f"{args.warning_id}.json"
-    if not path.is_file():
-        raise ValueError(f"Unknown warning ID: {args.warning_id}")
-    warning = read_json(path)
-    reviewed_at = validate_date(args.reviewed_at or today(), "reviewed_at")
-    next_review_at = validate_date(args.next_review_at, "next_review_at")
-    old_level = str(warning.get("level") or "")
-    warning["level"] = args.level
-    warning["status"] = args.status
-    warning["last_reviewed_at"] = reviewed_at
-    warning["next_review_at"] = next_review_at
-    history = warning.setdefault("history", [])
-    history.append(
+    value = validate_risk_factor(
         {
-            "date": reviewed_at,
-            "action": "closed" if args.status == "closed" else "reviewed",
-            "from_level": old_level,
-            "to_level": args.level,
-            "added_signal_ids": list(args.signal_id or []),
-            "rationale": args.rationale,
+            "risk_factor_id": args.risk_factor_id,
+            "taxonomy_version": args.taxonomy_version,
+            "name": args.name,
+            "definition": args.definition,
+            "category": args.category,
+            "parent_risk_factor_id": args.parent_risk_factor_id,
+            "aliases": args.alias or [],
+            "status": args.status,
+            "valid_from": args.valid_from,
+            "valid_to": args.valid_to,
         }
     )
-    thesis_id = str(warning.get("thesis_id") or "")
-    thesis = read_json(root / THESES_DIR / f"{thesis_id}.json")
-    trend_id = str((thesis.get("trend_ids") or [""])[0])
-    trend = read_json(root / TRENDS_DIR / f"{trend_id}.json")
-    validate_strategic_watch_manifest(
-        root,
-        {"schema_version": STRATEGIC_WATCH_SCHEMA_VERSION, "trend": trend, "thesis": thesis, "warning": warning},
+    parent = value.get("parent_risk_factor_id")
+    if parent:
+        verify_risk_factor_ids(root, [str(parent)])
+    put_risk_factor(root, value)
+    append_log(root, "add-risk-factor", f"{value['risk_factor_id']}: {value['name']}")
+    return {"action": "risk_factor_created", **value}
+
+
+def add_observation(args: argparse.Namespace) -> dict[str, Any]:
+    root = require_store(Path(args.root))
+    verify_source_ids(root, [args.source_id])
+    verify_source_modality(root, [args.source_id], args.modality)
+    verify_risk_factor_ids(root, args.risk_factor_id)
+    try:
+        numeric_value: object = float(args.value)
+    except ValueError:
+        numeric_value = args.value
+    value = observation_version(
+        {
+            "observation_id": args.observation_id,
+            "version_no": args.version_no,
+            "series_key": args.series_key,
+            "metric_kind": args.metric_kind,
+            "value": numeric_value,
+            "unit": args.unit,
+            "observed_at": args.observed_at,
+            "source_id": args.source_id,
+            "modality": args.modality,
+            "risk_factor_ids": args.risk_factor_id,
+            "verification_status": args.verification_status,
+        }
     )
-    write_json(path, warning)
-    sync_obsidian_store(root)
-    append_log(root, "review-strategic-warning", f"{args.warning_id}: {old_level} -> {args.level}")
-    return {"action": "strategic_warning_reviewed", "warning_id": args.warning_id, "level": args.level, "status": args.status}
+    write_json(
+        root / OBSERVATIONS_DIR / f"{value['observation_version_id']}.json", value
+    )
+    put_observation_version(root, value)
+    put_risk_factor_links(
+        root,
+        subject_kind="observation",
+        subject_version_id=value["observation_version_id"],
+        risk_factor_ids=value["risk_factor_ids"],
+        created_at=value["created_at"],
+    )
+    return {"action": "observation_created", **value}
+
+
+def add_event(args: argparse.Namespace) -> dict[str, Any]:
+    root = require_store(Path(args.root))
+    verify_source_ids(root, args.source_id)
+    verify_source_modality(root, args.source_id, args.modality)
+    verify_risk_factor_ids(root, args.risk_factor_id)
+    value = event_version(
+        {
+            "event_id": args.event_id,
+            "version_no": args.version_no,
+            "event_type": args.event_type,
+            "actor_ref": args.actor_ref,
+            "target_ref": args.target_ref,
+            "observed_at": args.observed_at,
+            "effective_at": args.effective_at,
+            "before_value": args.before_value,
+            "after_value": args.after_value,
+            "unit": args.unit,
+            "source_ids": args.source_id,
+            "modality": args.modality,
+            "risk_factor_ids": args.risk_factor_id,
+            "status": args.status,
+        }
+    )
+    write_json(root / EVENTS_DIR / f"{value['event_version_id']}.json", value)
+    put_event_version(root, value)
+    put_risk_factor_links(
+        root,
+        subject_kind="event",
+        subject_version_id=value["event_version_id"],
+        risk_factor_ids=value["risk_factor_ids"],
+        created_at=value["created_at"],
+    )
+    return {"action": "event_created", **value}
 
 
 def run_record_by_id(root: Path, run_id: str) -> tuple[Path, dict[str, Any]]:
@@ -4140,9 +4201,677 @@ def run_record_by_id(root: Path, run_id: str) -> tuple[Path, dict[str, Any]]:
     raise ValueError(f"Unknown run ID: {run_id}")
 
 
-def _stable_node_id(prefix: str, *values: str) -> str:
+def required_research_cells(
+    settings: dict[str, Any],
+    *,
+    company_ids: list[str] | None = None,
+    business_axes: list[str] | None = None,
+) -> list[dict[str, str]]:
+    """Freeze every configured company/business-axis cell into a research run."""
+    cells: list[dict[str, str]] = []
+    unknown: list[str] = []
+    for raw_name in settings.get("companies", []):
+        company_name = str(raw_name).strip()
+        company_id = COMPANY_NAME_TO_ID.get(company_name)
+        if not company_id:
+            unknown.append(company_name or "<blank>")
+            continue
+        axes = MARKET_SENSING_COMPANY_AXES.get(company_id, ())
+        if not axes:
+            unknown.append(company_name)
+            continue
+        cells.extend(
+            {"company_id": company_id, "business_axis": business_axis}
+            for business_axis in axes
+        )
+    if unknown:
+        raise ValueError(
+            "priority companies are missing governed company/business-axis mappings: "
+            + ", ".join(unknown)
+        )
+    selected_company_ids = {
+        str(company_id).strip() for company_id in (company_ids or []) if str(company_id).strip()
+    }
+    unknown_company_ids = sorted(selected_company_ids - set(MARKET_SENSING_COMPANY_AXES))
+    if unknown_company_ids:
+        raise ValueError(
+            "unknown explicit company IDs: " + ", ".join(unknown_company_ids)
+        )
+    selected_axes = {
+        str(business_axis).strip()
+        for business_axis in (business_axes or [])
+        if str(business_axis).strip()
+    }
+    unknown_axes = sorted(selected_axes - ALL_MARKET_SENSING_AXES)
+    if unknown_axes:
+        raise ValueError("unknown explicit business axes: " + ", ".join(unknown_axes))
+    if selected_company_ids:
+        cells = [cell for cell in cells if cell["company_id"] in selected_company_ids]
+    if selected_axes:
+        cells = [cell for cell in cells if cell["business_axis"] in selected_axes]
+    if not cells:
+        raise ValueError(
+            "research run requires at least one company/axis cell after explicit scope filters"
+        )
+    return cells
+
+
+def initial_research_coverage(
+    required_cells: list[dict[str, str]],
+) -> dict[str, Any]:
+    return {
+        "schema_version": 1,
+        "cells_checked": [
+            {
+                **cell,
+                "status": "pending",
+                "channels": [],
+                "search_strategies": [],
+                "candidate_ids": [],
+                "limitations": [],
+                "next_trigger": "",
+            }
+            for cell in required_cells
+        ],
+        "candidates": [],
+        "high_risk_gaps": [],
+        "limitations": [],
+        "next_triggers": [],
+        "no_signal_reasons_by_company": {},
+    }
+
+
+def evaluate_research_coverage(
+    run: dict[str, Any], signals: list[dict[str, Any]]
+) -> list[str]:
+    """Reject completed runs that can hide untouched or thinly searched cells."""
+    run_id = str(run.get("run_id") or "<unknown-run>")
+    contract = run.get("research_contract")
+    if not isinstance(contract, dict) or int(contract.get("version") or 0) < 1:
+        return []
+    contract_version = int(contract.get("version") or 0)
+    mode = str(contract.get("mode") or "coverage_managed")
+    if mode == "count_limited":
+        target_count = contract.get("target_count")
+        if (
+            not isinstance(target_count, int)
+            or isinstance(target_count, bool)
+            or target_count < 1
+        ):
+            return [f"{run_id}: count-limited research needs a positive target_count"]
+        listed_signal_ids = {
+            str(signal_id).strip()
+            for signal_id in run.get("signal_ids", [])
+            if str(signal_id).strip()
+        }
+        published_signal_ids = {
+            str(signal.get("signal_id") or "").strip()
+            for signal in signals
+            if signal.get("status", "active") == "active"
+            and str(signal.get("signal_id") or "").strip()
+            in listed_signal_ids
+        }
+        if len(published_signal_ids) < target_count:
+            return [
+                f"{run_id}: count-limited research published "
+                f"{len(published_signal_ids)}/{target_count} requested Signals"
+            ]
+        return []
+    if mode not in {"coverage_managed", "user_scoped"}:
+        return [f"{run_id}: unknown research mode {mode!r}"]
+    required_raw = contract.get("required_company_axes")
+    if not isinstance(required_raw, list) or not required_raw:
+        return [f"{run_id}: research contract has no required company/axis cells"]
+
+    findings: list[str] = []
+    required: list[tuple[str, str]] = []
+    for index, item in enumerate(required_raw):
+        if not isinstance(item, dict):
+            findings.append(f"{run_id}: required cell #{index + 1} must be an object")
+            continue
+        pair = (
+            str(item.get("company_id") or "").strip(),
+            str(item.get("business_axis") or "").strip(),
+        )
+        if not all(pair):
+            findings.append(f"{run_id}: required cell #{index + 1} is incomplete")
+            continue
+        if pair in required:
+            findings.append(f"{run_id}: duplicate required cell {pair[0]}/{pair[1]}")
+            continue
+        required.append(pair)
+
+    coverage = run.get("coverage")
+    if not isinstance(coverage, dict):
+        return [*findings, f"{run_id}: completed research run has no coverage ledger"]
+    if coverage.get("schema_version") != 1:
+        findings.append(f"{run_id}: coverage schema_version must be 1")
+
+    candidates_by_id: dict[str, dict[str, Any]] = {}
+    candidate_fingerprints: dict[tuple[str, str, str, str], str] = {}
+    candidates_by_day: Counter[str] = Counter()
+    signals_by_id = {
+        str(signal.get("signal_id") or "").strip(): signal
+        for signal in signals
+        if str(signal.get("signal_id") or "").strip()
+    }
+    candidates = coverage.get("candidates")
+    if not isinstance(candidates, list):
+        candidates = []
+        findings.append(f"{run_id}: coverage.candidates must be a list")
+    for index, candidate in enumerate(candidates):
+        if not isinstance(candidate, dict):
+            findings.append(f"{run_id}: candidate #{index + 1} must be an object")
+            continue
+        candidate_id = str(candidate.get("candidate_id") or "").strip()
+        if not candidate_id:
+            findings.append(f"{run_id}: candidate #{index + 1} needs candidate_id")
+            continue
+        if candidate_id in candidates_by_id:
+            findings.append(f"{run_id}: duplicate candidate {candidate_id}")
+            continue
+        candidates_by_id[candidate_id] = candidate
+        if contract_version < 3:
+            continue
+        try:
+            detected_at = validate_date(candidate.get("detected_at"), "detected_at")
+        except ValueError:
+            detected_at = None
+        if not detected_at or not (str(run.get("date_from")) <= detected_at <= str(run.get("date_to"))):
+            findings.append(f"{run_id}/{candidate_id}: detected_at must be inside the run period")
+        else:
+            candidates_by_day[detected_at] += 1
+        company_id = str(candidate.get("company_id") or "").strip()
+        business_axis = str(candidate.get("business_axis") or "").strip()
+        if not company_supports_business_axis(company_id, business_axis):
+            findings.append(f"{run_id}/{candidate_id}: invalid company/business-axis pair")
+        change_type = str(candidate.get("change_type") or "").strip()
+        if change_type not in SIGNAL_TYPES:
+            findings.append(f"{run_id}/{candidate_id}: invalid change_type {change_type!r}")
+        if len(str(candidate.get("title") or "").strip()) < 10:
+            findings.append(f"{run_id}/{candidate_id}: title must describe the observed change")
+        try:
+            source_url = canonicalize_url(candidate.get("source_url"))
+        except ValueError:
+            source_url = None
+        if not source_url or urlsplit(source_url).scheme not in {"http", "https"}:
+            findings.append(f"{run_id}/{candidate_id}: source_url is required")
+        title = " ".join(str(candidate.get("title") or "").casefold().split())
+        fingerprint = (company_id, business_axis, source_url or "", title)
+        previous_candidate_id = candidate_fingerprints.get(fingerprint)
+        if previous_candidate_id:
+            findings.append(
+                f"{run_id}/{candidate_id}: duplicates observed change {previous_candidate_id}"
+            )
+        else:
+            candidate_fingerprints[fingerprint] = candidate_id
+        disposition = str(candidate.get("disposition") or "").strip()
+        if disposition not in RESEARCH_CANDIDATE_DISPOSITIONS:
+            findings.append(f"{run_id}/{candidate_id}: invalid disposition {disposition!r}")
+        if disposition in {"watchlist", "rejected"} and len(str(candidate.get("reason") or "").strip()) < 12:
+            findings.append(f"{run_id}/{candidate_id}: {disposition} needs a specific reason")
+        if disposition == "published_signal":
+            signal_id = str(candidate.get("signal_id") or "").strip()
+            signal = signals_by_id.get(signal_id)
+            if not signal_id:
+                findings.append(f"{run_id}/{candidate_id}: published_signal needs signal_id")
+            elif signal is None or signal.get("status", "active") != "active":
+                findings.append(
+                    f"{run_id}/{candidate_id}: published_signal must reference an active Signal"
+                )
+            elif (
+                company_id
+                not in {
+                    str(item).strip()
+                    for item in signal.get("company_ids", [])
+                    if str(item).strip()
+                }
+                or str(signal.get("business_axis") or "").strip() != business_axis
+            ):
+                findings.append(
+                    f"{run_id}/{candidate_id}: published Signal company/business-axis does not match"
+                )
+
+    if contract_version >= 3:
+        date_from = date.fromisoformat(str(run.get("date_from")))
+        date_to = date.fromisoformat(str(run.get("date_to")))
+        minimum_per_day = int(contract.get("minimum_candidates_per_day") or 3)
+        if contract_version == 3:
+            minimum_candidates = ((date_to - date_from).days + 1) * minimum_per_day
+            if len(candidates_by_id) < minimum_candidates:
+                findings.append(
+                    f"{run_id}: detection density is "
+                    f"{len(candidates_by_id)}/{minimum_candidates}; time-bounded "
+                    "research requires the period-level candidate minimum"
+                )
+        else:
+            cursor = date_from
+            while cursor <= date_to:
+                day_text = cursor.isoformat()
+                actual = candidates_by_day.get(day_text, 0)
+                if actual < minimum_per_day:
+                    findings.append(
+                        f"{run_id}/{day_text}: daily detection density is "
+                        f"{actual}/{minimum_per_day}; time-bounded research requires "
+                        "the minimum on every calendar day"
+                    )
+                cursor += timedelta(days=1)
+
+    cells_by_pair: dict[tuple[str, str], dict[str, Any]] = {}
+    cells = coverage.get("cells_checked")
+    if not isinstance(cells, list):
+        cells = []
+        findings.append(f"{run_id}: coverage.cells_checked must be a list")
+    for index, cell in enumerate(cells):
+        if not isinstance(cell, dict):
+            findings.append(f"{run_id}: coverage cell #{index + 1} must be an object")
+            continue
+        pair = (
+            str(cell.get("company_id") or "").strip(),
+            str(cell.get("business_axis") or "").strip(),
+        )
+        if not all(pair):
+            findings.append(f"{run_id}: coverage cell #{index + 1} is incomplete")
+            continue
+        if pair in cells_by_pair:
+            findings.append(f"{run_id}: duplicate coverage cell {pair[0]}/{pair[1]}")
+            continue
+        cells_by_pair[pair] = cell
+
+    for company_id, business_axis in required:
+        cell_label = f"{run_id}/{company_id}/{business_axis}"
+        cell = cells_by_pair.get((company_id, business_axis))
+        if cell is None:
+            findings.append(f"{cell_label}: required coverage cell was not checked")
+            continue
+        status = str(cell.get("status") or "")
+        if status not in RESEARCH_CELL_STATUSES:
+            findings.append(f"{cell_label}: invalid coverage status {status!r}")
+        elif status == "pending":
+            findings.append(f"{cell_label}: coverage is still pending")
+        elif status == "blocked":
+            findings.append(f"{cell_label}: blocked coverage cannot close the run")
+
+        channels = {
+            str(channel)
+            for channel in (cell.get("channels") or [])
+            if str(channel) in RESEARCH_EVIDENCE_CHANNELS
+        }
+        unknown_channels = sorted(
+            {
+                str(channel)
+                for channel in (cell.get("channels") or [])
+                if str(channel) not in RESEARCH_EVIDENCE_CHANNELS
+            }
+        )
+        if unknown_channels:
+            findings.append(
+                f"{cell_label}: unknown evidence channels {', '.join(unknown_channels)}"
+            )
+        if len(channels) < 2:
+            findings.append(
+                f"{cell_label}: at least two independent evidence channels are required"
+            )
+
+        candidate_ids = {
+            str(candidate_id).strip()
+            for candidate_id in (cell.get("candidate_ids") or [])
+            if str(candidate_id).strip()
+        }
+        unknown_candidate_ids = sorted(candidate_ids - set(candidates_by_id))
+        if contract_version >= 3 and unknown_candidate_ids:
+            findings.append(
+                f"{cell_label}: candidate_ids missing from coverage.candidates: "
+                + ", ".join(unknown_candidate_ids)
+            )
+        strategies = cell.get("search_strategies")
+        if not isinstance(strategies, list):
+            strategies = []
+            findings.append(f"{cell_label}: search_strategies must be a list")
+        valid_strategies: list[dict[str, Any]] = []
+        for strategy_index, strategy in enumerate(strategies):
+            if not isinstance(strategy, dict):
+                findings.append(
+                    f"{cell_label}: search strategy #{strategy_index + 1} must be an object"
+                )
+                continue
+            strategy_name = str(strategy.get("strategy") or "").strip()
+            channel = str(strategy.get("channel") or "").strip()
+            high_impact = strategy.get("new_high_impact_candidates")
+            new_candidates = strategy.get("new_candidates")
+            if not strategy_name or channel not in channels:
+                findings.append(
+                    f"{cell_label}: search strategy #{strategy_index + 1} needs a name "
+                    "and one of the cell's governed channels"
+                )
+                continue
+            if (
+                not isinstance(high_impact, int)
+                or isinstance(high_impact, bool)
+                or high_impact < 0
+                or not isinstance(new_candidates, int)
+                or isinstance(new_candidates, bool)
+                or new_candidates < 0
+            ):
+                findings.append(
+                    f"{cell_label}: search strategy #{strategy_index + 1} yields must be non-negative integers"
+                )
+                continue
+            if contract_version >= 2:
+                query = str(strategy.get("query") or "").strip()
+                executed_at = str(strategy.get("executed_at") or "").strip()
+                change_types = {
+                    str(item).strip()
+                    for item in (strategy.get("change_types") or [])
+                    if str(item).strip()
+                }
+                if len(query) < 8:
+                    findings.append(
+                        f"{cell_label}: search strategy #{strategy_index + 1} "
+                        "needs the concrete executed query"
+                    )
+                    continue
+                try:
+                    datetime.fromisoformat(executed_at)
+                except ValueError:
+                    findings.append(
+                        f"{cell_label}: search strategy #{strategy_index + 1} "
+                        "needs an ISO executed_at timestamp"
+                    )
+                    continue
+                unknown_change_types = sorted(change_types - set(SIGNAL_TYPES))
+                if not change_types or unknown_change_types:
+                    findings.append(
+                        f"{cell_label}: search strategy #{strategy_index + 1} "
+                        "needs governed change_types"
+                    )
+                    continue
+            valid_strategies.append(strategy)
+
+        last_three = valid_strategies[-3:]
+        diminishing_yield = (
+            len(valid_strategies) >= 3
+            and len({str(item.get("strategy")) for item in last_three}) == 3
+            and (
+                contract_version < 2
+                or len({str(item.get("channel")) for item in last_three}) >= 2
+            )
+            and (
+                contract_version < 2
+                or len(
+                    {
+                        str(change_type)
+                        for item in last_three
+                        for change_type in (item.get("change_types") or [])
+                    }
+                )
+                >= 3
+            )
+            and all(
+                int(
+                    item.get(
+                        "new_candidates"
+                        if contract_version >= 2
+                        else "new_high_impact_candidates"
+                    )
+                    or 0
+                )
+                == 0
+                for item in last_three
+            )
+        )
+        if len(candidate_ids) < 8 and not diminishing_yield:
+            findings.append(
+                f"{cell_label}: closure needs 8 unique candidates or three distinct "
+                "consecutive strategies with zero new high-impact candidates"
+            )
+        if status in {"no_change", "blocked"}:
+            limitations = [
+                str(item).strip()
+                for item in (cell.get("limitations") or [])
+                if str(item).strip()
+            ]
+            if not limitations or len(str(cell.get("next_trigger") or "").strip()) < 10:
+                findings.append(
+                    f"{cell_label}: {status} needs a limitation and a concrete next trigger"
+                )
+
+    extra_pairs = sorted(set(cells_by_pair) - set(required))
+    for company_id, business_axis in extra_pairs:
+        findings.append(
+            f"{run_id}/{company_id}/{business_axis}: coverage cell is outside the frozen contract"
+        )
+
+    unresolved_gaps = [
+        item
+        for item in (coverage.get("high_risk_gaps") or [])
+        if not isinstance(item, dict) or item.get("resolved") is not True
+    ]
+    if unresolved_gaps:
+        findings.append(
+            f"{run_id}: {len(unresolved_gaps)} high-risk coverage gaps remain unresolved"
+        )
+
+    signal_company_ids = {
+        str(company_id)
+        for signal in signals
+        if signal.get("status", "active") == "active"
+        for company_id in signal.get("company_ids", [])
+    }
+    reasons = coverage.get("no_signal_reasons_by_company")
+    if not isinstance(reasons, dict):
+        reasons = {}
+    for company_id in sorted({company_id for company_id, _ in required}):
+        if company_id in signal_company_ids:
+            continue
+        reason = reasons.get(company_id)
+        if (
+            not isinstance(reason, dict)
+            or len(str(reason.get("reason") or "").strip()) < 20
+            or len(str(reason.get("next_trigger") or "").strip()) < 10
+        ):
+            findings.append(
+                f"{run_id}/{company_id}: no published Signal; record a specific "
+                "non-publication reason and next re-search trigger"
+            )
+    return findings
+
+
+def scout_run(args: argparse.Namespace) -> dict[str, Any]:
+    """Create, update, and close a coverage-gated adaptive research run."""
+    root = require_store(Path(args.root))
+    run_id = str(args.run_id).strip()
+    if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{2,127}", run_id):
+        raise ValueError("run_id must be 3-128 safe characters: letters, digits, ._- ")
+
+    requested_target_count = getattr(args, "target_count", None)
+    if requested_target_count is not None and requested_target_count < 1:
+        raise ValueError("target_count must be at least 1")
+
+    try:
+        run_path, run = run_record_by_id(root, run_id)
+        created = False
+    except ValueError:
+        date_from = validate_date(getattr(args, "date_from", None), "date_from")
+        date_to = validate_date(getattr(args, "date_to", None), "date_to")
+        if not date_from or not date_to:
+            raise ValueError("new scout run requires --date-from and --date-to")
+        if date_from > date_to:
+            raise ValueError("date_from must not be after date_to")
+        explicit_company_ids = list(getattr(args, "company_id", None) or [])
+        explicit_business_axes = list(getattr(args, "business_axis", None) or [])
+        user_scope = str(getattr(args, "user_scope", None) or "").strip()
+        has_explicit_scope = bool(
+            requested_target_count is not None
+            or explicit_company_ids
+            or explicit_business_axes
+            or user_scope
+        )
+        required_cells = required_research_cells(
+            effective_settings(root),
+            company_ids=explicit_company_ids,
+            business_axes=explicit_business_axes,
+        )
+        research_mode = (
+            "count_limited"
+            if requested_target_count is not None
+            else "user_scoped"
+            if has_explicit_scope
+            else "coverage_managed"
+        )
+        run_path = root / RUNS_DIR / f"{run_id}.json"
+        run = {
+            "run_id": run_id,
+            "status": "in_progress",
+            "started_at": timestamp(),
+            "date_from": date_from,
+            "date_to": date_to,
+            "signal_ids": [],
+            "results": {"new_sources": 0, "new_claims": 0, "new_signals": 0},
+            "research_contract": {
+                "version": RUN_RESEARCH_CONTRACT_VERSION,
+                "mode": research_mode,
+                "required_company_axes": required_cells,
+                "minimum_independent_channels_per_cell": 2,
+                "candidate_target_per_cell": 8,
+                "minimum_candidates_per_day": 3,
+                "diminishing_yield_searches": 3,
+                **(
+                    {"target_count": requested_target_count}
+                    if requested_target_count is not None
+                    else {}
+                ),
+                **({"user_directive": user_scope} if user_scope else {}),
+            },
+            "signal_contract": {
+                **RUN_SIGNAL_CONTRACT,
+                "required_business_axes": sorted(
+                    {str(item["business_axis"]) for item in required_cells}
+                ),
+                "documented_axis_gaps": [],
+                "signal_ids": [],
+            },
+            "coverage": (
+                {
+                    **initial_research_coverage([]),
+                    "count_limited": {
+                        "target_count": requested_target_count,
+                        "selection_note": "사용자가 결과 개수를 명시한 제한 탐색",
+                    },
+                }
+                if requested_target_count is not None
+                else initial_research_coverage(required_cells)
+            ),
+        }
+        created = True
+
+    existing_contract = run.get("research_contract") or {}
+    existing_target_count = existing_contract.get("target_count")
+    if not created and requested_target_count is not None:
+        if existing_contract.get("mode") != "count_limited":
+            raise ValueError("cannot convert an existing coverage-managed run to count-limited")
+        if requested_target_count != existing_target_count:
+            raise ValueError(
+                f"target_count is frozen at run creation: {existing_target_count}"
+            )
+
+    coverage_file = getattr(args, "coverage_file", None)
+    if coverage_file:
+        coverage_payload = read_json(Path(coverage_file))
+        signal_contract_payload = coverage_payload.get("signal_contract")
+        if isinstance(signal_contract_payload, dict):
+            documented_axis_gaps = signal_contract_payload.get("documented_axis_gaps")
+            if documented_axis_gaps is not None:
+                if not isinstance(documented_axis_gaps, list):
+                    raise ValueError("signal_contract.documented_axis_gaps must be a list")
+                signal_contract = dict(run.get("signal_contract") or RUN_SIGNAL_CONTRACT)
+                signal_contract["documented_axis_gaps"] = documented_axis_gaps
+                run["signal_contract"] = signal_contract
+        coverage = coverage_payload
+        if "coverage" in coverage_payload and isinstance(coverage_payload["coverage"], dict):
+            coverage = coverage_payload["coverage"]
+        run["coverage"] = coverage
+        referenced_signal_ids = [
+            str(candidate.get("signal_id") or "").strip()
+            for candidate in coverage.get("candidates", [])
+            if isinstance(candidate, dict)
+            and candidate.get("disposition") == "published_signal"
+            and str(candidate.get("signal_id") or "").strip()
+        ]
+        if referenced_signal_ids:
+            run["signal_ids"] = list(
+                dict.fromkeys([*run.get("signal_ids", []), *referenced_signal_ids])
+            )
+            signal_contract = dict(run.get("signal_contract") or RUN_SIGNAL_CONTRACT)
+            signal_contract["signal_ids"] = list(
+                dict.fromkeys([*signal_contract.get("signal_ids", []), *referenced_signal_ids])
+            )
+            run["signal_contract"] = signal_contract
+        run["coverage_updated_at"] = timestamp()
+
+    completed = bool(getattr(args, "complete", False))
+    if completed:
+        listed_signal_ids = {
+            str(signal_id).strip()
+            for signal_id in run.get("signal_ids", [])
+            if str(signal_id).strip()
+        }
+        run_signals = [
+            signal
+            for _, signal in signal_records(root)
+            if str(signal.get("run_id") or "") == run_id
+            or str(signal.get("signal_id") or "") in listed_signal_ids
+        ]
+        coverage_findings = evaluate_research_coverage(run, run_signals)
+        if (
+            int((run.get("research_contract") or {}).get("version") or 0) >= 2
+            and (run.get("research_contract") or {}).get("mode") != "count_limited"
+        ):
+            claims_by_id = {
+                str(claim.get("claim_id") or ""): claim
+                for _, claim in claim_records(root)
+                if claim.get("claim_id")
+            }
+            coverage_findings.extend(
+                evaluate_run_signal_contract(
+                    run_id,
+                    run_signals,
+                    claims_by_id,
+                    dict(run.get("signal_contract") or RUN_SIGNAL_CONTRACT),
+                )
+            )
+        if coverage_findings:
+            run["status"] = "in_progress"
+            run.pop("completed_at", None)
+            write_json(run_path, run)
+            raise ValueError(
+                "research coverage gate failed:\n- " + "\n- ".join(coverage_findings)
+            )
+        run["status"] = "completed"
+        run["completed_at"] = timestamp()
+
+    write_json(run_path, run)
+    append_log(
+        root,
+        "scout",
+        f"{run_id}: {'completed' if completed else 'initialized' if created else 'updated'}",
+    )
+    return {
+        "action": "scout_completed" if completed else "scout_initialized" if created else "scout_updated",
+        "run_id": run_id,
+        "status": run.get("status"),
+        "required_cells": len(
+            (run.get("research_contract") or {}).get("required_company_axes", [])
+        ),
+        "checked_cells": len((run.get("coverage") or {}).get("cells_checked", [])),
+        "research_mode": (run.get("research_contract") or {}).get("mode"),
+        "target_count": (run.get("research_contract") or {}).get("target_count"),
+    }
+
+
+def _stable_node_id(prefix: str, *values: object) -> str:
     digest = hashlib.sha256(
-        "\x1f".join(normalize_text(value) for value in values).encode("utf-8")
+        "\x1f".join(normalize_text(str(value)) for value in values).encode("utf-8")
     ).hexdigest()
     return f"{prefix}-{digest[:12].upper()}"
 
@@ -4157,9 +4886,19 @@ def _records_by_id(
     }
 
 
-def validate_signal_analysis(markdown: str) -> None:
+def validate_signal_analysis(
+    markdown: str, *, require_h2_start: bool = True
+) -> None:
     """Reject thin summaries that cannot serve as the document-level layer."""
     text = markdown.strip()
+    first_line = next(
+        (line.strip() for line in text.splitlines() if line.strip()), ""
+    )
+    if require_h2_start and not re.fullmatch(r"##\s+\S.*", first_line):
+        raise ValueError(
+            "analysis Markdown must start with a conclusion-led ## section heading; "
+            "do not leave an unheaded lead paragraph or repeat the Signal title as H1"
+        )
     lead = first_markdown_prose_paragraph(text)
     if not lead or not re.search(r"[가-힣]", lead):
         raise ValueError("analysis Markdown must begin with a plain Korean explanation")
@@ -4196,6 +4935,90 @@ def validate_signal_analysis(markdown: str) -> None:
     ]
     if len(headings) < 5:
         raise ValueError("analysis Markdown must use at least five meaningful sections")
+    if re.search(r"^#\s+", text, flags=re.MULTILINE):
+        raise ValueError("analysis Markdown must not repeat the structured H1 title")
+    h2_headings = re.findall(r"^##\s+(.+)$", text, flags=re.MULTILINE)
+    h3_headings = re.findall(r"^###\s+(.+)$", text, flags=re.MULTILINE)
+    if not 3 <= len(h2_headings) <= 5:
+        raise ValueError(
+            "analysis Markdown must use three to five conclusion-led H2 chapters"
+        )
+    if len(h3_headings) > 10:
+        raise ValueError(
+            "analysis Markdown is fragmented into too many H3 subsections; "
+            "merge short checklist-like sections into the surrounding argument"
+        )
+    polite_sentence_headings = [
+        heading
+        for heading in headings
+        if re.search(r"(?:니다|하세요|해요|돼요|이에요|예요)[.!?]?$", heading)
+    ]
+    if polite_sentence_headings:
+        raise ValueError(
+            "analysis headings must use concise research-report headline style "
+            "instead of polite sentence endings: "
+            + ", ".join(polite_sentence_headings)
+        )
+    numbered_headings = [
+        heading
+        for heading in headings
+        if re.match(r"\d+(?:\.\d+)+(?:[.\s]|$)", heading)
+    ]
+    if numbered_headings:
+        raise ValueError(
+            "analysis Markdown must not store generated decimal section numbers: "
+            + ", ".join(numbered_headings)
+        )
+    generic_h2 = {
+        "판단 질문과 잠정 결론",
+        "판단 제안",
+        "확인된 변화 요약",
+        "사업 판단 요약",
+        "확인된 변화와 시점",
+        "일반적 해석과 확인된 차이",
+        "통념과 확인된 간극",
+        "포스코에 전달되는 사업 영향",
+        "포스코홀딩스에 전달되는 사업 영향",
+        "포스코인터내셔널에 전달되는 사업 영향",
+        "사업 영향 경로",
+        "사업 시나리오",
+        "조건부 사업 시나리오",
+        "조건부 시나리오",
+        "지금 확인할 지표",
+        "의사결정에 필요한 다음 산출물",
+        "결론을 확정·폐기할 조건",
+        "판단의 한계",
+        "공개 근거 확인",
+        "왜 중요한가",
+        "근거 세부사항",
+        "판단 근거 세부사항",
+    }
+    repeated_schema_headings = [
+        heading for heading in h2_headings if heading in generic_h2
+    ]
+    if repeated_schema_headings:
+        raise ValueError(
+            "analysis H2 headings must state report-specific conclusions instead of "
+            "repeating the analysis template: "
+            + ", ".join(repeated_schema_headings)
+        )
+    uncertainty_markers = (
+        "확인되지 않",
+        "확인하지 못",
+        "공개하지 않",
+        "공개되지 않",
+        "확정은 아",
+        "확정이 아",
+        "미확정",
+        "불확실",
+    )
+    uncertainty_mentions = sum(text.count(marker) for marker in uncertainty_markers)
+    if uncertainty_mentions > 2:
+        raise ValueError(
+            "analysis Markdown repeats uncertainty throughout the report; "
+            "state confirmed findings in the body and consolidate unresolved limits "
+            "once near the falsification or judgment-boundary section"
+        )
     table_rows = [
         line
         for line in text.splitlines()
@@ -4205,14 +5028,18 @@ def validate_signal_analysis(markdown: str) -> None:
     if len(table_rows) < 4 or not any("시나리오" in row for row in table_rows):
         raise ValueError("analysis Markdown must include a scenario table with three scenarios")
     monitoring_match = re.search(
-        r"^#{2,4}\s+.*(?:확인할|관찰)\s*지표.*?$(.*?)(?=^#{2,4}\s+|\Z)",
+        r"^(?:#{2,4}\s+[^\n]*(?:확인할|관찰)\s*지표[^\n]*|"
+        r"\*\*[^\n]*(?:확인할|관찰)\s*지표[^\n]*\*\*:?)\s*$"
+        r"(.*?)(?=^#{2,4}\s+|\Z)",
         text,
         flags=re.MULTILINE | re.DOTALL,
     )
     if not monitoring_match or len(re.findall(r"^\s*-\s+", monitoring_match.group(1), re.MULTILINE)) < 3:
         raise ValueError("analysis Markdown must include at least three monitoring indicators")
     output_match = re.search(
-        r"^#{2,4}\s+.*(?:다음\s+산출물|의사결정에\s+필요한).*?$(.*?)(?=^#{2,4}\s+|\Z)",
+        r"^(?:#{2,4}\s+[^\n]*(?:다음\s+산출물|의사결정에\s+필요한)[^\n]*|"
+        r"\*\*[^\n]*(?:다음\s+산출물|의사결정에\s+필요한)[^\n]*\*\*:?)\s*$"
+        r"(.*?)(?=^#{2,4}\s+|\Z)",
         text,
         flags=re.MULTILINE | re.DOTALL,
     )
@@ -4220,6 +5047,248 @@ def validate_signal_analysis(markdown: str) -> None:
         raise ValueError("analysis Markdown must include at least three decision outputs")
     if "!!! warning" not in text:
         raise ValueError("analysis Markdown must mark the judgment boundary with a warning")
+
+
+def rewrite_analysis_headings(
+    markdown: str, replacements: dict[str, str]
+) -> str:
+    """Replace exact Markdown H2-H4 labels without touching report prose."""
+    if not replacements:
+        raise ValueError("heading replacements must not be empty")
+    normalized: dict[str, str] = {}
+    for old, new in replacements.items():
+        old_heading = str(old).strip()
+        new_heading = str(new).strip()
+        if not old_heading or not new_heading:
+            raise ValueError("heading replacements require non-empty old and new labels")
+        if new_heading.startswith("#") or "\n" in new_heading:
+            raise ValueError("replacement headings must be plain single-line labels")
+        normalized[old_heading] = new_heading
+
+    replaced: set[str] = set()
+
+    def replace(match: re.Match[str]) -> str:
+        level, heading = match.groups()
+        heading = heading.strip()
+        replacement = normalized.get(heading)
+        if replacement is None:
+            return match.group(0)
+        replaced.add(heading)
+        return f"{level} {replacement}"
+
+    rewritten = re.sub(
+        r"^(#{2,4})\s+(.+)$", replace, markdown, flags=re.MULTILINE
+    )
+    missing = sorted(set(normalized) - replaced)
+    if missing:
+        raise ValueError("headings not found in analysis Markdown: " + ", ".join(missing))
+    validate_signal_analysis(rewritten)
+    return rewritten
+
+
+def _structured_analysis_key(value: Any, field: str) -> str:
+    key = str(value or "").strip()
+    if not re.fullmatch(r"[a-z][a-z0-9_]*", key):
+        raise ValueError(f"{field} must be stable lower snake_case")
+    return key
+
+
+def validate_structured_analysis(
+    value: Any,
+    *,
+    allowed_claim_ids: set[str] | None = None,
+    allowed_source_ids: set[str] | None = None,
+    require_current_schema: bool = False,
+    importance_score: int | None = None,
+) -> dict[str, Any]:
+    """Validate the UI-ready JSON representation stored beside narrative Markdown."""
+    if not isinstance(value, dict):
+        raise ValueError("structured analysis must be a JSON object")
+    schema_version = value.get("schema_version")
+    if schema_version not in SUPPORTED_STRUCTURED_ANALYSIS_SCHEMA_VERSIONS:
+        raise ValueError(
+            "structured analysis schema_version must be one of: "
+            + ", ".join(str(item) for item in sorted(SUPPORTED_STRUCTURED_ANALYSIS_SCHEMA_VERSIONS))
+        )
+    if require_current_schema and schema_version != STRUCTURED_ANALYSIS_SCHEMA_VERSION:
+        raise ValueError(
+            "structured analysis must use current schema_version "
+            f"{STRUCTURED_ANALYSIS_SCHEMA_VERSION}"
+        )
+    sections = value.get("sections")
+    if not isinstance(sections, list) or not sections:
+        raise ValueError("structured analysis sections must be a non-empty array")
+
+    section_keys: set[str] = set()
+    item_keys: set[str] = set()
+    items_by_key: dict[str, dict[str, Any]] = {}
+    for section_index, section in enumerate(sections):
+        field = f"sections[{section_index}]"
+        if not isinstance(section, dict):
+            raise ValueError(f"{field} must be an object")
+        section_key = _structured_analysis_key(section.get("key"), f"{field}.key")
+        if section_key in section_keys:
+            raise ValueError(f"structured analysis section key is duplicated: {section_key}")
+        section_keys.add(section_key)
+        if not str(section.get("title") or "").strip():
+            raise ValueError(f"{field}.title is required")
+        items = section.get("items")
+        if not isinstance(items, list) or not items:
+            raise ValueError(f"{field}.items must be a non-empty array")
+
+        for item_index, item in enumerate(items):
+            item_field = f"{field}.items[{item_index}]"
+            if not isinstance(item, dict):
+                raise ValueError(f"{item_field} must be an object")
+            item_key = _structured_analysis_key(item.get("key"), f"{item_field}.key")
+            if item_key in item_keys:
+                raise ValueError(f"structured analysis item key is duplicated: {item_key}")
+            item_keys.add(item_key)
+            items_by_key[item_key] = item
+            if not str(item.get("label") or "").strip():
+                raise ValueError(f"{item_field}.label is required")
+            display = str(item.get("display") or "").strip()
+            if display not in STRUCTURED_ANALYSIS_DISPLAY_TYPES:
+                raise ValueError(
+                    f"{item_field}.display must be one of: "
+                    + ", ".join(sorted(STRUCTURED_ANALYSIS_DISPLAY_TYPES))
+                )
+            if display == "text":
+                if not str(item.get("value") or "").strip():
+                    raise ValueError(f"{item_field}.value is required for text")
+            elif display == "list":
+                entries = item.get("items")
+                if not isinstance(entries, list) or not entries or any(
+                    not str(entry or "").strip() for entry in entries
+                ):
+                    raise ValueError(f"{item_field}.items must contain non-empty strings")
+            elif display == "flow":
+                steps = item.get("steps")
+                if not isinstance(steps, list) or len(steps) < 3 or any(
+                    not str(step or "").strip() for step in steps
+                ):
+                    raise ValueError(f"{item_field}.steps must contain at least three strings")
+            else:
+                columns = item.get("columns")
+                rows = item.get("rows")
+                if not isinstance(columns, list) or len(columns) < 2:
+                    raise ValueError(f"{item_field}.columns must contain at least two columns")
+                column_keys: set[str] = set()
+                for column_index, column in enumerate(columns):
+                    if not isinstance(column, dict):
+                        raise ValueError(f"{item_field}.columns[{column_index}] must be an object")
+                    column_key = _structured_analysis_key(
+                        column.get("key"), f"{item_field}.columns[{column_index}].key"
+                    )
+                    if column_key in column_keys:
+                        raise ValueError(f"{item_field} column key is duplicated: {column_key}")
+                    column_keys.add(column_key)
+                    if not str(column.get("label") or "").strip():
+                        raise ValueError(f"{item_field}.columns[{column_index}].label is required")
+                if not isinstance(rows, list) or not rows:
+                    raise ValueError(f"{item_field}.rows must be a non-empty array")
+                for row_index, row in enumerate(rows):
+                    if not isinstance(row, dict) or set(row) != column_keys:
+                        raise ValueError(
+                            f"{item_field}.rows[{row_index}] keys must match the column keys"
+                        )
+                    if any(not str(cell or "").strip() for cell in row.values()):
+                        raise ValueError(f"{item_field}.rows[{row_index}] contains an empty cell")
+
+            for reference_field, allowed in (
+                ("claim_ids", allowed_claim_ids),
+                ("source_ids", allowed_source_ids),
+            ):
+                references = item.get(reference_field, [])
+                if not isinstance(references, list) or any(
+                    not str(reference or "").strip() for reference in references
+                ):
+                    raise ValueError(f"{item_field}.{reference_field} must be an array of IDs")
+                if allowed is not None:
+                    unknown = sorted({str(reference) for reference in references} - allowed)
+                    if unknown:
+                        raise ValueError(
+                            f"{item_field}.{reference_field} contains unlinked IDs: "
+                            + ", ".join(unknown)
+                        )
+
+    required_keys = (
+        STRUCTURED_ANALYSIS_REQUIRED_KEYS
+        if schema_version == STRUCTURED_ANALYSIS_SCHEMA_VERSION
+        else STRUCTURED_ANALYSIS_LEGACY_REQUIRED_KEYS
+    )
+    if schema_version == STRUCTURED_ANALYSIS_SCHEMA_VERSION and importance_score is not None:
+        if importance_score >= 5:
+            required_keys = required_keys | STRUCTURED_ANALYSIS_MID_SCORE_REQUIRED_KEYS
+        if importance_score >= 8:
+            required_keys = required_keys | STRUCTURED_ANALYSIS_HIGH_SCORE_REQUIRED_KEYS
+    missing = sorted(required_keys - item_keys)
+    if missing:
+        raise ValueError(
+            "structured analysis is missing required item keys: " + ", ".join(missing)
+        )
+    if schema_version >= 2:
+        missing_sections = sorted(
+            STRUCTURED_ANALYSIS_REQUIRED_SECTION_KEYS - section_keys
+        )
+        if missing_sections:
+            raise ValueError(
+                f"structured analysis schema v{schema_version} is missing decision-dashboard sections: "
+                + ", ".join(missing_sections)
+            )
+    if schema_version == STRUCTURED_ANALYSIS_SCHEMA_VERSION:
+        table_contracts = {
+            "scenarios": ({"case", "condition", "meaning", "action"}, 3),
+            "monitoring_indicators": (
+                {"indicator", "current_state", "threshold", "decision_effect", "owner", "cadence"},
+                3,
+            ),
+            "opportunity": ({"condition", "effect", "action"}, 1),
+            "risk": ({"condition", "effect", "action"}, 1),
+            "quantification_decision": ({"status", "basis", "next_input"}, 1),
+            "escalation_triggers": ({"condition", "current_status", "decision_effect"}, 2),
+            "deescalation_triggers": ({"condition", "current_status", "decision_effect"}, 2),
+            "timing": ({"event", "date_or_condition", "status"}, 3),
+        }
+        if importance_score is not None and importance_score >= 5:
+            table_contracts["response_options"] = (
+                {"option", "benefit", "cost_or_risk", "activation_condition"},
+                2,
+            )
+        for item_key, (required_columns, minimum_rows) in table_contracts.items():
+            item = items_by_key.get(item_key)
+            if item is None:
+                continue
+            if item.get("display") != "table":
+                raise ValueError(f"structured analysis {item_key} must use table display")
+            column_keys = {
+                str(column.get("key"))
+                for column in item.get("columns", [])
+                if isinstance(column, dict)
+            }
+            missing_columns = sorted(required_columns - column_keys)
+            if missing_columns:
+                raise ValueError(
+                    f"structured analysis {item_key} is missing columns: "
+                    + ", ".join(missing_columns)
+                )
+            if len(item.get("rows", [])) < minimum_rows:
+                raise ValueError(
+                    f"structured analysis {item_key} must contain at least "
+                    f"{minimum_rows} rows"
+                )
+    return value
+
+
+def read_structured_analysis(path_value: str | None) -> dict[str, Any] | None:
+    if not path_value:
+        return None
+    path = Path(path_value)
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, UnicodeDecodeError) as exc:
+        raise ValueError(f"invalid structured analysis JSON: {exc}") from exc
+    return validate_structured_analysis(value)
 
 
 OPAQUE_SIGNAL_TITLE_TERMS = {
@@ -4344,24 +5413,102 @@ def evaluate_run_signal_contract(
         contract.get("single_asset_concentration_threshold", 0.5)
     )
     minimum_signals = int(contract.get("single_asset_minimum_signals", 3))
+    contract_version = int(contract.get("version") or 1)
+    minimum_axis_signals = int(contract.get("minimum_signals_per_axis", 3))
+    minimum_observation_ratio = float(
+        contract.get("minimum_observation_band_ratio", 0.2)
+    )
+    minimum_management_ratio = float(
+        contract.get("minimum_management_band_ratio", 0.2)
+    )
+    maximum_executive_ratio = float(
+        contract.get("maximum_executive_band_ratio", 0.5)
+    )
+    maximum_single_score_ratio = float(
+        contract.get("maximum_single_score_ratio", 0.5)
+    )
+    documented_gaps = {
+        str(item.get("axis")): item
+        for item in contract.get("documented_axis_gaps", [])
+        if isinstance(item, dict)
+        and str(item.get("axis") or "").strip()
+        and len(str(item.get("reason") or "").strip()) >= 20
+        and len(str(item.get("next_trigger") or "").strip()) >= 10
+    }
     findings: list[str] = []
     by_axis: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for signal in signals:
         if signal.get("status", "active") == "active":
             by_axis[str(signal.get("business_axis") or "미분류")].append(signal)
 
-    for axis, axis_signals in sorted(by_axis.items()):
+    required_axes = {
+        str(axis).strip()
+        for axis in contract.get("required_business_axes", [])
+        if str(axis).strip()
+    }
+    for axis in sorted(set(by_axis) | required_axes):
+        axis_signals = by_axis.get(axis, [])
         total = len(axis_signals)
         core_count = sum(
             signal.get("signal_role") == "core_market_signal"
             for signal in axis_signals
         )
         ratio = core_count / total if total else 0.0
-        if ratio + 1e-12 < minimum_core_ratio:
+        if total and ratio + 1e-12 < minimum_core_ratio:
             findings.append(
                 f"{run_id}/{axis}: external core market signals are "
                 f"{core_count}/{total} ({ratio:.0%}); minimum is {minimum_core_ratio:.0%}"
             )
+
+        gap = documented_gaps.get(axis)
+        gap_matches = bool(gap) and int(gap.get("actual_signals", -1)) == total
+        if contract_version >= 2 and total < minimum_axis_signals and not gap_matches:
+            findings.append(
+                f"{run_id}/{axis}: only {total} Signals detected; "
+                f"vitality target is at least {minimum_axis_signals} per completed monitoring run"
+            )
+
+        if contract_version >= 2 and total >= minimum_axis_signals:
+            band_scores = [
+                max(
+                    int((signal.get("business_impact") or {}).get("score") or 0),
+                    int((signal.get("urgency") or {}).get("score") or 0),
+                )
+                for signal in axis_signals
+            ]
+            observation_count = sum(score <= 4 for score in band_scores)
+            management_count = sum(5 <= score <= 7 for score in band_scores)
+            executive_count = sum(score >= 8 for score in band_scores)
+            observation_ratio = observation_count / total
+            management_ratio = management_count / total
+            executive_ratio = executive_count / total
+            score_counts = Counter(band_scores)
+            clustered_score, clustered_count = max(
+                score_counts.items(), key=lambda item: item[1]
+            )
+            if observation_ratio + 1e-12 < minimum_observation_ratio:
+                findings.append(
+                    f"{run_id}/{axis}: 1~4점 관찰 Signal이 "
+                    f"{observation_count}/{total}건으로 {minimum_observation_ratio:.0%} 미만; "
+                    "저강도 변화가 승격 단계에서 누락됐는지 확인 필요"
+                )
+            if management_ratio + 1e-12 < minimum_management_ratio:
+                findings.append(
+                    f"{run_id}/{axis}: 5~7점 관리 Signal이 "
+                    f"{management_count}/{total}건으로 {minimum_management_ratio:.0%} 미만"
+                )
+            if executive_ratio - 1e-12 > maximum_executive_ratio:
+                findings.append(
+                    f"{run_id}/{axis}: 8~10점 경영 Signal이 "
+                    f"{executive_count}/{total}건으로 {maximum_executive_ratio:.0%} 초과; "
+                    "중요 이슈만 통과시키는 승격 편향 또는 점수 인플레이션 검토 필요"
+                )
+            if clustered_count / total - 1e-12 > maximum_single_score_ratio:
+                findings.append(
+                    f"{run_id}/{axis}: {clustered_score}점이 "
+                    f"{clustered_count}/{total}건으로 {maximum_single_score_ratio:.0%} 초과; "
+                    "점수 근거가 개별 영향 경로를 충분히 구분하는지 확인 필요"
+                )
 
         if total < minimum_signals:
             continue
@@ -4613,8 +5760,13 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
     run_path, run_record = run_record_by_id(root, run_id)
     impact_score = int(args.business_impact_score)
     urgency_score = int(args.urgency_score)
-    if impact_score not in range(1, 6) or urgency_score not in range(1, 6):
-        raise ValueError("business impact and urgency scores must be between 1 and 5")
+    if (
+        impact_score not in range(1, SIGNAL_SCORE_MAX + 1)
+        or urgency_score not in range(1, SIGNAL_SCORE_MAX + 1)
+    ):
+        raise ValueError(
+            f"business impact and urgency scores must be between 1 and {SIGNAL_SCORE_MAX}"
+        )
     if args.assessment_confidence not in CLAIM_CONFIDENCE:
         raise ValueError(f"Invalid assessment confidence: {args.assessment_confidence}")
     validate_signal_copy(args.title, args.sentence, args.paragraph)
@@ -4649,14 +5801,31 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
         )
     )
     verify_source_ids(root, source_ids)
+    risk_factor_ids = list(dict.fromkeys(args.risk_factor_id))
+    verify_risk_factor_ids(root, risk_factor_ids)
+    observations_by_id = _records_by_id(
+        observation_records(root), "observation_version_id"
+    )
+    events_by_id = _records_by_id(event_records(root), "event_version_id")
+    observation_ids = list(dict.fromkeys(getattr(args, "observation_id", None) or []))
+    event_ids = list(dict.fromkeys(getattr(args, "event_id", None) or []))
+    missing_observations = sorted(set(observation_ids) - set(observations_by_id))
+    missing_events = sorted(set(event_ids) - set(events_by_id))
+    if missing_observations:
+        raise ValueError("Unknown Observation versions: " + ", ".join(missing_observations))
+    if missing_events:
+        raise ValueError("Unknown Event versions: " + ", ".join(missing_events))
 
     document_value = getattr(args, "document_path", None)
     document_path = Path(document_value) if document_value else None
     if document_path is not None:
         if document_path.is_absolute() or ".." in document_path.parts:
             raise ValueError("document_path must be relative to the wiki root")
-        if not (root / document_path).is_file():
-            raise ValueError(f"Document does not exist: {document_path.as_posix()}")
+        if get_artifact(root, document_path.as_posix()) is None:
+            raise ValueError(
+                "document_path must reference a SQLite artifact ID; "
+                f"not found: {document_path.as_posix()}"
+            )
 
     assessed_at = validate_date(args.assessed_at, "assessed_at") or today()
     response_deadline = validate_date(args.response_deadline, "response_deadline")
@@ -4665,18 +5834,31 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
         raise ValueError("analysis_file is required for a document-level signal")
     analysis_markdown = Path(analysis_file).read_text(encoding="utf-8").strip()
     validate_signal_analysis(analysis_markdown)
+    structured_analysis_file = getattr(args, "structured_analysis_file", None)
+    if not structured_analysis_file:
+        raise ValueError(
+            "structured_analysis_file is required for a UI-ready document-level signal"
+        )
+    analysis_structured = read_structured_analysis(structured_analysis_file)
     impact_estimate = read_impact_estimate(getattr(args, "impact_estimate_file", None))
     company_ids = list(dict.fromkeys(args.company_id))
     invalid_pairs = [
         f"{company_id}={args.business_axis}"
         for company_id in company_ids
-        if MARKET_SENSING_AXES.get(company_id) != args.business_axis
+        if not company_supports_business_axis(company_id, args.business_axis)
     ]
     if invalid_pairs:
         raise ValueError(
             "Invalid company/business-axis pairs: " + ", ".join(invalid_pairs)
         )
     sources_by_id = _records_by_id(source_records(root), "source_id")
+    validate_structured_analysis(
+        analysis_structured,
+        allowed_claim_ids=set(claim_ids),
+        allowed_source_ids=set(source_ids),
+        require_current_schema=True,
+        importance_score=max(impact_score, urgency_score),
+    )
     proposed_signal = {
         "signal_role": signal_role,
         "signal_origin": signal_origin,
@@ -4705,9 +5887,9 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
     }
     expected_values = {
         "business_axis": args.business_axis,
-        "business_impact_score_1_to_5": str(impact_score),
+        "business_impact_score_1_to_10": str(impact_score),
         "business_impact_rationale": args.business_impact_rationale,
-        "urgency_score_1_to_5": str(urgency_score),
+        "urgency_score_1_to_10": str(urgency_score),
         "urgency_rationale": args.urgency_rationale,
         "assessment_confidence": args.assessment_confidence,
         "assessed_at": assessed_at,
@@ -4725,16 +5907,96 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
     insight_id = _stable_node_id(
         "INS", args.title, args.paragraph, document_path.as_posix() if document_path else "", *claim_ids
     )
-    signal_id = _stable_node_id(
-        "SIG", args.sentence, insight_id, assessed_at, *company_ids
-    )
     now = timestamp()
+    evidence_refs: list[dict[str, Any]] = []
+    for claim_id in claim_ids:
+        claim = claims_by_id[claim_id]
+        claim_version_id = str(claim.get("claim_version_id") or "").strip()
+        if not claim_version_id:
+            raise ValueError(f"{claim_id} has no canonical claim_version_id")
+        claim_source_ids = [str(item) for item in claim.get("source_ids", [])]
+        modalities = {
+            validate_modality(sources_by_id[source_id].get("source_modality"))
+            for source_id in claim_source_ids
+        }
+        if len(modalities) != 1:
+            raise ValueError(
+                f"{claim_id} mixes source modalities; split it into atomic evidence versions"
+            )
+        evidence_refs.append(
+            {
+                "kind": "claim",
+                "version_id": claim_version_id,
+                "modality": next(iter(modalities)),
+                "relation": "contradict" if claim.get("status") == "disputed" else "support",
+                "source_ids": claim_source_ids,
+            }
+        )
+    evidence_refs.extend(
+        {
+            "kind": "observation",
+            "version_id": observation_id,
+            "modality": observations_by_id[observation_id]["modality"],
+            "relation": "support",
+            "source_ids": [observations_by_id[observation_id]["source_id"]],
+        }
+        for observation_id in observation_ids
+    )
+    evidence_refs.extend(
+        {
+            "kind": "event",
+            "version_id": event_id,
+            "modality": events_by_id[event_id]["modality"],
+            "relation": "support",
+            "source_ids": events_by_id[event_id]["source_ids"],
+        }
+        for event_id in event_ids
+    )
+    business_impact = {
+        "score": impact_score,
+        "rationale": args.business_impact_rationale.strip(),
+    }
+    urgency = {
+        "score": urgency_score,
+        "rationale": args.urgency_rationale.strip(),
+        "response_deadline": response_deadline,
+    }
+    existing_signal_versions = [
+        value
+        for _, value in signal_version_records(root)
+        if value.get("canonical_key") == args.canonical_key
+    ]
+    signal_version, company_impacts, scenarios = build_signal_bundle(
+        canonical_key=args.canonical_key,
+        title=args.title.strip(),
+        sentence=args.sentence.strip(),
+        signal_type=signal_type,
+        signal_role=signal_role,
+        signal_origin=signal_origin,
+        assessed_at=assessed_at,
+        risk_factor_ids=risk_factor_ids,
+        evidence_refs=evidence_refs,
+        company_ids=company_ids,
+        business_axis=args.business_axis.strip(),
+        business_impact=business_impact,
+        urgency=urgency,
+        assessment_confidence=args.assessment_confidence,
+        structured_analysis=analysis_structured,
+        created_at=now,
+        version_no=max(
+            (int(value.get("version_no") or 0) for value in existing_signal_versions),
+            default=0,
+        )
+        + 1,
+    )
+    signal_id = signal_version["signal_id"]
     insight = {
         "schema_version": INSIGHT_SCHEMA_VERSION,
         "insight_id": insight_id,
         "title": args.title.strip(),
         "summary": args.paragraph.strip(),
         "analysis_markdown": analysis_markdown,
+        "analysis_structured": analysis_structured,
         "impact_estimate": impact_estimate,
         "document_path": document_path.as_posix() if document_path else None,
         "company_ids": company_ids,
@@ -4748,6 +6010,13 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
     signal = {
         "schema_version": SIGNAL_SCHEMA_VERSION,
         "signal_id": signal_id,
+        "signal_version_id": signal_version["signal_version_id"],
+        "version_no": signal_version["version_no"],
+        "canonical_key": signal_version["canonical_key"],
+        "risk_factor_ids": risk_factor_ids,
+        "evidence_refs": signal_version["evidence_refs"],
+        "company_impact_version_ids": signal_version["company_impact_version_ids"],
+        "scenario_version_ids": signal_version["scenario_version_ids"],
         "sentence": args.sentence.strip(),
         "signal_type": signal_type,
         "signal_role": signal_role,
@@ -4756,14 +6025,13 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
         "insight_id": insight_id,
         "company_ids": company_ids,
         "business_axis": args.business_axis.strip(),
-        "business_impact": {
-            "score": impact_score,
-            "rationale": args.business_impact_rationale.strip(),
-        },
-        "urgency": {
-            "score": urgency_score,
-            "rationale": args.urgency_rationale.strip(),
-            "response_deadline": response_deadline,
+        "business_impact": business_impact,
+        "urgency": urgency,
+        "score_scale": {
+            "version": 1,
+            "minimum": 1,
+            "maximum": SIGNAL_SCORE_MAX,
+            "calibration": "rubric_v1",
         },
         "assessed_at": assessed_at,
         "assessment_confidence": args.assessment_confidence,
@@ -4776,6 +6044,21 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
     }
     write_json(root / INSIGHTS_DIR / f"{insight_id}.json", insight)
     write_json(root / SIGNALS_DIR / f"{signal_id}.json", signal)
+    write_json(
+        root / SIGNAL_VERSIONS_DIR / f"{signal_version['signal_version_id']}.json",
+        signal_version,
+    )
+    for impact in company_impacts:
+        write_json(
+            root / COMPANY_IMPACTS_DIR / f"{impact['company_impact_version_id']}.json",
+            impact,
+        )
+    for scenario in scenarios:
+        write_json(
+            root / SCENARIOS_DIR / f"{scenario['scenario_version_id']}.json",
+            scenario,
+        )
+    put_signal_analytics_bundle(root, signal_version, company_impacts, scenarios)
     published_signal_ids = list(
         dict.fromkeys([*run_record.get("signal_ids", []), signal_id])
     )
@@ -4784,6 +6067,31 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
     signal_contract["signal_ids"] = list(
         dict.fromkeys([*signal_contract.get("signal_ids", []), signal_id])
     )
+    contract_signal_ids = {
+        str(item) for item in signal_contract.get("signal_ids", [])
+    }
+    axis_signal_counts: Counter[str] = Counter(
+        str(item.get("business_axis") or "미분류")
+        for _, item in signal_records(root)
+        if (
+            str(item.get("run_id") or "") == run_id
+            or str(item.get("signal_id") or "") in contract_signal_ids
+        )
+        and item.get("status", "active") == "active"
+    )
+    documented_axis_gaps = signal_contract.get("documented_axis_gaps")
+    if isinstance(documented_axis_gaps, list):
+        signal_contract["documented_axis_gaps"] = [
+            {
+                **gap,
+                "actual_signals": axis_signal_counts.get(
+                    str(gap.get("axis") or ""), 0
+                ),
+            }
+            if isinstance(gap, dict)
+            else gap
+            for gap in documented_axis_gaps
+        ]
     run_record["signal_contract"] = signal_contract
     if signal_role == "core_market_signal":
         discovery_contract = dict(
@@ -4797,7 +6105,291 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
     write_json(run_path, run_record)
     sync_obsidian_store(root)
     append_log(root, "add-signal", f"{signal_id}: {args.title}")
-    return {"action": "created", "signal_id": signal_id, "insight_id": insight_id}
+    return {
+        "action": "created",
+        "signal_id": signal_id,
+        "signal_version_id": signal_version["signal_version_id"],
+        "insight_id": insight_id,
+    }
+
+
+def refresh_signal_analytics_version(
+    root: Path, signal: dict[str, Any], insight: dict[str, Any]
+) -> dict[str, Any]:
+    """Append the next canonical version after evidence, analysis, or scoring changes."""
+
+    canonical_key = str(signal.get("canonical_key") or "").strip()
+    risk_factor_ids = [str(item) for item in signal.get("risk_factor_ids", [])]
+    verify_risk_factor_ids(root, risk_factor_ids)
+    claims_by_id = _records_by_id(claim_records(root), "claim_id")
+    sources_by_id = _records_by_id(source_records(root), "source_id")
+    evidence_refs: list[dict[str, Any]] = [
+        dict(item)
+        for item in signal.get("evidence_refs", [])
+        if isinstance(item, dict) and item.get("kind") != "claim"
+    ]
+    for claim_id in signal.get("claim_ids", []):
+        claim = claims_by_id.get(str(claim_id))
+        if claim is None:
+            raise ValueError(f"Unknown claim ID: {claim_id}")
+        version_id = str(claim.get("claim_version_id") or "")
+        if not version_id:
+            raise ValueError(f"{claim_id} has no canonical claim_version_id")
+        source_ids = [str(item) for item in claim.get("source_ids", [])]
+        modalities = {
+            validate_modality(sources_by_id[source_id].get("source_modality"))
+            for source_id in source_ids
+        }
+        if len(modalities) != 1:
+            raise ValueError(f"{claim_id} mixes source modalities")
+        evidence_refs.append(
+            {
+                "kind": "claim",
+                "version_id": version_id,
+                "modality": next(iter(modalities)),
+                "relation": "contradict" if claim.get("status") == "disputed" else "support",
+                "source_ids": source_ids,
+            }
+        )
+    versions = [
+        value
+        for _, value in signal_version_records(root)
+        if value.get("signal_id") == signal.get("signal_id")
+    ]
+    now = timestamp()
+    signal_version, company_impacts, scenarios = build_signal_bundle(
+        canonical_key=canonical_key,
+        title=str(insight.get("title") or ""),
+        sentence=str(signal.get("sentence") or ""),
+        signal_type=str(signal.get("signal_type") or ""),
+        signal_role=str(signal.get("signal_role") or ""),
+        signal_origin=str(signal.get("signal_origin") or ""),
+        assessed_at=str(signal.get("assessed_at") or ""),
+        risk_factor_ids=risk_factor_ids,
+        evidence_refs=evidence_refs,
+        company_ids=[str(item) for item in signal.get("company_ids", [])],
+        business_axis=str(signal.get("business_axis") or ""),
+        business_impact=dict(signal.get("business_impact") or {}),
+        urgency=dict(signal.get("urgency") or {}),
+        assessment_confidence=str(signal.get("assessment_confidence") or ""),
+        structured_analysis=dict(insight.get("analysis_structured") or {}),
+        created_at=now,
+        version_no=max((int(value.get("version_no") or 0) for value in versions), default=0) + 1,
+        stable_signal_id=str(signal.get("signal_id") or ""),
+    )
+    for value, directory, id_field in (
+        (signal_version, SIGNAL_VERSIONS_DIR, "signal_version_id"),
+        *(
+            (impact, COMPANY_IMPACTS_DIR, "company_impact_version_id")
+            for impact in company_impacts
+        ),
+        *((scenario, SCENARIOS_DIR, "scenario_version_id") for scenario in scenarios),
+    ):
+        write_json(root / directory / f"{value[id_field]}.json", value)
+    put_signal_analytics_bundle(root, signal_version, company_impacts, scenarios)
+    signal.update(
+        {
+            "signal_version_id": signal_version["signal_version_id"],
+            "version_no": signal_version["version_no"],
+            "evidence_refs": signal_version["evidence_refs"],
+            "company_impact_version_ids": signal_version["company_impact_version_ids"],
+            "scenario_version_ids": signal_version["scenario_version_ids"],
+            "updated_at": now,
+        }
+    )
+    write_json(root / SIGNALS_DIR / f"{signal['signal_id']}.json", signal)
+    return signal_version
+
+
+def set_structured_analysis(args: argparse.Namespace) -> dict[str, Any]:
+    """Attach or replace validated UI-ready JSON without changing narrative analysis."""
+    root = require_store(Path(args.root))
+    signals = _records_by_id(signal_records(root), "signal_id")
+    signal = signals.get(args.signal_id)
+    if signal is None:
+        raise ValueError(f"Unknown signal ID: {args.signal_id}")
+    insight_id = str(signal.get("insight_id") or "")
+    insight_paths = {
+        str(record.get("insight_id")): (path, record)
+        for path, record in insight_records(root)
+        if record.get("insight_id")
+    }
+    if insight_id not in insight_paths:
+        raise ValueError(f"Broken insight link: {insight_id}")
+    analysis = read_structured_analysis(args.structured_analysis_file)
+    if analysis is None:
+        raise ValueError("structured_analysis_file is required")
+    insight_path, insight = insight_paths[insight_id]
+    validate_structured_analysis(
+        analysis,
+        allowed_claim_ids={str(item) for item in insight.get("claim_ids", [])},
+        allowed_source_ids={str(item) for item in insight.get("source_ids", [])},
+        require_current_schema=True,
+        importance_score=max(
+            int((signal.get("business_impact") or {}).get("score") or 0),
+            int((signal.get("urgency") or {}).get("score") or 0),
+        ),
+    )
+    insight["schema_version"] = INSIGHT_SCHEMA_VERSION
+    insight["analysis_structured"] = analysis
+    insight["updated_at"] = timestamp()
+    signal_version = refresh_signal_analytics_version(root, signal, insight)
+    write_json(insight_path, insight)
+    append_log(
+        root,
+        "set-structured-analysis",
+        f"{args.signal_id}: schema v{analysis['schema_version']}",
+    )
+    return {
+        "action": "structured_analysis_updated",
+        "signal_id": args.signal_id,
+        "insight_id": insight_id,
+        "schema_version": STRUCTURED_ANALYSIS_SCHEMA_VERSION,
+        "signal_version_id": signal_version["signal_version_id"],
+    }
+
+
+def set_signal_analysis(args: argparse.Namespace) -> dict[str, Any]:
+    """Replace narrative analysis and optionally replace its UI representation."""
+    root = require_store(Path(args.root))
+    signals = _records_by_id(signal_records(root), "signal_id")
+    signal = signals.get(args.signal_id)
+    if signal is None:
+        raise ValueError(f"Unknown signal ID: {args.signal_id}")
+    insight_id = str(signal.get("insight_id") or "")
+    insight_paths = {
+        str(record.get("insight_id")): (path, record)
+        for path, record in insight_records(root)
+        if record.get("insight_id")
+    }
+    if insight_id not in insight_paths:
+        raise ValueError(f"Broken insight link: {insight_id}")
+
+    insight_path, insight = insight_paths[insight_id]
+    analysis_markdown = Path(args.analysis_file).read_text(encoding="utf-8").strip()
+    validate_signal_analysis(analysis_markdown)
+    structured_analysis_file = getattr(args, "structured_analysis_file", None)
+    analysis_structured = (
+        read_structured_analysis(structured_analysis_file)
+        if structured_analysis_file
+        else insight.get("analysis_structured")
+    )
+    if analysis_structured is None:
+        raise ValueError(
+            "structured_analysis_file is required when the Insight has no existing "
+            "structured analysis"
+        )
+
+    claims_by_id = _records_by_id(claim_records(root), "claim_id")
+    claim_ids = list(
+        dict.fromkeys(
+            [
+                *(str(item) for item in signal.get("claim_ids", [])),
+                *(str(item) for item in getattr(args, "claim_id", [])),
+            ]
+        )
+    )
+    missing_claims = [claim_id for claim_id in claim_ids if claim_id not in claims_by_id]
+    if missing_claims:
+        raise ValueError(f"Unknown claim IDs: {', '.join(missing_claims)}")
+    source_ids = list(
+        dict.fromkeys(
+            str(source_id)
+            for claim_id in claim_ids
+            for source_id in claims_by_id[claim_id].get("source_ids", [])
+        )
+    )
+    verify_source_ids(root, source_ids)
+    validate_structured_analysis(
+        analysis_structured,
+        allowed_claim_ids=set(claim_ids),
+        allowed_source_ids=set(source_ids),
+        require_current_schema=True,
+        importance_score=max(
+            int((signal.get("business_impact") or {}).get("score") or 0),
+            int((signal.get("urgency") or {}).get("score") or 0),
+        ),
+    )
+
+    now = timestamp()
+    insight["schema_version"] = INSIGHT_SCHEMA_VERSION
+    insight["analysis_markdown"] = analysis_markdown
+    insight["analysis_structured"] = analysis_structured
+    insight["claim_ids"] = claim_ids
+    insight["source_ids"] = source_ids
+    insight["updated_at"] = now
+    signal["claim_ids"] = claim_ids
+    signal["source_ids"] = source_ids
+    signal["updated_at"] = now
+    signal_version = refresh_signal_analytics_version(root, signal, insight)
+    write_json(insight_path, insight)
+    sync_obsidian_store(root)
+    append_log(root, "set-signal-analysis", f"{args.signal_id}: {len(claim_ids)} claims")
+    return {
+        "action": "signal_analysis_updated",
+        "signal_id": args.signal_id,
+        "insight_id": insight_id,
+        "claim_ids": claim_ids,
+        "source_ids": source_ids,
+        "signal_version_id": signal_version["signal_version_id"],
+    }
+
+
+def rewrite_signal_report_headings(args: argparse.Namespace) -> dict[str, Any]:
+    """Apply user-supplied exact heading maps through the normal analysis update path."""
+    root = require_store(Path(args.root))
+    mapping_path = Path(args.mapping_file)
+    try:
+        mapping_payload = json.loads(mapping_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ValueError(f"invalid heading mapping file: {exc}") from exc
+    if not isinstance(mapping_payload, dict) or not mapping_payload:
+        raise ValueError("heading mapping file must map signal IDs to heading maps")
+
+    signals = _records_by_id(signal_records(root), "signal_id")
+    insights = _records_by_id(insight_records(root), "insight_id")
+    rewritten_by_signal: dict[str, str] = {}
+    for signal_id, replacements in mapping_payload.items():
+        signal = signals.get(str(signal_id))
+        if signal is None:
+            raise ValueError(f"Unknown signal ID: {signal_id}")
+        insight = insights.get(str(signal.get("insight_id") or ""))
+        if insight is None:
+            raise ValueError(f"Broken insight link for Signal: {signal_id}")
+        if not isinstance(replacements, dict):
+            raise ValueError(f"{signal_id}: heading map must be an object")
+        rewritten_by_signal[str(signal_id)] = rewrite_analysis_headings(
+            str(insight.get("analysis_markdown") or ""), replacements
+        )
+
+    updated: list[dict[str, Any]] = []
+    for signal_id, markdown in rewritten_by_signal.items():
+        temp_path: Path | None = None
+        try:
+            with tempfile.NamedTemporaryFile(
+                mode="w", encoding="utf-8", suffix=".md", delete=False
+            ) as handle:
+                handle.write(markdown)
+                temp_path = Path(handle.name)
+            updated.append(
+                set_signal_analysis(
+                    argparse.Namespace(
+                        root=str(root),
+                        signal_id=signal_id,
+                        analysis_file=str(temp_path),
+                        structured_analysis_file=None,
+                        claim_id=[],
+                    )
+                )
+            )
+        finally:
+            if temp_path is not None:
+                temp_path.unlink(missing_ok=True)
+    return {
+        "action": "signal_report_headings_rewritten",
+        "updated_count": len(updated),
+        "signal_ids": [item["signal_id"] for item in updated],
+    }
 
 
 def set_impact_estimate(args: argparse.Namespace) -> dict[str, Any]:
@@ -4837,11 +6429,519 @@ def set_impact_estimate(args: argparse.Namespace) -> dict[str, Any]:
     }
 
 
+def set_signal_assessment(args: argparse.Namespace) -> dict[str, Any]:
+    """Reassess an existing Signal on the governed 1-10 rubric with claim history."""
+    root = require_store(Path(args.root))
+    signal_paths = {
+        str(record.get("signal_id")): (path, record)
+        for path, record in signal_records(root)
+    }
+    if args.signal_id not in signal_paths:
+        raise ValueError(f"Unknown signal ID: {args.signal_id}")
+    signal_path, signal = signal_paths[args.signal_id]
+    insight_id = str(signal.get("insight_id") or "")
+    insight_path = root / INSIGHTS_DIR / f"{insight_id}.json"
+    if not record_exists(root, "insights", insight_id):
+        raise ValueError(f"Broken insight link: {insight_id}")
+    insight = read_json(insight_path)
+
+    impact_score = int(args.business_impact_score)
+    urgency_score = int(args.urgency_score)
+    if impact_score not in range(1, SIGNAL_SCORE_MAX + 1):
+        raise ValueError(f"business impact score must be between 1 and {SIGNAL_SCORE_MAX}")
+    if urgency_score not in range(1, SIGNAL_SCORE_MAX + 1):
+        raise ValueError(f"urgency score must be between 1 and {SIGNAL_SCORE_MAX}")
+    assessed_at = validate_date(args.assessed_at, "assessed_at") or today()
+
+    exceptional_basis = {
+        "enterprise_scope": str(getattr(args, "enterprise_scope", None) or "").strip(),
+        "immediate_action": str(getattr(args, "immediate_action", None) or "").strip(),
+        "delay_loss": str(getattr(args, "delay_loss", None) or "").strip(),
+        "irreversibility": str(getattr(args, "irreversibility", None) or "").strip(),
+    }
+    if impact_score == 10 and not all(exceptional_basis.values()):
+        raise ValueError(
+            "사업영향도 10점은 --enterprise-scope, --immediate-action, --delay-loss, "
+            "--irreversibility 근거가 모두 필요합니다"
+        )
+
+    claims_by_id = _records_by_id(claim_records(root), "claim_id")
+    claim_paths = {claim_id: root / CLAIMS_DIR / f"{claim_id}.json" for claim_id in claims_by_id}
+    active_by_predicate = {
+        str(claims_by_id[claim_id].get("predicate") or ""): claims_by_id[claim_id]
+        for claim_id in (str(item) for item in insight.get("claim_ids", []))
+        if claim_id in claims_by_id and claims_by_id[claim_id].get("status") == "active"
+    }
+    updates = {
+        "business_impact_score_1_to_10": str(impact_score),
+        "business_impact_rationale": str(args.business_impact_rationale).strip(),
+        "urgency_score_1_to_10": str(urgency_score),
+        "urgency_rationale": str(args.urgency_rationale).strip(),
+        "assessment_confidence": str(args.assessment_confidence),
+        "assessed_at": assessed_at,
+    }
+    replacements: dict[str, str] = {}
+    for predicate, value in updates.items():
+        old_claim = active_by_predicate.get(predicate)
+        if old_claim is None:
+            raise ValueError(f"{args.signal_id}: missing active assessment claim {predicate}")
+        old_id = str(old_claim["claim_id"])
+        if normalize_text(str(old_claim.get("value") or "")) == normalize_text(value):
+            continue
+        new_id = claim_id_for(str(old_claim.get("subject_id") or ""), predicate, value)
+        new_claim = claims_by_id.get(new_id)
+        if new_claim is None:
+            new_claim = {
+                **old_claim,
+                "schema_version": CLAIM_SCHEMA_VERSION,
+                "claim_id": new_id,
+                "claim_version_id": _stable_node_id("CLMV", new_id, 1, *old_claim.get("source_ids", [])),
+                "version_no": 1,
+                "value": value,
+                "status": "active",
+                "first_seen": assessed_at,
+                "last_verified": assessed_at,
+                "supersedes": [old_id],
+                "coexists_with": [],
+                "history": [
+                    {
+                        "date": assessed_at,
+                        "action": "created",
+                        "reason": str(args.reason).strip(),
+                        "source_ids": list(old_claim.get("source_ids", [])),
+                    }
+                ],
+            }
+            write_json(root / CLAIMS_DIR / f"{new_id}.json", new_claim)
+            put_claim_version(root, new_claim)
+            if new_claim.get("risk_factor_ids"):
+                put_risk_factor_links(
+                    root,
+                    subject_kind="claim",
+                    subject_version_id=new_claim["claim_version_id"],
+                    risk_factor_ids=list(new_claim["risk_factor_ids"]),
+                )
+            claims_by_id[new_id] = new_claim
+        elif new_claim.get("status") == "superseded":
+            new_claim["schema_version"] = CLAIM_SCHEMA_VERSION
+            new_claim["version_no"] = int(new_claim.get("version_no") or 1) + 1
+            new_claim["claim_version_id"] = _stable_node_id(
+                "CLMV", new_id, new_claim["version_no"], *new_claim.get("source_ids", [])
+            )
+            new_claim["status"] = "active"
+            new_claim.pop("superseded_by", None)
+            new_claim["last_verified"] = assessed_at
+            new_claim.setdefault("history", []).append(
+                {
+                    "date": assessed_at,
+                    "action": "reactivated",
+                    "reason": str(args.reason).strip(),
+                    "source_ids": list(new_claim.get("source_ids", [])),
+                }
+            )
+            write_json(root / CLAIMS_DIR / f"{new_id}.json", new_claim)
+            put_claim_version(root, new_claim)
+            if new_claim.get("risk_factor_ids"):
+                put_risk_factor_links(
+                    root,
+                    subject_kind="claim",
+                    subject_version_id=new_claim["claim_version_id"],
+                    risk_factor_ids=list(new_claim["risk_factor_ids"]),
+                )
+        elif new_claim.get("status") != "active":
+            raise ValueError(
+                f"{new_id}: only a superseded reassessment claim can be reactivated"
+            )
+        old_claim["status"] = "superseded"
+        old_claim["schema_version"] = CLAIM_SCHEMA_VERSION
+        old_claim["version_no"] = int(old_claim.get("version_no") or 1) + 1
+        old_claim["claim_version_id"] = _stable_node_id(
+            "CLMV", old_id, old_claim["version_no"], *old_claim.get("source_ids", [])
+        )
+        old_claim["superseded_by"] = new_id
+        old_claim.setdefault("history", []).append(
+            {
+                "date": assessed_at,
+                "action": "superseded",
+                "reason": str(args.reason).strip(),
+            }
+        )
+        write_json(claim_paths[old_id], old_claim)
+        put_claim_version(root, old_claim)
+        if old_claim.get("risk_factor_ids"):
+            put_risk_factor_links(
+                root,
+                subject_kind="claim",
+                subject_version_id=old_claim["claim_version_id"],
+                risk_factor_ids=list(old_claim["risk_factor_ids"]),
+            )
+        replacements[old_id] = new_id
+
+    def replace_claim_ids(record: dict[str, Any]) -> None:
+        record["claim_ids"] = list(
+            dict.fromkeys(
+                replacements.get(str(claim_id), str(claim_id))
+                for claim_id in record.get("claim_ids", [])
+            )
+        )
+
+    replace_claim_ids(signal)
+    replace_claim_ids(insight)
+    structured_replacements = {
+        str(claim_id): str(claim.get("superseded_by"))
+        for claim_id, claim in claims_by_id.items()
+        if str(claim.get("superseded_by") or "").strip()
+    }
+    structured_replacements.update(replacements)
+
+    def replace_structured_claim_ids(value: Any) -> None:
+        if isinstance(value, dict):
+            for key, item in value.items():
+                if key == "claim_ids" and isinstance(item, list):
+                    value[key] = list(
+                        dict.fromkeys(
+                            structured_replacements.get(
+                                str(claim_id), str(claim_id)
+                            )
+                            for claim_id in item
+                        )
+                    )
+                else:
+                    replace_structured_claim_ids(item)
+        elif isinstance(value, list):
+            for item in value:
+                replace_structured_claim_ids(item)
+
+    replace_structured_claim_ids(insight.get("analysis_structured"))
+    signal["business_impact"] = {
+        **(signal.get("business_impact") or {}),
+        "score": impact_score,
+        "rationale": str(args.business_impact_rationale).strip(),
+    }
+    signal["urgency"] = {
+        **(signal.get("urgency") or {}),
+        "score": urgency_score,
+        "rationale": str(args.urgency_rationale).strip(),
+    }
+    signal["assessment_confidence"] = args.assessment_confidence
+    signal["assessed_at"] = assessed_at
+    signal["score_scale"] = {
+        "version": 1,
+        "minimum": 1,
+        "maximum": SIGNAL_SCORE_MAX,
+        "calibration": "rubric_v1",
+        "note": "기존·신규 구분 없이 같은 1~10 rubric으로 재평가",
+    }
+    if impact_score == 10:
+        signal["exceptional_score_basis"] = exceptional_basis
+    else:
+        signal.pop("exceptional_score_basis", None)
+    signal["updated_at"] = timestamp()
+    insight["updated_at"] = timestamp()
+    write_json(insight_path, insight)
+    signal_version = refresh_signal_analytics_version(root, signal, insight)
+    sync_obsidian_store(root)
+    append_log(root, "set-signal-assessment", f"{args.signal_id}: {impact_score}/{urgency_score}")
+    return {
+        "action": "signal_assessment_updated",
+        "signal_id": args.signal_id,
+        "business_impact_score": impact_score,
+        "urgency_score": urgency_score,
+        "assessment_confidence": args.assessment_confidence,
+        "superseded_claims": len(replacements),
+        "signal_version_id": signal_version["signal_version_id"],
+    }
+
+
+def migrate_signal_scores(args: argparse.Namespace) -> dict[str, Any]:
+    """Migrate governed Signal assessments from the legacy 1-5 scale to 1-10."""
+    root = require_store(Path(args.root))
+    migration_date = validate_date(
+        getattr(args, "migrated_at", None), "migrated_at"
+    ) or today()
+    old_predicates = {
+        "business_impact_score_1_to_5": "business_impact_score_1_to_10",
+        "urgency_score_1_to_5": "urgency_score_1_to_10",
+    }
+    claim_paths = {claim["claim_id"]: path for path, claim in claim_records(root)}
+    claims_by_id = _records_by_id(claim_records(root), "claim_id")
+    replacement_ids: dict[str, str] = {}
+    migrated_claims = 0
+
+    for old_id, old_claim in list(claims_by_id.items()):
+        old_predicate = str(old_claim.get("predicate") or "")
+        new_predicate = old_predicates.get(old_predicate)
+        if not new_predicate or old_claim.get("status") != "active":
+            continue
+        try:
+            legacy_score = int(str(old_claim.get("value") or ""))
+        except ValueError as exc:
+            raise ValueError(f"{old_id}: legacy score must be an integer") from exc
+        if legacy_score not in range(1, 6):
+            raise ValueError(f"{old_id}: legacy score must be between 1 and 5")
+        # Preserve ordinal meaning without inflating the old maximum into the new
+        # exceptional 9-10 band. Those scores require a fresh rubric assessment.
+        calibrated_score = {1: 1, 2: 3, 3: 5, 4: 7, 5: 8}[legacy_score]
+        new_value = str(calibrated_score)
+        new_id = claim_id_for(
+            str(old_claim.get("subject_id") or ""), new_predicate, new_value
+        )
+        existing_new = claims_by_id.get(new_id)
+        if existing_new and existing_new.get("status") != "active":
+            raise ValueError(f"{new_id}: migrated score claim already exists but is not active")
+        if not existing_new:
+            new_claim = {
+                **old_claim,
+                "claim_id": new_id,
+                "predicate": new_predicate,
+                "value": new_value,
+                "status": "active",
+                "first_seen": migration_date,
+                "last_verified": migration_date,
+                "supersedes": [old_id],
+                "coexists_with": [],
+                "history": [
+                    {
+                        "date": migration_date,
+                        "action": "created",
+                        "reason": "담당 임원 지침에 따라 1~5 평가를 임시 기준점의 1~10 척도로 전환; 8점은 상한이 아니며 새 rubric 재평가 대상",
+                        "source_ids": list(old_claim.get("source_ids", [])),
+                    }
+                ],
+            }
+            write_json(root / CLAIMS_DIR / f"{new_id}.json", new_claim)
+            claims_by_id[new_id] = new_claim
+            migrated_claims += 1
+
+        old_claim["status"] = "superseded"
+        old_claim["superseded_by"] = new_id
+        old_claim.setdefault("history", []).append(
+            {
+                "date": migration_date,
+                "action": "superseded",
+                "reason": "평가 척도를 1~5에서 1~10으로 전환",
+            }
+        )
+        write_json(claim_paths[old_id], old_claim)
+        replacement_ids[old_id] = new_id
+
+    migrated_signals = 0
+    for signal_path, signal in signal_records(root):
+        if signal.get("schema_version") == SIGNAL_SCHEMA_VERSION:
+            if (signal.get("score_scale") or {}).get("calibration") != "legacy_anchor":
+                continue
+            if not any(
+                str(claim_id) in replacement_ids for claim_id in signal.get("claim_ids", [])
+            ):
+                continue
+        elif signal.get("schema_version") != 2:
+            raise ValueError(
+                f"{signal.get('signal_id')}: expected schema_version 2 before score migration"
+            )
+        else:
+            for field in ("business_impact", "urgency"):
+                score = (signal.get(field) or {}).get("score")
+                if not isinstance(score, int) or score not in range(1, 6):
+                    raise ValueError(
+                        f"{signal.get('signal_id')}: legacy {field} score must be between 1 and 5"
+                    )
+                signal[field]["score"] = {1: 1, 2: 3, 3: 5, 4: 7, 5: 8}[score]
+        signal["score_scale"] = {
+            "version": 1,
+            "minimum": 1,
+            "maximum": SIGNAL_SCORE_MAX,
+            "calibration": "legacy_anchor",
+            "note": "기존 1~5 평가는 1·3·5·7·8 임시 기준점으로 이관하며 8점은 상한이 아님; 기존 Signal도 새 rubric에서 9~10점 재평가 가능",
+        }
+        signal["schema_version"] = SIGNAL_SCHEMA_VERSION
+        signal["claim_ids"] = [
+            replacement_ids.get(str(claim_id), str(claim_id))
+            for claim_id in signal.get("claim_ids", [])
+        ]
+        signal["updated_at"] = timestamp()
+        write_json(signal_path, signal)
+
+        insight_id = str(signal.get("insight_id") or "")
+        insight_path = root / INSIGHTS_DIR / f"{insight_id}.json"
+        if not record_exists(root, "insights", insight_id):
+            raise ValueError(f"{signal.get('signal_id')}: missing Insight {insight_id}")
+        insight = read_json(insight_path)
+        insight["claim_ids"] = [
+            replacement_ids.get(str(claim_id), str(claim_id))
+            for claim_id in insight.get("claim_ids", [])
+        ]
+        insight["updated_at"] = timestamp()
+        write_json(insight_path, insight)
+        migrated_signals += 1
+
+    sync_obsidian_store(root)
+    append_log(
+        root,
+        "migrate-signal-scores",
+        f"1~5 -> calibrated 1~10: {migrated_signals} Signals, {migrated_claims} assessment Claims",
+    )
+    return {
+        "action": "signal_scores_migrated",
+        "schema_version": SIGNAL_SCHEMA_VERSION,
+        "signals": migrated_signals,
+        "claims": migrated_claims,
+    }
+
+
+def _legacy_risk_factor(signal: dict[str, Any]) -> dict[str, Any]:
+    """Create one stable governed risk factor for a legacy axis/change-type pair."""
+
+    business_axis = str(signal.get("business_axis") or "미분류").strip()
+    signal_type = str(signal.get("signal_type") or "외부 변화").strip()
+    digest = hashlib.sha256(
+        f"{business_axis}\0{signal_type}".encode("utf-8")
+    ).hexdigest()[:16].upper()
+    categories = {
+        "정책·규제": "POLICY_REGULATION",
+        "수급·가격": "SUPPLY_DEMAND",
+        "경쟁사": "COMPETITION",
+        "투자·프로젝트": "INVESTMENT_PROJECT",
+        "공급망·물류": "SUPPLY_CHAIN",
+        "고객·계약": "CUSTOMER_CONTRACT",
+        "기술·운영": "TECHNOLOGY_OPERATIONS",
+        "재무·실적": "FINANCE_PERFORMANCE",
+    }
+    return validate_risk_factor(
+        {
+            "risk_factor_id": f"RF-{digest}",
+            "taxonomy_version": 1,
+            "name": f"{business_axis} · {signal_type}",
+            "definition": (
+                f"{business_axis} 사업축에서 {signal_type} 변화가 사업 판단과 대응 시점을 "
+                "바꾸는 공통 위험요인"
+            ),
+            "category": categories.get(signal_type, "MARKET_CHANGE"),
+            "status": "active",
+        }
+    )
+
+
+def migrate_analytics_contract(args: argparse.Namespace) -> dict[str, Any]:
+    """Adopt legacy Source, Claim, Insight, and Signal rows into the canonical contract."""
+
+    root = require_store(Path(args.root))
+    backup_path = (
+        root
+        / "data"
+        / "backups"
+        / f"market_sensing-before-analytics-contract-{datetime.now().strftime('%Y%m%dT%H%M%S')}.db"
+    )
+    online_backup(root, backup_path)
+
+    migrated_sources = 0
+    for path, source in source_records(root):
+        changed = (
+            source.get("schema_version") != SOURCE_SCHEMA_VERSION
+            or not source.get("source_modality")
+        )
+        source["schema_version"] = SOURCE_SCHEMA_VERSION
+        source["source_modality"] = validate_modality(
+            source.get("source_modality") or args.legacy_source_modality
+        )
+        if changed:
+            source["updated_at"] = timestamp()
+            migrated_sources += 1
+        write_json(path, source)
+        put_source_asset(root, source)
+
+    migrated_claims = 0
+    for path, claim in claim_records(root):
+        changed = (
+            claim.get("schema_version") != CLAIM_SCHEMA_VERSION
+            or not claim.get("claim_version_id")
+            or int(claim.get("version_no") or 0) < 1
+        )
+        claim["schema_version"] = CLAIM_SCHEMA_VERSION
+        claim["version_no"] = max(1, int(claim.get("version_no") or 1))
+        claim["claim_version_id"] = str(
+            claim.get("claim_version_id")
+            or _stable_node_id(
+                "CLMV",
+                str(claim.get("claim_id") or ""),
+                str(claim["version_no"]),
+                *(str(item) for item in claim.get("source_ids", [])),
+            )
+        )
+        claim["risk_factor_ids"] = list(
+            dict.fromkeys(str(item) for item in claim.get("risk_factor_ids", []))
+        )
+        if changed:
+            migrated_claims += 1
+        write_json(path, claim)
+        put_claim_version(root, claim)
+
+    migrated_signals = 0
+    created_risk_factors: set[str] = set()
+    insights = _records_by_id(insight_records(root), "insight_id")
+    for _, signal in signal_records(root):
+        if (
+            signal.get("schema_version") == SIGNAL_SCHEMA_VERSION
+            and signal.get("canonical_key")
+            and signal.get("signal_version_id")
+            and signal.get("risk_factor_ids")
+            and signal.get("evidence_refs")
+        ):
+            continue
+        insight_id = str(signal.get("insight_id") or "")
+        insight = insights.get(insight_id)
+        if insight is None:
+            raise ValueError(f"{signal.get('signal_id')}: missing Insight {insight_id}")
+        insight["schema_version"] = INSIGHT_SCHEMA_VERSION
+        write_json(root / INSIGHTS_DIR / f"{insight_id}.json", insight)
+
+        risk_factor = _legacy_risk_factor(signal)
+        put_risk_factor(root, risk_factor)
+        created_risk_factors.add(str(risk_factor["risk_factor_id"]))
+        signal_id = str(signal.get("signal_id") or "")
+        suffix = signal_id.removeprefix("SIG-").casefold()
+        signal.update(
+            {
+                "schema_version": SIGNAL_SCHEMA_VERSION,
+                "canonical_key": str(
+                    signal.get("canonical_key") or f"legacy.signal.{suffix}"
+                ),
+                "risk_factor_ids": list(
+                    dict.fromkeys(
+                        [
+                            *(str(item) for item in signal.get("risk_factor_ids", [])),
+                            str(risk_factor["risk_factor_id"]),
+                        ]
+                    )
+                ),
+            }
+        )
+        refresh_signal_analytics_version(root, signal, insight)
+        migrated_signals += 1
+
+    sync_obsidian_store(root)
+    append_log(
+        root,
+        "migrate-analytics-contract",
+        (
+            f"Source {migrated_sources}, Claim {migrated_claims}, Signal "
+            f"{migrated_signals}, RiskFactor {len(created_risk_factors)}"
+        ),
+    )
+    return {
+        "action": "analytics_contract_migrated",
+        "backup": str(backup_path),
+        "sources": migrated_sources,
+        "claims": migrated_claims,
+        "signals": migrated_signals,
+        "risk_factors": len(created_risk_factors),
+    }
+
+
 def _archive_excerpt(root: Path, source: dict[str, Any], limit: int = 2400) -> str | None:
-    raw_path = root / str(source.get("raw_path") or "")
-    if not raw_path.is_file():
+    raw = get_source_content(root, str(source.get("source_id") or ""))
+    if raw is None:
         return None
-    text = raw_path.read_text(encoding="utf-8", errors="replace").strip()
+    text = raw.decode("utf-8", errors="replace").strip()
     return text[:limit] + ("…" if len(text) > limit else "")
 
 
@@ -4867,12 +6967,13 @@ def trace_signal(args: argparse.Namespace) -> dict[str, Any]:
     if depth == 2:
         return result
     claims_by_id = _records_by_id(claim_records(root), "claim_id")
+    document_id = str(insight.get("document_path") or "")
+    document_artifact = get_artifact(root, document_id) if document_id else None
     result["document"] = {
-        "path": insight.get("document_path"),
+        "artifact_id": document_id or None,
+        "structured": insight.get("analysis_structured"),
         "markdown": insight.get("analysis_markdown")
-        or (root / str(insight.get("document_path"))).read_text(
-            encoding="utf-8", errors="replace"
-        ),
+        or (document_artifact or {}).get("markdown_text"),
     }
     result["claims"] = [
         claims_by_id[claim_id]
@@ -4895,97 +6996,6 @@ def trace_signal(args: argparse.Namespace) -> dict[str, Any]:
         "insight_to_claims": insight.get("claim_ids", []),
         "claims_to_sources": {
             claim["claim_id"]: claim.get("source_ids", []) for claim in result["claims"]
-        },
-    }
-    return result
-
-
-def trace_strategic_warning(args: argparse.Namespace) -> dict[str, Any]:
-    """Return the persistent warning and its evidence roots at progressive depth."""
-    root = require_store(Path(args.root))
-    depth = int(args.depth)
-    warnings = _records_by_id(warning_records(root), "warning_id")
-    warning = warnings.get(args.warning_id)
-    if warning is None:
-        raise ValueError(f"Unknown warning ID: {args.warning_id}")
-    result: dict[str, Any] = {
-        "action": "strategic_warning_trace",
-        "depth": depth,
-        "warning": warning,
-    }
-    if depth == 1:
-        return result
-    thesis = _records_by_id(thesis_records(root), "thesis_id").get(
-        str(warning.get("thesis_id"))
-    )
-    if thesis is None:
-        raise ValueError(f"Broken thesis link: {warning.get('thesis_id')}")
-    trends_by_id = _records_by_id(trend_records(root), "trend_id")
-    trends = [
-        trends_by_id[trend_id]
-        for trend_id in thesis.get("trend_ids", [])
-        if trend_id in trends_by_id
-    ]
-    result["thesis"] = thesis
-    result["trends"] = trends
-    if depth == 2:
-        return result
-    signal_ids = list(
-        dict.fromkeys(
-            [
-                str(signal_id)
-                for trend in trends
-                for signal_id in trend.get("signal_ids", [])
-            ]
-            + [str(signal_id) for signal_id in thesis.get("execution_context_signal_ids", [])]
-        )
-    )
-    signals_by_id = _records_by_id(signal_records(root), "signal_id")
-    signals = [signals_by_id[signal_id] for signal_id in signal_ids if signal_id in signals_by_id]
-    insights_by_id = _records_by_id(insight_records(root), "insight_id")
-    insights = [
-        insights_by_id[str(signal.get("insight_id"))]
-        for signal in signals
-        if str(signal.get("insight_id")) in insights_by_id
-    ]
-    claims_by_id = _records_by_id(claim_records(root), "claim_id")
-    result["signals"] = signals
-    result["insights"] = insights
-    result["claims"] = [
-        claims_by_id[claim_id]
-        for insight in insights
-        for claim_id in insight.get("claim_ids", [])
-        if claim_id in claims_by_id
-    ]
-    if depth == 3:
-        return result
-    source_ids = list(
-        dict.fromkeys(
-            str(source_id)
-            for trend in trends
-            for source_id in (
-                list(trend.get("supporting_source_ids", []))
-                + list(trend.get("counter_source_ids", []))
-            )
-        )
-    )
-    sources_by_id = _records_by_id(source_records(root), "source_id")
-    result["sources"] = [
-        {
-            **sources_by_id[source_id],
-            "archive_excerpt": _archive_excerpt(root, sources_by_id[source_id]),
-        }
-        for source_id in source_ids
-        if source_id in sources_by_id
-    ]
-    result["edges"] = {
-        "warning_to_thesis": [warning["warning_id"], thesis["thesis_id"]],
-        "thesis_to_trends": thesis.get("trend_ids", []),
-        "trends_to_signals": {trend["trend_id"]: trend.get("signal_ids", []) for trend in trends},
-        "trends_to_sources": {
-            trend["trend_id"]: list(trend.get("supporting_source_ids", []))
-            + list(trend.get("counter_source_ids", []))
-            for trend in trends
         },
     }
     return result
@@ -5384,6 +7394,67 @@ def claim_evidence_label(
         if label not in result:
             result.append(label)
     return "·".join(result) or "근거 유형 미상"
+
+
+def claim_cross_validation_status(claim: dict[str, Any]) -> str:
+    """Derive Claim corroboration without treating it as a publish gate."""
+    if str(claim.get("status") or "") == "disputed":
+        return "conflicted"
+    source_ids = {
+        str(source_id).strip()
+        for source_id in claim.get("source_ids", [])
+        if str(source_id).strip()
+    }
+    if len(source_ids) >= 2:
+        return "independent"
+    if len(source_ids) == 1:
+        return "single"
+    return "unknown"
+
+
+def claim_is_cross_validatable(claim: dict[str, Any]) -> bool:
+    """Keep source corroboration labels on externally verifiable facts."""
+    return str(claim.get("predicate") or "") not in CROSS_VALIDATION_EXCLUDED_PREDICATES
+
+
+def claim_cross_validation_label(claim: dict[str, Any]) -> str:
+    status = claim_cross_validation_status(claim)
+    return CLAIM_CROSS_VALIDATION_LABELS[status]
+
+
+def claim_cross_validation_table_lines(
+    claims: list[dict[str, Any]],
+    sources_by_id: dict[str, dict[str, Any]],
+    *,
+    limit: int = 12,
+) -> list[str]:
+    """Render Claim-level corroboration in the evidence section only."""
+    claims = [claim for claim in claims if claim_is_cross_validatable(claim)]
+    if not claims:
+        return []
+    lines = [
+        "**교차검증**",
+        "",
+        "| 근거 항목 | 상태 | 원문 |",
+        "| --- | --- | ---: |",
+    ]
+    for index, claim in enumerate(claims[:limit], start=1):
+        predicate = str(claim.get("predicate") or "")
+        label = PREDICATE_LABELS.get(predicate) or f"확인 근거 {index}"
+        links = [
+            wikilink(Path("sources") / f"{source_id}.md", "근거 보기")
+            for source_id in dict.fromkeys(
+                str(item) for item in claim.get("source_ids", [])
+            )
+            if source_id in sources_by_id
+        ]
+        lines.append(
+            f"| **{markdown_cell(label)}** "
+            f"| {markdown_cell(claim_cross_validation_label(claim))} "
+            f"| {' · '.join(links) if links else '-'} |"
+        )
+    lines.append("")
+    return lines
 
 
 def humanize_claim_value(value: Any) -> str:
@@ -7271,7 +9342,7 @@ def trend_report_index_lines(root: Path) -> list[str]:
     lines = [
         "# 동향 보고서",
         "",
-        "> 마지막 기준일 이후 새로 확인되거나 달라진 3대 사업축에 영향을 주는 외부 변화만",
+        "> 마지막 기준일 이후 새로 확인되거나 달라진 우선 기업의 사업축에 영향을 주는 외부 변화만",
         "> 모아 보는 변화 중심 브리프입니다.",
         "",
         '!!! abstract "현재 발행 상태"',
@@ -7371,7 +9442,89 @@ def update_trend_report_index(root: Path) -> None:
 
 
 def _score_label(score: Any) -> str:
-    return f"{score}/5"
+    return f"{score}/{SIGNAL_SCORE_MAX}"
+
+
+def _confidence_label(value: Any) -> str:
+    return {"high": "높음", "medium": "중간", "low": "낮음"}.get(
+        str(value), "미정"
+    )
+
+
+def _days_until(date_value: Any) -> str | None:
+    try:
+        remaining = (date.fromisoformat(str(date_value)) - date.today()).days
+    except (TypeError, ValueError):
+        return None
+    return f"D-{remaining}" if remaining >= 0 else f"D+{abs(remaining)} 경과"
+
+
+def signal_decision_brief_lines(
+    signal: dict[str, Any],
+    insight: dict[str, Any],
+    claims_by_id: dict[str, dict[str, Any]],
+) -> list[str]:
+    impact = signal.get("business_impact") or {}
+    urgency = signal.get("urgency") or {}
+    claims = [
+        claims_by_id[str(claim_id)]
+        for claim_id in insight.get("claim_ids", [])
+        if str(claim_id) in claims_by_id
+    ]
+    claim_by_predicate = {
+        str(claim.get("predicate") or ""): claim for claim in claims
+    }
+    published_dates = sorted(
+        str(claim.get("last_verified") or "") for claim in claims if claim.get("last_verified")
+    )
+    deadline = urgency.get("response_deadline")
+    deadline_count = _days_until(deadline) if deadline else None
+    lines = [
+        "## 판단 요약",
+        "",
+        "| 사업영향도 | 긴급도 | 평가 신뢰도 | 평가일 |",
+        "| ---: | ---: | --- | --- |",
+        f"| **{_score_label(impact.get('score', '-'))}** "
+        f"| **{_score_label(urgency.get('score', '-'))}** "
+        f"| **{_confidence_label(signal.get('assessment_confidence'))}** "
+        f"| {markdown_cell(signal.get('assessed_at') or '-')} |",
+        "",
+        f"- **영향 경로:** {markdown_cell((claim_by_predicate.get('impact_path') or {}).get('value') or '-')}",
+        f"- **사업영향도 근거:** {markdown_cell(impact.get('rationale') or '-')}",
+        f"- **긴급도 근거:** {markdown_cell(urgency.get('rationale') or '-')}",
+    ]
+    if deadline:
+        suffix = f" · **{deadline_count}**" if deadline_count else ""
+        lines.append(f"- **판단 시한:** {markdown_cell(deadline)}{suffix}")
+    lines.extend(
+        [
+            f"- **근거 범위:** Claim {len(claims)}건 · 원문 {len(insight.get('source_ids', []))}건",
+            "",
+        ]
+    )
+    excluded = REQUIRED_SIGNAL_PREDICATES | {
+        "event_date",
+        "effective_date",
+        "collected_at",
+        "published_at",
+    }
+    drivers = [
+        claim
+        for claim in claims
+        if str(claim.get("predicate") or "") not in excluded
+        and str(claim.get("predicate") or "") in PREDICATE_LABELS
+        and claim.get("status") == "active"
+    ][:4]
+    if drivers:
+        lines.extend(["### 키 드라이버", ""])
+        for claim in drivers:
+            predicate = str(claim.get("predicate") or "")
+            label = PREDICATE_LABELS.get(predicate, predicate.replace("_", " "))
+            lines.append(
+                f"- **{markdown_cell(label)}:** {markdown_cell(claim.get('value') or '-')}"
+            )
+        lines.append("")
+    return lines
 
 
 def impact_estimate_block_lines(estimate: dict[str, Any] | None) -> list[str]:
@@ -7391,15 +9544,437 @@ def impact_estimate_block_lines(estimate: dict[str, Any] | None) -> list[str]:
     ]
 
 
-def signal_page_lines(
+def _structured_item_lines(item: dict[str, Any]) -> list[str]:
+    """Render one typed JSON item without reparsing prose labels or colon strings."""
+    display = str(item.get("display") or "")
+    label = markdown_cell(item.get("label") or "구조화 항목")
+    lines = [f"**{label}**", ""]
+    if display == "text":
+        lines.extend([markdown_cell(item.get("value") or "-"), ""])
+    elif display == "list":
+        entries = item.get("items") if isinstance(item.get("items"), list) else []
+        lines.extend(f"- {markdown_cell(entry)}" for entry in entries)
+        lines.append("")
+    elif display == "flow":
+        steps = item.get("steps") if isinstance(item.get("steps"), list) else []
+        lines.extend(
+            f"{index}. {markdown_cell(step)}"
+            for index, step in enumerate(steps, start=1)
+        )
+        lines.append("")
+    elif display == "table":
+        columns = [
+            column for column in item.get("columns", []) if isinstance(column, dict)
+        ]
+        column_keys = [str(column.get("key") or "") for column in columns]
+        lines.append(
+            "| "
+            + " | ".join(
+                markdown_cell(column.get("label") or column.get("key") or "-")
+                for column in columns
+            )
+            + " |"
+        )
+        lines.append("| " + " | ".join("---" for _ in columns) + " |")
+        for row in item.get("rows", []):
+            if isinstance(row, dict):
+                lines.append(
+                    "| "
+                    + " | ".join(markdown_cell(row.get(key) or "-") for key in column_keys)
+                    + " |"
+                )
+        lines.append("")
+    return lines
+
+
+def _structured_key_driver_lines(
+    insight: dict[str, Any], claims_by_id: dict[str, dict[str, Any]]
+) -> list[str]:
+    excluded = REQUIRED_SIGNAL_PREDICATES | {
+        "event_date",
+        "effective_date",
+        "collected_at",
+        "published_at",
+    }
+    drivers = [
+        claims_by_id[str(claim_id)]
+        for claim_id in insight.get("claim_ids", [])
+        if str(claim_id) in claims_by_id
+        and str(claims_by_id[str(claim_id)].get("predicate") or "") not in excluded
+        and str(claims_by_id[str(claim_id)].get("predicate") or "")
+        in PREDICATE_LABELS
+        and claims_by_id[str(claim_id)].get("status") == "active"
+    ][:6]
+    lines: list[str] = []
+    for claim in drivers:
+        predicate = str(claim.get("predicate") or "")
+        label = PREDICATE_LABELS.get(predicate, predicate.replace("_", " "))
+        lines.append(
+            f"- **{markdown_cell(label)}:** {markdown_cell(claim.get('value') or '-')}"
+        )
+    return lines
+
+
+def structured_analysis_lines(
+    value: Any,
+    signal: dict[str, Any] | None = None,
+    insight: dict[str, Any] | None = None,
+    claims_by_id: dict[str, dict[str, Any]] | None = None,
+    sources_by_id: dict[str, dict[str, Any]] | None = None,
+) -> list[str]:
+    """Render JSON as a decision dashboard, distinct from the prose report."""
+    if not isinstance(value, dict) or not isinstance(value.get("sections"), list):
+        return legacy_structured_analysis_lines(
+            signal or {}, insight or {}, claims_by_id or {}, sources_by_id or {}
+        )
+
+    signal = signal or {}
+    insight = insight or {}
+    claims_by_id = claims_by_id or {}
+    sources_by_id = sources_by_id or {}
+    linked_claims = [
+        claims_by_id[str(claim_id)]
+        for claim_id in insight.get("claim_ids", [])
+        if str(claim_id) in claims_by_id
+        and claims_by_id[str(claim_id)].get("status") in {"active", "disputed"}
+    ]
+    if value.get("schema_version") == STRUCTURED_ANALYSIS_SCHEMA_VERSION:
+        section_by_key = {
+            str(section.get("key")): section
+            for section in value["sections"]
+            if isinstance(section, dict) and section.get("key")
+        }
+        ordered_sections = [
+            ("scenarios", "시나리오"),
+            ("business_impact", "사업 영향"),
+            ("key_drivers", "키 드라이버"),
+            ("evidence", "근거와 시점"),
+            ("falsification_actions", "반증과 다음 행동"),
+        ]
+        lines: list[str] = []
+        for index, (section_key, default_title) in enumerate(
+            ordered_sections, start=1
+        ):
+            section = section_by_key[section_key]
+            title = str(section.get("title") or default_title).strip()
+            lines.extend([f"**{index}. {markdown_cell(title)}**", ""])
+            for item in section.get("items", []):
+                if isinstance(item, dict):
+                    lines.extend(_structured_item_lines(item))
+            if section_key == "evidence":
+                lines.extend(
+                    claim_cross_validation_table_lines(
+                        linked_claims,
+                        sources_by_id,
+                    )
+                )
+        return lines
+
+    items_by_key = {
+        str(item.get("key")): item
+        for section in value["sections"]
+        if isinstance(section, dict)
+        for item in section.get("items", [])
+        if isinstance(item, dict) and item.get("key")
+    }
+    used: set[str] = set()
+    groups = [
+        ("시나리오", ("scenarios",)),
+        (
+            "사업 영향",
+            ("impact_path", "opportunity", "risk", "opportunity_cost", "contract_clauses"),
+        ),
+        ("키 드라이버", ("monitoring_indicators",)),
+        (
+            "근거와 시점",
+            ("verified_change", "regulatory_timeline", "evidence", "source_summary"),
+        ),
+        (
+            "반증과 다음 행동",
+            (
+                "decision_question",
+                "provisional_conclusion",
+                "conventional_view_gap",
+                "falsification_condition",
+                "owner",
+                "detection_trigger",
+                "decision_outputs",
+                "limitations",
+            ),
+        ),
+    ]
+    lines: list[str] = []
+    for index, (title, keys) in enumerate(groups, start=1):
+        # Keep dashboard labels out of the document TOC so the prose report keeps
+        # its own independent heading sequence.
+        lines.extend([f"**{index}. {title}**", ""])
+        if title == "키 드라이버":
+            driver_lines = _structured_key_driver_lines(insight, claims_by_id)
+            if driver_lines:
+                lines.extend(["**확인된 핵심 변수**", "", *driver_lines, ""])
+        rendered = False
+        for key in keys:
+            item = items_by_key.get(key)
+            if item is not None:
+                lines.extend(_structured_item_lines(item))
+                used.add(key)
+                rendered = True
+        if title == "근거와 시점":
+            validation_lines = claim_cross_validation_table_lines(
+                linked_claims,
+                sources_by_id,
+            )
+            lines.extend(validation_lines)
+            rendered = rendered or bool(validation_lines)
+        if not rendered and title not in {"사업 영향", "키 드라이버"}:
+            lines.extend(["현재 저장된 구조화 항목이 없습니다.", ""])
+
+    leftovers = [item for key, item in items_by_key.items() if key not in used]
+    if leftovers:
+        lines.extend(["**6. 추가 판단 정보**", ""])
+        for item in leftovers:
+            lines.extend(_structured_item_lines(item))
+    return lines
+
+
+def legacy_structured_analysis_lines(
     signal: dict[str, Any],
     insight: dict[str, Any],
     claims_by_id: dict[str, dict[str, Any]],
     sources_by_id: dict[str, dict[str, Any]],
 ) -> list[str]:
+    """Project typed legacy fields without reparsing the narrative Markdown."""
+    linked_claims = [
+        claims_by_id[str(claim_id)]
+        for claim_id in insight.get("claim_ids", [])
+        if str(claim_id) in claims_by_id
+        and claims_by_id[str(claim_id)].get("status") in {"active", "disputed"}
+    ]
+    claims = [
+        claim for claim in linked_claims if claim.get("status") == "active"
+    ]
+    claim_by_predicate = {
+        str(claim.get("predicate") or ""): claim for claim in claims
+    }
+
+    def claim_value(predicate: str) -> str:
+        return str((claim_by_predicate.get(predicate) or {}).get("value") or "").strip()
+
+    def public_claim_label(
+        claim: dict[str, Any], index: int, fallback_prefix: str
+    ) -> str:
+        predicate = str(claim.get("predicate") or "")
+        return PREDICATE_LABELS.get(predicate) or f"{fallback_prefix} {index}"
+
+    impact = signal.get("business_impact") or {}
+    urgency = signal.get("urgency") or {}
+    deadline = str(urgency.get("response_deadline") or claim_value("response_deadline") or "-")
+    confidence = _confidence_label(signal.get("assessment_confidence"))
+    source_ids = list(
+        dict.fromkeys(
+            [str(item) for item in insight.get("source_ids", [])]
+            + [
+                str(source_id)
+                for claim in linked_claims
+                for source_id in claim.get("source_ids", [])
+            ]
+        )
+    )
+    published_dates = sorted(
+        str(sources_by_id[source_id].get("published_at"))
+        for source_id in source_ids
+        if source_id in sources_by_id and sources_by_id[source_id].get("published_at")
+    )
+    published_at = published_dates[-1] if published_dates else "-"
+    effective_at = claim_value("effective_date") or "-"
+    detected_at = str(signal.get("created_at") or "-").split("T", 1)[0]
+
+    lines = [
+        "**1. 시나리오**",
+        "",
+        "| 사업영향도 | 긴급도 | 평가 신뢰도 | 판단 시한 |",
+        "| ---: | ---: | --- | --- |",
+        f"| **{_score_label(impact.get('score', '-'))}** "
+        f"| **{_score_label(urgency.get('score', '-'))}** "
+        f"| **{markdown_cell(confidence)}** | {markdown_cell(deadline)} |",
+        "",
+    ]
+    if impact.get("rationale"):
+        lines.append(
+            f"- **사업영향도 근거:** {markdown_cell(impact.get('rationale'))}"
+        )
+    if urgency.get("rationale"):
+        lines.append(f"- **긴급도 근거:** {markdown_cell(urgency.get('rationale'))}")
+    if insight.get("summary"):
+        lines.extend(
+            ["", "**현재 판단**", "", str(insight.get("summary") or "").strip()]
+        )
+
+    impact_path = claim_value("impact_path")
+    affected_business = claim_value("affected_business")
+    lines.extend(["", "**2. 사업 영향**", ""])
+    if impact_path:
+        lines.extend(["**영향 경로**", "", markdown_cell(impact_path), ""])
+    if affected_business:
+        lines.extend(["**영향 대상**", "", markdown_cell(affected_business), ""])
+    if signal.get("sentence"):
+        lines.extend(
+            ["**바꿔야 할 판단**", "", markdown_cell(signal.get("sentence")), ""]
+        )
+
+    excluded_driver_predicates = REQUIRED_SIGNAL_PREDICATES | {
+        "affected_business",
+        "assessed_at",
+        "assessment_confidence",
+        "business_impact_rationale",
+        "business_impact_score_1_to_5",
+        "business_impact_score_1_to_10",
+        "collected_at",
+        "effective_date",
+        "event_date",
+        "impact_path",
+        "published_at",
+        "recommended_follow_up",
+        "response_deadline",
+        "urgency_rationale",
+        "urgency_score_1_to_5",
+        "urgency_score_1_to_10",
+    }
+    driver_claims = [
+        claim
+        for claim in claims
+        if str(claim.get("predicate") or "") not in excluded_driver_predicates
+    ][:8]
+    lines.extend(["**3. 키 드라이버**", ""])
+    if driver_claims:
+        lines.extend(
+            [
+                "| 확인사항 | 확인값 | 최근 확인 |",
+                "| --- | --- | --- |",
+            ]
+        )
+        for index, claim in enumerate(driver_claims, start=1):
+            label = public_claim_label(claim, index, "핵심 변수")
+            lines.append(
+                f"| **{markdown_cell(label)}** | {markdown_cell(claim.get('value') or '-')} "
+                f"| {markdown_cell(claim.get('last_verified') or '-')} |"
+            )
+        lines.append("")
+    else:
+        lines.extend(["연결된 핵심 변수를 다음 검토에서 보강합니다.", ""])
+
+    lines.extend(
+        [
+            "**4. 근거와 시점**",
+            "",
+            f"**확인된 근거 {len(linked_claims)}건 · 원문 {len(source_ids)}건**",
+            "",
+            "| 감지일 | 원문 발표일 | 효력 발생일 | 평가일 |",
+            "| --- | --- | --- | --- |",
+            f"| {markdown_cell(detected_at)} | {markdown_cell(published_at)} "
+            f"| {markdown_cell(effective_at)} | {markdown_cell(signal.get('assessed_at') or '-')} |",
+            "",
+        ]
+    )
+    evidence_excluded_predicates = {
+        "assessed_at",
+        "assessment_confidence",
+        "business_axis",
+        "business_impact_rationale",
+        "business_impact_score_1_to_5",
+        "business_impact_score_1_to_10",
+        "collected_at",
+        "published_at",
+        "urgency_rationale",
+        "urgency_score_1_to_5",
+        "urgency_score_1_to_10",
+    }
+    evidence_claims = [
+        claim
+        for claim in linked_claims
+        if str(claim.get("predicate") or "") not in evidence_excluded_predicates
+    ][:12]
+    if evidence_claims:
+        lines.extend(
+            [
+                "| 근거 항목 | 확인값 | 교차검증 | 원문 | 최근 확인 |",
+                "| --- | --- | --- | ---: | --- |",
+            ]
+        )
+        for index, claim in enumerate(evidence_claims, start=1):
+            label = public_claim_label(claim, index, "확인 근거")
+            links = [
+                wikilink(Path("sources") / f"{source_id}.md", "근거 보기")
+                for source_id in claim.get("source_ids", [])
+                if str(source_id) in sources_by_id
+            ]
+            lines.append(
+                f"| **{markdown_cell(label)}** | {markdown_cell(claim.get('value') or '-')} "
+                f"| {markdown_cell(claim_cross_validation_label(claim))} "
+                f"| {' · '.join(links) if links else '-'} "
+                f"| {markdown_cell(claim.get('last_verified') or '-')} |"
+            )
+        lines.append("")
+
+    lines.extend(["**5. 반증과 다음 행동**", ""])
+    decision_fields = [
+        ("기존 전제", signal.get("baseline_assumption")),
+        ("전제를 깨는 관측", signal.get("observed_break")),
+        ("바꿀 결정", signal.get("decision_change")),
+        ("반증 확인", signal.get("falsification_check")),
+        ("다음 행동", claim_value("recommended_follow_up")),
+    ]
+    rendered_decisions = False
+    for label, field_value in decision_fields:
+        if field_value:
+            lines.extend([f"**{label}**", "", markdown_cell(field_value), ""])
+            rendered_decisions = True
+    if not rendered_decisions:
+        lines.extend(
+            [
+                "**다음 행동**",
+                "",
+                markdown_cell(signal.get("sentence") or insight.get("summary") or "-"),
+                "",
+            ]
+        )
+    return lines
+
+
+def tab_content_lines(lines: list[str]) -> list[str]:
+    """Indent Markdown so pymdownx.tabbed owns the full nested document."""
+    return [f"    {line}" if line else "" for line in lines]
+
+
+def non_toc_label_lines(lines: list[str]) -> list[str]:
+    """Render headings as visual labels without duplicating the narrative TOC."""
+    result: list[str] = []
+    for line in lines:
+        match = re.match(r"^#{2,6}\s+(.+)$", line)
+        result.append(f"**{match.group(1)}**" if match else line)
+    return result
+
+
+def demote_markdown_headings(lines: list[str]) -> list[str]:
+    """Nest stored narrative sections beneath the page's detailed-analysis heading."""
+    result: list[str] = []
+    for line in lines:
+        match = re.match(r"^(#{2,5})(\s+.+)$", line)
+        result.append(f"#{match.group(1)}{match.group(2)}" if match else line)
+    return result
+
+
+def signal_page_lines(
+    signal: dict[str, Any],
+    insight: dict[str, Any],
+    claims_by_id: dict[str, dict[str, Any]],
+    sources_by_id: dict[str, dict[str, Any]],
+    settings: dict[str, Any] | None = None,
+) -> list[str]:
     impact = signal.get("business_impact") or {}
     urgency = signal.get("urgency") or {}
     source_ids = [str(item) for item in insight.get("source_ids", [])]
+    analysis_markdown = str(insight.get("analysis_markdown") or "").strip()
     lines = [
         GENERATED_MARKER,
         "",
@@ -7416,46 +9991,36 @@ def signal_page_lines(
         f"| **{_score_label(urgency.get('score', '-'))}** "
         f"| {markdown_cell(signal.get('assessed_at') or '-')} |",
         "",
-        "## 왜 중요한가",
+        '=== "신호분석"',
         "",
-        str(insight.get("summary") or "-").strip(),
-        "",
-        "### 판단 근거",
-        "",
-        f"- **사업 영향:** {markdown_cell(impact.get('rationale') or '-')}",
-        f"- **긴급성:** {markdown_cell(urgency.get('rationale') or '-')}",
     ]
-    if urgency.get("response_deadline"):
-        lines.append(f"- **대응 시한:** {markdown_cell(urgency['response_deadline'])}")
-    assumption = signal.get("assumption_challenge")
-    if isinstance(assumption, dict):
-        lines.extend(
+
+    structured_lines = structured_analysis_lines(
+        insight.get("analysis_structured"),
+        signal,
+        insight,
+        claims_by_id,
+        sources_by_id,
+    )
+    if "```impact-simulator" not in analysis_markdown:
+        structured_lines.extend(
             [
                 "",
-                '!!! warning "기존 전제를 무엇이 깨는가"',
-                "",
-                f"    **기존 전제:** {markdown_cell(assumption.get('baseline_assumption') or '-')}",
-                "",
-                f"    **전제를 깨는 관측:** {markdown_cell(assumption.get('observed_break') or '-')}",
-                "",
-                f"    **바꿀 결정:** {markdown_cell(assumption.get('decision_change') or '-')}",
-                "",
-                f"    **반증 확인:** {markdown_cell(assumption.get('falsification_check') or '-')}",
+                *non_toc_label_lines(
+                    impact_estimate_block_lines(insight.get("impact_estimate"))
+                ),
             ]
         )
-    lines.extend(["", *impact_estimate_block_lines(insight.get("impact_estimate"))])
-    lines.extend(
-        [
-            "## 상세 분석",
-            "",
-        ]
+    lines.extend(tab_content_lines(structured_lines))
+    lines.extend(["", '=== "보고서"', ""])
+
+    narrative_lines = (
+        analysis_markdown.splitlines()
+        if analysis_markdown
+        else [str(insight.get("summary") or "-").strip()]
     )
-    analysis_markdown = str(insight.get("analysis_markdown") or "").strip()
-    if analysis_markdown:
-        lines.extend([analysis_markdown, ""])
-    else:
-        lines.append(str(insight.get("summary") or "-").strip())
-        lines.append("")
+    lines.extend(tab_content_lines(narrative_lines))
+    lines.append("")
     lines.extend(['??? note "연결된 판단 근거"', ""])
     rendered_claims = 0
     for claim_id in insight.get("claim_ids", []):
@@ -7468,8 +10033,14 @@ def signal_page_lines(
         )
         predicate = str(claim.get("predicate") or "")
         label = PREDICATE_LABELS.get(predicate, predicate.replace("_", " "))
+        validation = (
+            f" · **{markdown_cell(claim_cross_validation_label(claim))}**"
+            if claim_is_cross_validatable(claim)
+            else ""
+        )
         lines.append(
             f"    - **{markdown_cell(label)}:** {markdown_cell(claim.get('value') or '-')}"
+            f"{validation}"
             + (f" · {links}" if links else "")
         )
         rendered_claims += 1
@@ -7529,7 +10100,7 @@ def signal_index_lines(
         sentence = markdown_cell(signal.get("sentence") or "마켓 시그널")
         signal_path = Path("signals") / f"{signal.get('signal_id')}.md"
         lines.append(
-            f"| 영향 **{impact}/5** · 긴급 **{urgency}/5** "
+            f"| 영향 **{impact}/{SIGNAL_SCORE_MAX}** · 긴급 **{urgency}/{SIGNAL_SCORE_MAX}** "
             f"| {markdown_cell(companies)}<br>{markdown_cell(signal.get('business_axis') or '-')} "
             f"| {wikilink(signal_path, sentence)} "
             f"| {markdown_cell(signal.get('assessed_at') or '-')} |"
@@ -7541,906 +10112,36 @@ def signal_index_lines(
             "",
             '!!! info "평가 기준"',
             "",
-            "    사업영향도와 긴급도는 각각 1~5점입니다. 점수 자체보다 각 항목의 "
+            "    사업영향도와 긴급도는 각각 1~10점입니다. 점수 자체보다 각 항목의 "
             "영향 경로와 대응 시한을 함께 확인해 주십시오.",
         ]
     )
     return lines
 
 
-WARNING_LEVEL_LABELS = {
-    "observe": "관찰",
-    "watch": "주목",
-    "warning": "대응 검토",
-    "critical": "즉시 대응",
-}
-STRATEGIC_ISSUE_DIRECTION_LABELS = {
-    "opportunity": "기회",
-    "risk": "위험",
-    "mixed": "기회·위험 혼재",
-}
-STRATEGIC_ISSUE_TIMELINE_LABELS = {
-    "event": "시장 사건",
-    "publication": "공개",
-    "effective": "시행",
-    "milestone": "사업 분기점",
-    "decision": "판단 시한",
-    "monitoring": "확인 시점",
-}
-THESIS_CONFIDENCE_LABELS = {"high": "높음", "medium": "중간", "low": "낮음"}
-WARNING_ACTION_LABELS = {
-    "raised": "최초 등록",
-    "reviewed": "정기 검토",
-    "closed": "이슈 종료",
-}
-
-
-def _indicator_display_value(indicator: dict[str, Any]) -> str:
-    current = str(indicator.get("current") or "-").strip()
-    unit = str(indicator.get("unit") or "").strip()
-    if not unit or unit in {"목표시점", "일정"} or unit in current:
-        return current
-    if unit == "%":
-        return f"{current}%"
-    return f"{current} {unit}"
-
-
-def _warning_link(warning: dict[str, Any]) -> str:
-    return wikilink(
-        Path("strategic-warnings") / f"{warning.get('warning_id')}.md",
-        str(warning.get("title") or "핵심 전략 이슈"),
-    )
-
-
-def strategic_warning_page_lines(
-    warning: dict[str, Any],
-    thesis: dict[str, Any],
-    trends: list[dict[str, Any]],
-    signals_by_id: dict[str, dict[str, Any]],
-    insights_by_id: dict[str, dict[str, Any]],
-    sources_by_id: dict[str, dict[str, Any]],
-) -> list[str]:
-    level = WARNING_LEVEL_LABELS.get(str(warning.get("level")), "미정")
-    direction = STRATEGIC_ISSUE_DIRECTION_LABELS.get(
-        str(warning.get("issue_direction")), "방향 미정"
-    )
-    status = "활성" if warning.get("status") == "active" else "종료"
-    lines = [
-        GENERATED_MARKER,
-        "",
-        f"# {markdown_cell(warning.get('title') or '핵심 전략 이슈')}",
-        "",
-        f'!!! warning "{level} · {status} · {direction}"',
-        "",
-        f"    **{markdown_cell(warning.get('executive_summary') or '-')}**",
-        "",
-        f"    다음 사업 분기점: {markdown_cell(warning.get('next_milestone') or '-')}",
-        "",
-        "## 변화가 시작된 시점과 다음 분기점",
-        "",
-        "| 시점 | 구분 | 확인된 변화·판단 |",
-        "| --- | --- | --- |",
-    ]
-    for item in warning.get("timeline", []):
-        lines.append(
-            f"| **{markdown_cell(item.get('date_label') or '-')}** "
-            f"| {STRATEGIC_ISSUE_TIMELINE_LABELS.get(str(item.get('kind')), '-')} "
-            f"| {markdown_cell(item.get('label') or '-')} |"
-        )
-
-    signal_ids = list(
-        dict.fromkeys(
-            [
-                str(signal_id)
-                for trend in trends
-                for signal_id in trend.get("signal_ids", [])
-            ]
-            + [str(signal_id) for signal_id in thesis.get("execution_context_signal_ids", [])]
-        )
-    )
-    section_by_role = {
-        str(section.get("role")): section for section in warning.get("report_sections", [])
-    }
-    for role in STRATEGIC_ISSUE_SECTION_ROLES:
-        section = section_by_role.get(role)
-        if not section:
-            continue
-        lines.extend(["", f"## {section['heading']}", "", str(section["body"]).strip(), ""])
-        if role == "business_impact":
-            lines.extend(
-                [
-                    f"- **영향 경로:** {markdown_cell(thesis.get('business_impact_path') or '-')}",
-                    f"- **판단 기간:** {markdown_cell(thesis.get('decision_horizon') or '-')}",
-                    f"- **분석 신뢰도:** {THESIS_CONFIDENCE_LABELS.get(str(thesis.get('confidence')), '-')}",
-                    "",
-                ]
-            )
-        elif role == "recommendation":
-            lines.extend(
-                [
-                    f"- **판단 과제:** {markdown_cell(warning.get('decision_question') or '-')}",
-                    f"- **권고 시한:** {markdown_cell(warning.get('decision_deadline') or '-')}",
-                    f"- **권고 담당:** {markdown_cell(warning.get('owner') or '-')}",
-                    "",
-                ]
-            )
-            lines.extend(f"- {markdown_cell(item)}" for item in warning.get("actions", []))
-            lines.append("")
-        elif role == "evidence":
-            for signal_id in signal_ids:
-                signal = signals_by_id.get(signal_id)
-                if not signal:
-                    continue
-                insight = insights_by_id.get(str(signal.get("insight_id")), {})
-                label = insight.get("title") or signal.get("sentence") or signal_id
-                context_label = (
-                    " · 회사 노출 확인"
-                    if signal_id in set(thesis.get("execution_context_signal_ids", []))
-                    else ""
-                )
-                lines.append(
-                    f"- {wikilink(Path('signals') / f'{signal_id}.md', str(label))} · "
-                    f"영향 {(signal.get('business_impact') or {}).get('score', '-')}/5 · "
-                    f"긴급 {(signal.get('urgency') or {}).get('score', '-')}/5{context_label}"
-                )
-            if not signal_ids:
-                lines.append("- 연결된 시그널이 없습니다.")
-            lines.append("")
-        elif role == "monitoring":
-            lines.extend(["| 확인 방향 | 구체적 변화 |", "| --- | --- |"])
-            for item in warning.get("escalation_rules", []):
-                lines.append(f"| 이슈 강도 상승 | {markdown_cell(item)} |")
-            for item in warning.get("deescalation_rules", []):
-                lines.append(f"| 이슈 강도 완화 | {markdown_cell(item)} |")
-            for item in thesis.get("falsification_conditions", []):
-                lines.append(f"| 기존 해석 재검토 | {markdown_cell(item)} |")
-            lines.append("")
-
-    lines.extend(
-        [
-            '??? info "문서 관리 정보"',
-            "",
-            f"    등록 {markdown_cell(warning.get('first_raised_at') or '-')} · "
-            f"최근 확인 {markdown_cell(warning.get('last_reviewed_at') or '-')} · "
-            f"다음 모니터링 {markdown_cell(warning.get('next_review_at') or '-')}",
-            "",
-            f"    **지속 관찰 원칙:** {markdown_cell(warning.get('persistence_rule') or '-')}",
-            "",
-            "    | 날짜 | 조치 | 단계 변화 | 판단 근거 |",
-            "    | --- | --- | --- | --- |",
-        ]
-    )
-    for event in reversed(warning.get("history", [])):
-        transition = " → ".join(
-            filter(
-                None,
-                [
-                    WARNING_LEVEL_LABELS.get(str(event.get("from_level") or ""), ""),
-                    WARNING_LEVEL_LABELS.get(str(event.get("to_level") or ""), ""),
-                ],
-            )
-        ) or "-"
-        lines.append(
-            f"    | {markdown_cell(event.get('date') or '-')} | "
-            f"{WARNING_ACTION_LABELS.get(str(event.get('action')), markdown_cell(event.get('action') or '-'))} "
-            f"| {markdown_cell(transition)} | {markdown_cell(event.get('rationale') or '-')} |"
-        )
-
-    source_ids = list(
-        dict.fromkeys(
-            str(source_id)
-            for trend in trends
-            for source_id in list(trend.get("supporting_source_ids", []))
-            + list(trend.get("counter_source_ids", []))
-        )
-    )
-    lines.extend(["", "## 확인한 원문", ""])
-    for source_id in source_ids:
-        source = sources_by_id.get(source_id)
-        if not source:
-            continue
-        links = []
-        if source.get("url"):
-            links.append(f"[원문 링크]({source['url']})")
-        links.append(wikilink(Path("sources") / f"{source_id}.md", "보관 원문"))
-        lines.append(
-            f"- **{markdown_cell(source.get('title') or source_id)}** · "
-            f"{markdown_cell(source.get('publisher') or '-')} · "
-            f"{markdown_cell(source.get('published_at') or '게시일 미상')} · {' · '.join(links)}"
-        )
-    return lines
-
-
-def strategic_warning_index_lines(warnings: list[dict[str, Any]]) -> list[str]:
-    active = sorted(
-        (item for item in warnings if item.get("status") == "active"),
-        key=lambda item: (
-            WARNING_LEVELS.index(str(item.get("level"))) if item.get("level") in WARNING_LEVELS else -1,
-            str(item.get("last_reviewed_at") or ""),
-        ),
-        reverse=True,
-    )
-    lines = [
-        GENERATED_MARKER,
-        "",
-        "# 핵심 전략 이슈",
-        "",
-        "서로 다른 시그널을 연결했을 때 기존 사업전제나 투자 우선순위를 바꿀 수 있는 "
-        "기회와 위험을 선별합니다. 새 기사가 없어도 사업적 의미가 해소될 때까지 계속 추적합니다.",
-        "",
-        "## 현재 추적 중인 이슈",
-        "",
-        "| 상태 | 방향 | 사업축 | 핵심 전략 이슈 | 다음 사업 분기점 |",
-        "| --- | --- | --- | --- | --- |",
-    ]
-    for warning in active:
-        lines.append(
-            f"| **{WARNING_LEVEL_LABELS.get(str(warning.get('level')), '-')}** "
-            f"| {STRATEGIC_ISSUE_DIRECTION_LABELS.get(str(warning.get('issue_direction')), '-')} "
-            f"| {markdown_cell(warning.get('business_axis') or '-')} "
-            f"| {_warning_link(warning)}<br>{markdown_cell(warning.get('rationale') or '-')} "
-            f"| {markdown_cell(warning.get('next_milestone') or '-')} |"
-        )
-    if not active:
-        lines.append("| - | - | - | 현재 추적 중인 핵심 전략 이슈가 없습니다. | - |")
-    closed = [item for item in warnings if item.get("status") == "closed"]
-    if closed:
-        lines.extend(["", "## 추적을 마친 이슈", ""])
-        lines.extend(f"- {_warning_link(item)}" for item in closed)
-    return lines
-
-
 def sync_obsidian_store(root: Path) -> dict[str, Any]:
-    """Rebuild generated Markdown projections used by Obsidian."""
-    root = require_store(root)
-    settings = effective_settings(root)
-    priority_order = {
-        predicate: index
-        for index, predicate in enumerate(settings.get("priority_predicates", []))
-    }
-    for folder in [
-        *SUBJECT_FOLDERS.values(),
-        "entities",
-        "sources",
-        "events",
-        "signals",
-        "strategic-warnings",
-    ]:
-        (root / folder).mkdir(parents=True, exist_ok=True)
-    sources = [record for _, record in source_records(root)]
-    sources_by_id = {
-        str(record.get("source_id", "")): record
-        for record in sources
-        if record.get("source_id")
-    }
-    claims = [claim for _, claim in claim_records(root)]
-    signals = [signal for _, signal in signal_records(root)]
-    insights = [insight for _, insight in insight_records(root)]
-    trends = [trend for _, trend in trend_records(root)]
-    theses = [thesis for _, thesis in thesis_records(root)]
-    warnings = [warning for _, warning in warning_records(root)]
-    insights_by_id = _records_by_id(insight_records(root), "insight_id")
-    trends_by_id = _records_by_id(trend_records(root), "trend_id")
-    theses_by_id = _records_by_id(thesis_records(root), "thesis_id")
-    claims_by_id = _records_by_id(claim_records(root), "claim_id")
-    claims_by_subject: dict[str, list[dict[str, Any]]] = defaultdict(list)
-    subjects_by_source: dict[str, set[str]] = defaultdict(set)
-    for claim in claims:
-        subject_id = str(claim.get("subject_id", "")).strip()
-        if not subject_id:
-            continue
-        claims_by_subject[subject_id].append(claim)
-        for source_id in claim.get("source_ids", []):
-            subjects_by_source[str(source_id)].add(subject_id)
+    """Return the live SQLite projection boundary.
 
-    subject_links: dict[str, str] = {}
-    for subject_id, subject_claims in sorted(claims_by_subject.items()):
-        relative = subject_path(subject_id)
-        display_name = subject_display_name(subject_id, settings)
-        subject_links[subject_id] = wikilink(relative, display_name)
-        ordered_claims = sorted(
-            subject_claims,
-            key=lambda item: (
-                priority_order.get(
-                    str(item.get("predicate", "")), len(priority_order)
-                ),
-                str(item.get("predicate", "")),
-                str(item.get("claim_id", "")),
-            ),
-        )
-        active_claims = [
-            claim for claim in ordered_claims if claim.get("status") == "active"
-        ]
-        historical_claims = [
-            claim for claim in ordered_claims if claim.get("status") != "active"
-        ]
-        if relative.parent.name == "companies":
-            lines = company_dossier_lines(
-                subject_id,
-                display_name,
-                subject_claims,
-                active_claims,
-                historical_claims,
-                settings,
-                sources_by_id,
-                claims_by_subject,
-            )
-        elif relative.parent.name == "projects":
-            lines = project_dossier_lines(
-                display_name,
-                subject_claims,
-                active_claims,
-                historical_claims,
-                sources_by_id,
-            )
-        else:
-            all_source_ids = sorted(
-                {
-                    str(source_id)
-                    for claim in subject_claims
-                    for source_id in claim.get("source_ids", [])
-                }
-            )
-            lines = [
-                GENERATED_MARKER,
-                "",
-                f"# {markdown_cell(display_name)}",
-                "",
-                f"- Subject ID: `{markdown_cell(subject_id)}`",
-                f"- 유형: `{relative.parent.name}`",
-                f"- Claim 수: {len(subject_claims)}",
-            ]
-            lines.extend(media_gallery_lines(all_source_ids, sources_by_id))
-            lines.extend(["", "## 현재 핵심 현황", ""])
-            for claim in active_claims:
-                source_links = ", ".join(
-                    wikilink(
-                        Path("sources") / f"{source_id}.md",
-                        str(source_id),
-                    )
-                    for source_id in claim.get("source_ids", [])
-                )
-                lines.extend(
-                    [
-                        f"### `{markdown_cell(claim.get('predicate', ''))}`",
-                        "",
-                        f"**{markdown_cell(claim.get('value', ''))}**",
-                        "",
-                        f"- 최근 검증: {markdown_cell(claim.get('last_verified', ''))}",
-                        f"- 신뢰도: `{markdown_cell(claim.get('confidence', ''))}`",
-                        f"- Claim ID: `{markdown_cell(claim.get('claim_id', ''))}`",
-                        f"- 근거: {source_links or '-'}",
-                        "",
-                    ]
-                )
-            if not active_claims:
-                lines.append("- 현재 active Claim이 없습니다.")
-            lines.extend(["", "## 변경 및 이력", ""])
-            if historical_claims:
-                lines.extend(
-                    [
-                        "| 상태 | 속성 | 값 | 최근 검증 | Claim ID |",
-                        "|---|---|---|---|---|",
-                    ]
-                )
-                for claim in historical_claims:
-                    lines.append(
-                        f"| {markdown_cell(claim.get('status', ''))} "
-                        f"| `{markdown_cell(claim.get('predicate', ''))}` "
-                        f"| {markdown_cell(claim.get('value', ''))} "
-                        f"| {markdown_cell(claim.get('last_verified', ''))} "
-                        f"| `{markdown_cell(claim.get('claim_id', ''))}` |"
-                    )
-            else:
-                lines.append("- 기록된 과거 상태가 없습니다.")
-            lines.extend(["", "## 관련 출처", ""])
-            lines.extend(
-                "- "
-                + wikilink(
-                    Path("sources") / f"{source_id}.md",
-                    source_id,
-                )
-                for source_id in all_source_ids
-            )
-            if not all_source_ids:
-                lines.append("- None")
-        atomic_write_text(root / relative, "\n".join(lines) + "\n")
-
-    for technology_value in settings.get("technologies", []):
-        technology = str(technology_value)
-        relative = technology_page_path(technology)
-        label = str(TECHNOLOGY_DETAILS.get(technology, {}).get("label") or technology)
-        technology_subject_id = relative.stem
-        subject_links[technology_subject_id] = wikilink(relative, label)
-        lines = technology_company_dossier_lines(
-            technology,
-            settings,
-            claims_by_subject,
-            sources_by_id,
-        )
-        atomic_write_text(root / relative, "\n".join(lines) + "\n")
-
-    for record in sorted(sources, key=lambda item: str(item.get("source_id", ""))):
-        source_id = str(record.get("source_id", "")).strip()
-        if not source_id:
-            continue
-        relative = Path("sources") / f"{source_id}.md"
-        raw_path = str(record.get("raw_path", ""))
-        url = str(record.get("url") or "")
-        lines = [
-            GENERATED_MARKER,
-            "",
-            f"# {markdown_cell(record.get('title') or source_id)}",
-            "",
-            f"- Source ID: `{markdown_cell(source_id)}`",
-            f"- 발행자: {markdown_cell(record.get('publisher') or '-')}",
-            f"- 게시일: {markdown_cell(record.get('published_at') or '미상')}",
-            f"- 수집일: {markdown_cell(record.get('collected_at') or '-')}",
-            f"- 유형: `{markdown_cell(record.get('source_type') or '-')}`",
-            f"- 신뢰도: `{markdown_cell(record.get('reliability') or '-')}`",
-        ]
-        academic = record.get("academic")
-        if isinstance(academic, dict) and academic:
-            academic_kind_labels = {
-                "journal_article": "학술지 논문",
-                "conference_paper": "학회 논문",
-                "conference_presentation": "학회 발표",
-                "preprint": "프리프린트",
-                "thesis": "학위논문",
-                "research_report": "연구보고서",
-            }
-            lines.extend(["", "## 학술 정보", ""])
-            lines.append(
-                "- 자료 구분: "
-                + academic_kind_labels.get(
-                    str(academic.get("kind") or ""),
-                    markdown_cell(academic.get("kind") or "미상"),
-                )
-            )
-            if academic.get("authors"):
-                lines.append(
-                    "- 저자: "
-                    + ", ".join(
-                        markdown_cell(author) for author in academic["authors"]
-                    )
-                )
-            if academic.get("venue"):
-                lines.append(f"- 게재지·프로시딩: {markdown_cell(academic['venue'])}")
-            if academic.get("doi"):
-                doi = str(academic["doi"])
-                lines.append(f"- DOI: [{doi}](https://doi.org/{doi})")
-            if academic.get("conference_name"):
-                lines.append(f"- 학회명: {markdown_cell(academic['conference_name'])}")
-            if academic.get("conference_date"):
-                lines.append(f"- 학회 일자: {markdown_cell(academic['conference_date'])}")
-            if academic.get("conference_location"):
-                lines.append(
-                    f"- 학회 장소: {markdown_cell(academic['conference_location'])}"
-                )
-            if academic.get("peer_review_status"):
-                peer_labels = {
-                    "peer_reviewed": "동료심사 완료",
-                    "not_peer_reviewed": "동료심사 아님",
-                    "unknown": "확인되지 않음",
-                }
-                lines.append(
-                    "- 동료심사: "
-                    + peer_labels.get(
-                        str(academic["peer_review_status"]),
-                        markdown_cell(academic["peer_review_status"]),
-                    )
-                )
-        if url:
-            lines.append(f"- 원 URL: <{url}>")
-        previous = record.get("previous_version")
-        if previous:
-            lines.append(
-                "- 이전 버전: "
-                + wikilink(
-                    Path("sources") / f"{previous}.md",
-                    str(previous),
-                )
-            )
-        correction = SOURCE_DISPLAY_CORRECTIONS.get(source_id)
-        if correction:
-            lines.extend(
-                [
-                    "",
-                    '!!! warning "사람 검토 정정"',
-                    "",
-                    f"    {markdown_cell(correction)}",
-                ]
-            )
-        lines.extend(media_gallery_lines([source_id], sources_by_id))
-        linked_subjects = sorted(subjects_by_source.get(source_id, set()))
-        lines.extend(["", "## 연결된 지식", ""])
-        if linked_subjects:
-            lines.extend(
-                f"- {subject_links[subject_id]}" for subject_id in linked_subjects
-            )
-        else:
-            lines.append("- 아직 연결된 Claim이 없습니다.")
-        lines.extend(["", "## 보관 원문", ""])
-        raw_file = root / raw_path if raw_path else None
-        if raw_file and raw_file.is_file():
-            raw_text = raw_file.read_text(encoding="utf-8", errors="replace")
-            lines.extend(
-                f"> {line}" if line else ">"
-                for line in raw_text.splitlines()
-            )
-        else:
-            lines.append("> 보관 원문을 찾을 수 없습니다.")
-        atomic_write_text(root / relative, "\n".join(lines) + "\n")
-
-    for signal in signals:
-        signal_id = str(signal.get("signal_id") or "")
-        insight = insights_by_id.get(str(signal.get("insight_id") or ""))
-        if not signal_id or insight is None:
-            continue
-        atomic_write_text(
-            root / "signals" / f"{signal_id}.md",
-            "\n".join(signal_page_lines(signal, insight, claims_by_id, sources_by_id))
-            + "\n",
-        )
-    atomic_write_text(
-        root / "signals" / "index.md",
-        "\n".join(signal_index_lines(signals, insights_by_id, settings)) + "\n",
-    )
-
-    for warning in warnings:
-        warning_id = str(warning.get("warning_id") or "")
-        thesis = theses_by_id.get(str(warning.get("thesis_id") or ""))
-        if not warning_id or thesis is None:
-            continue
-        linked_trends = [
-            trends_by_id[trend_id]
-            for trend_id in thesis.get("trend_ids", [])
-            if trend_id in trends_by_id
-        ]
-        atomic_write_text(
-            root / "strategic-warnings" / f"{warning_id}.md",
-            "\n".join(
-                strategic_warning_page_lines(
-                    warning,
-                    thesis,
-                    linked_trends,
-                    _records_by_id(signal_records(root), "signal_id"),
-                    insights_by_id,
-                    sources_by_id,
-                )
-            )
-            + "\n",
-        )
-    atomic_write_text(
-        root / "strategic-warnings" / "index.md",
-        "\n".join(strategic_warning_index_lines(warnings)) + "\n",
-    )
-
-    pending_records = load_json_objects(root / PENDING_REVIEWS_DIR)
-    review_lines = [
-        GENERATED_MARKER,
-        "",
-        "# Review Queue",
-        "",
-        f"미해결 검토: **{len(pending_records)}건**",
-        "",
-    ]
-    for _, review in pending_records:
-        review_id = str(review.get("review_id", "unknown"))
-        review_lines.extend(
-            [
-                f"## {markdown_cell(review_id)}",
-                "",
-                f"- 유형: `{markdown_cell(review.get('type', ''))}`",
-                f"- 주체: {markdown_cell(review.get('subject_id', '-'))}",
-                f"- 속성: `{markdown_cell(review.get('predicate', '-'))}`",
-                "- 허용 결정: "
-                + ", ".join(
-                    f"`{markdown_cell(item)}`"
-                    for item in review.get("allowed_decisions", [])
-                ),
-            ]
-        )
-        proposed = review.get("proposed_claim")
-        if isinstance(proposed, dict):
-            review_lines.append(
-                f"- 제안 값: **{markdown_cell(proposed.get('value', ''))}**"
-            )
-        review_lines.append("")
-    if not pending_records:
-        review_lines.append("- 검토 대기 항목이 없습니다.")
-    atomic_write_text(root / "REVIEW.md", "\n".join(review_lines).rstrip() + "\n")
-
-    recent_changes: list[tuple[str, str, str, str]] = []
-    for claim in claims:
-        for event in claim.get("history", []):
-            recent_changes.append(
-                (
-                    str(event.get("date", "")),
-                    str(claim.get("subject_id", "")),
-                    str(claim.get("predicate", "")),
-                    str(event.get("action", "")),
-                )
-            )
-    recent_changes.sort(reverse=True)
-    successful_runs = [
-        run
-        for _, run in load_json_objects(root / RUNS_DIR)
-        if run.get("status") == "success"
-    ]
-    successful_runs.sort(
-        key=lambda run: (
-            str(run.get("completed_at") or run.get("started_at") or ""),
-            str(run.get("run_id") or ""),
-        ),
-        reverse=True,
-    )
-
-    update_lines = [
-        GENERATED_MARKER,
-        "",
-        "# 최근 업데이트",
-        "",
-        "최근 수집 현황과 임직원 판단용으로 발행된 마켓 시그널을 시간순으로 보여줍니다.",
-        "",
-    ]
-    if successful_runs:
-        latest_completed = humanize_timestamp(
-            successful_runs[0].get("completed_at")
-            or successful_runs[0].get("started_at")
-            or "-"
-        )
-        update_lines.extend(
-            [
-                '!!! info "마지막 성공 조사"',
-                "",
-                f"    **{markdown_cell(latest_completed)}** 기준 · "
-                f"최근 성공 조사 **{len(successful_runs)}건** 기록",
-                "",
-            ]
-        )
-    else:
-        update_lines.extend(
-            [
-                '!!! info "조사 기록 없음"',
-                "",
-                "    아직 성공으로 기록된 조사 실행이 없습니다.",
-                "",
-            ]
-        )
-
-    update_lines.extend(
-        [
-            "## 최근 조사 실행",
-            "",
-            "| 완료 시각 | 조사 범위 | 반영 결과 |",
-            "|---|---|---|",
-        ]
-    )
-    for run in successful_runs[:20]:
-        scope = run.get("scope") if isinstance(run.get("scope"), dict) else {}
-        scope_parts = [
-            str(scope.get(key)).strip()
-            for key in ("purpose", "company", "technology", "project", "country")
-            if scope.get(key)
-        ]
-        if not scope_parts:
-            scope_parts = [str(run.get("run_id") or "범위 미기록")]
-        counts = run.get("counts") if isinstance(run.get("counts"), dict) else {}
-        result_parts = []
-        for key, label in (
-            ("new_sources", "신규 Source"),
-            ("claims_created", "신규 Claim"),
-            ("claims_verified", "재검증"),
-            ("pending_reviews", "검토 대기"),
-        ):
-            if key in counts:
-                result_parts.append(f"{label} {counts[key]}")
-        if not result_parts:
-            result_parts.append(
-                f"Source {len(run.get('source_ids', []))} · "
-                f"Claim {len(run.get('claim_ids', []))}"
-            )
-        failed_count = len(run.get("failed_urls", []))
-        if failed_count:
-            result_parts.append(f"접근 실패 {failed_count}")
-        update_lines.append(
-            f"| {markdown_cell(humanize_timestamp(run.get('completed_at') or run.get('started_at')))} "
-            f"| {markdown_cell(' · '.join(scope_parts))} "
-            f"| {markdown_cell(' · '.join(result_parts))} |"
-        )
-    if not successful_runs:
-        update_lines.append("| - | 기록된 조사가 없습니다. | - |")
-
-    update_lines.extend(
-        [
-            "",
-            "## 최근 공개 시그널",
-            "",
-            "원자 Claim의 등록 이력이나 내부 프로젝트 ID 대신, 임직원이 판단에 활용할 "
-            "수 있도록 발행이 완료된 시그널만 표시합니다.",
-            "",
-            "| 평가일 | 정보 발표일 | 회사·사업축 | 시그널 | 사업영향도 | 긴급도 |",
-            "|---|---|---|---|---|---|",
-        ]
-    )
-    published_signals = sorted(
-        (signal for signal in signals if signal.get("status") == "active"),
-        key=lambda signal: (
-            str(signal.get("assessed_at") or ""),
-            str(signal.get("updated_at") or signal.get("created_at") or ""),
-        ),
-        reverse=True,
-    )
-    for signal in published_signals[:20]:
-        source_dates = sorted(
-            {
-                str(sources_by_id.get(str(source_id), {}).get("published_at"))
-                for source_id in signal.get("source_ids", [])
-                if sources_by_id.get(str(source_id), {}).get("published_at")
-            }
-        )
-        information_date = source_dates[-1] if source_dates else "게시일 미상"
-        companies = ", ".join(
-            subject_display_name(str(company_id), settings)
-            for company_id in signal.get("company_ids", [])
-        ) or "-"
-        signal_path = Path("signals") / f"{signal.get('signal_id')}.md"
-        update_lines.append(
-            f"| {markdown_cell(signal.get('assessed_at') or '-')} "
-            f"| {markdown_cell(information_date)} "
-            f"| {markdown_cell(companies)}<br>"
-            f"{markdown_cell(signal.get('business_axis') or '-')} "
-            f"| {wikilink(signal_path, markdown_cell(signal.get('sentence') or '마켓 시그널'))} "
-            f"| **{markdown_cell((signal.get('business_impact') or {}).get('score', '-'))}/5** "
-            f"| **{markdown_cell((signal.get('urgency') or {}).get('score', '-'))}/5** |"
-        )
-    if not published_signals:
-        update_lines.append("| - | - | - | 아직 발행된 시그널이 없습니다. | - | - |")
-    atomic_write_text(
-        root / "recent-updates.md",
-        "\n".join(update_lines) + "\n",
-    )
-
-    active_warnings = sorted(
-        (warning for warning in warnings if warning.get("status") == "active"),
-        key=lambda item: (
-            WARNING_LEVELS.index(str(item.get("level")))
-            if item.get("level") in WARNING_LEVELS
-            else -1,
-            str(item.get("last_reviewed_at") or ""),
-        ),
-        reverse=True,
-    )
-    index_lines = [
-        GENERATED_MARKER,
-        "",
-        "# 포스코그룹 마켓센싱",
-        "",
-        "철강·리튬·에너지 사업의 의사결정에 영향을 줄 외부 변화를 선별해 "
-        "한 문장부터 원문까지 단계적으로 보여줍니다.",
-        "",
-        "## 지금 봐야 할 핵심 전략 이슈",
-        "",
-    ]
-    for warning in active_warnings:
-        index_lines.extend(
-            [
-                f'!!! warning "{WARNING_LEVEL_LABELS.get(str(warning.get("level")), "경고")} · '
-                f'{markdown_cell(warning.get("business_axis") or "-")}"',
-                "",
-                f"    **{_warning_link(warning)}**",
-                "",
-                f"    {markdown_cell(warning.get('rationale') or '-')}",
-                "",
-                f"    다음 검토: {markdown_cell(warning.get('next_review_at') or '-')} · "
-                f"판단 시한: {markdown_cell(warning.get('decision_deadline') or '-')}",
-                "",
-            ]
-        )
-    if not active_warnings:
-        index_lines.extend(["현재 추적 중인 핵심 전략 이슈가 없습니다.", ""])
-    index_lines.extend(
-        [
-        "[[strategic-warnings/index|전체 핵심 전략 이슈 보기 →]]",
-        "",
-        "## 지금 볼 시그널",
-        "",
-        "| 관심도 | 회사·사업축 | 핵심 변화 | 평가일 |",
-        "| --- | --- | --- | --- |",
-        ]
-    )
-    ordered_signals = sorted(
-        signals,
-        key=lambda item: (
-            int((item.get("business_impact") or {}).get("score") or 0)
-            + int((item.get("urgency") or {}).get("score") or 0),
-            str(item.get("assessed_at") or ""),
-        ),
-        reverse=True,
-    )
-    for signal in ordered_signals[:5]:
-        impact = (signal.get("business_impact") or {}).get("score", "-")
-        urgency = (signal.get("urgency") or {}).get("score", "-")
-        companies = ", ".join(
-            subject_display_name(str(company_id), settings)
-            for company_id in signal.get("company_ids", [])
-        ) or "-"
-        signal_path = Path("signals") / f"{signal.get('signal_id')}.md"
-        index_lines.append(
-            f"| 영향 **{impact}/5** · 긴급 **{urgency}/5** "
-            f"| {markdown_cell(companies)}<br>{markdown_cell(signal.get('business_axis') or '-')} "
-            f"| {wikilink(signal_path, str(signal.get('sentence') or '마켓 시그널'))} "
-            f"| {markdown_cell(signal.get('assessed_at') or '-')} |"
-        )
-    if not ordered_signals:
-        index_lines.append("| - | - | 현재 등록된 시그널이 없습니다. | - |")
-    index_lines.extend(
-        [
-            "",
-            "[[signals/index|전체 마켓 시그널 보기 →]]",
-            "",
-            '!!! info "판단 경계"',
-            "",
-            "    점수와 영향 경로는 공개 정보에 근거한 분석입니다. 회사 내부의 "
-            "매출·원가·계약 정보가 확인되면 평가가 달라질 수 있습니다.",
-            "",
-            "## 감시하는 사업축",
-            "",
-            "| 회사 | 사업축 | 보는 변화 |",
-            "| --- | --- | --- |",
-            "| POSCO | 철강 | 수출 접근성·원가·수요·경쟁기술을 바꾸는 외부 변화 |",
-            "| POSCO Holdings | 리튬 | 가격·공급·투자·정책이 자원사업 가치에 미치는 변화 |",
-            "| POSCO International | 에너지 | 가스·LNG·발전의 가격·계약·정책·공급 변화 |",
-            "",
-            "## 운영 현황",
-            "",
-            '??? note "근거 저장 현황"',
-            "",
-            f"    **핵심 전략 이슈 {len(active_warnings)}건** · "
-            f"**{len(signals)}개 시그널** · **{len(sources)}개 원문** · "
-            f"**{len(claims)}개 검증 항목** · [[REVIEW|사람 검토 대기]] "
-            f"**{len(pending_records)}건**",
-        ]
-    )
-    report_files = sorted(
-        (root / "reports" / "briefs").glob("*.md"),
-        key=lambda path: path.stat().st_mtime,
-        reverse=True,
-    )
-    index_lines.extend(["", "## 상세 보고서", ""])
-    index_lines.extend(
-        f"- [{markdown_cell(report_page_metadata(path).get('title') or path.stem)}]"
-        f"({path.relative_to(root).as_posix()})"
-        for path in report_files[:5]
-    )
-    if not report_files:
-        index_lines.append("- 아직 발행된 상세 보고서가 없습니다.")
-    atomic_write_text(
-        root / "index.md",
-        "\n".join(index_lines) + "\n",
-    )
-    update_trend_report_index(root)
-    (root / "HOME.md").unlink(missing_ok=True)
-
+    Per-record Markdown generation was retired when SQLite became canonical.
+    MyPIN and other consumers read the same database directly.
+    """
+    root = root.resolve()
     return {
-        "subjects": len(claims_by_subject),
-        "signals": len(signals),
-        "strategic_warnings": len(warnings),
-        "sources": len(sources),
-        "open_reviews": len(pending_records),
+        "action": "sqlite_canonical",
+        "database": str(database_path(root)),
+        "generated_files": 0,
     }
 
 
 def sync_obsidian(args: argparse.Namespace) -> dict[str, Any]:
     root = require_store(Path(args.root))
-    counts = sync_obsidian_store(root)
+    result = sync_obsidian_store(root)
     append_log(
         root,
         "sync-obsidian",
-        f"{counts['subjects']} subjects and {counts['sources']} sources projected.",
+        "No files generated; SQLite remains the canonical live store.",
     )
-    return {"action": "obsidian_synced", **counts}
+    return {"action": "no_file_projection", **result}
 
 
 def search_terms(query: str) -> list[str]:
@@ -8496,68 +10197,63 @@ def search_store(args: argparse.Namespace) -> dict[str, Any]:
     }
 
     direct_notes: list[dict[str, Any]] = []
-    note_text: dict[str, str] = {}
-    visible_directories = [
-        root / "companies",
-        root / "technologies",
-        root / "projects",
-        root / "entities",
-        root / "sources",
-        root / "events",
-        root / "reports",
-    ]
-    visible_notes = [
-        path
-        for directory in visible_directories
-        for path in directory.glob("**/*.md")
-    ]
-    visible_notes.extend(
-        path for path in (root / "index.md", root / "REVIEW.md") if path.is_file()
-    )
-    for path in sorted(visible_notes):
-        relative = path.relative_to(root).as_posix()
-        text = path.read_text(encoding="utf-8", errors="replace")
-        note_text[relative] = text
+    searchable_documents: list[tuple[str, str, str]] = []
+    for _, insight in insight_records(root):
+        searchable_documents.append(
+            (
+                str(insight.get("insight_id") or ""),
+                "insight",
+                "\n".join(
+                    str(insight.get(field) or "")
+                    for field in ("title", "summary", "analysis_markdown")
+                ),
+            )
+        )
+    for _, signal in signal_records(root):
+        searchable_documents.append(
+            (
+                str(signal.get("signal_id") or ""),
+                "signal",
+                "\n".join(
+                    str(signal.get(field) or "")
+                    for field in ("sentence", "business_axis", "signal_type")
+                ),
+            )
+        )
+    for artifact in list_artifacts(root):
+        searchable_documents.append(
+            (
+                str(artifact["artifact_id"]),
+                str(artifact["artifact_type"]),
+                "\n".join(
+                    str(artifact.get(field) or "")
+                    for field in ("title", "markdown_text", "html_text")
+                ),
+            )
+        )
+    for document_id, document_type, text in searchable_documents:
         score, matched = relevance(
             query,
             terms,
             [
-                ("path", relative, 6),
+                ("id", document_id, 6),
+                ("type", document_type, 3),
                 ("content", text[:120_000], 2),
             ],
         )
         if score:
             direct_notes.append(
                 {
-                    "path": relative,
+                    "artifact_id": document_id,
+                    "artifact_type": document_type,
                     "score": score,
                     "match": "direct",
                     "matched_fields": matched,
                 }
             )
-    direct_notes.sort(key=lambda item: (-item["score"], item["path"]))
-    direct_notes = direct_notes[:limit]
-
-    notes = list(direct_notes)
-    seen_notes = {item["path"] for item in notes}
+    direct_notes.sort(key=lambda item: (-item["score"], item["artifact_id"]))
+    notes = direct_notes[:limit]
     followed_links: list[dict[str, str]] = []
-    for note in direct_notes:
-        for target in WIKILINK_PATTERN.findall(note_text[note["path"]]):
-            target_path = f"{target}.md"
-            if target_path not in note_text:
-                continue
-            followed_links.append({"from": note["path"], "to": target_path})
-            if target_path in seen_notes or len(notes) >= limit * 2:
-                continue
-            notes.append(
-                {
-                    "path": target_path,
-                    "score": 0,
-                    "match": "wikilink",
-                    "via": note["path"],
-                }
-            )
-            seen_notes.add(target_path)
 
     ranked_claims: list[dict[str, Any]] = []
     claims_by_id: dict[str, dict[str, Any]] = {}
@@ -8603,10 +10299,10 @@ def search_store(args: argparse.Namespace) -> dict[str, Any]:
     for _, record in source_records(root):
         source_id = str(record.get("source_id", ""))
         sources_by_id[source_id] = record
-        raw_path = root / str(record.get("raw_path", ""))
+        raw_content = get_source_content(root, source_id)
         raw_text = (
-            raw_path.read_text(encoding="utf-8", errors="replace")[:120_000]
-            if raw_path.is_file()
+            raw_content.decode("utf-8", errors="replace")[:120_000]
+            if raw_content is not None
             else ""
         )
         score, matched = relevance(
@@ -8639,7 +10335,7 @@ def search_store(args: argparse.Namespace) -> dict[str, Any]:
                     "reliability": record.get("reliability"),
                     "academic": record.get("academic"),
                     "url": record.get("url"),
-                    "raw_path": record.get("raw_path"),
+                    "raw_ref": record.get("raw_ref"),
                     "score": score,
                     "match": "direct",
                     "matched_fields": matched,
@@ -8669,7 +10365,7 @@ def search_store(args: argparse.Namespace) -> dict[str, Any]:
                     "reliability": record.get("reliability"),
                     "academic": record.get("academic"),
                     "url": record.get("url"),
-                    "raw_path": record.get("raw_path"),
+                    "raw_ref": record.get("raw_ref"),
                     "score": 0,
                     "match": "claim_link",
                     "via": claim["claim_id"],
@@ -8710,7 +10406,7 @@ def search_store(args: argparse.Namespace) -> dict[str, Any]:
         "sources": selected_sources[: limit * 2],
         "followed_links": followed_links,
         "verification_required": True,
-        "next_step": "Read candidate claim JSON and cited raw source files before answering.",
+        "next_step": "Read candidate Claim records and cited SQLite source content before answering.",
     }
 
 
@@ -8718,10 +10414,24 @@ def verify_source_ids(root: Path, source_ids: list[str]) -> None:
     missing = [
         source_id
         for source_id in source_ids
-        if not (root / SOURCE_RECORDS_DIR / f"{source_id}.json").exists()
+        if not record_exists(root, "sources", source_id)
     ]
     if missing:
         raise ValueError("Unknown source IDs: " + ", ".join(missing))
+
+
+def verify_source_modality(root: Path, source_ids: list[str], modality: str) -> None:
+    expected = validate_modality(modality)
+    sources_by_id = _records_by_id(source_records(root), "source_id")
+    mismatched = [
+        source_id
+        for source_id in source_ids
+        if validate_modality(sources_by_id[source_id].get("source_modality")) != expected
+    ]
+    if mismatched:
+        raise ValueError(
+            f"Evidence modality {expected} disagrees with sources: {', '.join(mismatched)}"
+        )
 
 
 def create_claim_review(
@@ -8779,6 +10489,10 @@ def add_claim(args: argparse.Namespace) -> dict[str, Any]:
         raise ValueError(f"Invalid confidence: {args.confidence}")
     source_ids = list(dict.fromkeys(args.source_id))
     verify_source_ids(root, source_ids)
+    risk_factor_ids = list(
+        dict.fromkeys(getattr(args, "risk_factor_id", None) or [])
+    )
+    verify_risk_factor_ids(root, risk_factor_ids)
 
     claim_id = claim_id_for(args.subject_id, args.predicate, args.value)
     records = claim_records(root)
@@ -8801,6 +10515,14 @@ def add_claim(args: argparse.Namespace) -> dict[str, Any]:
         old_sources = list(claim.get("source_ids", []))
         claim["source_ids"] = list(dict.fromkeys(old_sources + source_ids))
         claim["last_verified"] = as_of
+        claim["schema_version"] = CLAIM_SCHEMA_VERSION
+        claim["version_no"] = int(claim.get("version_no") or 1) + 1
+        claim["claim_version_id"] = _stable_node_id(
+            "CLMV", claim["claim_id"], claim["version_no"], *claim["source_ids"]
+        )
+        claim["risk_factor_ids"] = list(
+            dict.fromkeys([*claim.get("risk_factor_ids", []), *risk_factor_ids])
+        )
         claim.setdefault("history", []).append(
             {
                 "date": as_of,
@@ -8810,6 +10532,14 @@ def add_claim(args: argparse.Namespace) -> dict[str, Any]:
             }
         )
         write_json(path, claim)
+        put_claim_version(root, claim)
+        if claim["risk_factor_ids"]:
+            put_risk_factor_links(
+                root,
+                subject_kind="claim",
+                subject_version_id=claim["claim_version_id"],
+                risk_factor_ids=claim["risk_factor_ids"],
+            )
         sync_obsidian_store(root)
         append_log(
             root,
@@ -8823,7 +10553,10 @@ def add_claim(args: argparse.Namespace) -> dict[str, Any]:
         }
 
     proposed = {
+        "schema_version": CLAIM_SCHEMA_VERSION,
         "claim_id": claim_id,
+        "claim_version_id": _stable_node_id("CLMV", claim_id, 1, *source_ids),
+        "version_no": 1,
         "subject_id": args.subject_id,
         "predicate": args.predicate,
         "value": args.value,
@@ -8832,6 +10565,7 @@ def add_claim(args: argparse.Namespace) -> dict[str, Any]:
         "first_seen": as_of,
         "last_verified": as_of,
         "source_ids": source_ids,
+        "risk_factor_ids": risk_factor_ids,
         "supersedes": [],
         "coexists_with": [],
         "history": [
@@ -8848,10 +10582,18 @@ def add_claim(args: argparse.Namespace) -> dict[str, Any]:
         return create_claim_review(root, proposed, conflicts)
 
     path = root / CLAIMS_DIR / f"{claim_id}.json"
-    if path.exists():
+    if record_exists(root, "claims", claim_id):
         existing = read_json(path)
         return create_claim_review(root, proposed, [existing])
     write_json(path, proposed)
+    put_claim_version(root, proposed)
+    if risk_factor_ids:
+        put_risk_factor_links(
+            root,
+            subject_kind="claim",
+            subject_version_id=proposed["claim_version_id"],
+            risk_factor_ids=risk_factor_ids,
+        )
     sync_obsidian_store(root)
     append_log(
         root,
@@ -8882,7 +10624,7 @@ def resolve_claim_review(
     existing_claims: list[tuple[Path, dict[str, Any]]] = []
     for claim_id in conflict_ids:
         path = claim_dir / f"{claim_id}.json"
-        if path.exists():
+        if record_exists(root, "claims", claim_id):
             existing_claims.append((path, read_json(path)))
 
     if decision in {"supersede", "coexist", "dispute"}:
@@ -8955,7 +10697,7 @@ def resolve_claim_review(
     }
     resolved_path = root / RESOLVED_REVIEWS_DIR / review_path.name
     write_json(resolved_path, review)
-    review_path.unlink()
+    delete_record(root, "reviews_pending", review["review_id"])
     sync_obsidian_store(root)
     append_log(
         root,
@@ -8984,7 +10726,8 @@ def resolve_duplicate_review(
             f"Decision {decision!r} is not allowed. Choose: {', '.join(sorted(allowed))}"
         )
     metadata = review["candidate"]
-    candidate_path = root / review["candidate_path"]
+    candidate_id = str(review.get("candidate_artifact_id") or review.get("review_id") or "")
+    candidate = get_artifact(root, candidate_id)
     result: dict[str, Any] = {"action": decision}
 
     if decision == "supporting":
@@ -9006,22 +10749,32 @@ def resolve_duplicate_review(
             metadata.get("published_at"),
         )
     elif decision == "accept-new":
-        source_args = argparse.Namespace(
-            root=str(root),
-            content_file=str(candidate_path),
-            title=metadata["title"],
-            url=metadata.get("url"),
-            publisher=metadata["publisher"],
-            published_at=metadata.get("published_at"),
-            collected_at=metadata.get("collected_at"),
-            source_type=metadata["source_type"],
-            language=metadata["language"],
-            reliability=metadata["reliability"],
-            academic=metadata.get("academic"),
-            supporting_of=None,
-            force=True,
-        )
-        result = add_source(source_args)
+        if not candidate or candidate.get("markdown_text") is None:
+            raise ValueError(f"Missing source candidate artifact: {candidate_id}")
+        with tempfile.NamedTemporaryFile(
+            "w", encoding="utf-8", suffix=".md", delete=False
+        ) as handle:
+            handle.write(str(candidate["markdown_text"]))
+            candidate_path = Path(handle.name)
+        try:
+            source_args = argparse.Namespace(
+                root=str(root),
+                content_file=str(candidate_path),
+                title=metadata["title"],
+                url=metadata.get("url"),
+                publisher=metadata["publisher"],
+                published_at=metadata.get("published_at"),
+                collected_at=metadata.get("collected_at"),
+                source_type=metadata["source_type"],
+                language=metadata["language"],
+                reliability=metadata["reliability"],
+                academic=metadata.get("academic"),
+                supporting_of=None,
+                force=True,
+            )
+            result = add_source(source_args)
+        finally:
+            candidate_path.unlink(missing_ok=True)
 
     review["status"] = "resolved"
     review["resolution"] = {
@@ -9032,13 +10785,7 @@ def resolve_duplicate_review(
     }
     resolved_path = root / RESOLVED_REVIEWS_DIR / review_path.name
     write_json(resolved_path, review)
-    review_path.unlink()
-    if candidate_path.exists():
-        destination = (
-            root / SOURCE_CANDIDATES_DIR / "resolved" / candidate_path.name
-        )
-        if not destination.exists():
-            shutil.move(str(candidate_path), str(destination))
+    delete_record(root, "reviews_pending", review["review_id"])
     sync_obsidian_store(root)
     append_log(
         root,
@@ -9056,7 +10803,7 @@ def resolve_duplicate_review(
 def resolve_review(args: argparse.Namespace) -> dict[str, Any]:
     root = require_store(Path(args.root))
     review_path = root / PENDING_REVIEWS_DIR / f"{args.review_id}.json"
-    if not review_path.exists():
+    if not record_exists(root, "reviews_pending", args.review_id):
         raise ValueError(f"Pending review not found: {args.review_id}")
     review = read_json(review_path)
     if not args.rationale.strip():
@@ -9094,6 +10841,17 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
         stale_days = int(settings.get("claim_stale_days", 180))
 
     findings: dict[str, list[str]] = defaultdict(list)
+    risk_factors = _records_by_id(risk_factor_records(root), "risk_factor_id")
+    for risk_factor_id, risk_factor in risk_factors.items():
+        try:
+            validate_risk_factor(risk_factor)
+        except (TypeError, ValueError) as exc:
+            findings["risk_factor_schema"].append(f"{risk_factor_id}: {exc}")
+        parent_id = str(risk_factor.get("parent_risk_factor_id") or "")
+        if parent_id and parent_id not in risk_factors:
+            findings["risk_factor_integrity"].append(
+                f"{risk_factor_id}: unknown parent {parent_id}"
+            )
     source_ids: set[str] = set()
     for path, record in source_records(root):
         source_id = record.get("source_id")
@@ -9101,6 +10859,14 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
             findings["source_schema"].append(f"{path.name}: missing source_id")
             continue
         source_ids.add(source_id)
+        if record.get("schema_version") != SOURCE_SCHEMA_VERSION:
+            findings["source_schema"].append(
+                f"{source_id}: schema_version must be {SOURCE_SCHEMA_VERSION}"
+            )
+        try:
+            validate_modality(record.get("source_modality"))
+        except ValueError as exc:
+            findings["source_schema"].append(f"{source_id}: {exc}")
         if record.get("source_type") not in SOURCE_TYPES:
             findings["source_schema"].append(
                 f"{source_id}: invalid source_type {record.get('source_type')!r}"
@@ -9173,35 +10939,34 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
                 findings["media_schema"].append(
                     f"{source_id}/{media_id}: invalid subject_ids"
                 )
-            local_path = str(media.get("local_path") or "")
+            local_ref = str(media.get("local_ref") or media.get("local_path") or "")
             if media.get("rights_status") == "link_only":
-                if local_path:
+                if local_ref:
                     findings["media_schema"].append(
-                        f"{source_id}/{media_id}: link_only must not have local_path"
+                        f"{source_id}/{media_id}: link_only must not have local_ref"
                     )
                 if not media.get("image_url"):
                     findings["media_schema"].append(
                         f"{source_id}/{media_id}: link_only missing image_url"
                     )
-            elif not local_path:
+            elif not local_ref:
                 findings["media_integrity"].append(
-                    f"{source_id}/{media_id}: local image missing"
+                    f"{source_id}/{media_id}: SQLite image reference missing"
                 )
             else:
-                image_path = root / local_path
-                if not image_path.is_file():
+                image_bytes = get_binary_asset(root, media_id)
+                if image_bytes is None:
                     findings["media_integrity"].append(
-                        f"{source_id}/{media_id}: image file missing"
+                        f"{source_id}/{media_id}: SQLite image BLOB missing"
                     )
-                elif raw_sha256(image_path.read_bytes()) != media.get("content_sha256"):
+                elif raw_sha256(image_bytes) != media.get("content_sha256"):
                     findings["media_integrity"].append(
-                        f"{source_id}/{media_id}: image file hash changed"
+                        f"{source_id}/{media_id}: image BLOB hash changed"
                     )
-        raw_path = root / str(record.get("raw_path", ""))
-        if not raw_path.is_file():
-            findings["source_integrity"].append(f"{source_id}: raw file missing")
+        raw_bytes = get_source_content(root, source_id)
+        if raw_bytes is None:
+            findings["source_integrity"].append(f"{source_id}: source content BLOB missing")
         else:
-            raw_bytes = raw_path.read_bytes()
             current_hash = raw_sha256(raw_bytes)
             # Git may materialize tracked Markdown with CRLF on Windows even
             # though the immutable source was registered and hashed with LF.
@@ -9224,6 +10989,21 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
     for path, claim in claim_records(root):
         claim_id = claim.get("claim_id", path.stem)
         all_claim_ids.add(str(claim_id))
+        if claim.get("schema_version") != CLAIM_SCHEMA_VERSION:
+            findings["claim_schema"].append(
+                f"{claim_id}: schema_version must be {CLAIM_SCHEMA_VERSION}"
+            )
+        if not str(claim.get("claim_version_id") or "").strip():
+            findings["claim_schema"].append(f"{claim_id}: missing claim_version_id")
+        if not isinstance(claim.get("version_no"), int) or claim.get("version_no", 0) < 1:
+            findings["claim_schema"].append(f"{claim_id}: invalid version_no")
+        unknown_risk_factors = sorted(
+            set(str(item) for item in claim.get("risk_factor_ids", [])) - set(risk_factors)
+        )
+        if unknown_risk_factors:
+            findings["risk_factor_integrity"].append(
+                f"{claim_id}: unknown risk factors {', '.join(unknown_risk_factors)}"
+            )
         if claim.get("status") not in CLAIM_STATUS:
             findings["claim_schema"].append(
                 f"{claim_id}: invalid status {claim.get('status')!r}"
@@ -9280,7 +11060,49 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
                 f"{subject_id} / {predicate}: {detail}"
             )
 
+    observation_versions = _records_by_id(
+        observation_records(root), "observation_version_id"
+    )
+    for observation_version_id, observation in observation_versions.items():
+        try:
+            observation_version(observation)
+        except (TypeError, ValueError) as exc:
+            findings["observation_schema"].append(f"{observation_version_id}: {exc}")
+        if observation.get("source_id") not in source_ids:
+            findings["evidence_integrity"].append(
+                f"{observation_version_id}: unknown source {observation.get('source_id')}"
+            )
+        unknown = sorted(set(observation.get("risk_factor_ids", [])) - set(risk_factors))
+        if unknown:
+            findings["risk_factor_integrity"].append(
+                f"{observation_version_id}: unknown risk factors {', '.join(unknown)}"
+            )
+    event_versions = _records_by_id(event_records(root), "event_version_id")
+    for event_version_id, event in event_versions.items():
+        try:
+            event_version(event)
+        except (TypeError, ValueError) as exc:
+            findings["event_schema"].append(f"{event_version_id}: {exc}")
+        unknown_sources = sorted(set(event.get("source_ids", [])) - source_ids)
+        if unknown_sources:
+            findings["evidence_integrity"].append(
+                f"{event_version_id}: unknown sources {', '.join(unknown_sources)}"
+            )
+        unknown = sorted(set(event.get("risk_factor_ids", [])) - set(risk_factors))
+        if unknown:
+            findings["risk_factor_integrity"].append(
+                f"{event_version_id}: unknown risk factors {', '.join(unknown)}"
+            )
+
     audit_claims_by_id = _records_by_id(claim_records(root), "claim_id")
+    with sqlite_connection_scope(root) as connection:
+        stored_claim_versions = {
+            str(row[0]): str(row[1])
+            for row in connection.execute(
+                "SELECT claim_version_id, claim_id FROM wiki_claim_versions"
+            )
+        }
+    stored_claim_version_ids = set(stored_claim_versions)
     audit_runs_by_id = _records_by_id(load_json_objects(root / RUNS_DIR), "run_id")
     audit_sources_by_id = _records_by_id(source_records(root), "source_id")
     insights = _records_by_id(insight_records(root), "insight_id")
@@ -9288,6 +11110,29 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
     published_claim_ids: set[str] = set()
     published_source_ids: set[str] = set()
     analysis_by_insight: dict[str, str] = {}
+    canonical_signal_versions = _records_by_id(
+        signal_version_records(root), "signal_version_id"
+    )
+    # Immutable Signal history remains published evidence even after the active
+    # Signal points to a newer analysis revision.  Do not reclassify historical
+    # Claim and Source links as unpublished merely because a report was edited.
+    for signal_version in canonical_signal_versions.values():
+        for evidence in signal_version.get("evidence_refs", []):
+            if str(evidence.get("kind") or "") == "claim":
+                claim_id = stored_claim_versions.get(
+                    str(evidence.get("version_id") or "")
+                )
+                if claim_id:
+                    published_claim_ids.add(claim_id)
+            published_source_ids.update(
+                str(item) for item in evidence.get("source_ids", [])
+            )
+    company_impact_versions = _records_by_id(
+        load_json_objects(root / COMPANY_IMPACTS_DIR), "company_impact_version_id"
+    )
+    scenario_versions = _records_by_id(
+        load_json_objects(root / SCENARIOS_DIR), "scenario_version_id"
+    )
     for path, signal in signal_records(root):
         signal_id = str(signal.get("signal_id") or path.stem)
         if signal.get("schema_version") != SIGNAL_SCHEMA_VERSION:
@@ -9349,10 +11194,83 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
             continue
         referenced_insights.add(insight_id)
         insight = insights[insight_id]
-        if insight.get("schema_version") != INSIGHT_SCHEMA_VERSION:
+        insight_schema_version = insight.get("schema_version")
+        if insight_schema_version not in {
+            LEGACY_INSIGHT_SCHEMA_VERSION,
+            INSIGHT_SCHEMA_VERSION,
+        }:
             findings["signal_schema"].append(
-                f"{insight_id}: schema_version must be {INSIGHT_SCHEMA_VERSION}"
+                f"{insight_id}: schema_version must be "
+                f"{LEGACY_INSIGHT_SCHEMA_VERSION} or {INSIGHT_SCHEMA_VERSION}"
             )
+        signal_version_id = str(signal.get("signal_version_id") or "")
+        canonical_key = str(signal.get("canonical_key") or "")
+        if not signal_version_id or signal_version_id not in canonical_signal_versions:
+            findings["signal_integrity"].append(
+                f"{signal_id}: unknown signal_version_id {signal_version_id or '-'}"
+            )
+        elif canonical_signal_versions[signal_version_id].get("signal_id") != signal_id:
+            findings["signal_integrity"].append(
+                f"{signal_id}: canonical version points to another signal"
+            )
+        if not canonical_key:
+            findings["signal_schema"].append(f"{signal_id}: missing canonical_key")
+        risk_factor_ids = {str(item) for item in signal.get("risk_factor_ids", [])}
+        if not risk_factor_ids:
+            findings["signal_schema"].append(f"{signal_id}: no risk_factor_ids")
+        unknown_risk_factors = sorted(risk_factor_ids - set(risk_factors))
+        if unknown_risk_factors:
+            findings["risk_factor_integrity"].append(
+                f"{signal_id}: unknown risk factors {', '.join(unknown_risk_factors)}"
+            )
+        evidence_refs = signal.get("evidence_refs")
+        if not isinstance(evidence_refs, list) or not evidence_refs:
+            findings["signal_schema"].append(f"{signal_id}: no canonical evidence_refs")
+        else:
+            known_evidence = {
+                "claim": {
+                    *stored_claim_version_ids,
+                },
+                "observation": set(observation_versions),
+                "event": set(event_versions),
+            }
+            for evidence in evidence_refs:
+                kind = str(evidence.get("kind") or "")
+                version_id = str(evidence.get("version_id") or "")
+                if kind not in known_evidence or version_id not in known_evidence.get(kind, set()):
+                    findings["evidence_integrity"].append(
+                        f"{signal_id}: unknown {kind or 'evidence'} version {version_id or '-'}"
+                    )
+                try:
+                    validate_modality(evidence.get("modality"))
+                except ValueError as exc:
+                    findings["signal_schema"].append(f"{signal_id}: {exc}")
+        for impact_id in signal.get("company_impact_version_ids", []):
+            if str(impact_id) not in company_impact_versions:
+                findings["signal_integrity"].append(
+                    f"{signal_id}: unknown company impact {impact_id}"
+                )
+        for scenario_id in signal.get("scenario_version_ids", []):
+            if str(scenario_id) not in scenario_versions:
+                findings["signal_integrity"].append(
+                    f"{signal_id}: unknown scenario {scenario_id}"
+                )
+        if insight_schema_version == INSIGHT_SCHEMA_VERSION:
+            try:
+                validate_structured_analysis(
+                    insight.get("analysis_structured"),
+                    allowed_claim_ids={str(item) for item in insight.get("claim_ids", [])},
+                    allowed_source_ids={str(item) for item in insight.get("source_ids", [])},
+                    require_current_schema=True,
+                    importance_score=max(
+                        int((signal.get("business_impact") or {}).get("score") or 0),
+                        int((signal.get("urgency") or {}).get("score") or 0),
+                    ),
+                )
+            except ValueError as exc:
+                findings["signal_schema"].append(
+                    f"{insight_id}: invalid structured analysis: {exc}"
+                )
         if not run_id or run_id not in audit_runs_by_id:
             findings["signal_integrity"].append(
                 f"{signal_id}: missing or unknown run_id {run_id or '-'}"
@@ -9405,7 +11323,10 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
             )
         for field in ("business_impact", "urgency"):
             score = (signal.get(field) or {}).get("score")
-            if not isinstance(score, int) or score not in range(1, 6):
+            if (
+                not isinstance(score, int)
+                or score not in range(1, SIGNAL_SCORE_MAX + 1)
+            ):
                 findings["signal_schema"].append(
                     f"{signal_id}: invalid {field} score {score!r}"
                 )
@@ -9413,19 +11334,45 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
                 findings["signal_schema"].append(
                     f"{signal_id}: missing {field} rationale"
                 )
+        if (signal.get("business_impact") or {}).get("score") == 10:
+            exceptional_basis = signal.get("exceptional_score_basis")
+            required_basis = (
+                "enterprise_scope",
+                "immediate_action",
+                "delay_loss",
+                "irreversibility",
+            )
+            if not isinstance(exceptional_basis, dict) or any(
+                not str(exceptional_basis.get(key) or "").strip()
+                for key in required_basis
+            ):
+                findings["signal_schema"].append(
+                    f"{signal_id}: 사업영향도 10점은 전사 범위·즉시성·지연 손실·불가역성 "
+                    "근거가 모두 필요"
+                )
+        score_scale = signal.get("score_scale")
+        if (
+            not isinstance(score_scale, dict)
+            or score_scale.get("minimum") != 1
+            or score_scale.get("maximum") != SIGNAL_SCORE_MAX
+            or score_scale.get("calibration") not in {"rubric_v1", "legacy_anchor"}
+        ):
+            findings["signal_schema"].append(
+                f"{signal_id}: invalid or missing 1~{SIGNAL_SCORE_MAX} score_scale"
+            )
         if signal.get("assessment_confidence") not in CLAIM_CONFIDENCE:
             findings["signal_schema"].append(
                 f"{signal_id}: invalid assessment_confidence"
             )
         expected_values = {
             "business_axis": signal.get("business_axis"),
-            "business_impact_score_1_to_5": str(
+            "business_impact_score_1_to_10": str(
                 (signal.get("business_impact") or {}).get("score")
             ),
             "business_impact_rationale": (
                 signal.get("business_impact") or {}
             ).get("rationale"),
-            "urgency_score_1_to_5": str(
+            "urgency_score_1_to_10": str(
                 (signal.get("urgency") or {}).get("score")
             ),
             "urgency_rationale": (signal.get("urgency") or {}).get("rationale"),
@@ -9449,7 +11396,7 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
         invalid_pairs = [
             f"{company_id}={axis}"
             for company_id in signal.get("company_ids", [])
-            if MARKET_SENSING_AXES.get(str(company_id)) != axis
+            if not company_supports_business_axis(str(company_id), axis)
         ]
         if invalid_pairs:
             findings["signal_schema"].append(
@@ -9479,70 +11426,167 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
                 )
         analysis_by_insight[insight_id] = analysis
 
+    normalized_contracts = {
+        "wiki_source_assets": (
+            "source_id",
+            source_ids,
+        ),
+        "wiki_risk_factors": (
+            "risk_factor_id",
+            set(risk_factors),
+        ),
+        "wiki_claim_versions": (
+            "claim_version_id",
+            {
+                str(value.get("claim_version_id"))
+                for value in audit_claims_by_id.values()
+                if value.get("claim_version_id")
+            },
+        ),
+        "wiki_observation_versions": (
+            "observation_version_id",
+            set(observation_versions),
+        ),
+        "wiki_event_versions": (
+            "event_version_id",
+            set(event_versions),
+        ),
+        "wiki_signal_versions": (
+            "signal_version_id",
+            set(canonical_signal_versions),
+        ),
+        "wiki_company_impact_versions": (
+            "company_impact_version_id",
+            set(company_impact_versions),
+        ),
+        "wiki_scenario_versions": (
+            "scenario_version_id",
+            set(scenario_versions),
+        ),
+    }
+    with sqlite_connection_scope(root) as connection:
+        for table, (column, expected_ids) in normalized_contracts.items():
+            actual_ids = {
+                str(row[0])
+                for row in connection.execute(f"SELECT {column} FROM {table}")
+            }
+            missing_ids = sorted(expected_ids - actual_ids)
+            orphan_ids = sorted(actual_ids - expected_ids)
+            if missing_ids:
+                findings["analytics_projection"].append(
+                    f"{table}: missing normalized rows {', '.join(missing_ids)}"
+                )
+            if orphan_ids and table != "wiki_claim_versions":
+                findings["analytics_projection"].append(
+                    f"{table}: orphan normalized rows {', '.join(orphan_ids)}"
+                )
+        expected_links: set[tuple[str, str, str]] = set()
+        for table, id_column, subject_kind in (
+            ("wiki_claim_versions", "claim_version_id", "claim"),
+            ("wiki_observation_versions", "observation_version_id", "observation"),
+            ("wiki_event_versions", "event_version_id", "event"),
+            ("wiki_signal_versions", "signal_version_id", "signal"),
+        ):
+            for row in connection.execute(f"SELECT {id_column}, payload_json FROM {table}"):
+                payload = json.loads(str(row["payload_json"]))
+                expected_links.update(
+                    (str(risk_factor_id), subject_kind, str(row[id_column]))
+                    for risk_factor_id in payload.get("risk_factor_ids", [])
+                )
+        actual_links = {
+            (str(row[0]), str(row[1]), str(row[2]))
+            for row in connection.execute(
+                "SELECT risk_factor_id, subject_kind, subject_version_id "
+                "FROM wiki_risk_factor_links"
+            )
+        }
+        if expected_links != actual_links:
+            findings["analytics_projection"].append(
+                "wiki_risk_factor_links: normalized link set disagrees with version payloads"
+            )
+
+    active_signals = [
+        signal for _, signal in signal_records(root) if signal.get("status") == "active"
+    ]
+    if len(active_signals) >= 10:
+        for field in ("business_impact", "urgency"):
+            scores = [
+                int((signal.get(field) or {}).get("score") or 0)
+                for signal in active_signals
+            ]
+            high_band = sum(score >= 9 for score in scores)
+            exceptional = sum(score == 10 for score in scores)
+            if high_band / len(scores) > 0.25:
+                findings["score_calibration"].append(
+                    f"{field}: 9~10점이 {high_band}/{len(scores)}건으로 25%를 초과해 상위점수 인플레이션 검토 필요"
+                )
+            if exceptional / len(scores) > 0.10:
+                findings["score_calibration"].append(
+                    f"{field}: 예외 등급 10점이 {exceptional}/{len(scores)}건으로 10%를 초과"
+                )
+
     signals_by_run: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    all_audit_signals: list[dict[str, Any]] = []
     for _, signal in signal_records(root):
+        all_audit_signals.append(signal)
         signals_by_run[str(signal.get("run_id") or "")].append(signal)
     for run_id, run in sorted(audit_runs_by_id.items()):
+        listed_signal_ids = {
+            str(signal_id)
+            for signal_id in run.get("signal_ids", [])
+            if str(signal_id)
+        }
+        run_signals = [
+            signal
+            for signal in all_audit_signals
+            if str(signal.get("run_id") or "") == run_id
+            or str(signal.get("signal_id") or "") in listed_signal_ids
+        ]
+        research_contract = run.get("research_contract")
+        if (
+            isinstance(research_contract, dict)
+            and int(research_contract.get("version") or 0) >= 1
+            and (run.get("completed_at") or run.get("status") in {"success", "completed"})
+        ):
+            findings["research_coverage"].extend(
+                evaluate_research_coverage(run, run_signals)
+            )
         contract = run.get("signal_contract")
         if not isinstance(contract, dict) or int(contract.get("version") or 0) < 1:
             continue
+        audit_contract = dict(contract)
+        count_limited_research = (
+            isinstance(run.get("research_contract"), dict)
+            and run["research_contract"].get("mode") == "count_limited"
+        )
+        if (
+            int(audit_contract.get("version") or 0) >= 2
+            and (
+                count_limited_research
+                or (
+                    not run.get("completed_at")
+                    and run.get("status") not in {"success", "completed"}
+                )
+            )
+        ):
+            # A run can be audited while collection is still in progress. Keep the
+            # source-bias checks active, but defer frequency and score-band vitality
+            # checks until the run has been explicitly completed. Explicitly
+            # count-limited runs never inherit full-monitoring volume quotas.
+            audit_contract["version"] = 1
         findings["signal_portfolio"].extend(
             evaluate_run_signal_contract(
                 run_id,
                 [
                     signal
-                    for signal in signals_by_run.get(run_id, [])
+                    for signal in run_signals
                     if str(signal.get("signal_id") or "")
                     in {str(item) for item in contract.get("signal_ids", [])}
                 ],
                 audit_claims_by_id,
-                contract,
+                audit_contract,
             )
         )
-
-    audit_trends = _records_by_id(trend_records(root), "trend_id")
-    audit_theses = _records_by_id(thesis_records(root), "thesis_id")
-    audit_warnings = _records_by_id(warning_records(root), "warning_id")
-    referenced_trends: set[str] = set()
-    referenced_theses: set[str] = set()
-    for warning_id, warning in sorted(audit_warnings.items()):
-        thesis_id = str(warning.get("thesis_id") or "")
-        thesis = audit_theses.get(thesis_id)
-        if thesis is None:
-            findings["strategic_watch"].append(
-                f"{warning_id}: unknown thesis {thesis_id or '-'}"
-            )
-            continue
-        referenced_theses.add(thesis_id)
-        trend_ids = [str(item) for item in thesis.get("trend_ids", [])]
-        if len(trend_ids) != 1 or trend_ids[0] not in audit_trends:
-            findings["strategic_watch"].append(
-                f"{warning_id}: requires exactly one valid linked trend"
-            )
-            continue
-        trend_id = trend_ids[0]
-        referenced_trends.add(trend_id)
-        try:
-            validate_strategic_watch_manifest(
-                root,
-                {
-                    "schema_version": STRATEGIC_WATCH_SCHEMA_VERSION,
-                    "trend": audit_trends[trend_id],
-                    "thesis": thesis,
-                    "warning": warning,
-                },
-            )
-        except ValueError as exc:
-            findings["strategic_watch"].append(f"{warning_id}: {exc}")
-        next_review = parse_iso_date(warning.get("next_review_at"))
-        if warning.get("status") == "active" and next_review and next_review < date.today():
-            findings["strategic_watch"].append(
-                f"{warning_id}: active warning review overdue since {next_review.isoformat()}"
-            )
-    for thesis_id in sorted(set(audit_theses) - referenced_theses):
-        findings["strategic_watch"].append(f"{thesis_id}: thesis is not linked to a warning")
-    for trend_id in sorted(set(audit_trends) - referenced_trends):
-        findings["strategic_watch"].append(f"{trend_id}: trend is not linked to a warning")
 
     for insight_id in sorted(set(insights) - referenced_insights):
         findings["signal_integrity"].append(
@@ -9576,8 +11620,8 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
                 f"{run.get('run_id') or path.stem}: {new_claims} new claims but no published Signal"
             )
 
-    pending = sorted((root / PENDING_REVIEWS_DIR).glob("*.json"))
-    for path in pending:
+    pending_records = load_json_objects(root / PENDING_REVIEWS_DIR)
+    for path, _ in pending_records:
         findings["pending_reviews"].append(path.stem)
 
     report_date = today()
@@ -9596,15 +11640,22 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
     categories = [
         "source_integrity",
         "source_schema",
+        "risk_factor_schema",
+        "risk_factor_integrity",
         "media_integrity",
         "media_schema",
         "claim_schema",
         "claim_evidence",
+        "observation_schema",
+        "event_schema",
+        "evidence_integrity",
+        "analytics_projection",
         "signal_schema",
         "signal_integrity",
         "signal_quality",
+        "score_calibration",
+        "research_coverage",
         "signal_portfolio",
-        "strategic_watch",
         "unpublished_claims",
         "unpublished_sources",
         "run_publication",
@@ -9620,16 +11671,25 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
             continue
         lines.extend(["", f"## {category}", ""])
         lines.extend(f"- {value}" for value in values)
-    atomic_write_text(report_path, "\n".join(lines) + "\n")
+    report_text = "\n".join(lines) + "\n"
+    report_id = f"audit:{report_date}"
+    put_artifact(
+        root,
+        report_id,
+        "audit",
+        f"Market Sensing Intelligence Audit {report_date}",
+        markdown_text=report_text,
+        metadata={"counts": {key: len(findings.get(key, [])) for key in categories}},
+    )
     append_log(
         root,
         "audit",
         f"{sum(len(items) for items in findings.values())} findings. "
-        f"Report: {report_path.relative_to(root).as_posix()}",
+        f"Artifact: {report_id}",
     )
     return {
         "action": "audited",
-        "report": report_path.relative_to(root).as_posix(),
+        "report_artifact_id": report_id,
         "counts": {key: len(findings.get(key, [])) for key in categories},
     }
 
@@ -9674,7 +11734,7 @@ def brief(args: argparse.Namespace) -> dict[str, Any]:
             item["predicate"],
         )
     )
-    pending = sorted(path.stem for path in (root / PENDING_REVIEWS_DIR).glob("*.json"))
+    pending = sorted(path.stem for path, _ in load_json_objects(root / PENDING_REVIEWS_DIR))
     report_path = (
         root / "reports" / "briefs" / f"brief-{since}-to-{today()}.md"
     )
@@ -9792,28 +11852,45 @@ def brief(args: argparse.Namespace) -> dict[str, Any]:
             source_footnote_definition(source_id, sources_by_id)
             for source_id in cited_source_ids
         )
-    atomic_write_text(report_path, "\n".join(lines) + "\n")
-    update_trend_report_index(root)
-    html_report: str | None = None
+    report_text = "\n".join(lines) + "\n"
+    report_id = f"brief:{since}:{today()}"
+    html_text: str | None = None
     if getattr(args, "html", False):
-        html_path = report_path.with_suffix(".html")
-        render_report_html(root, report_path, html_path)
-        html_report = html_path.relative_to(root).as_posix()
+        with tempfile.TemporaryDirectory() as temp_directory:
+            temp_root = Path(temp_directory)
+            markdown_path = temp_root / "brief.md"
+            html_path = temp_root / "brief.html"
+            atomic_write_text(markdown_path, report_text)
+            render_report_html(root, markdown_path, html_path)
+            html_text = html_path.read_text(encoding="utf-8")
+    put_artifact(
+        root,
+        report_id,
+        "brief",
+        f"포스코그룹 마켓센싱 브리프 · {since}–{today()}",
+        markdown_text=report_text,
+        html_text=html_text,
+        metadata={
+            "since": since,
+            "through": today(),
+            "change_count": len(changes),
+            "pending_review_count": len(pending),
+        },
+    )
     append_log(
         root,
         "brief",
         f"{len(changes)} changes since {since}. "
-        f"Report: {report_path.relative_to(root).as_posix()}"
-        + (f"; HTML: {html_report}" if html_report else ""),
+        f"Artifact: {report_id}" + ("; HTML stored" if html_text else ""),
     )
     result = {
         "action": "brief_created",
-        "report": report_path.relative_to(root).as_posix(),
+        "report_artifact_id": report_id,
         "change_count": len(changes),
         "pending_review_count": len(pending),
     }
-    if html_report:
-        result["html_report"] = html_report
+    if html_text:
+        result["html_stored"] = True
     return result
 
 
@@ -9824,27 +11901,670 @@ def render_report(args: argparse.Namespace) -> dict[str, Any]:
         raise ValueError(f"Markdown report does not exist: {input_path}")
     if input_path.suffix.casefold() != ".md":
         raise ValueError("render-report input must be a .md file")
-    output_path = (
-        Path(args.output).resolve()
-        if args.output
-        else input_path.with_suffix(".html")
+    if args.output:
+        raise ValueError("--output was retired; rendered HTML is stored in SQLite")
+    with tempfile.TemporaryDirectory() as temp_directory:
+        output_path = Path(temp_directory) / "report.html"
+        rendered = render_report_html(root, input_path, output_path)
+        html_text = output_path.read_text(encoding="utf-8")
+    markdown_text = input_path.read_text(encoding="utf-8")
+    report_id = f"report:{raw_sha256(markdown_text.encode('utf-8'))[:16]}"
+    put_artifact(
+        root,
+        report_id,
+        "report",
+        input_path.stem,
+        markdown_text=markdown_text,
+        html_text=html_text,
+        metadata={
+            "source_count": rendered["source_count"],
+            "missing_source_ids": rendered["missing_source_ids"],
+        },
     )
-    rendered = render_report_html(root, input_path, output_path)
-    try:
-        report_value = output_path.relative_to(root).as_posix()
-    except ValueError:
-        report_value = str(output_path)
     append_log(
         root,
         "render-report",
-        f"{input_path.name} -> {report_value} "
+        f"{input_path.name} -> {report_id} "
         f"({rendered['source_count']} cited sources)",
     )
     return {
-        "action": "html_report_created",
-        "html_report": report_value,
+        "action": "html_report_stored",
+        "report_artifact_id": report_id,
         "source_count": rendered["source_count"],
         "missing_source_ids": rendered["missing_source_ids"],
+    }
+
+
+def _nested_reference_ids(
+    value: Any,
+    singular_key: str,
+    plural_key: str,
+) -> set[str]:
+    references: set[str] = set()
+
+    def visit(node: Any) -> None:
+        if isinstance(node, dict):
+            for key, child in node.items():
+                if key == singular_key and isinstance(child, str) and child.strip():
+                    references.add(child.strip())
+                elif key == plural_key and isinstance(child, list):
+                    references.update(
+                        item.strip()
+                        for item in child
+                        if isinstance(item, str) and item.strip()
+                    )
+                visit(child)
+        elif isinstance(node, list):
+            for child in node:
+                visit(child)
+
+    visit(value)
+    return references
+
+
+def _signal_prune_plan(
+    connection: Any, retained_signal_ids: set[str] | None = None
+) -> dict[str, Any]:
+    records: dict[str, dict[str, dict[str, Any]]] = defaultdict(dict)
+    for row in connection.execute(
+        "SELECT collection, record_id, payload_json FROM wiki_records"
+    ):
+        records[str(row["collection"])][str(row["record_id"])] = json.loads(
+            row["payload_json"]
+        )
+
+    all_signals = records.get("signals", {})
+    if not all_signals:
+        raise ValueError("prune-to-signals requires at least one stored Signal")
+    if retained_signal_ids is not None:
+        unknown = retained_signal_ids - set(all_signals)
+        if unknown:
+            raise ValueError(
+                "Unknown retained Signal IDs: " + ", ".join(sorted(unknown))
+            )
+        if not retained_signal_ids:
+            raise ValueError("At least one --signal-id must be retained")
+        signals = {
+            signal_id: all_signals[signal_id]
+            for signal_id in sorted(retained_signal_ids)
+        }
+    else:
+        signals = all_signals
+
+    keep_insights: set[str] = set()
+    keep_claims: set[str] = set()
+    keep_sources: set[str] = set()
+    keep_runs: set[str] = set()
+    keep_signal_versions: set[str] = set()
+    keep_observations: set[str] = set()
+    keep_events: set[str] = set()
+    keep_company_impacts: set[str] = set()
+    keep_scenarios: set[str] = set()
+    keep_risk_factors: set[str] = set()
+    for signal in signals.values():
+        keep_insights.update(
+            _nested_reference_ids(signal, "insight_id", "insight_ids")
+        )
+        keep_claims.update(_nested_reference_ids(signal, "claim_id", "claim_ids"))
+        keep_sources.update(_nested_reference_ids(signal, "source_id", "source_ids"))
+        keep_risk_factors.update(str(item) for item in signal.get("risk_factor_ids", []))
+        run_id = str(signal.get("run_id") or "").strip()
+        if run_id and run_id in records.get("runs", {}):
+            keep_runs.add(run_id)
+
+    for version_id, version in records.get("signal_versions", {}).items():
+        if str(version.get("signal_id") or "") in signals:
+            keep_signal_versions.add(version_id)
+            keep_company_impacts.update(
+                str(item) for item in version.get("company_impact_version_ids", [])
+            )
+            keep_scenarios.update(str(item) for item in version.get("scenario_version_ids", []))
+            keep_risk_factors.update(str(item) for item in version.get("risk_factor_ids", []))
+            for evidence in version.get("evidence_refs", []):
+                if not isinstance(evidence, dict):
+                    continue
+                kind = str(evidence.get("kind") or "")
+                evidence_id = str(evidence.get("version_id") or "")
+                if kind == "observation":
+                    keep_observations.add(evidence_id)
+                elif kind == "event":
+                    keep_events.add(evidence_id)
+                elif kind == "claim":
+                    keep_claims.update(
+                        claim_id
+                        for claim_id, claim in records.get("claims", {}).items()
+                        if claim.get("claim_version_id") == evidence_id
+                    )
+                keep_sources.update(str(item) for item in evidence.get("source_ids", []))
+
+    for evidence_id in keep_observations:
+        evidence = records.get("observations", {}).get(evidence_id, {})
+        source_id = str(evidence.get("source_id") or "")
+        if source_id:
+            keep_sources.add(source_id)
+        keep_risk_factors.update(str(item) for item in evidence.get("risk_factor_ids", []))
+    for evidence_id in keep_events:
+        evidence = records.get("events", {}).get(evidence_id, {})
+        keep_sources.update(str(item) for item in evidence.get("source_ids", []))
+        keep_risk_factors.update(str(item) for item in evidence.get("risk_factor_ids", []))
+
+    missing_insights = keep_insights - set(records.get("insights", {}))
+    if missing_insights:
+        raise ValueError(
+            "Cannot prune with missing Signal Insight references: "
+            + ", ".join(sorted(missing_insights))
+        )
+
+    for insight_id in keep_insights:
+        insight = records["insights"][insight_id]
+        keep_claims.update(_nested_reference_ids(insight, "claim_id", "claim_ids"))
+        keep_sources.update(_nested_reference_ids(insight, "source_id", "source_ids"))
+
+    while True:
+        before = len(keep_claims)
+        for claim_id in tuple(keep_claims):
+            claim = records.get("claims", {}).get(claim_id)
+            if claim is None:
+                continue
+            keep_claims.update(_nested_reference_ids(claim, "claim_id", "claim_ids"))
+            for relation_key in ("supersedes", "coexists_with"):
+                relation_ids = claim.get(relation_key, [])
+                if isinstance(relation_ids, list):
+                    keep_claims.update(
+                        item.strip()
+                        for item in relation_ids
+                        if isinstance(item, str) and item.strip()
+                    )
+            keep_sources.update(_nested_reference_ids(claim, "source_id", "source_ids"))
+        if len(keep_claims) == before:
+            break
+
+    missing_claims = keep_claims - set(records.get("claims", {}))
+    if missing_claims:
+        raise ValueError(
+            "Cannot prune with missing Signal Claim references: "
+            + ", ".join(sorted(missing_claims))
+        )
+
+    while True:
+        before = len(keep_sources)
+        for source_id in tuple(keep_sources):
+            source = records.get("sources", {}).get(source_id)
+            if source is None:
+                continue
+            keep_sources.update(_nested_reference_ids(source, "source_id", "source_ids"))
+            previous_version = source.get("previous_version")
+            if isinstance(previous_version, str) and previous_version.strip():
+                keep_sources.add(previous_version.strip())
+        if len(keep_sources) == before:
+            break
+
+    missing_sources = keep_sources - set(records.get("sources", {}))
+    if missing_sources:
+        raise ValueError(
+            "Cannot prune with missing Signal Source references: "
+            + ", ".join(sorted(missing_sources))
+        )
+
+    while True:
+        before = len(keep_risk_factors)
+        for risk_factor_id in tuple(keep_risk_factors):
+            parent = str(
+                records.get("risk_factors", {})
+                .get(risk_factor_id, {})
+                .get("parent_risk_factor_id")
+                or ""
+            )
+            if parent:
+                keep_risk_factors.add(parent)
+        if len(keep_risk_factors) == before:
+            break
+
+    keep_by_collection = {
+        "signals": set(signals),
+        "signal_versions": keep_signal_versions,
+        "insights": keep_insights,
+        "claims": keep_claims,
+        "sources": keep_sources,
+        "risk_factors": keep_risk_factors,
+        "observations": keep_observations,
+        "events": keep_events,
+        "company_impacts": keep_company_impacts,
+        "scenarios": keep_scenarios,
+        "runs": keep_runs,
+    }
+    remove_by_collection = {
+        collection: sorted(
+            set(items) - keep_by_collection.get(collection, set())
+        )
+        for collection, items in records.items()
+    }
+    return {
+        "keep_by_collection": keep_by_collection,
+        "remove_by_collection": remove_by_collection,
+        "artifact_count": connection.execute(
+            "SELECT COUNT(*) FROM wiki_artifacts"
+        ).fetchone()[0],
+        "operation_log_count": connection.execute(
+            "SELECT COUNT(*) FROM wiki_operation_log"
+        ).fetchone()[0],
+        "binary_asset_remove_count": connection.execute(
+            "SELECT COUNT(*) FROM wiki_binary_assets"
+        ).fetchone()[0]
+        if not keep_sources
+        else connection.execute(
+            "SELECT COUNT(*) FROM wiki_binary_assets "
+            f"WHERE source_id IS NULL OR source_id NOT IN ({','.join('?' * len(keep_sources))})",
+            tuple(sorted(keep_sources)),
+        ).fetchone()[0],
+        "source_content_remove_count": connection.execute(
+            "SELECT COUNT(*) FROM wiki_source_contents"
+        ).fetchone()[0]
+        if not keep_sources
+        else connection.execute(
+            "SELECT COUNT(*) FROM wiki_source_contents "
+            f"WHERE source_id NOT IN ({','.join('?' * len(keep_sources))})",
+            tuple(sorted(keep_sources)),
+        ).fetchone()[0],
+    }
+
+
+def _public_signal_prune_plan(plan: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "preserved": {
+            collection: len(record_ids)
+            for collection, record_ids in plan["keep_by_collection"].items()
+        },
+        "removed": {
+            **{
+                collection: len(record_ids)
+                for collection, record_ids in plan["remove_by_collection"].items()
+                if record_ids
+            },
+            "artifacts": plan["artifact_count"],
+            "operation_log": plan["operation_log_count"],
+            "binary_assets": plan["binary_asset_remove_count"],
+            "source_contents": plan["source_content_remove_count"],
+        },
+    }
+
+
+def prune_to_signals(args: argparse.Namespace) -> dict[str, Any]:
+    """Keep complete Signal evidence lineage and remove every unrelated dataset."""
+    root = require_store(Path(args.root))
+    dry_run = bool(getattr(args, "dry_run", False))
+    requested = set(getattr(args, "signal_id", []) or []) or None
+    with sqlite_connection_scope(root) as connection:
+        plan = _signal_prune_plan(connection, requested)
+    public_plan = _public_signal_prune_plan(plan)
+    if dry_run:
+        return {"action": "prune_to_signals_preview", **public_plan}
+
+    backup_value = str(getattr(args, "backup_path", "") or "").strip()
+    if not backup_value:
+        raise ValueError("prune-to-signals requires --backup-path unless --dry-run is used")
+    backup_path = Path(backup_value).expanduser().resolve()
+    if backup_path == database_path(root):
+        raise ValueError("Backup path must differ from the canonical database")
+    if backup_path.exists():
+        raise ValueError(f"Backup path already exists: {backup_path}")
+    online_backup(root, backup_path)
+
+    with sqlite_transaction(root) as connection:
+        plan = _signal_prune_plan(connection, requested)
+        keep = plan["keep_by_collection"]
+
+        def delete_except(table: str, column: str, values: set[str]) -> None:
+            if values:
+                placeholders = ",".join("?" * len(values))
+                connection.execute(
+                    f"DELETE FROM {table} WHERE {column} NOT IN ({placeholders})",
+                    tuple(sorted(values)),
+                )
+            else:
+                connection.execute(f"DELETE FROM {table}")
+
+        delete_except(
+            "wiki_signal_versions", "signal_version_id", keep.get("signal_versions", set())
+        )
+        delete_except(
+            "wiki_company_impact_versions",
+            "company_impact_version_id",
+            keep.get("company_impacts", set()),
+        )
+        delete_except(
+            "wiki_scenario_versions", "scenario_version_id", keep.get("scenarios", set())
+        )
+        delete_except(
+            "wiki_observation_versions",
+            "observation_version_id",
+            keep.get("observations", set()),
+        )
+        delete_except(
+            "wiki_event_versions", "event_version_id", keep.get("events", set())
+        )
+        if keep.get("claims"):
+            placeholders = ",".join("?" * len(keep["claims"]))
+            connection.execute(
+                f"DELETE FROM wiki_claim_versions WHERE claim_id NOT IN ({placeholders})",
+                tuple(sorted(keep["claims"])),
+            )
+        else:
+            connection.execute("DELETE FROM wiki_claim_versions")
+        connection.execute("DELETE FROM wiki_risk_factor_links")
+        delete_except("wiki_source_assets", "source_id", keep.get("sources", set()))
+        delete_except(
+            "wiki_risk_factors", "risk_factor_id", keep.get("risk_factors", set())
+        )
+        keep_sources = sorted(plan["keep_by_collection"]["sources"])
+        if keep_sources:
+            placeholders = ",".join("?" * len(keep_sources))
+            connection.execute(
+                "DELETE FROM wiki_binary_assets "
+                f"WHERE source_id IS NULL OR source_id NOT IN ({placeholders})",
+                tuple(keep_sources),
+            )
+            connection.execute(
+                "DELETE FROM wiki_source_contents "
+                f"WHERE source_id NOT IN ({placeholders})",
+                tuple(keep_sources),
+            )
+        else:
+            connection.execute("DELETE FROM wiki_binary_assets")
+            connection.execute("DELETE FROM wiki_source_contents")
+
+        for collection, record_ids in plan["remove_by_collection"].items():
+            connection.executemany(
+                "DELETE FROM wiki_records WHERE collection=? AND record_id=?",
+                ((collection, record_id) for record_id in record_ids),
+            )
+        connection.execute("DELETE FROM wiki_artifacts")
+        connection.execute("DELETE FROM wiki_operation_log")
+        connection.execute(
+            "DELETE FROM sqlite_sequence WHERE name='wiki_operation_log'"
+        )
+
+        for table, id_column, subject_kind in (
+            ("wiki_claim_versions", "claim_version_id", "claim"),
+            ("wiki_observation_versions", "observation_version_id", "observation"),
+            ("wiki_event_versions", "event_version_id", "event"),
+            ("wiki_signal_versions", "signal_version_id", "signal"),
+        ):
+            for row in connection.execute(
+                f"SELECT {id_column}, payload_json FROM {table}"
+            ):
+                payload = json.loads(str(row["payload_json"]))
+                for risk_factor_id in payload.get("risk_factor_ids", []):
+                    connection.execute(
+                        "INSERT OR IGNORE INTO wiki_risk_factor_links("
+                        "risk_factor_id, subject_kind, subject_version_id, created_at"
+                        ") VALUES (?, ?, ?, ?)",
+                        (str(risk_factor_id), subject_kind, str(row[id_column]), timestamp()),
+                    )
+
+        if connection.execute("PRAGMA integrity_check").fetchone()[0] != "ok":
+            raise RuntimeError("SQLite integrity_check failed after Signal-only pruning")
+        foreign_keys = connection.execute("PRAGMA foreign_key_check").fetchall()
+        if foreign_keys:
+            raise RuntimeError("SQLite foreign_key_check failed after Signal-only pruning")
+
+    with sqlite_connection_scope(root) as connection:
+        connection.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+        connection.execute("VACUUM")
+        connection.execute("PRAGMA wal_checkpoint(TRUNCATE)")
+
+    integrity = sqlite_integrity(root)
+    return {
+        "action": (
+            "retained_selected_signal_lineage"
+            if requested is not None
+            else "pruned_to_signal_lineage"
+        ),
+        **_public_signal_prune_plan(plan),
+        "backup": str(backup_path),
+        "integrity_check": integrity["integrity_check"],
+        "foreign_key_errors": len(integrity["foreign_key_check"]),
+    }
+
+
+def migrate_to_sqlite(args: argparse.Namespace) -> dict[str, Any]:
+    """Losslessly import the legacy file store and optionally retire its data files."""
+    root = Path(args.root).resolve()
+    if not root.is_dir():
+        raise ValueError(f"Store root does not exist: {root}")
+
+    legacy_records: dict[str, list[tuple[Path, dict[str, Any]]]] = {}
+    collection_directories = {
+        "sources": SOURCE_RECORDS_DIR,
+        "source_candidates": SOURCE_CANDIDATES_DIR,
+        "claims": CLAIMS_DIR,
+        "signals": SIGNALS_DIR,
+        "insights": INSIGHTS_DIR,
+        "reviews_pending": PENDING_REVIEWS_DIR,
+        "reviews_resolved": RESOLVED_REVIEWS_DIR,
+        "runs": RUNS_DIR,
+    }
+    for collection, relative in collection_directories.items():
+        records: list[tuple[Path, dict[str, Any]]] = []
+        directory = root / relative
+        if directory.is_dir():
+            for path in sorted(directory.glob("*.json")):
+                with path.open("r", encoding="utf-8") as handle:
+                    value = json.load(handle)
+                if not isinstance(value, dict):
+                    raise ValueError(f"Expected JSON object: {path}")
+                records.append((path, value))
+        legacy_records[collection] = records
+
+    db_path = database_path(root)
+    backup_path: Path | None = None
+    if db_path.is_file():
+        backup_path = (
+            db_path.parent
+            / "backups"
+            / f"market_sensing-before-file-migration-{datetime.now():%Y%m%dT%H%M%S}.db"
+        )
+        online_backup(root, backup_path)
+    initialize_sqlite(root)
+
+    imported_counts: dict[str, int] = {}
+    raw_paths: list[Path] = []
+    media_paths: list[Path] = []
+    for collection, records in legacy_records.items():
+        for path, original in records:
+            record = json.loads(json.dumps(original, ensure_ascii=False))
+            if collection == "sources":
+                source_id = str(record.get("source_id") or path.stem)
+                raw_value = str(record.get("raw_path") or "")
+                raw_path = root / raw_value if raw_value else None
+                if raw_path is None or not raw_path.is_file():
+                    raise ValueError(f"{source_id}: legacy raw source is missing")
+                raw_bytes = raw_path.read_bytes()
+                expected = str(record.get("raw_sha256") or "")
+                current = raw_sha256(raw_bytes)
+                lf_current = raw_sha256(raw_bytes.replace(b"\r\n", b"\n"))
+                if expected and expected not in {current, lf_current}:
+                    raise ValueError(f"{source_id}: raw source hash mismatch")
+                record.pop("raw_path", None)
+                record["raw_ref"] = f"sqlite:wiki_source_contents:{source_id}"
+                for media in record.get("images", []):
+                    local_value = str(media.get("local_path") or "")
+                    if not local_value:
+                        continue
+                    media_path = root / local_value
+                    if not media_path.is_file():
+                        raise ValueError(
+                            f"{source_id}/{media.get('media_id')}: legacy image is missing"
+                        )
+                    media_bytes = media_path.read_bytes()
+                    media_id = str(media.get("media_id") or "")
+                    suffix = media_path.suffix.casefold()
+                    media_type = {
+                        ".png": "image/png",
+                        ".jpg": "image/jpeg",
+                        ".jpeg": "image/jpeg",
+                        ".gif": "image/gif",
+                        ".webp": "image/webp",
+                    }.get(suffix, "application/octet-stream")
+                    put_binary_asset(
+                        root,
+                        media_id,
+                        media_bytes,
+                        source_id=source_id,
+                        media_type=media_type,
+                        metadata={"legacy_path": local_value},
+                    )
+                    media.pop("local_path", None)
+                    media["local_ref"] = f"sqlite:wiki_binary_assets:{media_id}"
+                    media_paths.append(media_path)
+                write_json(path, record)
+                put_source_content(
+                    root,
+                    source_id,
+                    raw_bytes,
+                    media_type=source_media_type(raw_bytes),
+                )
+                raw_paths.append(raw_path)
+            else:
+                write_json(path, record)
+        imported_counts[collection] = len(records)
+
+    watchlist_path = root / "config" / "watchlist.json"
+    if watchlist_path.is_file():
+        with watchlist_path.open("r", encoding="utf-8") as handle:
+            settings = json.load(handle)
+        if not isinstance(settings, dict):
+            raise ValueError(f"Expected JSON object: {watchlist_path}")
+        put_settings(root, "watchlist", settings)
+    elif get_settings(root, "watchlist") is None:
+        put_settings(root, "watchlist", default_watchlist())
+
+    artifact_paths: list[Path] = []
+    artifact_roots = [
+        root / "events",
+        root / "reports" / "briefs",
+        root / "reports" / "audits",
+    ]
+    for directory in artifact_roots:
+        if not directory.is_dir():
+            continue
+        for path in sorted(directory.glob("*")):
+            if path.suffix.casefold() not in {".md", ".html"}:
+                continue
+            relative = path.relative_to(root).as_posix()
+            existing = get_artifact(root, relative)
+            markdown_text = existing.get("markdown_text") if existing else None
+            html_text = existing.get("html_text") if existing else None
+            text_value = path.read_text(encoding="utf-8", errors="replace")
+            if path.suffix.casefold() == ".md":
+                markdown_text = text_value
+            else:
+                html_text = text_value
+            put_artifact(
+                root,
+                relative,
+                "legacy_report" if "reports/" in relative else "event",
+                path.stem,
+                markdown_text=markdown_text,
+                html_text=html_text,
+                metadata={"legacy_path": relative},
+            )
+            artifact_paths.append(path)
+
+    for path, review in legacy_records.get("reviews_pending", []):
+        candidate_path_value = str(review.get("candidate_path") or "")
+        candidate_path = root / candidate_path_value if candidate_path_value else None
+        if candidate_path and candidate_path.is_file():
+            put_artifact(
+                root,
+                str(review.get("review_id") or path.stem),
+                "source_candidate",
+                str((review.get("candidate") or {}).get("title") or path.stem),
+                markdown_text=candidate_path.read_text(encoding="utf-8", errors="replace"),
+                metadata={"legacy_path": candidate_path_value},
+            )
+            artifact_paths.append(candidate_path)
+
+    log_path = root / "log.md"
+    if log_path.is_file():
+        put_artifact(
+            root,
+            "legacy:operation-log",
+            "legacy_log",
+            "Legacy operation log",
+            markdown_text=log_path.read_text(encoding="utf-8", errors="replace"),
+        )
+        artifact_paths.append(log_path)
+
+    verification = sqlite_integrity(root)
+    if verification["integrity_check"] != "ok" or verification["foreign_key_check"]:
+        raise RuntimeError(f"SQLite verification failed: {verification}")
+
+    if backup_path is None and getattr(args, "remove_legacy_files", False):
+        backup_path = (
+            db_path.parent
+            / "backups"
+            / f"market_sensing-after-file-import-{datetime.now():%Y%m%dT%H%M%S}.db"
+        )
+        online_backup(root, backup_path)
+
+    removed: list[str] = []
+    if getattr(args, "remove_legacy_files", False):
+        generated_roots = [
+            root / "companies",
+            root / "technologies",
+            root / "projects",
+            root / "entities",
+            root / "sources",
+            root / "signals",
+        ]
+        generated_files = [
+            path
+            for directory in generated_roots
+            if directory.is_dir()
+            for path in directory.glob("*.md")
+        ]
+        generated_files.extend(
+            path
+            for path in (
+                root / "index.md",
+                root / "REVIEW.md",
+                root / "recent-updates.md",
+                root / "reports" / "index.md",
+                watchlist_path,
+            )
+            if path.is_file()
+        )
+        record_files = [path for records in legacy_records.values() for path, _ in records]
+        exact_targets = {
+            path.resolve()
+            for path in record_files
+            + raw_paths
+            + media_paths
+            + artifact_paths
+            + generated_files
+            if path.is_file()
+        }
+        root_prefix = str(root) + os.sep
+        for path in sorted(exact_targets):
+            if not str(path).startswith(root_prefix):
+                raise RuntimeError(f"Refusing to remove path outside store root: {path}")
+            path.unlink()
+            removed.append(path.relative_to(root).as_posix())
+
+    append_log(
+        root,
+        "migrate-to-sqlite",
+        f"Imported {sum(imported_counts.values())} records; removed {len(removed)} legacy files.",
+    )
+    return {
+        "action": "migrated_to_sqlite",
+        "database": str(db_path),
+        "backup": str(backup_path) if backup_path else None,
+        "imported": imported_counts,
+        "verification": verification,
+        "removed_legacy_files": len(removed),
+        "storage": "sqlite",
     }
 
 
@@ -9860,6 +12580,109 @@ def build_parser() -> argparse.ArgumentParser:
     scaffold_parser.add_argument("root")
     scaffold_parser.set_defaults(func=lambda args: scaffold(Path(args.root)))
 
+    scout_parser = subparsers.add_parser(
+        "scout",
+        help=(
+            "Initialize, update, or complete an adaptive research run only after "
+            "every configured company/business-axis cell passes the coverage gate."
+        ),
+    )
+    scout_parser.add_argument("root")
+    scout_parser.add_argument("--run-id", required=True)
+    scout_parser.add_argument("--date-from")
+    scout_parser.add_argument("--date-to")
+    scout_parser.add_argument(
+        "--target-count",
+        type=int,
+        help=(
+            "Use only when the user explicitly requests a result count, such as "
+            "'find three'; completion then requires that many published Signals "
+            "instead of full company/axis coverage."
+        ),
+    )
+    scout_parser.add_argument(
+        "--company-id",
+        action="append",
+        help=(
+            "Explicit user-selected company scope; repeat for multiple companies. "
+            "Without this option, default settings determine company coverage."
+        ),
+    )
+    scout_parser.add_argument(
+        "--business-axis",
+        action="append",
+        help=(
+            "Explicit user-selected business-axis scope; repeat for multiple axes. "
+            "Without this option, default settings determine axis coverage."
+        ),
+    )
+    scout_parser.add_argument(
+        "--user-scope",
+        help="Record the user's explicit scope or method instruction in the frozen run contract.",
+    )
+    scout_parser.add_argument(
+        "--coverage-file",
+        help="JSON coverage ledger replacing the run's current coverage progress.",
+    )
+    scout_parser.add_argument(
+        "--complete",
+        action="store_true",
+        help="Close the run only when its frozen default or user-directed contract passes.",
+    )
+    scout_parser.set_defaults(func=scout_run)
+
+    migration_parser = subparsers.add_parser(
+        "migrate-to-sqlite",
+        help="Import the legacy JSON/Markdown store into one canonical SQLite file.",
+    )
+    migration_parser.add_argument("root")
+    migration_parser.add_argument(
+        "--remove-legacy-files",
+        action="store_true",
+        help="After hash and integrity verification, remove migrated data files and projections.",
+    )
+    migration_parser.set_defaults(func=migrate_to_sqlite)
+
+    analytics_migration_parser = subparsers.add_parser(
+        "migrate-analytics-contract",
+        help=(
+            "Upgrade legacy Source, Claim, Insight, and Signal rows to the current "
+            "version-pinned analytics contract."
+        ),
+    )
+    analytics_migration_parser.add_argument("root")
+    analytics_migration_parser.add_argument(
+        "--legacy-source-modality",
+        choices=SOURCE_MODALITIES,
+        default="DOCUMENT",
+        help="Modality assigned only to legacy Sources that do not already declare one.",
+    )
+    analytics_migration_parser.set_defaults(func=migrate_analytics_contract)
+
+    prune_parser = subparsers.add_parser(
+        "prune-to-signals",
+        help="Keep complete Signal/Insight/Claim/Source lineage and remove unrelated data.",
+    )
+    prune_parser.add_argument("root")
+    prune_parser.add_argument(
+        "--backup-path",
+        help="Required recovery copy for destructive pruning.",
+    )
+    prune_parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Show preserved and removed counts without changing SQLite.",
+    )
+    prune_parser.add_argument(
+        "--signal-id",
+        action="append",
+        help=(
+            "Development-only retention set; repeat to keep only these Signals and "
+            "their complete evidence lineage."
+        ),
+    )
+    prune_parser.set_defaults(func=prune_to_signals)
+
     source_parser = subparsers.add_parser(
         "add-source", help="Register an immutable source with duplicate checks."
     )
@@ -9871,6 +12694,10 @@ def build_parser() -> argparse.ArgumentParser:
     source_parser.add_argument("--published-at")
     source_parser.add_argument("--collected-at")
     source_parser.add_argument("--source-type", choices=sorted(SOURCE_TYPES), required=True)
+    source_parser.add_argument(
+        "--source-modality", choices=SOURCE_MODALITIES, required=True,
+        help="Observation modality: MARKET, DOCUMENT, PHYSICAL, or ATTENTION.",
+    )
     source_parser.add_argument("--language", required=True)
     source_parser.add_argument(
         "--reliability", choices=sorted(SOURCE_RELIABILITY), required=True
@@ -9964,6 +12791,69 @@ def build_parser() -> argparse.ArgumentParser:
     image_parser.add_argument("--rights-note", required=True)
     image_parser.set_defaults(func=add_image)
 
+    risk_factor_parser = subparsers.add_parser(
+        "add-risk-factor", help="Register a governed analytics risk-factor definition."
+    )
+    risk_factor_parser.add_argument("root")
+    risk_factor_parser.add_argument("--risk-factor-id", required=True)
+    risk_factor_parser.add_argument("--taxonomy-version", type=int, default=1)
+    risk_factor_parser.add_argument("--name", required=True)
+    risk_factor_parser.add_argument("--definition", required=True)
+    risk_factor_parser.add_argument("--category", required=True)
+    risk_factor_parser.add_argument("--parent-risk-factor-id")
+    risk_factor_parser.add_argument("--alias", action="append")
+    risk_factor_parser.add_argument("--status", choices=("active", "retired"), default="active")
+    risk_factor_parser.add_argument("--valid-from")
+    risk_factor_parser.add_argument("--valid-to")
+    risk_factor_parser.set_defaults(func=add_risk_factor)
+
+    observation_parser = subparsers.add_parser(
+        "add-observation", help="Register a versioned structured market observation."
+    )
+    observation_parser.add_argument("root")
+    observation_parser.add_argument("--observation-id", required=True)
+    observation_parser.add_argument("--version-no", type=int, default=1)
+    observation_parser.add_argument("--series-key", required=True)
+    observation_parser.add_argument("--metric-kind", required=True)
+    observation_parser.add_argument("--value", required=True)
+    observation_parser.add_argument("--unit", required=True)
+    observation_parser.add_argument("--observed-at", required=True)
+    observation_parser.add_argument("--source-id", required=True)
+    observation_parser.add_argument(
+        "--modality", choices=("MARKET", "PHYSICAL", "ATTENTION"), required=True
+    )
+    observation_parser.add_argument("--risk-factor-id", action="append", required=True)
+    observation_parser.add_argument(
+        "--verification-status",
+        choices=("verified", "partial", "unverified"),
+        default="verified",
+    )
+    observation_parser.set_defaults(func=add_observation)
+
+    event_parser = subparsers.add_parser(
+        "add-event", help="Register a versioned evidence-grounded market event."
+    )
+    event_parser.add_argument("root")
+    event_parser.add_argument("--event-id", required=True)
+    event_parser.add_argument("--version-no", type=int, default=1)
+    event_parser.add_argument("--event-type", required=True)
+    event_parser.add_argument("--actor-ref", required=True)
+    event_parser.add_argument("--target-ref", required=True)
+    event_parser.add_argument("--observed-at", required=True)
+    event_parser.add_argument("--effective-at")
+    event_parser.add_argument("--before-value")
+    event_parser.add_argument("--after-value")
+    event_parser.add_argument("--unit")
+    event_parser.add_argument("--source-id", action="append", required=True)
+    event_parser.add_argument("--modality", choices=SOURCE_MODALITIES, required=True)
+    event_parser.add_argument("--risk-factor-id", action="append", required=True)
+    event_parser.add_argument(
+        "--status",
+        choices=("announced", "effective", "delayed", "cancelled", "completed", "disputed"),
+        default="effective",
+    )
+    event_parser.set_defaults(func=add_event)
+
     claim_parser = subparsers.add_parser(
         "add-claim", help="Create or verify an atomic claim."
     )
@@ -9972,6 +12862,7 @@ def build_parser() -> argparse.ArgumentParser:
     claim_parser.add_argument("--predicate", required=True)
     claim_parser.add_argument("--value", required=True)
     claim_parser.add_argument("--source-id", action="append", required=True)
+    claim_parser.add_argument("--risk-factor-id", action="append")
     claim_parser.add_argument(
         "--confidence", choices=sorted(CLAIM_CONFIDENCE), required=True
     )
@@ -9980,10 +12871,18 @@ def build_parser() -> argparse.ArgumentParser:
     claim_parser.set_defaults(func=add_claim)
 
     signal_parser = subparsers.add_parser(
-        "add-signal", help="Create a four-level market signal linked to claims and sources."
+        "add-signal",
+        help="Create a canonical market-change version from version-pinned Evidence.",
     )
     signal_parser.add_argument("root")
     signal_parser.add_argument("--run-id", required=True)
+    signal_parser.add_argument(
+        "--canonical-key", required=True,
+        help="Stable identity key for the canonical market change; never include assessment dates.",
+    )
+    signal_parser.add_argument("--risk-factor-id", action="append", required=True)
+    signal_parser.add_argument("--observation-id", action="append")
+    signal_parser.add_argument("--event-id", action="append")
     signal_parser.add_argument(
         "--title", required=True,
         help="Short factual title naming the observed external change.",
@@ -10032,7 +12931,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     signal_parser.add_argument(
         "--analysis-file", required=True,
-        help="Markdown body rendered inline on the signal page as the document-level analysis.",
+        help="Reader-facing narrative Markdown stored beside the structured analysis.",
+    )
+    signal_parser.add_argument(
+        "--structured-analysis-file", required=True,
+        help="Validated UI-ready JSON stored in the Insight payload_json.",
     )
     signal_parser.add_argument(
         "--impact-estimate-file",
@@ -10052,6 +12955,35 @@ def build_parser() -> argparse.ArgumentParser:
     )
     signal_parser.set_defaults(func=add_signal)
 
+    score_migration_parser = subparsers.add_parser(
+        "migrate-signal-scores",
+        help="Migrate schema-v2 Signal assessments from 1-5 to calibrated 1-10 anchors.",
+    )
+    score_migration_parser.add_argument("root")
+    score_migration_parser.add_argument("--migrated-at")
+    score_migration_parser.set_defaults(func=migrate_signal_scores)
+
+    assessment_parser = subparsers.add_parser(
+        "set-signal-assessment",
+        help="Reassess an existing Signal on the 1-10 rubric while preserving claim history.",
+    )
+    assessment_parser.add_argument("root")
+    assessment_parser.add_argument("--signal-id", required=True)
+    assessment_parser.add_argument("--business-impact-score", type=int, required=True)
+    assessment_parser.add_argument("--business-impact-rationale", required=True)
+    assessment_parser.add_argument("--urgency-score", type=int, required=True)
+    assessment_parser.add_argument("--urgency-rationale", required=True)
+    assessment_parser.add_argument(
+        "--assessment-confidence", choices=sorted(CLAIM_CONFIDENCE), required=True
+    )
+    assessment_parser.add_argument("--assessed-at")
+    assessment_parser.add_argument("--reason", required=True)
+    assessment_parser.add_argument("--enterprise-scope")
+    assessment_parser.add_argument("--immediate-action")
+    assessment_parser.add_argument("--delay-loss")
+    assessment_parser.add_argument("--irreversibility")
+    assessment_parser.set_defaults(func=set_signal_assessment)
+
     impact_parser = subparsers.add_parser(
         "set-impact-estimate",
         help="Attach or replace a validated What-if model on an existing Signal.",
@@ -10061,6 +12993,45 @@ def build_parser() -> argparse.ArgumentParser:
     impact_parser.add_argument("--estimate-file", required=True)
     impact_parser.set_defaults(func=set_impact_estimate)
 
+    structured_analysis_parser = subparsers.add_parser(
+        "set-structured-analysis",
+        help="Attach or replace UI-ready JSON while preserving narrative Markdown.",
+    )
+    structured_analysis_parser.add_argument("root")
+    structured_analysis_parser.add_argument("--signal-id", required=True)
+    structured_analysis_parser.add_argument(
+        "--structured-analysis-file", required=True
+    )
+    structured_analysis_parser.set_defaults(func=set_structured_analysis)
+
+    signal_analysis_parser = subparsers.add_parser(
+        "set-signal-analysis",
+        help=(
+            "Replace narrative analysis, optionally replace UI-ready JSON, and extend "
+            "evidence lineage."
+        ),
+    )
+    signal_analysis_parser.add_argument("root")
+    signal_analysis_parser.add_argument("--signal-id", required=True)
+    signal_analysis_parser.add_argument("--analysis-file", required=True)
+    signal_analysis_parser.add_argument(
+        "--structured-analysis-file",
+        help="Omit to preserve the Signal's existing validated UI-ready JSON.",
+    )
+    signal_analysis_parser.add_argument("--claim-id", action="append", default=[])
+    signal_analysis_parser.set_defaults(func=set_signal_analysis)
+
+    report_headings_parser = subparsers.add_parser(
+        "rewrite-signal-report-headings",
+        help=(
+            "Replace exact H2-H4 labels for selected Signals while preserving report "
+            "prose, structured analysis, and evidence lineage."
+        ),
+    )
+    report_headings_parser.add_argument("root")
+    report_headings_parser.add_argument("--mapping-file", required=True)
+    report_headings_parser.set_defaults(func=rewrite_signal_report_headings)
+
     trace_parser = subparsers.add_parser(
         "trace-signal", help="Traverse Signal to Insight, Claim, Source, and Archive."
     )
@@ -10068,37 +13039,6 @@ def build_parser() -> argparse.ArgumentParser:
     trace_parser.add_argument("--signal-id", required=True)
     trace_parser.add_argument("--depth", type=int, choices=range(1, 5), default=4)
     trace_parser.set_defaults(func=trace_signal)
-
-    watch_parser = subparsers.add_parser(
-        "upsert-strategic-watch",
-        help="Atomically connect a structural trend, strategic thesis, and persistent warning.",
-    )
-    watch_parser.add_argument("root")
-    watch_parser.add_argument("--watch-file", required=True)
-    watch_parser.set_defaults(func=upsert_strategic_watch)
-
-    warning_trace_parser = subparsers.add_parser(
-        "trace-strategic-warning",
-        help="Traverse a persistent warning to thesis, trends, Signals, Claims, and Sources.",
-    )
-    warning_trace_parser.add_argument("root")
-    warning_trace_parser.add_argument("--warning-id", required=True)
-    warning_trace_parser.add_argument("--depth", type=int, choices=range(1, 5), default=4)
-    warning_trace_parser.set_defaults(func=trace_strategic_warning)
-
-    warning_review_parser = subparsers.add_parser(
-        "review-strategic-warning",
-        help="Append an evidence-backed review without deleting prior warning history.",
-    )
-    warning_review_parser.add_argument("root")
-    warning_review_parser.add_argument("--warning-id", required=True)
-    warning_review_parser.add_argument("--level", choices=WARNING_LEVELS, required=True)
-    warning_review_parser.add_argument("--status", choices=sorted(WARNING_STATUSES), default="active")
-    warning_review_parser.add_argument("--rationale", required=True)
-    warning_review_parser.add_argument("--reviewed-at")
-    warning_review_parser.add_argument("--next-review-at", required=True)
-    warning_review_parser.add_argument("--signal-id", action="append")
-    warning_review_parser.set_defaults(func=review_strategic_warning)
 
     review_parser = subparsers.add_parser(
         "resolve-review", help="Apply a human decision to a claim conflict."

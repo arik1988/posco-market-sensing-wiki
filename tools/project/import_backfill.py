@@ -21,7 +21,24 @@ import market_sensing  # noqa: E402
 
 
 REQUIRED_CLAIMS = market_sensing.REQUIRED_SIGNAL_PREDICATES
-COMPANY_AXES = market_sensing.MARKET_SENSING_AXES
+LEGACY_SCORE_PREDICATES = {
+    "business_impact_score_1_to_5": "business_impact_score_1_to_10",
+    "urgency_score_1_to_5": "urgency_score_1_to_10",
+}
+
+
+def calibrated_score(value: Any) -> int:
+    score = int(value)
+    return score * 2 - 1 if score in range(1, 6) else score
+
+
+def normalize_score_claim(claim: dict[str, Any]) -> dict[str, Any]:
+    normalized = dict(claim)
+    predicate = str(normalized.get("predicate") or "")
+    if predicate in LEGACY_SCORE_PREDICATES:
+        normalized["predicate"] = LEGACY_SCORE_PREDICATES[predicate]
+        normalized["value"] = str(calibrated_score(normalized.get("value")))
+    return normalized
 
 
 def load_json(path: Path) -> Any:
@@ -93,6 +110,9 @@ def validate_plans(paths: list[Path], wiki_root: Path) -> tuple[list[dict[str, A
 
             source_path = base / str(source.get("content_file") or "")
             analysis_path = base / str(item.get("analysis_file") or "")
+            structured_analysis_path = base / str(
+                item.get("structured_analysis_file") or ""
+            )
             if not source_path.is_file():
                 errors.append(f"{label}: missing source file {source_path}")
             else:
@@ -139,6 +159,17 @@ def validate_plans(paths: list[Path], wiki_root: Path) -> tuple[list[dict[str, A
                     )
                 except ValueError as exc:
                     errors.append(f"{label}: analysis contract: {exc}")
+            if not structured_analysis_path.is_file():
+                errors.append(
+                    f"{label}: missing structured analysis file {structured_analysis_path}"
+                )
+            else:
+                try:
+                    market_sensing.validate_structured_analysis(
+                        load_json(structured_analysis_path)
+                    )
+                except (json.JSONDecodeError, UnicodeDecodeError, ValueError) as exc:
+                    errors.append(f"{label}: structured analysis contract: {exc}")
 
             canonical_url = market_sensing.canonicalize_url(source.get("url"))
             if not canonical_url:
@@ -156,7 +187,9 @@ def validate_plans(paths: list[Path], wiki_root: Path) -> tuple[list[dict[str, A
                 )
 
             company_id = str(signal.get("company_id") or "")
-            if COMPANY_AXES.get(company_id) != signal.get("business_axis"):
+            if not market_sensing.company_supports_business_axis(
+                company_id, str(signal.get("business_axis") or "")
+            ):
                 errors.append(f"{label}: invalid company/business-axis pair")
             try:
                 market_sensing.validate_signal_type(signal.get("signal_type"))
@@ -170,6 +203,10 @@ def validate_plans(paths: list[Path], wiki_root: Path) -> tuple[list[dict[str, A
             if str(signal.get("sentence") or "") in existing_sentences:
                 errors.append(f"{label}: signal sentence already exists")
 
+            claims = [
+                normalize_score_claim(claim) if isinstance(claim, dict) else claim
+                for claim in claims
+            ]
             claims_by_predicate = {
                 str(claim.get("predicate") or ""): claim
                 for claim in claims
@@ -190,9 +227,9 @@ def validate_plans(paths: list[Path], wiki_root: Path) -> tuple[list[dict[str, A
                 )
             expected = {
                 "business_axis": signal.get("business_axis"),
-                "business_impact_score_1_to_5": signal.get("business_impact_score"),
+                "business_impact_score_1_to_10": calibrated_score(signal.get("business_impact_score")),
                 "business_impact_rationale": signal.get("business_impact_rationale"),
-                "urgency_score_1_to_5": signal.get("urgency_score"),
+                "urgency_score_1_to_10": calibrated_score(signal.get("urgency_score")),
                 "urgency_rationale": signal.get("urgency_rationale"),
                 "assessment_confidence": signal.get("assessment_confidence"),
                 "assessed_at": signal.get("assessed_at"),
@@ -275,7 +312,8 @@ def publish_plan(plan: dict[str, Any], wiki_root: Path) -> dict[str, Any]:
             counts["new_sources"] += 1
 
         claim_ids: list[str] = []
-        for claim in item["claims"]:
+        for raw_claim in item["claims"]:
+            claim = normalize_score_claim(raw_claim)
             claim_result = market_sensing.add_claim(
                 SimpleNamespace(
                     root=str(wiki_root),
@@ -327,13 +365,16 @@ def publish_plan(plan: dict[str, Any], wiki_root: Path) -> dict[str, Any]:
                 paragraph=signal["paragraph"],
                 document_path=None,
                 analysis_file=str(base / item["analysis_file"]),
+                structured_analysis_file=str(
+                    base / item["structured_analysis_file"]
+                ),
                 impact_estimate_file=impact_file,
                 company_id=[signal["company_id"]],
                 business_axis=signal["business_axis"],
                 claim_id=claim_ids,
-                business_impact_score=int(signal["business_impact_score"]),
+                business_impact_score=calibrated_score(signal["business_impact_score"]),
                 business_impact_rationale=signal["business_impact_rationale"],
-                urgency_score=int(signal["urgency_score"]),
+                urgency_score=calibrated_score(signal["urgency_score"]),
                 urgency_rationale=signal["urgency_rationale"],
                 response_deadline=signal.get("response_deadline"),
                 assessed_at=signal["assessed_at"],

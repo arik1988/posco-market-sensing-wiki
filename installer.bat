@@ -28,6 +28,23 @@ if errorlevel 1 (
   exit /b 1
 )
 
+echo Installing packages required by the standalone AI research agent...
+if not exist "%WIKI_ROOT%\.venv-agent\Scripts\python.exe" (
+  "%WIKI_PYTHON%" -m venv "%WIKI_ROOT%\.venv-agent"
+  if errorlevel 1 (
+    echo [ERROR] AI research virtual environment creation failed.
+    pause
+    exit /b 1
+  )
+)
+"%WIKI_ROOT%\.venv-agent\Scripts\python.exe" -m pip install -r "%PROJECT_TOOLS%\requirements-agent.txt"
+if errorlevel 1 (
+  echo.
+  echo [ERROR] AI research package installation failed.
+  pause
+  exit /b 1
+)
+
 echo.
 echo Installing the project-local CodeGraph...
 call npm install --prefix "%PROJECT_TOOLS%" --no-audit --no-fund

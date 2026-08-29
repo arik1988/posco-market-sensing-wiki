@@ -182,7 +182,8 @@ INSTRUCTIONS = """당신은 현재 MyPIN 보고서 화면에 게재할 포스코
 
 필수 규칙:
 1. H1은 쓰지 않는다. 구조화된 Signal 제목이 화면 H1이다. 본문은 H2를 정확히 3~5개 사용하고,
-   각 H2 아래에 실제로 종속되는 H3를 둔다. H4는 반증 조건·담당·감지 조건처럼 H3보다
+   H3는 문서 전체에서 최대 10개만 사용한다. 짧은 문단마다 H3를 붙이지 말고 같은 결론을
+   설명하는 확인 사실·해석·영향 경로는 하나의 장 안에서 충분히 이어 쓴다. H4는 반증 조건·담당·감지 조건처럼 H3보다
    한 단계 더 좁은 항목에만 선택적으로 사용한다. 제목 레벨을 건너뛰지 않는다.
 2. H2는 각 문서의 구체적 결론·긴장·판단 기준을 드러내는 고유한 명사구로 새로 쓴다.
 3. '확인된 변화 요약', '사업 판단 요약', '확인된 변화와 시점', '사업 영향 경로',
@@ -201,13 +202,17 @@ INSTRUCTIONS = """당신은 현재 MyPIN 보고서 화면에 게재할 포스코
 9. 모든 근거 수치·공개 날짜·고유명사·인용 취지·표·Mermaid·링크는 그대로 보존한다.
    새 사실, 새 수치, 새 시한, 새 인과관계를 만들지 않는다. 공개 근거가 없는 내부
    월말·분기말·임의 산출물 날짜는 쓰지 않는다.
-10. 중복된 요약, 두 번째 보고서, 반복 문단은 한 번만 남긴다. Source/Claim 추적용 메타나
+10. 중복된 요약, 두 번째 보고서, 반복 문단은 한 번만 남긴다. 소제목 아래 한두 문장만 두는
+   체크리스트식 조각이 연속되면 소제목을 없애고 앞뒤 문단과 합쳐 논리를 전개한다. Source/Claim 추적용 메타나
    페이지 자체의 '왜 중요한가/판단 근거/출처' 복제본은 상세분석에서 제거한다.
-11. 내용 순서는 독자가 판단하기 좋은 흐름으로 재배열할 수 있지만, 의미를 축약해 버리지 않는다.
-12. 본문은 존댓말, H2는 존댓말 종결이 아닌 결론형 명사구로 쓴다.
-13. 출력 Markdown은 MyPIN이 semantic HTML과 중첩 목차로 직접 렌더링한다. 장 제목과
+11. 본문 장마다 '확정이 아니다', '공개되지 않았다', '확인하지 못했다'를 반복하지 않는다.
+   본문은 확인된 변화, 사업에 전달되는 경로, 선택지와 행동을 전진시키고, 남은 불확실성은
+   결론을 실제로 뒤집을 핵심 조건만 마지막 반증 조건과 판단의 한계에 한 번 모은다.
+12. 내용 순서는 독자가 판단하기 좋은 흐름으로 재배열할 수 있지만, 의미를 축약해 버리지 않는다.
+13. 본문은 존댓말, H2는 존댓말 종결이 아닌 결론형 명사구로 쓴다.
+14. 출력 Markdown은 MyPIN이 semantic HTML과 중첩 목차로 직접 렌더링한다. 장 제목과
    하위 제목의 포함 관계가 본문 의미와 일치해야 하며, 목차용 빈 제목을 만들지 않는다.
-14. 출력은 analysis_markdown과 짧은 edit_note만 반환한다.
+15. 출력은 analysis_markdown과 짧은 edit_note만 반환한다.
 """
 
 
@@ -566,9 +571,21 @@ def main() -> int:
     parser.add_argument("--provider", choices=("codex", "api"), default="codex")
     parser.add_argument("--batch-size", type=int, default=4)
     parser.add_argument("--signal-id", action="append", default=[])
+    parser.add_argument(
+        "--all",
+        action="store_true",
+        help="Explicitly opt in to rewriting every stored Signal report.",
+    )
     parser.add_argument("--generate", action="store_true")
     parser.add_argument("--apply", action="store_true")
     args = parser.parse_args()
+    if args.all and args.signal_id:
+        parser.error("choose explicit --signal-id values or --all, not both")
+    if not args.all and not args.signal_id:
+        parser.error(
+            "report refresh is scoped by default; pass --signal-id for development "
+            "fixtures or explicitly opt in with --all"
+        )
     args.proposals.parent.mkdir(parents=True, exist_ok=True)
     if args.generate:
         if args.provider == "codex":

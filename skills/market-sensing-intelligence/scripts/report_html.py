@@ -3,12 +3,12 @@
 from __future__ import annotations
 
 import html
-import json
-import os
 import re
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote, urlsplit
+
+from sqlite_store import list_records
 
 
 SOURCE_ID_RE = re.compile(r"\bSRC-\d{8}-[A-F0-9]{8,64}\b")
@@ -280,9 +280,7 @@ def markdown_to_html(
 
 def load_source_records(root: Path) -> dict[str, dict[str, Any]]:
     records: dict[str, dict[str, Any]] = {}
-    for path in sorted((root / ".system" / "source-records").glob("*.json")):
-        with path.open("r", encoding="utf-8") as handle:
-            record = json.load(handle)
+    for _, record in list_records(root, "sources"):
         source_id = record.get("source_id")
         if isinstance(source_id, str):
             records[source_id] = record
@@ -331,15 +329,8 @@ def source_reference_html(
                 f'<a href="{html.escape(url, quote=True)}" target="_blank" '
                 'rel="noopener noreferrer">원문 웹페이지</a>'
             )
-        raw_path = record.get("raw_path")
-        if include_raw_links and isinstance(raw_path, str):
-            absolute_raw = (root / raw_path).resolve()
-            try:
-                relative = os.path.relpath(absolute_raw, output_path.parent.resolve())
-                href = quote(Path(relative).as_posix(), safe="/.-_")
-                links.append(f'<a href="{href}">보관 원문</a>')
-            except ValueError:
-                pass
+        if include_raw_links and record.get("raw_ref"):
+            links.append('<span title="SQLite에 보관됨">보관 원문 · DB</span>')
         card_links = " · ".join(links) if links else "연결 가능한 URL 없음"
         cards.append(
             f'<article class="source-card" id="source-{number}">'
