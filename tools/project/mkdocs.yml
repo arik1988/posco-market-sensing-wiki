@@ -35,7 +35,7 @@ hooks:
   - mkdocs_hooks.py
 
 extra_css:
-  - stylesheets/extra.css
+  - stylesheets/extra.css?v=20260830-lazy-signal-navigation
 
 extra_javascript:
   - javascripts/mermaid.min.js
@@ -44,9 +44,10 @@ extra_javascript:
   - javascripts/mermaid-viewer.js
   - javascripts/footnote-tooltips.js
   - javascripts/contextual-navigation.js
-  - javascripts/signal-list.js
+  - javascripts/signal-sidebar.js?v=20260830-lazy-navigation
+  - javascripts/signal-list.js?v=20260829-signal-combined-filter
   - javascripts/impact-simulator.js
-  - javascripts/research-control-loader.js
+  - javascripts/research-control-loader.js?v=20260829-luna-default
 
 markdown_extensions:
   - admonition
@@ -80,5 +81,6 @@ exclude_docs: |
 
 not_in_nav: |
   sources/
+  signals/SIG-*.md
 
 copyright: 근거 기반 포스코그룹 마켓센싱 · POSCO Blue theme

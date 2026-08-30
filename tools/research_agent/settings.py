@@ -13,6 +13,11 @@ class ProviderId(StrEnum):
     CODEX = "codex"
 
 
+CODEX_MODELS = ("gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna")
+CODEX_EFFORTS = ("light", "medium", "high")
+CODEX_EFFORT_RUNTIME = {"light": "low", "medium": "medium", "high": "high"}
+
+
 @dataclass(frozen=True, slots=True)
 class AgentSettings:
     provider: ProviderId
@@ -25,8 +30,27 @@ class AgentSettings:
     codex_effort: str
 
     @classmethod
-    def from_env(cls, provider: str | ProviderId) -> AgentSettings:
+    def from_env(
+        cls,
+        provider: str | ProviderId,
+        *,
+        codex_model: str | None = None,
+        codex_effort: str | None = None,
+    ) -> AgentSettings:
         selected = ProviderId(str(provider).strip().lower())
+        selected_codex_model = (
+            str(codex_model).strip()
+            if codex_model is not None
+            else os.environ.get("MARKET_AGENT_CODEX_MODEL", "gpt-5.6-luna").strip()
+        ) or "gpt-5.6-luna"
+        selected_codex_effort = (
+            str(codex_effort).strip().lower()
+            if codex_effort is not None
+            else os.environ.get("MARKET_AGENT_CODEX_EFFORT", "medium").strip().lower()
+        ) or "medium"
+        selected_codex_effort = CODEX_EFFORT_RUNTIME.get(
+            selected_codex_effort, selected_codex_effort
+        )
         settings = cls(
             provider=selected,
             pgpt_base_url=(
@@ -42,23 +66,22 @@ class AgentSettings:
                 or os.environ.get("MYPIN_PGPT_RUNTIME_MODEL_ID", "").strip()
                 or None
             ),
-            codex_model=(
-                os.environ.get("MARKET_AGENT_CODEX_MODEL", "gpt-5.6-terra").strip()
-                or "gpt-5.6-terra"
-            ),
-            codex_effort=(
-                os.environ.get("MARKET_AGENT_CODEX_EFFORT", "medium").strip()
-                or "medium"
-            ),
+            codex_model=selected_codex_model,
+            codex_effort=selected_codex_effort,
         )
         settings.validate()
         return settings
 
     def validate(self) -> None:
-        if self.codex_effort not in {"low", "medium", "high", "xhigh"}:
-            raise ValueError(
-                "MARKET_AGENT_CODEX_EFFORT must be low, medium, high, or xhigh"
-            )
+        if self.provider is ProviderId.CODEX:
+            if self.codex_model not in CODEX_MODELS:
+                raise ValueError(
+                    "Codex model must be gpt-5.6-sol, gpt-5.6-terra, or gpt-5.6-luna"
+                )
+            if self.codex_effort not in {"low", "medium", "high"}:
+                raise ValueError(
+                    "Codex effort must be light/low, medium, or high"
+                )
         if self.provider is ProviderId.PGPT:
             missing = [
                 name
@@ -127,5 +150,7 @@ def provider_readiness() -> list[dict[str, object]]:
             "purpose": "개발 단계",
             "configured": True,
             "message": "실행 시 로컬 ChatGPT OAuth 로그인을 확인합니다.",
+            "models": list(CODEX_MODELS),
+            "efforts": list(CODEX_EFFORTS),
         },
     ]

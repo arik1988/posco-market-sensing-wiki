@@ -62,7 +62,7 @@ def valid_structured_analysis():
                     {"key": "secondary_effects", "label": "2차 영향", "display": "list", "items": ["계약", "운영"]},
                     table("response_options", "대응 선택지", ["option", "benefit", "cost_or_risk", "activation_condition"], [
                         ["선택 A", "효과 A", "비용 A", "조건 A"], ["선택 B", "효과 B", "비용 B", "조건 B"]]),
-                    table("quantification_decision", "정량화 판단", ["status", "basis", "next_input"], [["deferred", "내부값 부재", "계약 원가"]]),
+                    table("quantification_decision", "정량화 판단", ["status", "basis", "next_input"], [["not_applicable", "주제가 정량 영향과 본질적으로 맞지 않음", "재검토 조건"]]),
                 ],
             },
             {
@@ -148,6 +148,83 @@ class SQLiteMarketSensingTests(unittest.TestCase):
         self.assertEqual(first, second)
         self.assertRegex(first, r"^CLMV-[A-F0-9]{12}$")
 
+    def test_score_rationale_requires_fact_path_score_and_boundary(self):
+        valid = (
+            "분기 쿼터 4만 톤이 소진돼 초과 물량에 추가 관세가 적용될 수 있습니다. "
+            "선적 시점과 관세 부담 주체가 시장 접근성과 계약 마진을 함께 바꾸므로 "
+            "경영 판단이 필요한 7점으로 평가했습니다. 회사의 실제 사용량과 관세 "
+            "전가 조건이 확인되지 않아 8점 이상으로 높이지 않았습니다."
+        )
+        self.assertEqual(
+            market_sensing.validate_score_rationale("business_impact", 7, valid),
+            valid,
+        )
+        with self.assertRaisesRegex(ValueError, "between 120 and 600"):
+            market_sensing.validate_score_rationale(
+                "business_impact", 7, "시장 접근성과 계약 마진이 달라집니다."
+            )
+        with self.assertRaisesRegex(ValueError, "why it is 7점"):
+            market_sensing.validate_score_rationale(
+                "business_impact", 7, valid.replace("7점", "해당 점수")
+            )
+        with self.assertRaisesRegex(ValueError, "adjacent-score boundary"):
+            market_sensing.validate_score_rationale(
+                "business_impact",
+                7,
+                valid.replace("8점 이상으로 높이지 않았습니다", "추가 확인이 필요합니다"),
+            )
+
+    def test_quantification_decision_requires_model_or_narrow_json_exception(self):
+        estimate = json.loads(
+            (
+                Path(__file__).resolve().parents[1]
+                / "research"
+                / "impact-estimates"
+                / "senex-gas-reservation.json"
+            ).read_text(encoding="utf-8")
+        )
+        modeled = market_sensing.modeled_quantification_decision(estimate)
+        self.assertEqual(
+            "modeled",
+            market_sensing.validate_quantification_decision(
+                modeled, estimate
+            )["status"],
+        )
+        not_applicable = {
+            "schema_version": 1,
+            "status": "not_applicable",
+            "assessed_at": "2026-08-29",
+            "basis": (
+                "이 Signal은 금액이나 운영량 민감도가 아니라 정성적 분류체계 변경만을 "
+                "다루므로 독립 계산 결과가 의사결정을 개선하지 않습니다."
+            ),
+            "reason_code": "subject_not_quantifiable",
+            "required_inputs": ["정량 영향 경로가 생기는 후속 운영 사건"],
+            "reconsider_when": "후속 사건에서 가격·물량·비용 또는 일정 노출이 확인될 때",
+            "related_signal_ids": [],
+        }
+        self.assertEqual(
+            "not_applicable",
+            market_sensing.validate_quantification_decision(not_applicable)["status"],
+        )
+        with self.assertRaisesRegex(ValueError, "modeled or not_applicable"):
+            market_sensing.validate_quantification_decision(
+                {**not_applicable, "status": "deferred"}
+            )
+        with self.assertRaisesRegex(ValueError, "cannot have impact_estimate"):
+            market_sensing.validate_quantification_decision(
+                not_applicable, estimate
+            )
+
+    def test_structured_quantification_status_rejects_internal_waiting(self):
+        structured = valid_structured_analysis()
+        for section in structured["sections"]:
+            for item in section["items"]:
+                if item["key"] == "quantification_decision":
+                    item["rows"][0]["status"] = "내부 입력 대기"
+        with self.assertRaisesRegex(ValueError, "modeled or not_applicable"):
+            market_sensing.validate_structured_analysis(structured)
+
     def scout_args(self, run_id="weekly-scout", **overrides):
         values = {
             "root": str(self.root),
@@ -165,6 +242,9 @@ class SQLiteMarketSensingTests(unittest.TestCase):
         return Namespace(**values)
 
     def valid_no_change_coverage(self, run):
+        # Legacy candidate-density fixtures exercise the v4 compatibility path.
+        # New runs use v5 and must satisfy the published-Signal gate tested below.
+        run["research_contract"]["version"] = 4
         coverage = market_sensing.initial_research_coverage(
             run["research_contract"]["required_company_axes"]
         )
@@ -205,10 +285,11 @@ class SQLiteMarketSensingTests(unittest.TestCase):
             coverage["candidates"].append(
                 {
                     "candidate_id": candidate_id,
-                    "detected_at": (
+                    "candidate_date": (
                         date.fromisoformat(run["date_from"])
                         + timedelta(days=index // 3)
                     ).isoformat(),
+                    "detected_at": "2026-08-29",
                     "company_id": cell["company_id"],
                     "business_axis": cell["business_axis"],
                     "change_type": market_sensing.SIGNAL_TYPES[
@@ -298,6 +379,11 @@ class SQLiteMarketSensingTests(unittest.TestCase):
             for item in run["coverage"]["cells_checked"]
         }
         self.assertEqual(10, result["required_cells"])
+        self.assertEqual(5, run["research_contract"]["version"])
+        self.assertEqual(
+            3, run["research_contract"]["minimum_published_signals_per_day"]
+        )
+        self.assertNotIn("minimum_candidates_per_day", run["research_contract"])
         self.assertEqual(required, checked)
         self.assertEqual({"pending"}, {item["status"] for item in run["coverage"]["cells_checked"]})
 
@@ -383,7 +469,7 @@ class SQLiteMarketSensingTests(unittest.TestCase):
         )
         self.assertEqual(2, len(run["coverage"]["cells_checked"]))
 
-    def test_scout_completes_after_multichannel_diminishing_yield_for_all_cells(self):
+    def test_v5_scout_does_not_complete_with_candidates_but_no_published_signals(self):
         market_sensing.scout_run(self.scout_args())
         _, run = market_sensing.run_record_by_id(self.root, "weekly-scout")
         coverage_path = Path(self.temp_dir.name) / "coverage.json"
@@ -403,15 +489,102 @@ class SQLiteMarketSensingTests(unittest.TestCase):
             }
             for item in run["research_contract"]["required_company_axes"]
         ]
+        run["research_contract"]["version"] = 5
+        run["research_contract"].pop("minimum_candidates_per_day", None)
+        run["research_contract"]["minimum_published_signals_per_day"] = 3
         run_path, _ = market_sensing.run_record_by_id(self.root, "weekly-scout")
         market_sensing.write_json(run_path, run)
-        result = market_sensing.scout_run(
-            self.scout_args(date_from=None, date_to=None, coverage_file=str(coverage_path), complete=True)
-        )
+        with self.assertRaisesRegex(ValueError, "daily published Signal availability"):
+            market_sensing.scout_run(
+                self.scout_args(
+                    date_from=None,
+                    date_to=None,
+                    coverage_file=str(coverage_path),
+                    complete=True,
+                )
+            )
         _, completed = market_sensing.run_record_by_id(self.root, "weekly-scout")
-        self.assertEqual("scout_completed", result["action"])
-        self.assertEqual("completed", completed["status"])
-        self.assertTrue(completed["completed_at"])
+        self.assertEqual("in_progress", completed["status"])
+
+    def test_v5_requires_three_distinct_active_published_signals_per_day(self):
+        market_sensing.scout_run(
+            self.scout_args(
+                run_id="published-daily",
+                date_from="2026-08-29",
+                date_to="2026-08-29",
+                company_id=["COM-POSCO"],
+            )
+        )
+        _, run = market_sensing.run_record_by_id(self.root, "published-daily")
+        coverage = self.valid_no_change_coverage(run)
+        run["research_contract"]["version"] = 5
+        run["research_contract"].pop("minimum_candidates_per_day", None)
+        run["research_contract"]["minimum_published_signals_per_day"] = 3
+        signals = []
+        for index, candidate in enumerate(coverage["candidates"], start=1):
+            signal_id = f"SIG-PUBLISHED-{index}"
+            candidate.update(
+                {"disposition": "published_signal", "signal_id": signal_id}
+            )
+            candidate.pop("reason", None)
+            signals.append(
+                {
+                    "signal_id": signal_id,
+                    "status": "active",
+                    "company_ids": [candidate["company_id"]],
+                    "business_axis": candidate["business_axis"],
+                }
+            )
+        run["coverage"] = coverage
+
+        self.assertEqual([], market_sensing.evaluate_research_coverage(run, signals))
+
+        coverage["candidates"][-1]["disposition"] = "watchlist"
+        coverage["candidates"][-1].pop("signal_id")
+        coverage["candidates"][-1]["reason"] = (
+            "회사 영향 경로와 원문을 추가 확인하기 위해 관찰 후보로 유지합니다."
+        )
+        findings = market_sensing.evaluate_research_coverage(run, signals)
+        self.assertTrue(
+            any("daily published Signal availability is 2/3" in item for item in findings)
+        )
+
+    def test_v5_does_not_count_one_signal_on_multiple_calendar_days(self):
+        market_sensing.scout_run(
+            self.scout_args(run_id="reused-daily-signal", company_id=["COM-POSCO"])
+        )
+        _, run = market_sensing.run_record_by_id(self.root, "reused-daily-signal")
+        coverage = self.valid_no_change_coverage(run)
+        run["research_contract"]["version"] = 5
+        run["research_contract"]["minimum_published_signals_per_day"] = 3
+        reused = coverage["candidates"][0]
+        duplicate = dict(reused)
+        duplicate.update(
+            {
+                "candidate_id": "CAN-REUSED-OTHER-DAY",
+                "candidate_date": "2026-08-24",
+                "source_url": "https://example.com/reused/other-day",
+                "disposition": "published_signal",
+                "signal_id": "SIG-REUSED",
+            }
+        )
+        reused.update({"disposition": "published_signal", "signal_id": "SIG-REUSED"})
+        reused.pop("reason", None)
+        coverage["candidates"].append(duplicate)
+        run["coverage"] = coverage
+        findings = market_sensing.evaluate_research_coverage(
+            run,
+            [
+                {
+                    "signal_id": "SIG-REUSED",
+                    "status": "active",
+                    "company_ids": [reused["company_id"]],
+                    "business_axis": reused["business_axis"],
+                }
+            ],
+        )
+
+        self.assertTrue(any("cannot satisfy another calendar day" in item for item in findings))
 
     def test_v2_scout_rejects_templated_zero_yield_strategies(self):
         market_sensing.scout_run(self.scout_args(run_id="shallow-monthly"))
@@ -446,7 +619,7 @@ class SQLiteMarketSensingTests(unittest.TestCase):
         market_sensing.scout_run(self.scout_args(run_id="uneven-daily-density"))
         _, run = market_sensing.run_record_by_id(self.root, "uneven-daily-density")
         coverage = self.valid_no_change_coverage(run)
-        coverage["candidates"][-1]["detected_at"] = run["date_from"]
+        coverage["candidates"][-1]["candidate_date"] = run["date_from"]
         run["coverage"] = coverage
 
         findings = market_sensing.evaluate_research_coverage(run, [])
@@ -486,12 +659,25 @@ class SQLiteMarketSensingTests(unittest.TestCase):
         market_sensing.scout_run(self.scout_args(run_id="invalid-candidate-date"))
         _, run = market_sensing.run_record_by_id(self.root, "invalid-candidate-date")
         coverage = self.valid_no_change_coverage(run)
-        coverage["candidates"][0]["detected_at"] = "not-a-date"
+        coverage["candidates"][0]["candidate_date"] = "not-a-date"
         run["coverage"] = coverage
 
         findings = market_sensing.evaluate_research_coverage(run, [])
 
-        self.assertTrue(any("detected_at must be inside" in item for item in findings))
+        self.assertTrue(any("candidate_date must be inside" in item for item in findings))
+
+    def test_v4_backfill_counts_candidate_date_without_backdating_detection(self):
+        market_sensing.scout_run(self.scout_args(run_id="honest-backfill"))
+        _, run = market_sensing.run_record_by_id(self.root, "honest-backfill")
+        coverage = self.valid_no_change_coverage(run)
+        for candidate in coverage["candidates"]:
+            candidate["detected_at"] = "2026-09-01"
+        run["coverage"] = coverage
+
+        findings = market_sensing.evaluate_research_coverage(run, [])
+
+        self.assertFalse(any("daily detection density" in item for item in findings))
+        self.assertFalse(any("detected_at must be inside" in item for item in findings))
 
     def test_audit_flags_completed_research_run_with_a_missing_cell(self):
         market_sensing.scout_run(self.scout_args())
@@ -1168,12 +1354,10 @@ class SQLiteMarketSensingTests(unittest.TestCase):
         self.assertIn('group.setAttribute("aria-describedby", tooltip.id)', script)
         self.assertNotIn("signal-score-info", script)
         self.assertNotIn("signal-score-info", styles)
-        self.assertIn(
-            ".signal-score-with-rationale:hover .signal-score-rationale", styles
-        )
-        self.assertIn(
-            ".signal-score-with-rationale:focus .signal-score-rationale", styles
-        )
+        self.assertIn('group.addEventListener("mouseenter"', script)
+        self.assertIn('group.addEventListener("focus"', script)
+        self.assertIn("position: fixed", styles)
+        self.assertIn("z-index: 1000", styles)
 
     def test_signal_detail_header_uses_the_available_content_width(self):
         project_root = Path(__file__).resolve().parents[1]
@@ -1223,6 +1407,20 @@ class SQLiteMarketSensingTests(unittest.TestCase):
         database.unlink()
         self.assertFalse(database.exists())
 
+    def test_mkdocs_projection_cache_ignores_reader_shm_timestamp_changes(self):
+        database = sqlite_store.database_path(self.root)
+        first = mkdocs_hooks._projection_data(self.root)
+        Path(f"{database}-shm").touch()
+
+        with patch.object(
+            mkdocs_hooks,
+            "_read_only_connection",
+            side_effect=AssertionError("cached projection reopened SQLite"),
+        ):
+            second = mkdocs_hooks._projection_data(self.root)
+
+        self.assertIs(first, second)
+
     def test_mkdocs_navigation_exposes_only_market_signals(self):
         database = self.root / "data" / "market_sensing.db"
         with patch.dict(
@@ -1247,14 +1445,16 @@ class SQLiteMarketSensingTests(unittest.TestCase):
         self.assertEqual(
             config["nav"],
             [
-                {
-                    "마켓 시그널": [
-                        {"전체 시그널": "signals/index.md"},
-                        {"외부 변화": "signals/SIG-NAV.md"},
-                    ]
-                },
+                {"마켓 시그널": [{"전체 시그널": "signals/index.md"}]},
                 {"AI 조사": "research/index.md"},
             ],
+        )
+        navigation = json.loads(
+            mkdocs_hooks._signal_navigation_json(mkdocs_hooks._projection_data(self.root))
+        )
+        self.assertEqual(
+            navigation,
+            {"items": [{"signal_id": "SIG-NAV", "title": "외부 변화"}]},
         )
         for hidden_label in (
             "홈",

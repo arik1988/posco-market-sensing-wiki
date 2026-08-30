@@ -58,6 +58,18 @@ if ($source -notmatch '(?s)Wait-WikiServerReady -Server \$server -Url \$LocalUrl
 if ($source -notmatch 'Wait-ResearchAgentReady -Server \$researchAgent') {
     throw "The launcher must wait for the standalone AI research API."
 }
+if ($source -notmatch '(?s)function Wait-WikiServerReady.*?\[int\]\$TimeoutSeconds = 300') {
+    throw "The wiki readiness timeout must cover large SQLite snapshots."
+}
+if ($source -notmatch '(?s)function Wait-ResearchAgentReady.*?\[int\]\$TimeoutSeconds = 60') {
+    throw "The lightweight research API must keep its focused readiness timeout."
+}
+if ($source -notmatch 'MkDocs is still building the SQLite snapshot') {
+    throw "The launcher must report progress during a long initial build."
+}
+if ($source -match '--quiet') {
+    throw "MkDocs startup output must remain visible for diagnostics."
+}
 
 $intranetUrl = Get-WikiBrowserUrl `
     -LanAddress ([System.Net.IPAddress]::Parse("10.20.30.40"))

@@ -234,7 +234,7 @@ coverage 셀을 완료 조건으로 만들지 않는다.
       {"company_id": "COM-POSCO", "business_axis": "철강"}
     ],
     "minimum_independent_channels_per_cell": 2,
-    "minimum_candidates_per_day": 3,
+    "minimum_published_signals_per_day": 3,
     "candidate_target_per_cell": 8,
     "diminishing_yield_searches": 3
   },
@@ -265,6 +265,7 @@ coverage 셀을 완료 조건으로 만들지 않는다.
     "candidates": [
       {
         "candidate_id": "CAN-...",
+        "candidate_date": "2026-08-29",
         "detected_at": "2026-08-29",
         "company_id": "COM-POSCO",
         "business_axis": "철강",
@@ -302,12 +303,14 @@ python skills/market-sensing-intelligence/scripts/market_sensing.py scout market
 새 `research_contract.version=2` run부터 적용하며 기존 복구 run에는 소급하지 않는다.
 무수확 종료는 마지막 세 전략이 서로 다른 이름이고, 두 개 이상의 독립 채널과 세 개
 이상의 변화유형을 포함하며, 저강도 관찰 후보까지 신규 후보가 모두 0일 때만 인정한다.
-`research_contract.version=4` 월간·정기 run은 조사기간의 각 달력 날짜마다 고유 후보를
-최소 3건 감지·평가해야 한다. 기간 합계나 일평균이 기준을 넘더라도 어느 한 날짜가 3건
-미만이면 완료할 수 없다. 후보에는 감지일·회사·사업축·변화유형·원문 URL과
-`published_signal`, `watchlist`, `rejected` 중 하나의 처분을 기록한다. 관찰·제외 후보는
-구체적 사유가 필수이고, 발행 후보는 실제 Signal ID와 연결한다. 이는 발행량을 억지로
-채우는 할당량이 아니라 탐색 밀도 하한이다.
+`research_contract.version=5` 월간·정기 run은 조사기간의 각 달력 날짜마다 MyPIN에서 실제
+열람 가능한 서로 다른 active Signal을 최소 3건 발행해야 한다. 기간 합계나 일평균이
+기준을 넘더라도 어느 한 날짜가 3건 미만이면 완료할 수 없다. 후보에는 조사기간 안의
+원문 발표·사건·효력·관측일을 대표하는 `candidate_date`, 우리 시스템이 후보를 처음 안
+`detected_at`, 회사·사업축·변화유형·원문 URL과 `published_signal`, `watchlist`, `rejected`
+중 하나의 처분을 기록한다. 일별 최소치는 active Signal ID가 연결된 `published_signal`만
+세며 `watchlist`, `rejected`, 같은 Signal의 날짜 간 재사용은 포함하지 않는다. 과거 백필의
+귀속일은 `candidate_date`로 계산하며 `detected_at`을 과거로 소급하지 않는다.
 
 Signal 발행은 변곡점만을 문턱으로 삼지 않는다. 회사 영향 경로가 확인된 유의미한 증가·
 감소, 정책 단계 변화, 수주·투자·가동·중단·가격·물류 사건도 1~4점 관찰 Signal로

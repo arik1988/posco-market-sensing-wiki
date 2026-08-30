@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import asyncio
 import json
+import os
 import re
+import shutil
 import threading
 import uuid
 from datetime import UTC, datetime
@@ -10,8 +12,11 @@ from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlsplit
+from urllib.parse import parse_qs, urlsplit
 
+from .cli_tools import ALL_COMMANDS, MarketSensingCli
+from .database_snapshot import database_snapshot, sqlite_store
+from .operations import OperationRequest, operation_catalog, parse_cli_result
 from .signal_favorites import (
     USER_KEY_HEADER,
     get_favorite,
@@ -20,6 +25,7 @@ from .signal_favorites import (
     save_favorite,
     validate_user_key,
 )
+from .signal_comments import delete_comment, get_comment, list_comments, upsert_comment
 from .research_schedules import (
     claim_due_schedules,
     create_schedule,
@@ -29,6 +35,14 @@ from .research_schedules import (
     mark_schedule_run,
     request_dates,
     set_schedule_enabled,
+)
+from .watch_scope import (
+    add_watch_scope,
+    get_all_settings,
+    get_watch_scope,
+    patch_all_settings,
+    remove_watch_scope,
+    replace_watch_scope,
 )
 
 
@@ -43,12 +57,23 @@ _FAVORITES_PATH = re.compile(r"^/api/signal-favorites/?$")
 _FAVORITE_PATH = re.compile(
     r"^/api/signal-favorites/(?P<signal_id>[A-Za-z0-9][A-Za-z0-9._:-]{1,127})/?$"
 )
+_OPERATIONS_PATH = re.compile(r"^/api/operations/?$")
+_OPERATION_PATH = re.compile(
+    r"^/api/operations/(?P<operation_id>[0-9a-f-]{36})/?$"
+)
+_WATCH_SCOPE_PATH = re.compile(r"^/api/settings/company-axes/?$")
+_SETTINGS_PATH = re.compile(r"^/api/settings/?$")
+_COMMENTS_PATH = re.compile(r"^/api/signal-comments/?$")
+_COMMENT_PATH = re.compile(
+    r"^/api/signal-comments/(?P<comment_id>CMT-[A-Z0-9]{8,64})/?$"
+)
+DATABASE_EXECUTION_LOCK = threading.Lock()
 
 
 class JobStore:
-    def __init__(self) -> None:
+    def __init__(self, execution_lock: threading.Lock) -> None:
         self._lock = threading.Lock()
-        self._execution_lock = threading.Lock()
+        self._execution_lock = execution_lock
         self._jobs: dict[str, dict[str, Any]] = {}
         self._scheduler_stop = threading.Event()
         self._scheduler_thread: threading.Thread | None = None
@@ -59,6 +84,8 @@ class JobStore:
             "run_id": run_id,
             "status": "queued",
             "provider": request.provider,
+            "codex_model": request.codex_model,
+            "codex_effort": request.codex_effort,
             "publish": request.publish,
             "created_at": datetime.now(UTC).isoformat(),
             "updated_at": datetime.now(UTC).isoformat(),
@@ -138,7 +165,93 @@ class JobStore:
             self._jobs[run_id]["updated_at"] = datetime.now(UTC).isoformat()
 
 
-JOBS = JobStore()
+class OperationJobStore:
+    def __init__(self, execution_lock: threading.Lock) -> None:
+        self._lock = threading.Lock()
+        self._execution_lock = execution_lock
+        self._jobs: dict[str, dict[str, Any]] = {}
+
+    def create(self, request: OperationRequest) -> dict[str, Any]:
+        operation_id = str(uuid.uuid4())
+        now = datetime.now(UTC).isoformat()
+        job = {
+            "operation_id": operation_id,
+            "command": request.command,
+            "status": "queued",
+            "created_at": now,
+            "updated_at": now,
+            "result": None,
+            "error": None,
+        }
+        with self._lock:
+            self._jobs[operation_id] = job
+            self._trim_completed()
+        threading.Thread(
+            target=self._execute,
+            args=(operation_id, request),
+            daemon=True,
+            name=f"market-operation-{operation_id[:8]}",
+        ).start()
+        return dict(job)
+
+    def get(self, operation_id: str) -> dict[str, Any] | None:
+        with self._lock:
+            job = self._jobs.get(operation_id)
+            return dict(job) if job else None
+
+    def _execute(self, operation_id: str, request: OperationRequest) -> None:
+        with self._execution_lock:
+            self._update(operation_id, status="running")
+            try:
+                arguments = list(request.arguments)
+                if request.command == "prune-to-signals" and "--dry-run" not in arguments:
+                    database = sqlite_store.database_path(WIKI_ROOT)
+                    backup = (
+                        database.parent
+                        / "backups"
+                        / f"api-prune-{operation_id}.db"
+                    )
+                    arguments.extend(["--backup-path", str(backup)])
+                cli = MarketSensingCli(
+                    PROJECT_ROOT,
+                    publish=True,
+                    allowed_commands=set(ALL_COMMANDS),
+                )
+                result = asyncio.run(
+                    cli.run(
+                        request.command,
+                        arguments,
+                        request.input_files,
+                        server_managed_paths=True,
+                    )
+                )
+                result = parse_cli_result(result)
+                if not result.get("ok"):
+                    raise RuntimeError(str(result.get("stderr") or result.get("error")))
+            except Exception as exc:
+                self._update(
+                    operation_id,
+                    status="failed",
+                    error={"message": str(exc), "type": type(exc).__name__},
+                )
+            else:
+                self._update(operation_id, status="completed", result=result)
+
+    def _update(self, operation_id: str, **values: Any) -> None:
+        with self._lock:
+            self._jobs[operation_id].update(values)
+            self._jobs[operation_id]["updated_at"] = datetime.now(UTC).isoformat()
+
+    def _trim_completed(self) -> None:
+        while len(self._jobs) > 100:
+            oldest = next(iter(self._jobs))
+            if self._jobs[oldest]["status"] in {"queued", "running"}:
+                break
+            self._jobs.pop(oldest)
+
+
+JOBS = JobStore(DATABASE_EXECUTION_LOCK)
+OPERATION_JOBS = OperationJobStore(DATABASE_EXECUTION_LOCK)
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -153,6 +266,67 @@ class Handler(BaseHTTPRequestHandler):
         path = urlsplit(self.path).path
         if path == "/health":
             self._json(HTTPStatus.OK, {"status": "ok", "search": "duckduckgo_lite"})
+            return
+        if path in {"/api/capabilities", "/api/capabilities/"}:
+            self._json(HTTPStatus.OK, self._capabilities())
+            return
+        if path in {"/api/database/snapshot", "/api/database/snapshot/"}:
+            self._database_snapshot()
+            return
+        if _SETTINGS_PATH.fullmatch(path):
+            try:
+                with DATABASE_EXECUTION_LOCK:
+                    settings = get_all_settings(WIKI_ROOT)
+            except ValueError as exc:
+                self._json(
+                    HTTPStatus.INTERNAL_SERVER_ERROR,
+                    {"error": "settings_invalid", "message": str(exc)},
+                )
+                return
+            self._json(HTTPStatus.OK, settings)
+            return
+        if _WATCH_SCOPE_PATH.fullmatch(path):
+            try:
+                with DATABASE_EXECUTION_LOCK:
+                    scope = get_watch_scope(WIKI_ROOT)
+            except ValueError as exc:
+                self._json(
+                    HTTPStatus.INTERNAL_SERVER_ERROR,
+                    {"error": "settings_invalid", "message": str(exc)},
+                )
+                return
+            self._json(HTTPStatus.OK, scope)
+            return
+        if _OPERATIONS_PATH.fullmatch(path):
+            self._json(HTTPStatus.OK, operation_catalog())
+            return
+        if _COMMENTS_PATH.fullmatch(path):
+            query = parse_qs(urlsplit(self.path).query)
+            signal_id = str((query.get("signal_id") or [""])[0]).strip()
+            if not signal_id:
+                self._json(
+                    HTTPStatus.BAD_REQUEST,
+                    {"error": "signal_id_required"},
+                )
+                return
+            comments = list_comments(WIKI_ROOT, signal_id)
+            self._json(HTTPStatus.OK, {"comments": comments, "count": len(comments)})
+            return
+        comment_match = _COMMENT_PATH.fullmatch(path)
+        if comment_match:
+            comment = get_comment(WIKI_ROOT, comment_match.group("comment_id"))
+            self._json(
+                HTTPStatus.OK if comment else HTTPStatus.NOT_FOUND,
+                comment or {"error": "comment_not_found"},
+            )
+            return
+        operation_match = _OPERATION_PATH.fullmatch(path)
+        if operation_match:
+            job = OPERATION_JOBS.get(operation_match.group("operation_id"))
+            self._json(
+                HTTPStatus.OK if job else HTTPStatus.NOT_FOUND,
+                job or {"error": "operation_not_found"},
+            )
             return
         if path == "/api/research/providers":
             from .settings import provider_readiness
@@ -207,6 +381,48 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self) -> None:
         path = urlsplit(self.path).path
+        if _WATCH_SCOPE_PATH.fullmatch(path):
+            try:
+                data = self._read_json()
+                with DATABASE_EXECUTION_LOCK:
+                    scope = add_watch_scope(WIKI_ROOT, data.get("company_axes"))
+            except (ValueError, json.JSONDecodeError) as exc:
+                self._json(
+                    HTTPStatus.BAD_REQUEST,
+                    {"error": "invalid_company_axes", "message": str(exc)},
+                )
+                return
+            self._json(HTTPStatus.OK, scope)
+            return
+        if _OPERATIONS_PATH.fullmatch(path):
+            try:
+                request = OperationRequest.from_dict(
+                    self._read_json(max_bytes=28 * 1024 * 1024)
+                )
+            except (ValueError, json.JSONDecodeError) as exc:
+                self._json(
+                    HTTPStatus.BAD_REQUEST,
+                    {"error": "invalid_operation", "message": str(exc)},
+                )
+                return
+            self._json(HTTPStatus.ACCEPTED, OPERATION_JOBS.create(request))
+            return
+        if _COMMENTS_PATH.fullmatch(path):
+            try:
+                data = self._read_json()
+                with DATABASE_EXECUTION_LOCK:
+                    comment = upsert_comment(WIKI_ROOT, data)
+            except KeyError:
+                self._json(HTTPStatus.NOT_FOUND, {"error": "signal_not_found"})
+                return
+            except (ValueError, json.JSONDecodeError) as exc:
+                self._json(
+                    HTTPStatus.BAD_REQUEST,
+                    {"error": "invalid_comment", "message": str(exc)},
+                )
+                return
+            self._json(HTTPStatus.CREATED if comment["created"] else HTTPStatus.OK, comment)
+            return
         if path not in {"/api/research/runs", "/api/research/schedules", "/api/research/schedules/"}:
             self._json(HTTPStatus.NOT_FOUND, {"error": "not_found"})
             return
@@ -214,6 +430,7 @@ class Handler(BaseHTTPRequestHandler):
             from .service import ResearchRequest
 
             data = self._read_json()
+            data = self._with_default_scope(data)
             request = ResearchRequest.from_dict(data)
         except (ValueError, json.JSONDecodeError) as exc:
             self._json(
@@ -235,7 +452,21 @@ class Handler(BaseHTTPRequestHandler):
         self._json(HTTPStatus.ACCEPTED, JOBS.create(request))
 
     def do_PUT(self) -> None:
-        schedule_match = _SCHEDULE_PATH.fullmatch(urlsplit(self.path).path)
+        path = urlsplit(self.path).path
+        if _WATCH_SCOPE_PATH.fullmatch(path):
+            try:
+                data = self._read_json()
+                with DATABASE_EXECUTION_LOCK:
+                    scope = replace_watch_scope(WIKI_ROOT, data.get("company_axes"))
+            except (ValueError, json.JSONDecodeError) as exc:
+                self._json(
+                    HTTPStatus.BAD_REQUEST,
+                    {"error": "invalid_company_axes", "message": str(exc)},
+                )
+                return
+            self._json(HTTPStatus.OK, scope)
+            return
+        schedule_match = _SCHEDULE_PATH.fullmatch(path)
         if schedule_match:
             try:
                 data = self._read_json()
@@ -255,7 +486,7 @@ class Handler(BaseHTTPRequestHandler):
                 return
             self._json(HTTPStatus.OK, schedule)
             return
-        match = _FAVORITE_PATH.fullmatch(urlsplit(self.path).path)
+        match = _FAVORITE_PATH.fullmatch(path)
         if not match:
             self._json(HTTPStatus.NOT_FOUND, {"error": "not_found"})
             return
@@ -270,7 +501,37 @@ class Handler(BaseHTTPRequestHandler):
         self._json(HTTPStatus.CREATED if result["created"] else HTTPStatus.OK, result)
 
     def do_DELETE(self) -> None:
-        schedule_match = _SCHEDULE_PATH.fullmatch(urlsplit(self.path).path)
+        path = urlsplit(self.path).path
+        if _WATCH_SCOPE_PATH.fullmatch(path):
+            try:
+                data = self._read_json()
+                with DATABASE_EXECUTION_LOCK:
+                    scope = remove_watch_scope(WIKI_ROOT, data.get("company_axes"))
+            except (ValueError, json.JSONDecodeError) as exc:
+                self._json(
+                    HTTPStatus.BAD_REQUEST,
+                    {"error": "invalid_company_axes", "message": str(exc)},
+                )
+                return
+            self._json(HTTPStatus.OK, scope)
+            return
+        comment_match = _COMMENT_PATH.fullmatch(path)
+        if comment_match:
+            try:
+                with DATABASE_EXECUTION_LOCK:
+                    removed = delete_comment(WIKI_ROOT, comment_match.group("comment_id"))
+            except ValueError as exc:
+                self._json(
+                    HTTPStatus.CONFLICT,
+                    {"error": "comment_has_replies", "message": str(exc)},
+                )
+                return
+            self._json(
+                HTTPStatus.OK if removed else HTTPStatus.NOT_FOUND,
+                {"removed": removed, "error": None if removed else "comment_not_found"},
+            )
+            return
+        schedule_match = _SCHEDULE_PATH.fullmatch(path)
         if schedule_match:
             removed = delete_schedule(WIKI_ROOT, schedule_match.group("schedule_id"))
             self._json(
@@ -278,7 +539,7 @@ class Handler(BaseHTTPRequestHandler):
                 {"removed": removed, "error": None if removed else "schedule_not_found"},
             )
             return
-        match = _FAVORITE_PATH.fullmatch(urlsplit(self.path).path)
+        match = _FAVORITE_PATH.fullmatch(path)
         if not match:
             self._json(HTTPStatus.NOT_FOUND, {"error": "not_found"})
             return
@@ -295,6 +556,23 @@ class Handler(BaseHTTPRequestHandler):
             HTTPStatus.OK,
             {"signal_id": signal_id, "favorited": False, "removed": removed},
         )
+
+    def do_PATCH(self) -> None:
+        path = urlsplit(self.path).path
+        if not _SETTINGS_PATH.fullmatch(path):
+            self._json(HTTPStatus.NOT_FOUND, {"error": "not_found"})
+            return
+        try:
+            data = self._read_json()
+            with DATABASE_EXECUTION_LOCK:
+                settings = patch_all_settings(WIKI_ROOT, data)
+        except (ValueError, json.JSONDecodeError) as exc:
+            self._json(
+                HTTPStatus.BAD_REQUEST,
+                {"error": "invalid_settings", "message": str(exc)},
+            )
+            return
+        self._json(HTTPStatus.OK, settings)
 
     def _favorite_user_key(self) -> str | None:
         user_key = self.headers.get(USER_KEY_HEADER, "").strip()
@@ -313,9 +591,66 @@ class Handler(BaseHTTPRequestHandler):
             {"error": "signal_not_found", "signal_id": signal_id},
         )
 
-    def _read_json(self) -> dict[str, Any]:
+    def _with_default_scope(self, data: dict[str, Any]) -> dict[str, Any]:
+        if data.get("company_axes") is not None or data.get("companies"):
+            return data
+        with DATABASE_EXECUTION_LOCK:
+            scope = get_watch_scope(WIKI_ROOT)
+        return {**data, "company_axes": scope["company_axes"]}
+
+    def _capabilities(self) -> dict[str, Any]:
+        return {
+            "api_version": 1,
+            "binding": "loopback",
+            "endpoints": {
+                "company_axes": "/api/settings/company-axes",
+                "settings": "/api/settings",
+                "research_runs": "/api/research/runs",
+                "research_schedules": "/api/research/schedules",
+                "operations": "/api/operations",
+                "database_snapshot": "/api/database/snapshot",
+                "signal_favorites": "/api/signal-favorites",
+                "signal_comments": "/api/signal-comments",
+            },
+            "operation_count": len(ALL_COMMANDS),
+        }
+
+    def _database_snapshot(self) -> None:
+        headers_sent = False
+        try:
+            with database_snapshot(WIKI_ROOT) as snapshot:
+                path = snapshot["path"]
+                if not isinstance(path, Path):
+                    raise RuntimeError("SQLite snapshot path is invalid")
+                self.send_response(HTTPStatus.OK)
+                self._cors_headers()
+                self.send_header("Content-Type", "application/vnd.sqlite3")
+                self.send_header(
+                    "Content-Disposition",
+                    f'attachment; filename="{snapshot["filename"]}"',
+                )
+                self.send_header("Content-Length", str(snapshot["size"]))
+                self.send_header("Cache-Control", "no-store")
+                self.send_header("X-Snapshot-Generated-At", str(snapshot["generated_at"]))
+                self.send_header("X-Snapshot-SHA256", str(snapshot["sha256"]))
+                self.end_headers()
+                headers_sent = True
+                with path.open("rb") as stream:
+                    shutil.copyfileobj(stream, self.wfile, length=1024 * 1024)
+        except (BrokenPipeError, ConnectionResetError):
+            return
+        except Exception as exc:
+            if not headers_sent:
+                self._json(
+                    HTTPStatus.INTERNAL_SERVER_ERROR,
+                    {"error": "snapshot_failed", "message": str(exc)},
+                )
+            else:
+                print(f"[research-agent] snapshot transfer failed: {exc}")
+
+    def _read_json(self, *, max_bytes: int = 64 * 1024) -> dict[str, Any]:
         length = int(self.headers.get("content-length", "0"))
-        if not 0 < length <= 64 * 1024:
+        if not 0 < length <= max_bytes:
             raise ValueError("요청 크기가 올바르지 않습니다.")
         data = json.loads(self.rfile.read(length))
         if not isinstance(data, dict):
@@ -336,13 +671,24 @@ class Handler(BaseHTTPRequestHandler):
 
     def _cors_headers(self) -> None:
         origin = self.headers.get("Origin", "")
-        if origin in {"http://127.0.0.1:8200", "http://localhost:8200"}:
+        allowed_origins = {
+            "http://127.0.0.1:8200",
+            "http://localhost:8200",
+            *(
+                item.strip()
+                for item in os.environ.get("MARKET_API_ALLOWED_ORIGINS", "").split(",")
+                if item.strip()
+            ),
+        }
+        if origin in allowed_origins:
             self.send_header("Access-Control-Allow-Origin", origin)
             self.send_header("Vary", "Origin")
         self.send_header(
             "Access-Control-Allow-Headers", f"Content-Type, {USER_KEY_HEADER}"
         )
-        self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+        self.send_header(
+            "Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+        )
 
 
 def main() -> None:

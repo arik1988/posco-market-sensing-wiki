@@ -6,7 +6,7 @@ from datetime import date
 from pathlib import Path
 from typing import Any
 
-from .settings import ProviderId
+from .settings import CODEX_EFFORTS, CODEX_MODELS, ProviderId
 
 
 COMPANY_AXES = {
@@ -20,15 +20,62 @@ COMPANY_AXES = {
     "POSCO Steeleon": "도금·컬러강판",
 }
 
+MAX_COMPANY_AXES = 32
+
+
+def _company_axes_from_dict(data: dict[str, Any]) -> tuple[tuple[str, str], ...]:
+    raw_scope = data.get("company_axes")
+    if raw_scope is None:
+        companies = [
+            str(item).strip()
+            for item in data.get("companies", [])
+            if str(item).strip()
+        ]
+        unknown = [company for company in companies if company not in COMPANY_AXES]
+        if unknown:
+            raise ValueError(
+                "설정에 없는 회사는 company_axes에 회사와 사업축을 함께 입력해 주세요: "
+                + ", ".join(unknown)
+            )
+        raw_scope = [
+            {"company": company, "business_axis": COMPANY_AXES[company]}
+            for company in companies
+        ]
+    if not isinstance(raw_scope, list):
+        raise ValueError("회사와 사업축 범위는 목록으로 입력해 주세요.")
+
+    scope: list[tuple[str, str]] = []
+    for item in raw_scope:
+        if not isinstance(item, dict):
+            raise ValueError("각 조사 범위에 회사와 사업축을 함께 입력해 주세요.")
+        company = str(item.get("company") or "").strip()
+        business_axis = str(item.get("business_axis") or "").strip()
+        if not company or not business_axis:
+            raise ValueError("선택한 모든 조사 범위에 회사와 사업축을 입력해 주세요.")
+        if len(company) > 120 or len(business_axis) > 160:
+            raise ValueError("회사명은 120자, 사업축은 160자 이하로 입력해 주세요.")
+        pair = (company, business_axis)
+        if pair not in scope:
+            scope.append(pair)
+    if not scope:
+        raise ValueError("조사할 회사와 사업축을 하나 이상 입력해 주세요.")
+    if len(scope) > MAX_COMPANY_AXES:
+        raise ValueError(f"회사·사업축 조사 범위는 최대 {MAX_COMPANY_AXES}개까지 입력할 수 있습니다.")
+    return tuple(scope)
+
 
 @dataclass(frozen=True, slots=True)
 class ResearchRequest:
     topic: str
+    topic_company: str
     companies: tuple[str, ...]
     business_axes: tuple[str, ...]
+    company_axes: tuple[tuple[str, str], ...]
     date_from: str
     date_to: str
     provider: ProviderId
+    codex_model: str
+    codex_effort: str
     publish: bool = True
 
     @classmethod
@@ -46,25 +93,31 @@ class ResearchRequest:
             raise ValueError(
                 "조사 기간은 최대 366일이며 시작일이 종료일보다 빨라야 합니다."
             )
-        companies = tuple(
-            dict.fromkeys(
-                str(item).strip()
-                for item in data.get("companies", [])
-                if str(item).strip()
-            )
-        )
-        if not companies:
-            raise ValueError("조사할 회사를 하나 이상 선택해 주세요.")
-        unknown = [company for company in companies if company not in COMPANY_AXES]
-        if unknown:
-            raise ValueError(f"설정에 없는 회사입니다: {', '.join(unknown)}")
+        company_axes = _company_axes_from_dict(data)
+        topic_company = str(data.get("topic_company") or company_axes[0][0]).strip()
+        if not 1 <= len(topic_company) <= 120:
+            raise ValueError("조사 주제의 대상 회사는 1자 이상 120자 이하로 입력해 주세요.")
+        if topic_company not in {company for company, _ in company_axes}:
+            raise ValueError("조사 주제의 대상 회사를 아래 회사·사업축 범위에도 포함해 주세요.")
+        codex_model = str(data.get("codex_model") or "gpt-5.6-luna").strip().lower()
+        if codex_model not in CODEX_MODELS:
+            raise ValueError("Codex 모델은 GPT-5.6-Sol, GPT-5.6-Terra, GPT-5.6-Luna 중에서 선택해 주세요.")
+        codex_effort = str(data.get("codex_effort") or "medium").strip().lower()
+        if codex_effort == "low":
+            codex_effort = "light"
+        if codex_effort not in CODEX_EFFORTS:
+            raise ValueError("Codex effort는 Light, Medium, High 중에서 선택해 주세요.")
         return cls(
             topic=topic,
-            companies=companies,
-            business_axes=tuple(COMPANY_AXES[company] for company in companies),
+            topic_company=topic_company,
+            companies=tuple(company for company, _ in company_axes),
+            business_axes=tuple(axis for _, axis in company_axes),
+            company_axes=company_axes,
             date_from=date_from,
             date_to=date_to,
             provider=ProviderId(str(data.get("provider") or "pgpt").lower()),
+            codex_model=codex_model,
+            codex_effort=codex_effort,
             publish=bool(data.get("publish", True)),
         )
 
@@ -83,7 +136,11 @@ async def run_research(
     from .settings import AgentSettings
     from .web import PublicWeb
 
-    settings = AgentSettings.from_env(request.provider)
+    settings = AgentSettings.from_env(
+        request.provider,
+        codex_model=request.codex_model,
+        codex_effort=request.codex_effort,
+    )
     model = build_model(settings)
     web = PublicWeb()
     wiki = MarketSensingCli(project_root, publish=request.publish)
@@ -154,6 +211,8 @@ async def run_research(
             )
         return {
             "provider": request.provider,
+            "codex_model": request.codex_model,
+            "codex_effort": request.codex_effort,
             "published": request.publish,
             "answer": str(final),
             "todos": result.get("todos", []),
@@ -202,8 +261,13 @@ def _request_prompt(request: ResearchRequest) -> str:
         {
             "task": "설정된 범위의 외부 변화를 조사하고 사업 영향을 분석하세요.",
             "topic": request.topic,
+            "topic_company": request.topic_company,
             "companies": request.companies,
             "business_axes": request.business_axes,
+            "company_axes": [
+                {"company": company, "business_axis": business_axis}
+                for company, business_axis in request.company_axes
+            ],
             "date_from": request.date_from,
             "date_to": request.date_to,
             "publish_to_sqlite": request.publish,

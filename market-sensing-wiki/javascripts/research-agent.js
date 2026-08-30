@@ -11,6 +11,12 @@
     ["POSCO Steeleon", "포스코스틸리온", "도금·컬러강판"],
   ];
   const weekdayLabels = ["월요일", "화요일", "수요일", "목요일", "금요일", "토요일", "일요일"];
+  const codexModelLabels = {
+    "gpt-5.6-sol": "GPT-5.6-Sol",
+    "gpt-5.6-terra": "GPT-5.6-Terra",
+    "gpt-5.6-luna": "GPT-5.6-Luna",
+  };
+  const codexEffortLabels = { light: "Light", medium: "Medium", high: "High" };
 
   const el = (tag, attrs = {}, children = []) => {
     const node = document.createElement(tag);
@@ -58,12 +64,22 @@
   }
 
   function requestPayload(root, controls) {
+    const companyAxes = [...root.querySelectorAll(".research-company-option")]
+      .filter((card) => card.querySelector('input[name="company-scope"]')?.checked)
+      .map((card) => ({
+        company: card.querySelector('input[name="company-name"]')?.value.trim() || "",
+        business_axis: card.querySelector('input[name="business-axis"]')?.value.trim() || "",
+      }));
     return {
       topic: controls.topic.value.trim(),
-      companies: [...root.querySelectorAll('input[name="company"]:checked')].map((node) => node.value),
+      topic_company: controls.topicCompany.value.trim(),
+      company_axes: companyAxes,
+      companies: companyAxes.map((item) => item.company),
       date_from: controls.start.value,
       date_to: controls.end.value,
       provider: root.querySelector('input[name="provider"]:checked')?.value || "pgpt",
+      codex_model: controls.codexModel.value,
+      codex_effort: controls.codexEffort.value,
       publish: controls.publish.checked,
     };
   }
@@ -136,9 +152,14 @@
           el("div", { class: "research-schedule-heading" }, [toggle, el("strong", { text: schedule.name }), remove]),
           el("p", { text: schedule.topic }),
           el("div", { class: "research-schedule-meta" }, [
+            el("span", { text: `${schedule.topic_company || schedule.companies[0]} 중심` }),
             el("span", { text: scheduleSummary(schedule) }),
             el("span", { text: `최근 ${schedule.lookback_days}일 재탐색` }),
-            el("span", { text: `${schedule.companies.length}개 회사` }),
+            el("span", { text: `${(schedule.company_axes || schedule.companies).length}개 회사·사업축` }),
+            ...(schedule.provider === "codex" ? [
+              el("span", { text: codexModelLabels[schedule.codex_model] || schedule.codex_model }),
+              el("span", { text: `${codexEffortLabels[schedule.codex_effort] || schedule.codex_effort} effort` }),
+            ] : []),
             el("span", { text: schedule.publish ? "SQLite 발행" : "읽기 전용" }),
           ]),
           el("small", { text: `다음 실행 ${dateTimeLabel(schedule.next_run_at)}` }),
@@ -160,34 +181,82 @@
 
     const topic = el("textarea", {
       id: "research-topic", rows: "4", required: "required",
+      "aria-label": "조사 주제 직접 입력",
       placeholder: "예: 최근 2주간 철강 수입규제와 원료 가격 변화가 POSCO 사업 판단에 미치는 영향",
     });
+    const topicCompany = input({
+      type: "text", id: "research-topic-company", required: "required", maxlength: "120",
+      list: "research-company-suggestions", "aria-label": "조사 주제 대상 회사 직접 입력",
+      placeholder: "예: POSCO",
+    });
+    const companySuggestions = el("datalist", { id: "research-company-suggestions" },
+      companies.map(([name, label]) => el("option", { value: name, label }))
+    );
     const companyGrid = el("div", { class: "research-company-grid" });
     const selectionCount = el("span", { class: "research-selection-count" });
     const updateSelectionCount = () => {
-      const count = companyGrid.querySelectorAll('input[name="company"]:checked').length;
-      selectionCount.textContent = `${count}/${companies.length}개 회사 선택`;
+      const total = companyGrid.querySelectorAll(".research-company-option").length;
+      const count = companyGrid.querySelectorAll('input[name="company-scope"]:checked').length;
+      selectionCount.textContent = `${count}/${total}개 범위 사용`;
     };
-    companies.forEach(([name, label, axis]) => {
-      const checkbox = input({ type: "checkbox", name: "company", value: name, checked: true });
+
+    const addCompanyScope = (name = "", label = "직접 추가한 범위", axis = "", checked = true) => {
+      const checkbox = input({ type: "checkbox", name: "company-scope", checked, "aria-label": `${label} 조사 범위 사용` });
       checkbox.addEventListener("change", updateSelectionCount);
-      companyGrid.append(el("label", { class: "research-company-option" }, [
-        checkbox, el("span", {}, [el("strong", { text: label }), el("small", { text: axis })]),
-      ]));
-    });
+      const companyName = input({ type: "text", name: "company-name", value: name, maxlength: "120", placeholder: "예: POSCO 또는 포스코" });
+      const businessAxis = input({ type: "text", name: "business-axis", value: axis, maxlength: "160", placeholder: "예: 철강·원료" });
+      const remove = el("button", { type: "button", class: "research-icon-button", text: "삭제", "aria-label": `${label} 조사 범위 삭제` });
+      const card = el("article", { class: "research-company-option" }, [
+        el("div", { class: "research-company-option-heading" }, [
+          el("label", {}, [checkbox, el("strong", { text: label })]), remove,
+        ]),
+        el("div", { class: "research-company-edit-grid" }, [
+          el("label", { class: "research-field" }, [el("span", { text: "회사명" }), companyName]),
+          el("label", { class: "research-field" }, [el("span", { text: "조사 사업축·주제" }), businessAxis]),
+        ]),
+      ]);
+      remove.addEventListener("click", () => { card.remove(); updateSelectionCount(); });
+      companyGrid.append(card);
+      updateSelectionCount();
+      if (!name) companyName.focus();
+    };
+    companies.forEach(([name, label, axis]) => addCompanyScope(name, label, axis));
     updateSelectionCount();
     const allCompanies = el("button", { type: "button", class: "research-text-button", text: "전체 선택" });
     const clearCompanies = el("button", { type: "button", class: "research-text-button", text: "전체 해제" });
+    const addCompany = el("button", { type: "button", class: "research-add-scope-button", text: "+ 회사·조사 주제 추가" });
     allCompanies.addEventListener("click", () => {
-      companyGrid.querySelectorAll('input[name="company"]').forEach((node) => { node.checked = true; }); updateSelectionCount();
+      companyGrid.querySelectorAll('input[name="company-scope"]').forEach((node) => { node.checked = true; }); updateSelectionCount();
     });
     clearCompanies.addEventListener("click", () => {
-      companyGrid.querySelectorAll('input[name="company"]').forEach((node) => { node.checked = false; }); updateSelectionCount();
+      companyGrid.querySelectorAll('input[name="company-scope"]').forEach((node) => { node.checked = false; }); updateSelectionCount();
     });
+    addCompany.addEventListener("click", () => addCompanyScope());
 
     const start = input({ type: "date", id: "research-date-from", value: daysAgo(13) });
     const end = input({ type: "date", id: "research-date-to", value: localDate() });
     const publish = input({ type: "checkbox", id: "research-publish", checked: true });
+    const codexModel = el("select", { id: "research-codex-model", "aria-label": "Codex 모델" }, [
+      option("gpt-5.6-sol", "GPT-5.6-Sol"),
+      option("gpt-5.6-terra", "GPT-5.6-Terra"),
+      option("gpt-5.6-luna", "GPT-5.6-Luna"),
+    ]);
+    codexModel.value = "gpt-5.6-luna";
+    const codexEffort = el("select", { id: "research-codex-effort", "aria-label": "Codex effort" }, [
+      option("light", "Light"), option("medium", "Medium"), option("high", "High"),
+    ]);
+    codexEffort.value = "medium";
+    const codexOptions = el("div", { class: "research-codex-options" }, [
+      el("label", { class: "research-field" }, [el("span", { text: "모델" }), codexModel]),
+      el("label", { class: "research-field" }, [el("span", { text: "Effort" }), codexEffort]),
+      el("small", { text: "Codex OAuth를 선택했을 때 적용됩니다." }),
+    ]);
+    const updateCodexOptions = () => {
+      const enabled = root.querySelector('input[name="provider"]:checked')?.value === "codex";
+      codexOptions.dataset.enabled = enabled ? "true" : "false";
+      codexModel.disabled = !enabled;
+      codexEffort.disabled = !enabled;
+    };
     const runButton = el("button", { type: "submit", class: "research-submit", text: "지금 조사 시작" });
     const status = el("section", { class: "research-status", "aria-live": "polite" }, [
       el("strong", { text: "실행 대기" }), el("p", { text: "범위를 설정한 뒤 지금 조사하거나 반복 일정을 저장해 주세요." }),
@@ -219,20 +288,24 @@
       el("section", { class: "research-panel research-panel-lead" }, [
         el("div", { class: "research-eyebrow", text: "MARKET RESEARCH CONTROL" }),
         el("h2", { text: "조사 범위를 정하고 바로 실행합니다" }),
-        el("p", { text: "회사·사업축과 기간을 선택해 즉시 조사하거나, 같은 범위를 정기적으로 다시 확인하도록 예약할 수 있습니다." }),
+        el("p", { text: "회사·사업축과 조사 주제를 직접 정해 즉시 조사하거나, 같은 범위를 정기적으로 다시 확인하도록 예약할 수 있습니다." }),
       ]),
       serverState,
       el("section", { class: "research-panel" }, [
         el("div", { class: "research-section-heading" }, [
-          el("div", {}, [el("h3", { text: "1. 조사 주제" }), el("p", { class: "research-help", text: "확인하려는 외부 변화와 바꿀 사업 판단을 한 문장으로 적어 주세요." })]),
+          el("div", {}, [el("h3", { text: "1. 대상 회사와 조사 주제" }), el("p", { class: "research-help", text: "이번 주제가 어느 회사를 위한 조사인지 회사와 외부 변화·사업 판단을 함께 입력해 주세요." })]),
           el("span", { class: "research-required", text: "필수" }),
-        ]), topic,
+        ]),
+        el("div", { class: "research-topic-scope-grid" }, [
+          el("label", { class: "research-topic-field" }, [el("span", { text: "대상 회사 직접 입력" }), topicCompany, companySuggestions]),
+          el("label", { class: "research-topic-field" }, [el("span", { text: "조사 주제 직접 입력" }), topic]),
+        ]),
       ]),
       el("section", { class: "research-panel" }, [
         el("div", { class: "research-section-heading" }, [
-          el("div", {}, [el("h3", { text: "2. 대상 회사와 사업축" }), el("p", { class: "research-help", text: "선택한 회사의 공식 사업축만 조사 범위에 반영됩니다." })]),
+          el("div", {}, [el("h3", { text: "2. 추가 조사 범위" }), el("p", { class: "research-help", text: "1번 대상 회사를 포함해 함께 조사할 회사와 사업축을 선택·수정하거나 새로 추가할 수 있습니다." })]),
           el("div", { class: "research-company-actions" }, [selectionCount, allCompanies, clearCompanies]),
-        ]), companyGrid,
+        ]), companyGrid, addCompany,
       ]),
       el("section", { class: "research-panel research-grid-two" }, [
         el("div", {}, [el("h3", { text: "3. 조사 기간" }), el("p", { class: "research-help", text: "즉시 실행에서 확인할 발표·사건 기간입니다." }), el("div", { class: "research-date-row" }, [start, el("span", { text: "—" }), end])]),
@@ -241,6 +314,7 @@
       el("section", { class: "research-panel" }, [
         el("h3", { text: "5. 실행 Provider" }), el("p", { class: "research-help", text: "검색과 SQLite 계약은 같고, 판단 모델의 연결 방식만 다릅니다." }),
         el("div", { class: "research-provider-grid" }, [providerCard("pgpt", "P-GPT", "실제 운영", "회사 API를 사용하는 기본 Provider", true), providerCard("codex", "Codex OAuth", "개발 검증", "로컬 ChatGPT OAuth로 기능 검증", false)]),
+        codexOptions,
       ]),
       el("section", { class: "research-panel" }, [
         el("div", { class: "research-section-heading" }, [
@@ -255,12 +329,17 @@
       ]),
       el("div", { class: "research-action-row" }, [runButton, saveSchedule, el("span", { text: "동시에 요청된 조사는 SQLite 충돌을 막기 위해 순서대로 실행됩니다." })]),
     ]);
+    form.querySelectorAll('input[name="provider"]').forEach((radio) => radio.addEventListener("change", updateCodexOptions));
+    updateCodexOptions();
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
-      const payload = requestPayload(root, { topic, start, end, publish });
-      if (!payload.topic || payload.companies.length === 0) {
-        setStatus(status, "입력 확인 필요", "조사 주제와 회사를 하나 이상 선택해 주세요.", "failed"); return;
+      const payload = requestPayload(root, { topic, topicCompany, start, end, publish, codexModel, codexEffort });
+      if (!payload.topic || !payload.topic_company || payload.company_axes.length === 0 || payload.company_axes.some((item) => !item.company || !item.business_axis)) {
+        setStatus(status, "입력 확인 필요", "대상 회사, 조사 주제와 사용할 회사·사업축을 빠짐없이 입력해 주세요.", "failed"); return;
+      }
+      if (!payload.company_axes.some((item) => item.company === payload.topic_company)) {
+        setStatus(status, "입력 확인 필요", "1번 대상 회사를 2번 추가 조사 범위에도 포함해 주세요.", "failed"); return;
       }
       runButton.disabled = true;
       setStatus(status, "조사 요청 중", "Deep Agent 실행을 준비하고 있습니다.", "running"); output.hidden = true;
@@ -273,9 +352,12 @@
     });
 
     saveSchedule.addEventListener("click", async () => {
-      const payload = requestPayload(root, { topic, start, end, publish });
-      if (!payload.topic || payload.companies.length === 0) {
-        setStatus(status, "입력 확인 필요", "반복 일정에도 조사 주제와 회사가 필요합니다.", "failed"); return;
+      const payload = requestPayload(root, { topic, topicCompany, start, end, publish, codexModel, codexEffort });
+      if (!payload.topic || !payload.topic_company || payload.company_axes.length === 0 || payload.company_axes.some((item) => !item.company || !item.business_axis)) {
+        setStatus(status, "입력 확인 필요", "반복 일정에도 대상 회사, 조사 주제와 사용할 회사·사업축이 필요합니다.", "failed"); return;
+      }
+      if (!payload.company_axes.some((item) => item.company === payload.topic_company)) {
+        setStatus(status, "입력 확인 필요", "1번 대상 회사를 2번 추가 조사 범위에도 포함해 주세요.", "failed"); return;
       }
       const range = Math.round((new Date(payload.date_to) - new Date(payload.date_from)) / 86400000) + 1;
       Object.assign(payload, { frequency: frequency.value, run_time: runTime.value, weekday: Number(weekday.value), day_of_month: Number(dayOfMonth.value), lookback_days: Math.max(1, range) });
@@ -332,7 +414,11 @@
   }
 
   const boot = () => document.querySelectorAll("[data-research-agent-root]").forEach(mount);
+  window.__poscoResearchAgentBoot = boot;
+  // The agent bundle is loaded dynamically. It can arrive after MkDocs has
+  // already emitted its first document$ event, so always mount the current
+  // document before subscribing to later instant-navigation updates.
+  boot();
   if (typeof document$ !== "undefined") document$.subscribe(boot);
   else if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
-  else boot();
 })();

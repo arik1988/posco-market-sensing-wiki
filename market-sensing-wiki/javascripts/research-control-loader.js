@@ -1,9 +1,18 @@
 (() => {
+  if (typeof window.__poscoResearchAgentBoot === "function") {
+    window.__poscoResearchAgentBoot();
+    return;
+  }
   const current = document.currentScript;
-  const source = new URL("research-agent.js?ui=20260829-3", current?.src || window.location.href);
+  const source = new URL("research-agent.js?ui=20260829-luna-default", current?.src || window.location.href);
   const script = document.createElement("script");
   script.src = source.href;
   script.defer = true;
+  script.addEventListener("load", () => {
+    if (typeof window.__poscoResearchAgentBoot === "function") {
+      window.__poscoResearchAgentBoot();
+    }
+  });
   script.addEventListener("error", () => {
     document.querySelectorAll("[data-research-agent-root]").forEach((root) => {
       const message = root.querySelector(".research-loading-shell p");

@@ -40,6 +40,9 @@
    끝나고, `판단 요약`·`왜 중요한가`·Insight summary가 두 탭 밖에 없는지도 확인한다.
    데스크톱 Signal 상세 상단이 중앙 콘텐츠 열의 가용폭을 사용해 우측 목차 앞에
    불필요한 빈 열을 남기지 않는지도 확인한다.
+   목록에서는 회사·사업축·감지일 필터를 각각 적용한 결과와 세 조건의 교차 결과,
+   감지일 시작·종료 경계 포함, 잘못된 날짜 범위 오류, 필터 초기화와 좌측 Signal
+   탐색 목록의 동기화를 함께 확인한다.
 7. 기존 산문-only Insight의 MkDocs 수용 검증에서는 `analysis_markdown`을 재파싱하지 않고
    Signal의 점수·시한·신뢰도와 active Claim·Source만으로 다섯 의사결정 섹션이
    렌더링되는지 확인한다. 구조화 JSON 부재 안내문만 남거나 신호분석 탭이 비어 있으면
@@ -56,6 +59,26 @@
 
 사용자가 명시적으로 “이 Signal만 예외”라고 지정하면 데이터 범위는 그 요청에 맞추되,
 예외 처리를 공용 기본값으로 확장하지 않는다.
+
+### 외부 프로그램에서 전체 기능 제어
+
+같은 PC의 외부 프로그램이 조사를 요청하면 UI와 동일한 `POST /api/research/runs` 입력
+계약을 사용하고 반환된 `run_id`를 `GET /api/research/runs/{run_id}`로 추적한다. 새 실행
+경로를 만들지 않으며 모든 조사 쓰기는 기존 직렬 큐에 합류시킨다. 관심 회사·사업축은
+구조화 CRUD API로 관리하고 Markdown 설정과 SQLite 캐시를 같은 작업에서 갱신한다. 다른
+설정은 부분 갱신 API로 바꾸되 미지정 섹션을 보존한다.
+
+Source·Claim·Signal 발행, 평가·분석 갱신, trace, audit, brief, 설정 동기화와 유지보수는
+`/api/operations` catalog에 등록된 공용 명령만 실행한다. catalog는 인자·선택값·반복값·
+임시 파일 필드를 제공한다. API는 셸 문자열, 작업 디렉터리, 임의 입출력 경로를 받지 않고
+등록된 임시 입력만 격리 디렉터리에 매핑한다. 쓰기는 조사와 같은 lock으로 직렬화한다.
+파괴적 유지보수는 명령별 확인값을 요구하며 실제 prune은 서버 관리 online backup을 먼저
+만든다.
+
+완성 DB 전달은 `GET /api/database/snapshot`을 사용한다. 원본 `.db`와
+`-wal`·`-shm` 파일을 복사하거나 묶지 않고 SQLite online backup 및 integrity check를
+거친 단일 파일만 전송한다. 생성 시각과 SHA-256을 응답 헤더에 포함하고 임시 snapshot은
+전송 뒤 삭제한다.
 
 개발 단계에서 대표 Signal만 남기라는 요청은 `prune-to-signals --signal-id ... --dry-run`으로
 정확한 삭제 범위와 보존 계보를 먼저 확인한 뒤, 복구용 SQLite 백업 경로를 지정해
@@ -119,6 +142,10 @@ coverage와 정기 감시 발행량 조건을 적용하지 않는다. 개수를 
 10. 쿼리와 결과를 SQLite `runs` collection에 기록한다. `coverage`에 확인 셀, 독립 채널, 쿼리별 수확,
    고위험 빈칸, 중단 근거, 한계, 다음 트리거를 남긴다. 저장 작업이면
    `results.new_claims`, `results.new_signals`, `signal_ids`를 함께 기록한다.
+   월간·정기 조사는 각 달력 날짜마다 MyPIN에서 열람 가능한 서로 다른 active Signal을
+   최소 3건 발행한다. 과거 기간을 백필할 때 날짜 귀속은 원문의 발표·사건·효력·관측일을
+   대표하는 `candidate_date`로 세고, 시스템 최초 인지일인 `detected_at`은 소급하지 않는다.
+   후보·watchlist·rejected·같은 Signal의 날짜 간 재사용은 일별 최소치에 포함하지 않는다.
 11. 후보를 ingest로 넘긴다. 단독 속보는 즉시 발행할 수 있지만 run 완료 조건으로
     간주하지 않고 나머지 필수 셀 탐색을 계속한다.
 12. 모든 필수 셀에 독립 채널 2개 이상과 `후보 8건` 또는 `서로 다른 최근 3개 탐색에서
@@ -135,8 +162,22 @@ coverage와 정기 감시 발행량 조건을 적용하지 않는다. 개수를 
 
 `wiki_run.bat`로 연 MkDocs의 `AI 조사` 탭에서는 주제, 우선 회사와 사업축, 시작일과
 종료일, provider를 선택한다. `P-GPT`는 실제 운영, `Codex OAuth`는 개발 단계 용도다.
+Codex OAuth에서는 모델을 `GPT-5.6-Sol`, `GPT-5.6-Terra`, `GPT-5.6-Luna` 중에서,
+effort를 `Light`, `Medium`, `High` 중에서 선택한다. API와 반복 일정은 각각
+`codex_model`, `codex_effort`로 이 값을 보존하고 `Light` 실행은 runtime의 `low` effort로
+변환한다. 초기 기본값은 `GPT-5.6-Luna / Medium`이며 모델·effort 선택은 조사 범위나
+SQLite 발행 계약을 바꾸지 않는다.
 선택 범위는 `user_directive`와 `required_company_axes`에 그대로 반영하며 사람이 명시한
 범위를 설정 전체로 확대하지 않는다.
+
+주제는 사용자가 직접 작성·수정하는 텍스트 입력이며 같은 1단계에서 필수 대상 회사
+`topic_company`도 함께 입력한다. 이 값은 해당 주제의 1차 대상 회사로 실행 요청과 반복
+일정에 보존하고 선택한 `company_axes`에도 포함되어야 한다. 기본 회사·사업축 카드는 편집 가능한
+시작값이다. 각 카드의 회사명과 조사 사업축·주제를 수정하거나 새 행을 추가할 수 있어야
+한다. 실행·일정 API는 화면에서 선택된 각 조합을 `company_axes[{company,
+business_axis}]`로 받아 순서와 대응 관계를 그대로 보존한다. 이전 클라이언트의
+`companies`만 들어오면 설정된 기본 사업축으로 호환하되, 새 `company_axes` 입력은 고정
+우선 회사 목록에 없다는 이유로 거부하거나 기본 범위로 바꾸지 않는다.
 
 조사 UI는 조사 서버 연결 상태와 분리해 항상 범위 폼을 보여준다. 사용자는 회사 전체
 선택·해제와 현재 선택 수를 확인하고 `지금 조사 시작`으로 즉시 실행하거나, 매일·매주·
@@ -145,6 +186,13 @@ coverage와 정기 감시 발행량 조건을 적용하지 않는다. 개수를 
 저장된 일정은 활성·일시정지와 다음 실행 시각을 표시하며 삭제할 수 있다. 조사 서버가
 꺼져 있으면 폼을 숨기지 않고 실행·일정 API의 불가 상태와 재시작 방법을 같은 화면에
 표시한다.
+
+MkDocs 좌측 탐색에는 SQLite의 Signal 상세 항목을 표시해 목록과 상세 화면 어디서나 다른
+Signal로 바로 이동할 수 있게 한다. 다만 모든 페이지의 정적 내비게이션 HTML에 같은 목록을
+복제하지 않고, 빌드마다 생성한 경량 JSON을 브라우저가 한 번 읽어 좌측 목록을 채운다.
+`전체 시그널`의 필터·검색 동선도 함께 유지하고, 한 번 읽은 SQLite projection과 보관 원문은
+같은 빌드 안에서 재사용해 Signal 수가 늘어도 DB를 페이지마다 다시 읽지 않는다. 실행기는
+MkDocs의 초기 snapshot 빌드 진행을 콘솔에 표시하며 실제 strict 빌드 시간으로 성능을 검증한다.
 
 두 provider는 동일한 Deep Agent와 동일한 도구 계약을 사용한다. 후보 발견은
 DuckDuckGo Lite의 `web_search`, 공개 원문 확인은 `web_fetch`, SQLite 조회·발행은 허용
@@ -350,6 +398,10 @@ HTML 하단 출처 카드로 연결되며, 출처 레코드의 웹 URL과 보관
    `risk_factor_id`를 연결한다. Source 등록 시 `--source-modality`를 반드시 지정한다.
    가격·FX·재고·운임·AIS·위성·관심도는 `add-observation`, 정책·계약·프로젝트 상태 전이는
    `add-event`, 문서의 원자 사실은 `add-claim`을 사용한다.
+   Observation adapter는 기존 `series_key` 값을 공통 `indicator_id`로 보존하고,
+   `observed_at`·`detected_at`·`collected_at`과 필요한 경우 `ingested_at`을 분리한다.
+   감지 lead time은 우리 시스템의 최초 인지시각인 `detected_at`으로 계산하며, 재수집이나
+   DB 커밋 시각으로 최초값을 덮어쓰지 않는다.
 2. 검증된 Evidence와 Source가 준비된 뒤 읽기용 문서급 분석 Markdown과 UI용 구조화 분석
    JSON을 함께 작성한다. JSON은 `sections[].items[]`의 `key`, `label`, `display`와 타입별
    값으로 구성하고, Markdown을 화면 로딩 시 다시 파싱하는 방식으로 대신하지 않는다.
@@ -394,21 +446,30 @@ HTML 하단 출처 카드로 연결되며, 출처 레코드의 웹 URL과 보관
    자료만 있는 Claim도 Signal로 발행하며, 독립 Source가 추가되면 같은 Claim과 Signal을
    유지한 채 근거 영역의 상태만 `단일 출처`에서 `독립 교차확인`으로 바뀐다. 상충은
    `출처 상충`으로 표시하고 `추가 검증 중` 같은 별도 진행 문구는 만들지 않는다.
-6. 먼저 재무 영향 경로와 의사결정에 쓸 수 있는 범위를 만들 입력이 있는지 판정한다.
-   정량화 가능하면 공개정보·대용변수·AI 가정을 구분한 What-if JSON을 작성하고
+6. What-if를 기본 산출물로 두고 공개정보·대용변수·AI 가정을 구분한 JSON을 작성해
    `set-impact-estimate --signal-id <ID> --estimate-file <파일>`로 연결한다. 기준 추정액,
    가격·물량·원가·대응비용 구성효과, 현재값 옆에 상시 표시되는 방어·기준·압박 값과
-   각 프리셋 버튼의 입력 반영을 확인한다. 정성적 조기 신호이거나
-   합리적 범위를 만들 수 없으면 억지로 모델을 만들지 않고 보류 사유·필요 입력·재검토 조건을 저장한다.
+   각 프리셋 버튼의 입력 반영을 확인한다. 내부값 비공개나 정확한 단일값 부재는 생략
+   사유가 아니며 넓은 범위와 낮은 신뢰도로 표현한다. 주제가 정량 영향·운영량·비용·수익·
+   일정 민감도와 본질적으로 맞지 않거나 동일 충격을 다른 대표 Signal에서 이미 계산한
+   경우에만 `quantification_decision.status=not_applicable` JSON을 저장한다. 이 판정에는
+   제한된 사유 코드·구체적 근거·필요 입력·재검토 조건과 중복모델이면 대표 Signal ID를
+   포함한다. `deferred`, `내부 입력 대기`, 판정 누락은 발행 완료로 인정하지 않는다.
+   별도로 “무엇이 달라졌는가”를 정량 점검할 충분한 시계열이 있으면 검증된
+   Observation version만 나열한 spec을 만들고 `run-systematic-analysis --signal-id <ID>
+   --spec-file <JSON 파일>`을 실행한다. formula·window policy·feature set·normalization
+   revision과 기준일을 모두 고정한다. 결과는 Key Driver Candidate를 좁히는 근거로만 쓰며
+   원인·예측·Fact로 승격하지 않는다. 정책 결합 등 둘 이상의 독립 변화를 함께 볼 때는
+   원자 Signal을 합치지 않고 interaction scope와 구성 Signal version을 명시한다.
 7. 생성된 Signal에서 `trace-signal --depth 3`으로 구조화 JSON과 산문 Markdown이 함께
    반환되고 두 표현이 해당 작성 중요도 구간의 판단 깊이를 함께 충족하는지 확인한다.
-   Signal 페이지에서 한 문장, 문단 해석, 모델이 있는 경우의 정량 영향 시뮬레이션, 문서급 분석,
+   Signal 페이지에서 한 문장, 문단 해석, 기본 정량 영향 시뮬레이션, 문서급 분석,
    원문이 한 페이지 안에서
    순서대로 읽히는지 확인한다. 문서급 분석을 보기 위해 별도 보고서 링크를 누르게 하지
    않는다.
-8. MyPIN 실제 브라우저에서 모델이 있는 Signal의 방어·기준·압박 값 상시 표시,
+8. MyPIN 실제 브라우저에서 `modeled` Signal의 방어·기준·압박 값 상시 표시,
    슬라이더·직접입력·시나리오 초기화와,
-   모델이 없는 Signal에 빈 시뮬레이터가 나오지 않는지, Mermaid·
+   `not_applicable` Signal에 빈 시뮬레이터가 나오지 않는지, Mermaid·
    표·긴 문장·원문 링크와 콘솔 오류를 확인한다.
 9. `audit`을 다시 실행해 이번 작업에서 만든 Evidence가 모두 Signal에 연결됐고,
    `signal_schema`, `signal_integrity`, `signal_quality`, `signal_portfolio`가 0인지 확인한다. 기존
@@ -424,6 +485,10 @@ HTML 하단 출처 카드로 연결되며, 출처 레코드의 웹 URL과 보관
 - 같은 subject·predicate에 복수의 active 값
 - pending review
 - 잘못된 상태·신뢰도 값
+- `quantification_decision` 누락, `deferred`·`내부 입력 대기` 상태, 모델과 판정의 불일치,
+  구조화 JSON 판정과 Insight 판정의 불일치
+- 정량 결과의 재계산 불일치, 존재하지 않는 Observation·Signal version 입력,
+  정규 입력 관계와 JSON payload의 불일치
 - 역할·발생원 조합 오류와 대상 회사 발표 단독의 외부 핵심 시그널
 - 9~10점이 활성 Signal의 25%를 넘거나 10점이 10%를 넘는 상위점수 인플레이션
 - run×사업축 외부 핵심 시그널 70% 미달과 단일 프로젝트·설비 과반 편중

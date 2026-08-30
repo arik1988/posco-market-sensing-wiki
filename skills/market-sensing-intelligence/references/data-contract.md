@@ -40,6 +40,21 @@ collection을 설명하기 위한 **논리 주소**일 뿐 실제 파일을 만�
 사람용 Markdown·HTML은 DB TEXT로 저장합니다. JSON·Markdown 파일을 명령 입력으로 사용할
 수는 있지만 임시 입력으로만 취급하며 SQLite 밖에 영속 산출물로 남기지 않습니다.
 
+HTTP로 다른 프로그램에 DB를 전달할 때도 같은 계약을 유지합니다. 실행 중인 원본 파일이나
+WAL 보조 파일을 직접 복사하지 않고 SQLite online backup으로 단일 snapshot을 만든 뒤
+`integrity_check` 성공본만 전송합니다. 응답에는 생성 시각과 SHA-256을 포함하며 전송용
+임시 파일은 영속 산출물로 남기지 않습니다. 조사 시작 API는 검증된 구조화 입력만 받고
+기존 직렬 실행 큐를 사용합니다. 공용 운영 API도 등록된 명령과 인자 schema만 허용하고
+임의 셸·작업 디렉터리·파일 경로를 입력으로 받지 않습니다. UTF-8·base64 임시 입력은
+격리 디렉터리에만 만들고 작업 뒤 삭제합니다. 파괴적 작업은 명시적 확인값과 서버 관리
+backup을 요구합니다.
+
+관심 범위의 정본 편집면은 `WIKI-SETTINGS.md`의 `우선 기업`과 `우선 회사·사업축`입니다.
+후자는 `회사 | 사업축`의 대응을 보존하며 API 응답에서는
+`company_axes: [{company, business_axis}]`로 표현합니다. 설정 API는 두 섹션을 원자적으로
+갱신하고 같은 요청 안에서 SQLite `wiki_settings`의 `watchlist` 캐시를 동기화합니다.
+조사 요청에 명시적 범위가 없을 때만 이 등록 범위를 기본값으로 사용합니다.
+
 Signal 좋아요는 canonical Signal의 사실·평가 데이터와 분리한다. `user_key`는 인증
 시스템이 만든 128자 이하의 불투명 식별자이며 이름·사번·이메일을 직접 사용하지 않는다.
 `signal_id`는 `wiki_records(collection='signals')`에 실제 존재해야 하고, 사용자와 Signal의
@@ -49,7 +64,8 @@ API의 등록·해제는 반복 호출에 같은 최종 상태를 보장해야 �
 반환한다.
 
 Signal 전문가 의견은 canonical Signal의 Source·Claim·AI 평가와 분리한다. 다른 PC의
-MyPIN이 보내는 댓글을 받을 저장 공간만 정의하며, 이 저장소에서 예시 댓글을 생성하지 않는다.
+MyPIN이 보내는 댓글은 전용 API로 원본 키를 유지해 동기화하며, 이 저장소에서 예시 댓글을
+생성하지 않는다.
 
 - `comment_id`는 snapshot 안의 댓글 식별자이고, `signal_id`는 실제
   `wiki_records(collection='signals')` 행을 참조한다.
@@ -66,12 +82,24 @@ MyPIN이 보내는 댓글을 받을 저장 공간만 정의하며, 이 저장소
 - Signal 삭제 시 댓글은 함께 정리되지만 Signal version 교체나 점수 재평가로는 삭제하지 않는다.
 
 반복 조사 일정은 조사 결과나 Signal 평가가 아닌 로컬 운영 설정이다. 일정별
-`payload_json`에는 조사 주제, 회사·사업축, Provider, SQLite 발행 여부, `daily|weekly|monthly`
+`payload_json`에는 조사 주제, 회사·사업축, Provider, Codex 모델·effort, SQLite 발행 여부, `daily|weekly|monthly`
 주기, Asia/Seoul 실행 시각, 최근 재탐색 일수, 활성 상태, 마지막·다음 실행을 구조화해
 저장한다. 고정된 `date_from`·`date_to`를 반복하지 않고 실행 시점에 `lookback_days`로
 기간을 계산한다. 월간 실행일은 1~28일만 허용하며 만기 일정은 같은 SQLite를 쓰는 다른
 조사와 함께 직렬 실행한다. 서버가 중단된 동안의 모든 누락 회차를 몰아서 실행하지 않고,
 재시작 뒤 가장 가까운 다음 실행 시각으로 전진시켜 중복 발행을 막는다.
+
+Codex 일정의 `codex_model`은 `gpt-5.6-sol|gpt-5.6-terra|gpt-5.6-luna`,
+`codex_effort`는 `light|medium|high` 중 하나다. 사람 화면은 각각 `GPT-5.6-Sol`과
+`Light`처럼 표시하며 실행 어댑터에서만 `light`를 Codex runtime의 `low`로 매핑한다.
+새 요청의 기본값은 `gpt-5.6-luna`와 `medium`이다.
+
+즉시 실행과 반복 일정은 조사 주제의 필수 1차 대상 회사를 `topic_company` 문자열로
+저장한다. 이 값은 `company_axes`의 회사 중 하나여야 하며 Agent 요청에도 그대로 전달한다.
+사용자 지정 범위는 `company_axes` 배열로 저장하며 각 원소는
+`company`와 `business_axis` 문자열을 함께 가진다. 둘의 대응을 잃는 독립 배열만 정본으로
+사용하지 않는다. 설정된 우선 회사·사업축은 UI 시작값과 이전 `companies` 입력의 호환
+매핑일 뿐이며, 사용자가 직접 입력한 회사·사업축 조합도 같은 검증을 거쳐 보존한다.
 
 ## Signal Analytics 공통 의미 모델
 
@@ -99,6 +127,61 @@ Signal 자체가 아니라 Claim·Event·Observation 형태의 Evidence다. Evid
 Observation과 Document/Event/Claim이 동일한 `risk_factor_id` 및 불변 evidence version ID를
 제공해야 하며, 단일 SQLite의 `signal_version_id`에서 합쳐져야 한다. 제목 유사도나 평가일로
 Signal identity를 다시 만들지 않는다.
+
+### 지표 ID와 시간 계약
+
+- `indicator_id`는 adapter·분석 출력·소비 화면이 공통으로 참조하는 논리 지표 ID다.
+  MVP에서는 기존 `market_indicator_series.series_key` 값을 그대로 사용한다. 예시는
+  `raw_material.iron_ore_62_futures`처럼 소문자 점 구분 namespace와 snake_case 지표명이다.
+  `series_key`와 별개의 병렬 ID를 새로 만들지 않으며, 기존 정규 컬럼명이 `series_key`이면
+  그 값의 의미를 `indicator_id`로 해석한다.
+- 분석 block은 최소한 `indicator_id`와 불변 `observation_version_id`를 함께 참조한다.
+  MVP에서는 별도 지표 연결 테이블을 강제하지 않는다. typed JSON의 `indicator_id` 참조와
+  `wiki_systematic_analysis_inputs`의 Observation version 관계로 데이터 레벨 연결을 만든다.
+- `observed_at`은 원 지표가 가리키는 관측·기준시점이다.
+- `detected_at`은 우리 시스템이 해당 불변 Observation version을 처음 성공적으로 확보해
+  알게 된 시각이다. 사람 화면의 `감지일`·`감지시각`과 lead time 계산은 이 값을 사용한다.
+  timezone을 포함한 시각을 보존하고 재수집이나 재적재 때 덮어쓰지 않는다.
+- `collected_at`은 각 수집 시도 또는 revision을 확보한 시각이다. 같은 관측치를 다시
+  수집하면 새 수집 이력에 추가되며 최초 `detected_at`을 바꾸지 않는다.
+- `ingested_at`은 수집과 SQLite 커밋이 분리될 때만 기록하는 저장 완료 시각이다.
+  `detected_at`의 대체값으로 사용하지 않는다.
+- 정정값이나 새 revision은 새 불변 Observation version과 그 version의 `detected_at`을
+  가진다. 논리 Observation의 최초 감지시각은 모든 version의 `detected_at` 최솟값이다.
+- Signal 수준의 `detected_at`은 Evidence를 처음 Signal로 승격해 판단한 시각이다.
+  Observation 수준의 `detected_at`보다 늦을 수 있으며 두 값을 같은 필드 의미로 합치지
+  않는다. `assessed_at`은 재평가 시각이므로 Signal 감지시각을 덮어쓰지 않는다.
+
+### Systematic Analysis Version
+
+정량 분석이 적합하고 검증된 시계열 Observation이 충분한 Signal에만
+`systematic_analyses` collection과 `wiki_systematic_analysis_versions`를 선택적으로 둔다.
+별도 DB나 별도 Signal을 만들지 않는다. `wiki_systematic_analysis_inputs`는 결과가 사용한
+각 `observation_version_id`·`risk_factor_id`·`series_key`를 정규 관계로 고정하며,
+이때 `series_key` 값은 위에서 정의한 `indicator_id`와 같다.
+
+- `analysis_result_version_id`, `analysis_id`, `version_no`: 결과의 불변 버전과 안정 ID
+- `signal_version_id`: 계산 당시의 canonical Signal version. 현재 Signal이 갱신되어도
+  과거 계산을 덮어쓰지 않는다.
+- `analysis_scope.kind`: 하나의 변화는 `atomic`, 둘 이상의 독립 Signal 결합효과는
+  `interaction`이다. interaction은 `component_signal_version_ids`를 두 개 이상 명시한다.
+  복합 현상을 표현하기 위해 원자 Signal의 사실 경계를 억지로 합치지 않는다.
+- `method_bundle`: `formula_revision`, `historical_window_policy_revision`,
+  `feature_set_revision`, `normalization_revision`, 계산 parameter를 모두 명시한다.
+- `input_observation_version_ids`: 검증된 수치 Observation version만 허용한다. 임시 웹 값,
+  출처 없는 수치, AI가 보완한 수치는 금지한다.
+- `results`: robust anomaly, 두 window의 관계 변화, 상관 network 변화, Shannon entropy
+  변화, Risk Factor contribution candidate를 typed JSON으로 저장한다.
+- `status`: 한 가지 이상 계산되면 `completed`, 최소 표본을 충족하지 못하면
+  `insufficient_data`다. 후자의 누락값을 추정해 채우지 않는다.
+- `content_digest`: ID·생성시각과 분리된 의미 payload의 canonical JSON SHA-256이다.
+  `audit`은 저장된 Observation과 method bundle로 재계산해 동일성을 확인한다.
+
+Insight에는 UI용 경량 `systematic_analytics` projection만 선택적으로 두고 정본 결과 ID를
+가리킨다. 화면은 이를 기존 신호분석의 키 드라이버 근거로 표시하며 원인 확정, 예측 확률,
+별도 신뢰점수로 바꾸지 않는다. business Scenario와 원가 What-if simulator는 여전히
+“더 움직이면 무엇이 달라지는가”를 다루며, 이 계산 레이어의 “무엇이 달라졌는가”와
+역할을 섞지 않는다.
 
 ## Signal과 Insight
 
@@ -202,6 +285,12 @@ schema v4의 `business_impact.score`와 `urgency.score`는 1~10 정수다. `scor
 그 점수의 `rationale`만 도움말로 표시한다. 렌더러가 두 근거를 합치거나 산문에서
 재추출해 만들지 않는다.
 
+신규 발행과 재평가의 각 `rationale`은 120~600자, 3~4문장이어야 한다. 확인된 변화·상태,
+회사 영향 경로와 해당 점수, 인접 점수와의 경계를 순서대로 설명하고 본문에 실제 점수
+표현(예: `7점`)을 포함한다. 긴급도는 확인된 시한 또는 다음 평가 조건과 그 전에 할 일을
+함께 적는다. 단순 명사구, `중요함`, `확인 필요`, 날짜와 할 일만 적은 문장은 유효한
+판정 사유로 보지 않는다.
+
 `add-signal`은 `canonical_key`, 하나 이상의 `risk_factor_id`, 하나 이상의 version-pinned
 Evidence를 필수로 받고 `signal_contract.version=2`를 기록한다. 이 필드가 없는 개발
 snapshot은 자동 추정하지 않고 audit 및 MyPIN importer에서 거부한다.
@@ -281,12 +370,24 @@ Signal 페이지는 다른 보고서 링크를 상세 분석의 대체물로 사
 Signal·Insight·Claim ID, 해시, raw 경로는 MkDocs 본문에 노출하지 않는다. Source 원문
 링크와 보관 원문은 마지막 단계에서 사람이 읽을 수 있는 명칭으로 표시한다.
 
+Insight의 `quantification_decision`은 모든 신규 Signal의 What-if 판정을 저장하는 필수
+JSON 객체다. `schema_version`, `status`, `assessed_at`, `basis`를 공통으로 가지며
+`status`는 `modeled` 또는 `not_applicable`만 허용한다.
+
+- `modeled`는 같은 Insight의 검증된 `impact_estimate`를 반드시 참조한다. 내부값 비공개나
+  정확한 단일값 부재는 이 상태를 포기할 사유가 아니며 넓은 범위와 낮은 신뢰도로 표현한다.
+- `not_applicable`은 주제가 정량 영향·운영량·비용·수익·일정 민감도와 본질적으로 맞지 않는
+  `subject_not_quantifiable` 또는 동일 충격의 중복계상을 막는 `duplicate_impact_model`만
+  허용한다. `required_inputs`, `reconsider_when`을 저장하고 중복모델이면
+  `related_signal_ids`에 대표 Signal을 하나 이상 연결한다.
+- `deferred`, `내부 입력 대기`, 빈 문자열, 판정 누락은 허용하지 않는다. 구조화 분석의
+  `quantification_decision` 표에도 같은 상태를 기록하며 두 JSON 상태가 다르면 audit 실패다.
+
 Insight의 선택 필드 `impact_estimate`는 MkDocs와 향후 웹 프로그램이 함께 사용하는
 정량 영향 What-if 모델이다. `title`, `description`, `as_of`, `confidence`, `notice`,
 `formula_display`, `variables`, `outputs`, `presets`를 가진다.
-모든 Signal에 필수는 아니며, 재무 영향 경로가 있고 공개정보·대용변수로 의사결정용 범위를
-만들 수 있는 Signal에 우선 연결한다. 보류된 Signal은 `impact_estimate`를 빈 객체나 임의의
-기본값으로 채우지 않고, 별도 정량화 판정에 보류 사유·필요 입력·재검토 조건을 보존한다.
+기본적으로 모든 Signal에 연결하며 `quantification_decision.status=not_applicable`인
+제한적 예외에만 생략한다. 이 경우 `impact_estimate`를 빈 객체나 임의의 기본값으로 채우지 않는다.
 
 - `variables`는 3~8개 지배변수만 두고 `id`, `label`, `unit`, `min`, `max`, `step`,
   `default`, `kind`, `basis`, `source_ids`를 보존한다.
@@ -589,6 +690,11 @@ Insight·문서급 분석·원문으로 이어진다. 회사·정책·프로젝�
   `target_count`를 대신 완료 기준으로 저장
 - `coverage.schema_version=1`: 필수 셀별 상태·채널·탐색 전략별 수확·후보 ID·한계·다음
   트리거, 미해결 고위험 빈칸, Signal이 없는 회사의 미발행 사유와 재탐색 트리거
+- 후보 장부의 `candidate_date`는 조사기간 안의 발표·사건·효력·관측일을 대표하며 일별
+  Signal 귀속일 계산에 사용한다. `detected_at`은 시스템 최초 인지일이므로 과거 백필에서도
+  소급하지 않는다. `research_contract.version=5`의 월간·정기 run은 날짜마다 서로 다른
+  active Signal ID가 연결된 `published_signal`을 최소 3건 요구한다. 후보·watchlist·rejected와
+  날짜 사이에 재사용된 같은 Signal은 일별 발행량으로 세지 않는다.
 - 신규 발행 run의 `signal_contract`: 계약 버전 2, 이 계약이 적용되는 `signal_ids`,
   사업축별 외부 핵심 시그널 최소 비율 0.7, 단일 프로젝트·설비 편중 기준 0.5, 완료된
   감시 run의 사업축별 최소 Signal 3건, 최대 점수 기준 관찰군(1~4) 최소 20%, 관리군

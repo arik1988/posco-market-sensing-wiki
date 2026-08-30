@@ -135,7 +135,7 @@ class CodexOAuthChatModel(BaseChatModel):
     """Small LangChain adapter over the official Codex App Server OAuth runtime."""
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
-    model: str = "gpt-5.6-terra"
+    model: str = "gpt-5.6-luna"
     reasoning_effort: Literal["low", "medium", "high", "xhigh"] = "medium"
     tool_schemas: tuple[dict[str, Any], ...] = Field(
         default=(), exclude=True, repr=False

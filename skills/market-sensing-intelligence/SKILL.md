@@ -29,6 +29,20 @@ Observation은 Signal의 Evidence이며, 발행 전에 관리형 `risk_factor_id
 Source modality는 `MARKET`, `DOCUMENT`, `PHYSICAL`, `ATTENTION` 네 값만 사용하고
 발행주체·문서 종류인 `source_type`과 섞지 않는다.
 
+Systematic Signal Analytics는 새 화면이나 별도 DB가 아니라 위 계보에 선택적으로 붙는
+재현 가능한 계산 레이어다. 검증된 Observation version이 충분할 때만 통계적 이상,
+관계구조, 상관 네트워크, Shannon entropy 변화를 계산하고 구조변화 기여
+`risk_factor_id` 후보를 좁힌다. 계산 결과는 Fact·원인·예측이 아니며 Key Driver Candidate를
+검증하기 위한 derived evidence다. 입력이 부족하면 수치나 결론을 보간하지 않고
+`insufficient_data`와 필요한 최소 입력을 저장한다.
+
+정형 지표의 공통 공개 ID는 `indicator_id`다. MVP에서는 기존 지표 레지스트리의
+`series_key` 값을 그대로 `indicator_id`로 사용하며 둘과 나란히 움직이는 별도 ID 체계를
+만들지 않는다. 분석 출력은 `indicator_id`와 불변 `observation_version_id`를 함께 참조한다.
+시간 의미는 `observed_at`(원 지표 기준시점), `detected_at`(우리 시스템의 최초 인지시각),
+`collected_at`(각 수집·revision 시각), 필요할 때만 `ingested_at`(저장 커밋 시각)으로
+구분한다. 사람 화면의 `감지일`과 lead time은 `detected_at`을 기준으로 한다.
+
 ## Mermaid 색상 대비
 
 Mermaid의 `classDef` 또는 `style`로 어두운 배경색을 지정할 때는 반드시 밝은
@@ -166,6 +180,9 @@ python skills/market-sensing-intelligence/scripts/market_sensing.py --help
 - `add-risk-factor`: 관리형 위험요인 정의와 taxonomy version 등록
 - `add-observation`: MARKET·PHYSICAL·ATTENTION 정형 관측 버전 등록
 - `add-event`: Source로 검증된 정책·계약·행위·상태 전이 버전 등록
+- `run-systematic-analysis`: 기존 Signal version에 검증된 Observation version만 고정해
+  이상·관계·네트워크·entropy 변화와 Risk Factor 후보를 재현 가능하게 계산. 입력 JSON은
+  계산식·window·feature·normalization revision과 기준일을 명시해야 한다.
 - `set-academic-metadata`: 기존 학술 Source의 저자·게재지·DOI·학회 정보를
   원문 확인 후 보강
 - `add-image`: 필요한 설비 사진·공정도·특허 도면을 기존 source에 선택적으로 연결
@@ -173,12 +190,14 @@ python skills/market-sensing-intelligence/scripts/market_sensing.py --help
 - `add-signal`: 안정적인 `canonical_key`와 `risk_factor_id` 아래 Claim·Event·Observation
   Evidence를 결합하고, canonical Signal version·회사 영향·시나리오·Insight를 함께 저장
 - `set-impact-estimate`: 기존 Signal에 검증된 정량 영향 What-if JSON을 연결하거나 교체
+- `set-quantification-decision`: 정량 모델이 본질적으로 부적합하거나 대표 모델과
+  중복되는 제한적 예외만 `not_applicable` JSON으로 저장
 - `set-signal-analysis`: 기존 Signal ID를 유지하면서 산문·구조화 JSON과 새 Claim·Source 계보를 함께 갱신
 - `rewrite-signal-report-headings`: 선택한 Signal의 본문·구조화 JSON·근거 계보는 유지하고
   입력 매핑에 지정한 `##`~`####` 장 제목만 공용 갱신 경로로 교체
 - `trace-signal`: 지정한 Signal에서 질문 수준에 맞춰 1~4단계 근거 그래프를 읽기 전용 순회
 - `resolve-review`: 사람의 결정으로 주장 충돌 처리
-- `audit`: 원문 변조, 끊긴 근거, 노후 주장, 미해결 충돌 검사
+- `audit`: 원문 변조, 끊긴 근거, 노후 주장, 미해결 충돌과 정량 결과 재계산·입력 계보 검사
 - `brief`: 특정 날짜 이후의 주장 변화를 SQLite artifact로 저장
 - `render-report`: 입력 Markdown과 출처 포함 HTML을 SQLite artifact로 저장
 - `sync-obsidian`: 파일을 만들지 않는 이전 자동화 호환 명령
@@ -196,6 +215,11 @@ Scout부터 발행까지 실행하는 로컬 제어면이다. `wiki_run.bat`가 
 
 - 실제 운영 provider는 `pgpt`, 개발 검증 provider는 ChatGPT OAuth를 쓰는 `codex`다.
   Codex provider는 개발비 절감을 위한 경계일 뿐 조사·검색·저장 규칙을 바꾸지 않는다.
+- Codex provider를 선택하면 실행별 모델을 `gpt-5.6-sol`, `gpt-5.6-terra`,
+  `gpt-5.6-luna` 중에서, effort를 `light`, `medium`, `high` 중에서 함께 선택한다.
+  화면에는 모델을 `GPT-5.6-Sol`처럼 표시하고 `light`는 Codex runtime의 `low`로
+  매핑한다. 기본 조합은 `GPT-5.6-Luna`와 `Medium`이다. 선택값은 즉시 실행과 반복
+  일정에 보존하며 환경변수 기본값보다 우선한다.
 - 어느 provider를 선택해도 웹 발견은 애플리케이션 소유 `web_search`의 DuckDuckGo Lite만
   사용한다. provider 내장 검색, Codex 웹 검색·셸·파일·MCP는 사용하지 않는다.
 - 검색 결과는 후보일 뿐이다. `web_fetch`로 공개 원문을 확인하고 접근 실패·미확인 범위·
@@ -211,10 +235,39 @@ Scout부터 발행까지 실행하는 로컬 제어면이다. `wiki_run.bat`가 
 - 제어면은 서버 연결 성공 여부와 무관하게 조사 주제·회사·사업축·기간·Provider·즉시
   실행 컨트롤을 먼저 렌더링한다. 연결 실패 때 폼 전체를 안내문으로 대체하지 않고,
   실행·일정 저장이 불가능한 이유를 별도 상태 영역에 표시한다.
+- 조사 주제 입력에는 필수 `topic_company` 회사 입력을 함께 제공해 이번 주제의 1차 대상
+  회사를 명시한다. 이 회사는 선택한 `company_axes`에도 포함되어야 하며 즉시 실행·반복
+  일정·Agent 프롬프트에 그대로 보존한다. 기본 우선 회사·사업축은 시작값일 뿐
+  고정 선택지가 아니다. 사용자는 각 회사명과 조사 사업축·주제를 직접 수정하거나 새
+  회사·사업축 행을 추가할 수 있으며, API는 그 조합을 `company_axes`로 그대로 보존한다.
+  사용자 지정 범위를 설정 전체로 다시 확장하거나 고정 회사 목록으로 거부하지 않는다.
 - 반복 조사는 매일·매주·매월, Asia/Seoul 실행 시각, 매번 다시 볼 최근 기간,
   활성·일시정지 상태를 `wiki_research_schedules`에 저장한다. 월간 실행일은 모든 달에
   존재하는 1~28일만 허용하며, 조사 서버가 실행 중일 때 만기 일정을 기존 직렬 큐에 넣는다.
-  일정의 주제·회사·사업축·Provider·발행 여부는 즉시 실행과 같은 검증 계약을 사용한다.
+  일정의 주제·회사·사업축·Provider·Codex 모델·effort·발행 여부는 즉시 실행과 같은
+  검증 계약을 사용한다.
+
+### 외부 프로그램 제어 API
+
+같은 PC의 외부 프로그램은 조사 서버의 `POST /api/research/runs`로 조사 작업을 시작하고
+`GET /api/research/runs/{run_id}`로 상태를 확인한다. 이 경로도 UI와 같은
+`ResearchRequest` 검증과 직렬 실행 큐를 사용한다. `GET|POST|PUT|DELETE
+/api/settings/company-axes`는 회사와 사업축의 대응을 유지한 관심 범위를
+`WIKI-SETTINGS.md`와 SQLite 설정 캐시에 함께 반영한다. 조사 요청이 범위를 생략하면 이
+등록값을 사용한다. `GET|PATCH /api/settings`는 나머지 사람 편집 설정을 구조화 JSON으로
+조회·부분 갱신한다.
+
+공용 CLI 기능은 `GET /api/operations`의 기계 판독 가능한 허용 목록과 인자 schema를
+통해서만 노출한다. `POST /api/operations`는 허용 명령, 길이 제한 인자, 등록된 UTF-8 또는
+base64 임시 입력만 받아 비동기 직렬 큐에 넣고 `GET /api/operations/{operation_id}`로
+추적한다. 셸·작업 디렉터리·임의 입출력 경로는 받지 않는다. 마이그레이션과 실제 prune은
+명시적 `confirm`을 요구하고 prune 복구 백업 경로는 서버가 생성한다.
+
+`GET /api/database/snapshot`은 실행 중인 SQLite 파일을 직접 복사하지 않고
+SQLite online backup과 `integrity_check`를 거친 단일 `.db`를 첨부파일로 반환한다.
+응답에는 생성 시각과 SHA-256을 헤더로 제공하며 임시 전송본은 응답 후 삭제한다. API는
+기본적으로 `127.0.0.1`에만 바인딩한다. Signal 전문가 의견은 원본 시스템·댓글 ID의
+멱등 키를 유지하는 `/api/signal-comments`로 수신·조회·삭제한다.
 
 ### Signal 좋아요 API
 
@@ -239,8 +292,8 @@ Signal 좋아요는 조사 사실이나 Signal 평가가 아니라 사용자별 
 전문가 의견은 조사 사실이나 AI 평가가 아니라 MyPIN 사용자가 Signal에 남긴 업무 판단이다.
 따라서 Signal·Insight `payload_json`을 수정하지 않고 같은 SQLite의
 `wiki_signal_comments`에 안정적인 `signal_id`로 연결한다. 이 저장소에서는 MyPIN 댓글을
-직접 생성하거나 예시 댓글을 초기 데이터로 넣지 않으며, 다른 PC의 MyPIN이 동기화할 수
-있는 빈 스키마만 제공한다.
+직접 생성하거나 예시 댓글을 초기 데이터로 넣지 않으며, 다른 PC의 MyPIN이
+`/api/signal-comments`로 원본 의견을 멱등 동기화할 수 있게 한다.
 
 - `source_system`과 `source_comment_id`의 복합 유일성으로 같은 원본 댓글의 재전송을
   중복 행으로 만들지 않는다.
@@ -276,7 +329,10 @@ CompanyImpact/Scenario/Insight`이다. 사용자 화면에서는 Signal에서 Ev
 산문 탭에는 고정된 `판단 요약/왜 중요한가/상세 분석` 목차를 덧붙이지 않고, Signal별
 결론을 압축한 산업기사·증권사 리서치형 `analysis_markdown`을 그대로 보여준다. `##`~`####`
 장 제목은 본문의 존댓말과 구분해 `~합니다`, `~됩니다`, `~입니다` 같은 경어 문장 종결을
-쓰지 않고 짧은 명사형·서술형 헤드라인으로 편집한다.
+쓰지 않고 짧은 명사형·서술형 헤드라인으로 편집한다. 제목은 금칙어 치환이나 주제별
+하드코딩으로 만들지 않는다. LLM 편집 단계에서 해당 Signal의 독자 질문·잠정 결론·핵심
+수치·판단 간극·바꿀 결정을 먼저 정한 뒤, 그 논지에서만 성립하는 제목을 생성한다. 다른
+보고서에도 그대로 붙일 수 있는 제목이면 LLM이 본문과 대조해 다시 쓴다.
 Source·Claim 근거 접기와 원문 목록만 탭 아래에서 공유한다.
 
 사용자에게 보이는 공식 탭명은 구조화 JSON 화면이 `신호분석`, 산문 Markdown 화면이
@@ -289,6 +345,11 @@ Source·Claim 근거 접기와 원문 목록만 탭 아래에서 공유한다.
 
 사업영향도와 긴급도는 화면용 문장으로 합치지 않고 Signal JSON의
 `business_impact: {score, rationale}`와 `urgency: {score, rationale}`로 각각 보존한다.
+각 `rationale`은 120~600자, 3~4개의 짧은 문장으로 쓴다. 첫 문장은 점수를 만든 확인
+사실·상태, 둘째 문장은 회사의 가격·원가·물량·계약·투자·운영으로 이어지는 경로와 해당
+점수의 이유, 마지막 문장은 인접 상위·하위 점수를 가르는 확인된 경계를 설명한다. 긴급도는
+같은 구조 안에 대응 시한 또는 다음 평가 조건과 그 전에 할 일을 포함한다. 항목별 가중치나
+산식 표를 독자 화면에 늘어놓지 않고, 근거 없는 문장 반복으로 길이만 채우지 않는다.
 Signal 목록과 상세 화면의 점수에는 마우스 호버와 키보드 포커스로 해당 `rationale`을
 바로 확인할 수 있는 도움말을 제공하되 라벨 옆에 별도의 원형 `i` 아이콘을 표시하지
 않으며, 한 점수의 근거를 다른 점수에 재사용하지 않는다.
@@ -298,7 +359,10 @@ Signal 목록과 상세 화면의 점수에는 마우스 호버와 키보드 포
 회사명·말줄임표·핵심 사업결과를 매번 제목에 함께 넣지 않고, 사업영향과 달라지는 판단은
 별도 완전문장인 `사업 시사점`에 둔다. 설명 없는 번역투·내부 메모 용어·영문 약어를
 전문성으로 대신하지 않는다. 분석의 깊이는 상세 본문에 유지하되 문단과 각 절의
-도입부는 비전문 독자도 한 번에 이해할 수 있게 쓴다.
+도입부는 비전문 독자도 한 번에 이해할 수 있게 쓴다. 쉽게 쓰기 위해 정보량을 줄이지
+않으며, 한 문장에는 핵심 생각 하나만 두고 사실·사업 의미·다음 행동을 짧은 문장과
+문단으로 나눈다. 문단은 결론부터 시작하고 추상명사는 주체와 행동이 보이는 쉬운 말로
+바꾼다.
 
 Signal의 역할은 둘뿐이다. 시장·정책·경쟁사·거래상대에서 시작해 회사 판단을 바꾸는
 변화는 `core_market_signal`, 대상 회사와 자회사의 투자·증산·계약·실적·공정 진척은
@@ -327,10 +391,15 @@ Signal의 역할은 둘뿐이다. 시장·정책·경쟁사·거래상대에서 
 `cost_curve_break`, `timing_gap` 중 하나로 탐지 패턴을 분류한다. 경쟁사·고객의 실제 계약,
 생산능력, 납품일, 법적 효력일처럼 말보다 먼저 움직이는 행동 근거를 우선한다.
 
-1. MkDocs 목록에는 관측 변화 제목, 사업 시사점, 회사, 사업축 pill 1개, 변화 유형 pill
-   1개, 사업영향도·긴급도, 평가일을 보여준다. 변화 유형은 `정책·규제`, `수급·가격`,
+1. MkDocs 목록에는 관측 변화 제목, 사업 시사점, 회사 pill 1개, 사업축 pill 1개, 변화 유형
+   pill 1개를 `회사 → 사업축 → 변화 유형` 순서로 보여주고 사업영향도·긴급도, 평가일을
+   함께 제공한다. 회사명을 같은 행의 일반 텍스트로 반복하지 않는다. 변화 유형은 `정책·규제`, `수급·가격`,
    `경쟁사`, `투자·프로젝트`, `공급망·물류`, `고객·계약`, `기술·운영`, `재무·실적`
-   중 하나다.
+   중 하나다. 목록 필터는 회사·사업축·감지일을 독립적으로 선택하고 교차 적용하며,
+   회사 선택 뒤에는 해당 목록에 실제 존재하는 사업축만 제시한다. 이 목록의 감지일은
+   Signal 수준의 `detected_at`, 즉 Evidence를 Signal로 처음 판단해 등록한 시각을 사용한다.
+   Observation 수준의 최초 인지시각이나 평가일로 대체하지 않으며 시작일·종료일을 모두
+   포함한다.
 2. Signal 상세에는 문단 Insight와 점수의 판단 근거·대응 시한을 보여준다.
 3. 상세 분석은 Signal 상세 페이지 안에서 끊김 없이 읽히게 인라인 투영하고, 그
    결론을 뒷받침하는 Claim을 유지한다. 다른 보고서로 이동해야만 본문을 읽을 수
@@ -376,11 +445,15 @@ What-if는 숫자를 예측하는 장식이 아니라 결론의 부호를 바꾸
 자체 계산은 식·입력·단위·출처·가정을 공개하고 회사 실제값이 아님을 표시한다. 확인된
 반대 근거가 없으면 반박형 Insight를 만들기 위해 사실을 비틀지 않는다.
 
-모든 Signal에 What-if를 강제하지는 않는다. 다만 매출·EBITDA·현금흐름·NPV로 이어지는
-재무 영향 경로가 있고, 공개된 물량·가격·비용·용량·지역비중과 합리적 대용변수로 의사결정에
-쓸 수 있는 범위를 만들 수 있는 Signal은 정량 모델을 우선 연결한다. 비공개 입력이 있다는 이유만으로
-계산을 생략하지 않고 하방·기준·상방 범위와 낮은 신뢰도를 표시한다. 합리적 범위도 만들 수 없거나
-정성적 조기 신호에 그치는 경우는 억지로 모델을 만들지 않고 보류 사유·필요 입력·재검토 조건을 저장한다.
+What-if는 Signal의 기본 구성이다. 주제가 정량 영향·운영량·비용·수익·일정 민감도와
+본질적으로 맞지 않거나 동일 충격을 다른 대표 Signal 모델에서 이미 계산한 경우가 아니면
+가급적 정량 모델을 연결한다. 비공개 입력이나 정확한 단일값의 부재는 생략 사유가 아니다.
+공개된 물량·가격·비용·용량·지역비중과 합리적 대용변수로 하방·기준·상방 범위를 만들고
+낮은 신뢰도를 표시한다. 모든 Insight는 기계 판독 가능한 `quantification_decision` JSON을
+가지며 상태는 `modeled` 또는 `not_applicable`만 허용한다. `modeled`는 검증된
+`impact_estimate`를 반드시 연결한다. `not_applicable`은 제한된 사유 코드, 구체적 근거,
+필요 입력, 재검토 조건과 중복모델이면 대표 Signal ID를 저장한다. `deferred`, `내부 입력
+대기`, 판정 누락은 발행 완료로 인정하지 않는다.
 계산은 총노출과 순영향을 구분하고 가격효과·물량효과·원가효과·계약 전가·대응비용처럼
 회계적으로 더해지는 구성요소를 분해한다. 이론상 필요한 항을 임의의 보정률 하나로
 대체하지 않으며, 복잡해 보이기 위한 항도 추가하지 않는다.
@@ -392,7 +465,7 @@ MkDocs와 MyPIN은 `impact_estimate`가 연결된 Signal에만 기준 추정액�
 보존한다. 계산식은 실행 코드 문자열이 아니라 검증 가능한 중첩 사칙연산식으로 저장하되,
 이는 산식을 단순화하는 제약이 아니라 웹과 LLM이 같은 이론식을 안전하게 재사용하기 위한
 표현 계약이다. 관련 Signal의 같은 가격·물량 충격은 중복 합산하지 않는다.
-정량화 보류 Signal에는 빈 시뮬레이터나 근거 없는 기본값을 렌더링하지 않는다.
+`not_applicable` Signal에는 빈 시뮬레이터나 근거 없는 기본값을 렌더링하지 않는다.
 
 상세 분석은 원칙적으로 본문 1,200자 이상을 목표로 하되, 근거가 부족한 경우 분량을
 채우기 위해 추정이나 일반론을 만들지 않는다. 3개 이상의 인과 단계가 있으면 Mermaid,
@@ -411,8 +484,8 @@ MkDocs와 MyPIN은 `impact_estimate`가 연결된 Signal에만 기준 추정액�
 - 8~10점: 직접·2차 영향, 지연 손실, 가역·불가역 결정, 선택지별 손익과 시점, 가장 강한
   반대 근거와 반증, 담당·확인된 의사결정 시한·감지 트리거를 임원 의사결정 패킷 수준으로
   다룬다. 확인된 시한이 없으면 임의 날짜 대신 다음 평가 조건을 쓴다.
-  재무 영향 경로가 있으면 정량 모델을 우선 연결하고, 모델링할 수 없으면 보류 사유·필요
-  입력·재검토 조건을 같은 수준으로 구체화한다.
+  정량 모델을 기본 연결하고, 제한된 `not_applicable` 예외이면 사유 코드·구체적 근거·
+  필요 입력·재검토 조건과 중복모델의 대표 Signal ID를 같은 수준으로 구체화한다.
 
 근거가 충분할 때 `analysis_markdown`은 중요도 1~4점 1,200자 이상, 5~7점 1,800자 이상,
 8~10점 2,500자 이상을 목표로 한다. 이는 글자 수만 채우는 발행 게이트가 아니다. 확인된
@@ -471,6 +544,12 @@ python skills/market-sensing-intelligence/scripts/market_sensing.py scout market
 `pending`, `blocked`, 미확인 고위험 빈칸은 완료할 수 없다. Signal이 없는 회사는 구체적인
 미발행 사유와 다음 재탐색 트리거를 남긴다. 단독 속보는 이 커버리지 게이트와 무관하게
 즉시 발행할 수 있으며, 발행 뒤에도 나머지 필수 셀 탐색을 계속한다.
+
+월간·정기 조사의 일별 완료 단위는 후보가 아니라 발행 Signal이다. 조사기간의 각 달력
+날짜마다 `candidate_date`가 그 날짜인 `published_signal` 후보와 서로 다른 active Signal ID가
+최소 3개 연결되어야 한다. MyPIN에서 목록·상세 분석·보고서·원문을 열 수 있어야 하며,
+`watchlist`, `rejected`, 중복 Signal은 일별 최소치에 포함하지 않는다. 과거 백필에서도
+`detected_at`은 시스템이 실제 처음 안 날짜로 유지한다.
 
 - `WIKI-SETTINGS.md`의 분석 관점·기업·기술·프로젝트·국가·출처 우선순위를
   기준으로 검색 범위를 명시한다.
@@ -584,9 +663,12 @@ Query는 읽기 전용이다. 사용자가 요청하지 않은 한 검색 결과
 
 보고서는 전체 위키를 다시 요약하지 말고 기준일 이후의 변화만 다룬다.
 
-각 Market Sensing 항목에는 `collected_at`(조사·수집 시각), `published_at`(원문 발표일),
-확인 가능한 경우 `event_date`(사건 발생일)와 `effective_date`(효력 발생일)를 분리해
-표시한다. 날짜가 확인되지 않으면 추정값을 사실처럼 채우지 않는다. 사업영향도와
+각 Market Sensing 항목에는 `observed_at`(원 지표 기준시점), `detected_at`(우리 시스템이
+처음 안 시각), `collected_at`(각 수집·revision 시각), 필요할 때만 `ingested_at`(저장
+커밋 시각), `published_at`(원문 발표일)을 구분한다. 확인 가능한 경우 `event_date`(사건
+발생일)와 `effective_date`(효력 발생일)도 별도로 표시한다. Observation과 Signal은 각자
+자기 레코드 유형의 `detected_at`을 가지며, 최초값을 재수집·재평가 시각으로 덮어쓰지
+않는다. 날짜가 확인되지 않으면 추정값을 사실처럼 채우지 않는다. 사업영향도와
 긴급도는 각각 1~10점으로 평가하고, 점수 근거·영향 경로·대응 필요 시점·평가 시각·
 평가 신뢰도를 함께 표시한다. 점수만 단독으로 제시하지 않는다.
 
@@ -639,6 +721,8 @@ Markdown 각주를 붙인다. 각주는 출처명, 발행자, 게시일, 원문 
 - 작업 시작 시 `audit`의 `unpublished_claims` 기준값을 기록했고, 이번 작업에서 만든
   active Claim은 모두 하나 이상의 Signal에 연결되어 그 수를 증가시키지 않았다.
 - `add-signal --analysis-file --structured-analysis-file`이 산문과 구조화 JSON 검증을 모두 통과했다.
+- 모든 신규 Insight의 `quantification_decision`이 `modeled` 또는 `not_applicable`이고,
+  `modeled` Signal에는 검증된 `impact_estimate`가 연결되며 구조화 JSON의 판정 상태와 일치한다.
 - 두 분석 표현이 해당 Signal의 작성 중요도 구간에서 요구하는 판단 깊이를 함께 충족하고,
   근거가 부족해 목표 분량에 못 미친 경우 부족한 입력·신뢰도·재검토 조건이 명시되어 있다.
 - MkDocs Signal 상세 한 페이지에서 한 문장·문단·문서급 분석·원문이 순서대로 읽힌다.

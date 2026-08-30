@@ -143,7 +143,7 @@ function Start-WikiServer {
     $startInfo.FileName = $python
     $startInfo.Arguments = (
         "-m mkdocs serve -f `"$MkDocsConfig`" " +
-        "--quiet --dev-addr $WikiAddress"
+        "--dev-addr $WikiAddress"
     )
     $startInfo.WorkingDirectory = $WikiRoot
     $startInfo.UseShellExecute = $false
@@ -196,10 +196,12 @@ function Wait-WikiServerReady {
         [Parameter(Mandatory = $true)]
         [System.Diagnostics.Process]$Server,
         [string]$Url = $LocalUrl,
-        [int]$TimeoutSeconds = 60
+        [int]$TimeoutSeconds = 300
     )
 
     $deadline = [DateTime]::UtcNow.AddSeconds($TimeoutSeconds)
+    $startedAt = [DateTime]::UtcNow
+    $nextProgressAt = $startedAt.AddSeconds(15)
     while ([DateTime]::UtcNow -lt $deadline) {
         if ($Server.HasExited) {
             throw (
@@ -219,6 +221,11 @@ function Wait-WikiServerReady {
         }
         catch {
             # The server can refuse connections while MkDocs builds the site.
+        }
+        if ([DateTime]::UtcNow -ge $nextProgressAt) {
+            $elapsed = [int]([DateTime]::UtcNow - $startedAt).TotalSeconds
+            Write-Host "MkDocs is still building the SQLite snapshot... ${elapsed}s"
+            $nextProgressAt = [DateTime]::UtcNow.AddSeconds(15)
         }
         Start-Sleep -Milliseconds 100
     }

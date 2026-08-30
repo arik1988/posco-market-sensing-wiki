@@ -25,6 +25,77 @@ import mkdocs_hooks  # noqa: E402
 import apply_editorial_rewrite  # noqa: E402
 
 
+class ExecutiveReadabilityGuidanceTests(unittest.TestCase):
+    def test_indicator_identity_and_detection_time_guidance_are_explicit(self):
+        settings = (PROJECT_ROOT / "WIKI-SETTINGS.md").read_text(encoding="utf-8")
+        skill = (
+            PROJECT_ROOT / "skills" / "market-sensing-intelligence" / "SKILL.md"
+        ).read_text(encoding="utf-8")
+        contract = (
+            PROJECT_ROOT
+            / "skills"
+            / "market-sensing-intelligence"
+            / "references"
+            / "data-contract.md"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn("`감지일`·`감지시각`", settings)
+        self.assertIn("우리 시스템이 해당 Observation 또는 Signal을 처음 알게 된", settings)
+        self.assertIn("기존 지표 레지스트리의\n`series_key` 값을 그대로 `indicator_id`", skill)
+        self.assertIn("lead time은 `detected_at`", skill)
+        self.assertIn("### 지표 ID와 시간 계약", contract)
+        self.assertIn("`observed_at`은 원 지표", contract)
+        self.assertIn("`ingested_at`은 수집과 SQLite 커밋", contract)
+        self.assertIn("Signal 수준의 `detected_at`", contract)
+
+    def test_what_if_guidance_defaults_to_modeled_with_json_only_exceptions(self):
+        settings = (PROJECT_ROOT / "WIKI-SETTINGS.md").read_text(encoding="utf-8")
+        contract = (
+            PROJECT_ROOT
+            / "skills"
+            / "market-sensing-intelligence"
+            / "references"
+            / "data-contract.md"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn("What-if는 Signal의 기본 구성", settings)
+        self.assertIn("`modeled` 또는 `not_applicable`", settings)
+        self.assertIn("내부값이 비공개이거나 정확한 단일값이 없다는 이유로 생략하지 않음", settings)
+        self.assertIn("subject_not_quantifiable", contract)
+        self.assertIn("duplicate_impact_model", contract)
+
+    def test_guidance_keeps_depth_while_requiring_plain_single_idea_sentences(self):
+        editorial = (
+            PROJECT_ROOT
+            / "skills"
+            / "market-sensing-intelligence"
+            / "references"
+            / "editorial-style.md"
+        ).read_text(encoding="utf-8")
+        template = (
+            PROJECT_ROOT
+            / "skills"
+            / "market-sensing-intelligence"
+            / "references"
+            / "signal-analysis-template.md"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn("한 문장에는 핵심 생각을 하나만 둡니다", editorial)
+        self.assertIn("쉽게 쓴다는 것은 내용을 줄인다는 뜻이 아닙니다", editorial)
+        self.assertIn("문단은 결론부터 시작합니다", template)
+        self.assertIn("쉽게 쓰기 위해 내용을 삭제하지 않습니다", template)
+
+    def test_editorial_rewrite_prompt_uses_a_thesis_card_and_self_review(self):
+        rewrite_tool = (
+            PROJECT_ROOT / "tools" / "project" / "rewrite_signal_report_structure.py"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn("내부 논지 카드", rewrite_tool)
+        self.assertIn("소제목만 따로 읽고 자가 편집", rewrite_tool)
+        self.assertIn("금칙어 치환", rewrite_tool)
+        self.assertIn("고정 fallback으로 대신하지 않는다", rewrite_tool)
+
+
 @unittest.skip("Legacy per-record Markdown projection suite; SQLite is canonical")
 class MarketSensingTests(unittest.TestCase):
     def setUp(self):
@@ -209,7 +280,7 @@ class MarketSensingTests(unittest.TestCase):
                         {"key": "opportunity_cost", "label": "기회비용", "display": "text", "value": "대응 지연 비용"},
                         {"key": "secondary_effects", "label": "2차 영향", "display": "list", "items": ["계약", "운영"]},
                         table("response_options", ["option", "benefit", "cost_or_risk", "activation_condition"], [["A", "효과", "비용", "조건"], ["B", "효과", "위험", "조건"]]),
-                        table("quantification_decision", ["status", "basis", "next_input"], [["deferred", "내부값 부재", "원가"]]),
+                        table("quantification_decision", ["status", "basis", "next_input"], [["not_applicable", "주제가 정량 영향과 본질적으로 맞지 않음", "재검토 조건"]]),
                     ],
                 },
                 {
@@ -1564,6 +1635,7 @@ class MarketSensingTests(unittest.TestCase):
             [item["detected_at"] for item in payload["items"]],
             ["2026-08-19", "2026-08-19"],
         )
+        self.assertEqual(payload["items"][0]["companies"], ["POSCO"])
         self.assertEqual(
             payload["items"][0]["business_impact"],
             {"score": 8, "rationale": "실행 확인의 사업영향도 근거"},
@@ -1611,7 +1683,7 @@ class MarketSensingTests(unittest.TestCase):
         self.assertIn('["최근 1주일", 7]', script)
         self.assertIn('["최근 1개월", 30]', script)
         self.assertIn("시작일은 종료일보다 늦을 수 없습니다.", script)
-        self.assertIn("선택한 감지일 범위에 해당하는 Signal이 없습니다.", script)
+        self.assertIn("선택한 필터 조건에 해당하는 Signal이 없습니다.", script)
         self.assertIn('template[data-signal-ui]', script)
         self.assertIn("container.content.textContent", script)
         rendered_payload = mkdocs_hooks._signal_ui_data_script(
@@ -1628,8 +1700,10 @@ class MarketSensingTests(unittest.TestCase):
         self.assertIn(".signal-index-section-description", styles)
         self.assertIn(".signal-index-toolbar", styles)
         self.assertIn('.signal-date-preset[aria-pressed="true"]', styles)
-        self.assertIn(".signal-score-with-rationale:hover .signal-score-rationale", styles)
-        self.assertIn(".signal-score-with-rationale:focus .signal-score-rationale", styles)
+        self.assertIn('group.addEventListener("mouseenter"', script)
+        self.assertIn('group.addEventListener("focus"', script)
+        self.assertIn("position: fixed", styles)
+        self.assertIn("z-index: 1000", styles)
 
     def test_footnote_source_preview_is_loaded(self):
         config = (PROJECT_TOOLS / "mkdocs.yml").read_text(encoding="utf-8")
@@ -1691,6 +1765,9 @@ class MarketSensingTests(unittest.TestCase):
         self.assertIn('case "multiply"', simulator)
         self.assertIn('range.type = "range"', simulator)
         self.assertIn("dominantVariable", simulator)
+        self.assertIn('aria-label", "프리셋 결과 비교', simulator)
+        self.assertIn("impact-preset-comparison-grid", simulator)
+        self.assertIn(".impact-preset-result-value", styles)
         self.assertIn("controlStrip.append(driver, toolbar)", simulator)
         self.assertIn('element("p", "impact-input-basis", variable.basis)', simulator)
         self.assertNotIn('assumption: "AI 가정"', simulator)

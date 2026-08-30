@@ -30,9 +30,13 @@ class ResearchScheduleTests(unittest.TestCase):
         self.root.mkdir(parents=True)
         self.request = SimpleNamespace(
             topic="철강 수입규제와 원료 가격 변화",
+            topic_company="POSCO",
             companies=("POSCO",),
             business_axes=("철강",),
+            company_axes=(("POSCO", "철강"),),
             provider="codex",
+            codex_model="gpt-5.6-sol",
+            codex_effort="high",
             publish=True,
         )
 
@@ -53,6 +57,13 @@ class ResearchScheduleTests(unittest.TestCase):
         self.assertEqual(len(list_schedules(self.root)), 1)
         self.assertEqual(created["timezone"], "Asia/Seoul")
         self.assertEqual(created["business_axes"], ["철강"])
+        self.assertEqual(created["topic_company"], "POSCO")
+        self.assertEqual(created["codex_model"], "gpt-5.6-sol")
+        self.assertEqual(created["codex_effort"], "high")
+        self.assertEqual(
+            created["company_axes"],
+            [{"company": "POSCO", "business_axis": "철강"}],
+        )
 
         paused = set_schedule_enabled(self.root, created["schedule_id"], False)
         self.assertFalse(paused["enabled"])
@@ -136,10 +147,13 @@ class ResearchScheduleTests(unittest.TestCase):
                     "POST",
                     {
                         "topic": self.request.topic,
+                        "topic_company": self.request.topic_company,
                         "companies": ["POSCO"],
                         "date_from": "2026-08-16",
                         "date_to": "2026-08-29",
                         "provider": "codex",
+                        "codex_model": "gpt-5.6-terra",
+                        "codex_effort": "medium",
                         "publish": True,
                         "frequency": "daily",
                         "run_time": "09:00",
@@ -147,6 +161,8 @@ class ResearchScheduleTests(unittest.TestCase):
                     },
                 )
                 self.assertEqual(status, 201)
+                self.assertEqual(created["codex_model"], "gpt-5.6-terra")
+                self.assertEqual(created["codex_effort"], "medium")
                 schedule_id = created["schedule_id"]
                 _, listed = call("/api/research/schedules")
                 self.assertEqual(listed["count"], 1)

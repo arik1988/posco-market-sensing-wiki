@@ -11,7 +11,7 @@ try {
     Wait-WikiServerReady `
         -Server $firstServer `
         -Url "http://127.0.0.1:18081/" `
-        -TimeoutSeconds 15
+        -TimeoutSeconds 45
     $firstId = $firstServer.Id
     Stop-WikiProcessTree -ServerProcessId $firstId
     $firstServer = $null
@@ -20,7 +20,7 @@ try {
     Wait-WikiServerReady `
         -Server $secondServer `
         -Url "http://127.0.0.1:18081/" `
-        -TimeoutSeconds 15
+        -TimeoutSeconds 45
     if ($secondServer.Id -eq $firstId) {
         throw "The hard reset did not create a new process."
     }

@@ -100,9 +100,16 @@ def _normalize(request: Any, data: dict[str, Any], existing: dict[str, Any] | No
         "schedule_id": (existing or {}).get("schedule_id") or str(uuid.uuid4()),
         "name": name,
         "topic": topic,
+        "topic_company": request.topic_company,
         "companies": list(request.companies),
         "business_axes": list(request.business_axes),
+        "company_axes": [
+            {"company": company, "business_axis": business_axis}
+            for company, business_axis in request.company_axes
+        ],
         "provider": str(request.provider),
+        "codex_model": request.codex_model,
+        "codex_effort": request.codex_effort,
         "publish": bool(request.publish),
         "frequency": frequency,
         "run_time": run_time,

@@ -34,6 +34,7 @@ COMPANY_DISPLAY_NAMES = {
 }
 
 _MARKET_MODULE: Any | None = None
+_PROJECTION_CACHE: tuple[tuple[Any, ...], dict[str, Any]] | None = None
 
 
 def _database_path(root: Path) -> Path:
@@ -53,6 +54,22 @@ def _read_only_connection(root: Path) -> sqlite3.Connection:
     connection = sqlite3.connect(f"{database.as_uri()}?mode=ro", uri=True)
     connection.row_factory = sqlite3.Row
     return connection
+
+
+def _projection_signature(root: Path) -> tuple[Any, ...]:
+    """Identify the current SQLite snapshot without opening it repeatedly."""
+    database = _database_path(root)
+    signature: list[Any] = [str(database)]
+    for path in (
+        database,
+        Path(f"{database}-wal"),
+    ):
+        try:
+            stat = path.stat()
+            signature.extend((str(path), stat.st_size, stat.st_mtime_ns))
+        except FileNotFoundError:
+            signature.extend((str(path), None, None))
+    return tuple(signature)
 
 
 def _market_module() -> Any:
@@ -80,6 +97,11 @@ def _records_by_id(records: list[dict[str, Any]], id_field: str) -> dict[str, di
 
 
 def _projection_data(root: Path) -> dict[str, Any]:
+    global _PROJECTION_CACHE
+    signature = _projection_signature(root)
+    if _PROJECTION_CACHE is not None and _PROJECTION_CACHE[0] == signature:
+        return _PROJECTION_CACHE[1]
+
     data: dict[str, Any] = {
         "settings": {},
         "sources": [],
@@ -87,6 +109,7 @@ def _projection_data(root: Path) -> dict[str, Any]:
         "signals": [],
         "insights": [],
         "pending_reviews": [],
+        "source_contents": {},
     }
     artifacts: list[dict[str, Any]] = []
     database = _database_path(root)
@@ -98,12 +121,21 @@ def _projection_data(root: Path) -> dict[str, Any]:
             if settings_row:
                 data["settings"] = json.loads(settings_row["payload_json"])
             for row in connection.execute(
-                "SELECT collection, payload_json FROM wiki_records ORDER BY collection, record_id"
+                "SELECT collection, payload_json FROM wiki_records "
+                "WHERE collection IN "
+                "('sources', 'claims', 'signals', 'insights', 'reviews_pending') "
+                "ORDER BY collection, record_id"
             ):
                 collection = str(row["collection"])
                 target = "pending_reviews" if collection == "reviews_pending" else collection
                 if target in data and isinstance(data[target], list):
                     data[target].append(json.loads(row["payload_json"]))
+            data["source_contents"] = {
+                str(row["source_id"]): row["content"]
+                for row in connection.execute(
+                    "SELECT source_id, content FROM wiki_source_contents"
+                )
+            }
             for row in connection.execute(
                 "SELECT artifact_id, artifact_type, title, markdown_text, html_text, "
                 "metadata_json, created_at, updated_at FROM wiki_artifacts ORDER BY updated_at DESC"
@@ -112,6 +144,12 @@ def _projection_data(root: Path) -> dict[str, Any]:
                 artifact["metadata"] = json.loads(artifact.pop("metadata_json") or "{}")
                 artifacts.append(artifact)
     data["artifacts"] = artifacts
+    data["signals_by_id"] = _records_by_id(data["signals"], "signal_id")
+    data["insights_by_id"] = _records_by_id(data["insights"], "insight_id")
+    # Opening a WAL database can materialize or checkpoint sidecar files. Cache
+    # the post-read signature so that this reader activity does not invalidate
+    # the projection on the next page.
+    _PROJECTION_CACHE = (_projection_signature(root), data)
     return data
 
 
@@ -163,23 +201,12 @@ def _date_only(value: Any) -> str:
 
 
 def _signal_ui_item(root: Path, signal_id: str) -> dict[str, Any] | None:
-    database = _database_path(root)
-    if not database.is_file():
+    data = _projection_data(root)
+    signal = data["signals_by_id"].get(signal_id)
+    if signal is None:
         return None
-    with closing(_read_only_connection(root)) as connection:
-        signal_row = connection.execute(
-            "SELECT payload_json FROM wiki_records WHERE collection='signals' AND record_id=?",
-            (signal_id,),
-        ).fetchone()
-        if signal_row is None:
-            return None
-        signal = json.loads(signal_row[0])
-        insight_id = str(signal.get("insight_id") or "").strip()
-        insight_row = connection.execute(
-            "SELECT payload_json FROM wiki_records WHERE collection='insights' AND record_id=?",
-            (insight_id,),
-        ).fetchone()
-    insight = json.loads(insight_row[0]) if insight_row else {}
+    insight_id = str(signal.get("insight_id") or "").strip()
+    insight = data["insights_by_id"].get(insight_id, {})
     company_names = [
         COMPANY_DISPLAY_NAMES.get(
             str(company_id),
@@ -201,6 +228,7 @@ def _signal_ui_item(root: Path, signal_id: str) -> dict[str, Any] | None:
         "title": _display_text(insight.get("title")),
         "sentence": _display_text(signal.get("sentence")),
         "company": " · ".join(company_names),
+        "companies": company_names,
         "business_axis": _display_text(signal.get("business_axis")),
         "signal_type": _display_text(signal.get("signal_type")),
         "signal_role": _display_text(signal.get("signal_role")),
@@ -319,12 +347,15 @@ def _review_markdown(data: dict[str, Any]) -> str:
     return "\n".join(lines).rstrip() + "\n"
 
 
-def _source_markdown(root: Path, source: dict[str, Any]) -> str:
+def _source_markdown(
+    root: Path,
+    source: dict[str, Any],
+    content: bytes | str | None = None,
+) -> str:
     market = _market_module()
     source_id = str(source.get("source_id") or "")
     database = _database_path(root)
-    content: bytes | str | None = None
-    if database.is_file():
+    if content is None and database.is_file():
         with closing(_read_only_connection(root)) as connection:
             row = connection.execute(
                 "SELECT content FROM wiki_source_contents WHERE source_id=?",
@@ -449,6 +480,18 @@ def _signal_ui_data_script(payload: dict[str, Any]) -> str:
     )
 
 
+def _signal_navigation_json(data: dict[str, Any]) -> str:
+    items = []
+    for signal in data["signals"]:
+        signal_id = str(signal.get("signal_id") or "").strip()
+        if not signal_id:
+            continue
+        insight = data["insights_by_id"].get(str(signal.get("insight_id") or ""), {})
+        title = _display_text(insight.get("title") or signal.get("sentence")) or signal_id
+        items.append({"signal_id": signal_id, "title": title})
+    return json.dumps({"items": items}, ensure_ascii=False, separators=(",", ":"))
+
+
 def on_files(files: Any, config: Any) -> Any:
     """Expose SQLite records as in-memory MkDocs pages.
 
@@ -468,6 +511,7 @@ def on_files(files: Any, config: Any) -> Any:
         "REVIEW.md": _review_markdown(data),
         "recent-updates.md": _recent_updates_markdown(data),
         "research/index.md": _research_markdown(),
+        "signals/navigation.json": _signal_navigation_json(data),
         "signals/index.md": "\n".join(
             market.signal_index_lines(data["signals"], insights_by_id, data["settings"])
         ).rstrip()
@@ -486,7 +530,11 @@ def on_files(files: Any, config: Any) -> Any:
         )
 
     for source_id, source in sources_by_id.items():
-        pages[f"sources/{source_id}.md"] = _source_markdown(root, source)
+        pages[f"sources/{source_id}.md"] = _source_markdown(
+            root,
+            source,
+            data["source_contents"].get(source_id),
+        )
 
     report_links: list[tuple[str, str]] = []
     for artifact in data["artifacts"]:
@@ -628,21 +676,9 @@ def _pages(root: Path, pattern: str) -> list[dict[str, str]]:
 
 
 def on_config(config: Any) -> Any:
-    """Expose only the Market Signal collection in the reader navigation."""
-    root = _wiki_root(config)
-    data = _projection_data(root)
-    insights_by_id = _records_by_id(data["insights"], "insight_id")
-
-    signals = []
-    for signal in data["signals"]:
-        signal_id = str(signal.get("signal_id") or "").strip()
-        if not signal_id:
-            continue
-        insight = insights_by_id.get(str(signal.get("insight_id") or ""), {})
-        title = _display_text(insight.get("title") or signal.get("sentence")) or signal_id
-        signals.append({title: f"signals/{signal_id}.md"})
+    """Keep static nav small; the browser hydrates the full Signal sidebar."""
     config["nav"] = [
-        {"마켓 시그널": [{"전체 시그널": "signals/index.md"}, *signals]},
+        {"마켓 시그널": [{"전체 시그널": "signals/index.md"}]},
         {"AI 조사": "research/index.md"},
     ]
     return config

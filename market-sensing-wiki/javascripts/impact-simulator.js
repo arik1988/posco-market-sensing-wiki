@@ -130,6 +130,35 @@
       results.append(item);
       outputValues.set(output.id, value);
     }
+    const presetComparison = element("section", "impact-preset-comparison");
+    presetComparison.setAttribute("aria-label", "프리셋 결과 비교");
+    presetComparison.append(
+      element("span", "impact-preset-comparison-title", "프리셋 결과"),
+    );
+    const presetComparisonGrid = element("div", "impact-preset-comparison-grid");
+    const primary = primaryOutput(model);
+    for (const preset of model.presets) {
+      const presetValues = {
+        ...Object.fromEntries(
+          model.variables.map((variable) => [variable.id, Number(variable.default)]),
+        ),
+        ...preset.values,
+      };
+      const item = element("div", "impact-preset-result");
+      const label = element("span", "impact-preset-result-label", preset.label);
+      const value = element(
+        "strong",
+        "impact-preset-result-value",
+        formatNumber(
+          evaluate(primary.expression, presetValues),
+          Number(primary.decimals || 0),
+          Boolean(primary.show_sign),
+        ),
+      );
+      item.append(label, value, element("span", "impact-preset-result-unit", primary.unit));
+      presetComparisonGrid.append(item);
+    }
+    presetComparison.append(presetComparisonGrid);
     const driver = element("p", "impact-dominant-driver");
 
     const toolbar = element("div", "impact-toolbar");
@@ -243,7 +272,7 @@
 
     const error = element("p", "impact-error");
     error.hidden = true;
-    card.append(header, results, controlStrip, inputGrid, details, error);
+    card.append(header, results, presetComparison, controlStrip, inputGrid, details, error);
 
     function update() {
       try {

@@ -76,6 +76,25 @@ class ResearchAgentSettingsTests(unittest.TestCase):
         self.assertNotIn("private-api-key", rendered)
         self.assertNotIn("E12345", rendered)
         self.assertTrue(payload[0]["configured"])
+        self.assertEqual(
+            payload[1]["models"],
+            ["gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna"],
+        )
+        self.assertEqual(payload[1]["efforts"], ["light", "medium", "high"])
+
+    def test_codex_request_options_override_environment_and_map_light_to_low(self) -> None:
+        with patch.dict(
+            os.environ,
+            {"MARKET_AGENT_CODEX_MODEL": "gpt-5.6-terra", "MARKET_AGENT_CODEX_EFFORT": "high"},
+            clear=False,
+        ):
+            settings = AgentSettings.from_env(
+                ProviderId.CODEX,
+                codex_model="gpt-5.6-luna",
+                codex_effort="light",
+            )
+        self.assertEqual(settings.codex_model, "gpt-5.6-luna")
+        self.assertEqual(settings.codex_effort, "low")
 
 
 @unittest.skipUnless(RESEARCH_AGENT_DEPS, "research-agent dependencies are isolated")
@@ -84,6 +103,7 @@ class ResearchRequestTests(unittest.TestCase):
         request = ResearchRequest.from_dict(
             {
                 "topic": "철강 수입규제 변화",
+                "topic_company": "POSCO",
                 "companies": ["POSCO"],
                 "business_axes": ["철강"],
                 "date_from": "2026-08-01",
@@ -94,6 +114,76 @@ class ResearchRequestTests(unittest.TestCase):
         self.assertTrue(request.publish)
         self.assertEqual(request.provider, ProviderId.CODEX)
         self.assertEqual(request.business_axes, ("철강",))
+        self.assertEqual(request.company_axes, (("POSCO", "철강"),))
+        self.assertEqual(request.topic_company, "POSCO")
+        self.assertEqual(request.codex_model, "gpt-5.6-luna")
+        self.assertEqual(request.codex_effort, "medium")
+
+    def test_request_preserves_selected_codex_model_and_effort(self) -> None:
+        request = ResearchRequest.from_dict(
+            {
+                "topic": "철강 수입규제 변화",
+                "topic_company": "POSCO",
+                "companies": ["POSCO"],
+                "date_from": "2026-08-01",
+                "date_to": "2026-08-29",
+                "provider": "codex",
+                "codex_model": "gpt-5.6-sol",
+                "codex_effort": "high",
+            }
+        )
+        self.assertEqual(request.codex_model, "gpt-5.6-sol")
+        self.assertEqual(request.codex_effort, "high")
+
+    def test_request_rejects_unlisted_codex_options(self) -> None:
+        base = {
+            "topic": "철강 수입규제 변화",
+            "topic_company": "POSCO",
+            "companies": ["POSCO"],
+            "date_from": "2026-08-01",
+            "date_to": "2026-08-29",
+            "provider": "codex",
+        }
+        with self.assertRaisesRegex(ValueError, "GPT-5.6-Sol"):
+            ResearchRequest.from_dict({**base, "codex_model": "gpt-5.5"})
+        with self.assertRaisesRegex(ValueError, "Light"):
+            ResearchRequest.from_dict({**base, "codex_effort": "xhigh"})
+
+    def test_request_preserves_user_edited_company_axis_pairs(self) -> None:
+        request = ResearchRequest.from_dict(
+            {
+                "topic": "신규 공급망 변화",
+                "topic_company": "직접 입력 회사",
+                "company_axes": [
+                    {"company": "직접 입력 회사", "business_axis": "맞춤 원료 조달"},
+                    {"company": "POSCO", "business_axis": "저탄소 철강"},
+                ],
+                "date_from": "2026-08-01",
+                "date_to": "2026-08-29",
+                "provider": "codex",
+            }
+        )
+
+        self.assertEqual(
+            request.company_axes,
+            (("직접 입력 회사", "맞춤 원료 조달"), ("POSCO", "저탄소 철강")),
+        )
+        self.assertEqual(request.companies, ("직접 입력 회사", "POSCO"))
+        self.assertEqual(request.business_axes, ("맞춤 원료 조달", "저탄소 철강"))
+        self.assertEqual(request.topic_company, "직접 입력 회사")
+
+    def test_request_rejects_topic_company_outside_selected_scope(self) -> None:
+        with self.assertRaisesRegex(ValueError, "아래 회사·사업축 범위"):
+            ResearchRequest.from_dict(
+                {
+                    "topic": "철강 수입규제 변화",
+                    "topic_company": "POSCO Holdings",
+                    "company_axes": [{"company": "POSCO", "business_axis": "철강"}],
+                    "date_from": "2026-08-01",
+                    "date_to": "2026-08-29",
+                    "provider": "codex",
+                }
+            )
 
     def test_request_rejects_inverted_or_unbounded_period(self) -> None:
         base = {
@@ -146,6 +236,12 @@ class ResearchAgentUiContractTests(unittest.TestCase):
         script = (
             root / "market-sensing-wiki" / "javascripts" / "research-agent.js"
         ).read_text(encoding="utf-8")
+        loader = (
+            root
+            / "market-sensing-wiki"
+            / "javascripts"
+            / "research-control-loader.js"
+        ).read_text(encoding="utf-8")
         styles = (root / "market-sensing-wiki" / "stylesheets" / "extra.css").read_text(
             encoding="utf-8"
         )
@@ -153,12 +249,35 @@ class ResearchAgentUiContractTests(unittest.TestCase):
             encoding="utf-8"
         )
 
-        self.assertIn("javascripts/research-control-loader.js", config)
+        self.assertIn(
+            "javascripts/research-control-loader.js?v=20260829-luna-default",
+            config,
+        )
+        self.assertIn("research-agent.js?ui=20260829-luna-default", loader)
+        self.assertIn("window.__poscoResearchAgentBoot = boot", script)
+        self.assertIn("boot();", script)
+        self.assertIn('script.addEventListener("load"', loader)
+        self.assertIn("window.__poscoResearchAgentBoot();", loader)
         self.assertIn('providerCard("pgpt", "P-GPT", "실제 운영"', script)
         self.assertIn('providerCard("codex", "Codex OAuth", "개발 검증"', script)
+        self.assertIn('option("gpt-5.6-sol", "GPT-5.6-Sol")', script)
+        self.assertIn('option("gpt-5.6-terra", "GPT-5.6-Terra")', script)
+        self.assertIn('option("gpt-5.6-luna", "GPT-5.6-Luna")', script)
+        self.assertIn('codexModel.value = "gpt-5.6-luna"', script)
+        self.assertIn('option("light", "Light")', script)
+        self.assertIn("codex_model: controls.codexModel.value", script)
+        self.assertIn("codex_effort: controls.codexEffort.value", script)
+        self.assertIn(".research-codex-options", styles)
         self.assertIn("http://127.0.0.1:8201", script)
         self.assertIn("반복 조사 저장", script)
         self.assertIn("/api/research/schedules", script)
+        self.assertIn("조사 주제 직접 입력", script)
+        self.assertIn("대상 회사 직접 입력", script)
+        self.assertIn("topic_company: controls.topicCompany.value.trim()", script)
+        self.assertIn("+ 회사·조사 주제 추가", script)
+        self.assertIn("company_axes: companyAxes", script)
+        self.assertIn(".research-company-edit-grid", styles)
+        self.assertIn(".research-topic-scope-grid", styles)
         self.assertIn(".research-provider-grid", styles)
         self.assertIn(".research-schedule-fields", styles)
         self.assertIn("조사 관리 화면 준비 중", hooks)
@@ -206,6 +325,50 @@ class ResearchAgentWebTests(unittest.IsolatedAsyncioTestCase):
         )
         self.assertFalse(result["ok"])
         self.assertIn("@파일명", str(result["error"]))
+
+
+class ResearchModelSelectionContractTests(unittest.TestCase):
+    def test_request_and_runtime_preserve_supported_selection(self) -> None:
+        from tools.research_agent.service import ResearchRequest
+        from tools.research_agent.settings import AgentSettings
+
+        request = ResearchRequest.from_dict(
+            {
+                "topic": "철강 수입규제 변화",
+                "topic_company": "POSCO",
+                "companies": ["POSCO"],
+                "date_from": "2026-08-01",
+                "date_to": "2026-08-29",
+                "provider": "codex",
+                "codex_model": "gpt-5.6-luna",
+                "codex_effort": "light",
+            }
+        )
+        settings = AgentSettings.from_env(
+            request.provider,
+            codex_model=request.codex_model,
+            codex_effort=request.codex_effort,
+        )
+        self.assertEqual(request.codex_model, "gpt-5.6-luna")
+        self.assertEqual(request.codex_effort, "light")
+        self.assertEqual(settings.codex_model, "gpt-5.6-luna")
+        self.assertEqual(settings.codex_effort, "low")
+
+    def test_request_rejects_unlisted_model_and_effort(self) -> None:
+        from tools.research_agent.service import ResearchRequest
+
+        base = {
+            "topic": "철강 수입규제 변화",
+            "topic_company": "POSCO",
+            "companies": ["POSCO"],
+            "date_from": "2026-08-01",
+            "date_to": "2026-08-29",
+            "provider": "codex",
+        }
+        with self.assertRaisesRegex(ValueError, "GPT-5.6-Sol"):
+            ResearchRequest.from_dict({**base, "codex_model": "gpt-5.5"})
+        with self.assertRaisesRegex(ValueError, "Light"):
+            ResearchRequest.from_dict({**base, "codex_effort": "xhigh"})
 
 
 def os_path():

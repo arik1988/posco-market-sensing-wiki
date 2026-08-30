@@ -19,7 +19,7 @@ from typing import Any, Iterator
 
 DATABASE_ENV = "MYPIN_DATABASE_PATH"
 DATABASE_RELATIVE_PATH = Path("data/market_sensing.db")
-SCHEMA_VERSION = 5
+SCHEMA_VERSION = 6
 
 COLLECTION_PATHS: dict[str, Path] = {
     "sources": Path(".system/source-records"),
@@ -33,6 +33,7 @@ COLLECTION_PATHS: dict[str, Path] = {
     "events": Path(".system/events"),
     "company_impacts": Path(".system/company-impacts"),
     "scenarios": Path(".system/scenarios"),
+    "systematic_analyses": Path(".system/systematic-analyses"),
     "trends": Path(".system/trends"),
     "theses": Path(".system/theses"),
     "warnings": Path(".system/warnings"),
@@ -53,6 +54,7 @@ ID_FIELDS = {
     "events": "event_version_id",
     "company_impacts": "company_impact_version_id",
     "scenarios": "scenario_version_id",
+    "systematic_analyses": "analysis_result_version_id",
     "trends": "trend_id",
     "theses": "thesis_id",
     "warnings": "warning_id",
@@ -274,6 +276,40 @@ CREATE TABLE IF NOT EXISTS wiki_scenario_versions (
     UNIQUE (signal_version_id, scenario_key, version_no),
     FOREIGN KEY (signal_version_id) REFERENCES wiki_signal_versions(signal_version_id)
         ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS wiki_systematic_analysis_versions (
+    analysis_result_version_id TEXT PRIMARY KEY,
+    analysis_id TEXT NOT NULL,
+    version_no INTEGER NOT NULL CHECK (version_no >= 1),
+    signal_version_id TEXT NOT NULL,
+    status TEXT NOT NULL CHECK (status IN ('completed', 'insufficient_data')),
+    as_of TEXT NOT NULL,
+    payload_json TEXT NOT NULL CHECK (json_valid(payload_json)),
+    content_sha256 TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    UNIQUE (analysis_id, version_no),
+    FOREIGN KEY (signal_version_id) REFERENCES wiki_signal_versions(signal_version_id)
+        ON DELETE RESTRICT
+);
+
+CREATE INDEX IF NOT EXISTS idx_wiki_systematic_analysis_signal
+ON wiki_systematic_analysis_versions(signal_version_id, version_no DESC);
+
+CREATE TABLE IF NOT EXISTS wiki_systematic_analysis_inputs (
+    analysis_result_version_id TEXT NOT NULL,
+    observation_version_id TEXT NOT NULL,
+    risk_factor_id TEXT NOT NULL,
+    series_key TEXT NOT NULL,
+    ordinal INTEGER NOT NULL CHECK (ordinal >= 1),
+    PRIMARY KEY (analysis_result_version_id, observation_version_id),
+    FOREIGN KEY (analysis_result_version_id)
+        REFERENCES wiki_systematic_analysis_versions(analysis_result_version_id)
+        ON DELETE CASCADE,
+    FOREIGN KEY (observation_version_id)
+        REFERENCES wiki_observation_versions(observation_version_id) ON DELETE RESTRICT,
+    FOREIGN KEY (risk_factor_id) REFERENCES wiki_risk_factors(risk_factor_id)
+        ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS wiki_signal_favorites (
@@ -685,6 +721,79 @@ def put_signal_analytics_bundle(
                     str(scenario.get("created_at") or now),
                 ),
             )
+
+
+def put_systematic_analysis(root: Path, value: dict[str, Any]) -> None:
+    """Atomically persist one immutable calculation result and pinned inputs."""
+
+    result_id = str(value["analysis_result_version_id"])
+    payload = _json_text(value)
+    now = str(value.get("created_at") or _now())
+    with transaction(root) as connection:
+        existing = connection.execute(
+            "SELECT payload_json FROM wiki_systematic_analysis_versions "
+            "WHERE analysis_result_version_id=?",
+            (result_id,),
+        ).fetchone()
+        if existing is not None:
+            if str(existing["payload_json"]) != payload:
+                raise ValueError(f"immutable systematic analysis conflict: {result_id}")
+            return
+        connection.execute(
+            """
+            INSERT INTO wiki_records(
+                collection, record_id, schema_version, payload_json,
+                content_sha256, created_at, updated_at
+            ) VALUES ('systematic_analyses', ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                result_id,
+                value.get("schema_version"),
+                payload,
+                _digest(payload.encode("utf-8")),
+                now,
+                now,
+            ),
+        )
+        connection.execute(
+            """
+            INSERT INTO wiki_systematic_analysis_versions(
+                analysis_result_version_id, analysis_id, version_no,
+                signal_version_id, status, as_of, payload_json,
+                content_sha256, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                result_id,
+                str(value["analysis_id"]),
+                int(value["version_no"]),
+                str(value["signal_version_id"]),
+                str(value["status"]),
+                str(value["as_of"]),
+                payload,
+                str(value["content_digest"]).removeprefix("sha256:"),
+                now,
+            ),
+        )
+        ordinal = 0
+        for series in value["input_series"]:
+            for observation_version_id in series["observation_version_ids"]:
+                ordinal += 1
+                connection.execute(
+                    """
+                    INSERT INTO wiki_systematic_analysis_inputs(
+                        analysis_result_version_id, observation_version_id,
+                        risk_factor_id, series_key, ordinal
+                    ) VALUES (?, ?, ?, ?, ?)
+                    """,
+                    (
+                        result_id,
+                        str(observation_version_id),
+                        str(series["risk_factor_id"]),
+                        str(series["series_key"]),
+                        ordinal,
+                    ),
+                )
 
 
 def put_risk_factor_links(
@@ -1104,6 +1213,8 @@ def integrity(root: Path) -> dict[str, Any]:
             "wiki_risk_factor_links",
             "wiki_company_impact_versions",
             "wiki_scenario_versions",
+            "wiki_systematic_analysis_versions",
+            "wiki_systematic_analysis_inputs",
             "wiki_signal_favorites",
             "wiki_signal_comments",
         )

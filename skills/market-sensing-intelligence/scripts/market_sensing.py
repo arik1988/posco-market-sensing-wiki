@@ -30,6 +30,10 @@ from signal_analytics import (
     validate_modality,
     validate_risk_factor,
 )
+from systematic_signal_analytics import (
+    run_systematic_analysis,
+    validate_systematic_analysis_result,
+)
 from sqlite_store import (
     append_operation_log,
     collection_for_directory,
@@ -54,6 +58,7 @@ from sqlite_store import (
     put_risk_factor,
     put_risk_factor_links,
     put_signal_analytics_bundle,
+    put_systematic_analysis,
     put_source_asset,
     put_settings,
     put_source_content,
@@ -92,6 +97,11 @@ SOURCE_SCHEMA_VERSION = 2
 CLAIM_SCHEMA_VERSION = 2
 SIGNAL_SCHEMA_VERSION = 4
 SIGNAL_SCORE_MAX = 10
+SCORE_RATIONALE_MIN_LENGTH = 120
+SCORE_RATIONALE_MAX_LENGTH = 600
+SCORE_RATIONALE_BOUNDARY_PATTERN = re.compile(
+    r"(?:이상|이하|상향|하향|높이|낮추|최상위|단계|수준)"
+)
 LEGACY_INSIGHT_SCHEMA_VERSION = 1
 INSIGHT_SCHEMA_VERSION = 3
 STRUCTURED_ANALYSIS_SCHEMA_VERSION = 3
@@ -193,7 +203,7 @@ RUN_DISCOVERY_CONTRACT = {
     "version": 1,
     "required_for_roles": ["core_market_signal"],
 }
-RUN_RESEARCH_CONTRACT_VERSION = 4
+RUN_RESEARCH_CONTRACT_VERSION = 5
 RESEARCH_CELL_STATUSES = {"pending", "covered", "no_change", "blocked"}
 RESEARCH_CANDIDATE_DISPOSITIONS = {"published_signal", "watchlist", "rejected"}
 RESEARCH_EVIDENCE_CHANNELS = {
@@ -2779,6 +2789,7 @@ OBSERVATIONS_DIR = Path(".system/observations")
 EVENTS_DIR = Path(".system/events")
 COMPANY_IMPACTS_DIR = Path(".system/company-impacts")
 SCENARIOS_DIR = Path(".system/scenarios")
+SYSTEMATIC_ANALYSES_DIR = Path(".system/systematic-analyses")
 PENDING_REVIEWS_DIR = Path(".system/reviews/pending")
 RESOLVED_REVIEWS_DIR = Path(".system/reviews/resolved")
 RUNS_DIR = Path(".system/runs")
@@ -2936,6 +2947,7 @@ MAX_IMAGE_BYTES = 20 * 1024 * 1024
 SETTINGS_LIST_SECTIONS = {
     "분석 관점": "focus",
     "우선 기업": "companies",
+    "우선 회사·사업축": "company_axes",
     "우선 기술": "technologies",
     "우선 프로젝트": "projects",
     "우선 국가": "countries",
@@ -3264,6 +3276,17 @@ WIKI_SETTINGS_TEMPLATE = """# 포스코그룹 마켓센싱 관심사 설정
 - POSCO Mobility Solution
 - POSCO Steeleon
 
+## 우선 회사·사업축
+
+- POSCO | 철강
+- POSCO Holdings | 리튬·전략광물
+- POSCO International | 에너지·식량·팜
+- POSCO E&C | 건설·인프라
+- POSCO Future M | 이차전지소재
+- POSCO Flow | 철강·원료 물류
+- POSCO Mobility Solution | 구동모터코아·강건재가공
+- POSCO Steeleon | 도금·컬러강판
+
 ## 우선 기술
 
 
@@ -3496,13 +3519,17 @@ STORE_AGENTS = """# Market Sensing Intelligence 저장소 지침
   `사업 시사점`으로 분리하세요.
 - Signal에는 `정책·규제`, `수급·가격`, `경쟁사`, `투자·프로젝트`, `공급망·물류`,
   `고객·계약`, `기술·운영`, `재무·실적` 중 하나의 변화 유형을 저장하세요. 사람 화면에는
-  사업축 pill 1개와 변화 유형 pill 1개만 표시하세요.
+  회사 pill 1개, 사업축 pill 1개와 변화 유형 pill 1개를 회사 → 사업축 → 변화 유형
+  순서로 표시하고 회사명을 일반 텍스트로 반복하지 마세요.
 - 외부 시장·정책·경쟁사·거래상대 변화는 `core_market_signal`, 대상 회사의 투자·증산·
   실적·공정 진척은 `execution_context/company_execution`으로 분리하세요. 회사 자체 발표만
   근거인 실행 사실을 core로 발행하지 말고, run×사업축마다 core 비중 70% 이상을 유지하세요.
-- 정량화 가능한 Signal은 공개정보와 합리적 대용변수를 사용해 영향액을 숫자로 먼저
-  제시하고 방어·기준·압박 시나리오를 만드세요. 핵심 가정 3~8개는 근거·단위·범위를
-  가진 슬라이더와 직접입력으로 조정되게 하고 `set-impact-estimate`로 연결하세요.
+- What-if는 Signal의 기본 구성입니다. 주제가 정량 영향과 본질적으로 맞지 않거나 동일
+  충격을 대표 Signal에서 이미 계산한 경우가 아니면 공개정보와 합리적 대용변수로
+  영향액을 숫자로 먼저 제시하는 방어·기준·압박 모델을 만들고 `set-impact-estimate`로 연결하세요. 내부값 비공개는
+  생략 사유가 아닙니다. 모든 Insight는 `quantification_decision.status`를 `modeled` 또는
+  `not_applicable` JSON으로 저장하고 `deferred`·`내부 입력 대기`를 사용하지 마세요.
+  핵심 가정 3~8개는 근거·단위·범위를 가진 슬라이더와 직접입력으로 조정되게 하세요.
 - 총노출액과 순영향액을 구분하고 가격·물량·원가·계약 전가·대응비용을 사업이론에 맞게
   분해하세요. 회사 실제값이 아니면 낮은 신뢰도와 넓은 범위를 명시하고 중복효과를
   합산하지 마세요.
@@ -4086,6 +4113,10 @@ def event_records(root: Path) -> list[tuple[Path, dict[str, Any]]]:
     return load_json_objects(root / EVENTS_DIR)
 
 
+def systematic_analysis_records(root: Path) -> list[tuple[Path, dict[str, Any]]]:
+    return load_json_objects(root / SYSTEMATIC_ANALYSES_DIR)
+
+
 def verify_risk_factor_ids(root: Path, risk_factor_ids: list[str]) -> None:
     known = {
         str(record.get("risk_factor_id"))
@@ -4192,6 +4223,85 @@ def add_event(args: argparse.Namespace) -> dict[str, Any]:
         created_at=value["created_at"],
     )
     return {"action": "event_created", **value}
+
+
+def run_systematic_signal_analysis(args: argparse.Namespace) -> dict[str, Any]:
+    """Run and persist version-pinned statistical candidate evidence."""
+
+    root = require_store(Path(args.root))
+    signal = _records_by_id(signal_records(root), "signal_id").get(args.signal_id)
+    if signal is None:
+        raise ValueError(f"Unknown signal ID: {args.signal_id}")
+    signal_version_id = str(signal.get("signal_version_id") or "")
+    spec_path = Path(args.spec_file).resolve()
+    spec = json.loads(spec_path.read_text(encoding="utf-8"))
+    declared_version = str(spec.get("signal_version_id") or "")
+    if declared_version and declared_version != signal_version_id:
+        raise ValueError(
+            "analysis spec signal_version_id must match the Signal's active immutable version"
+        )
+    spec["signal_version_id"] = signal_version_id
+    observations = _records_by_id(observation_records(root), "observation_version_id")
+    result = run_systematic_analysis(spec, observations)
+
+    known_versions = {
+        str(record.get("signal_version_id")) for _, record in signal_version_records(root)
+    }
+    components = result["analysis_scope"]["component_signal_version_ids"]
+    missing_components = sorted(set(components) - known_versions)
+    if missing_components:
+        raise ValueError(
+            "Unknown component Signal versions: " + ", ".join(missing_components)
+        )
+    verify_risk_factor_ids(
+        root,
+        list(dict.fromkeys(item["risk_factor_id"] for item in result["input_series"])),
+    )
+    put_systematic_analysis(root, result)
+
+    insight_id = str(signal.get("insight_id") or "")
+    insight_path = root / INSIGHTS_DIR / f"{insight_id}.json"
+    insight = read_json(insight_path)
+    candidates = result["results"]["risk_factor_contribution"]
+    risk_factor_names = {
+        str(record.get("risk_factor_id")): str(record.get("name") or "").strip()
+        for _, record in risk_factor_records(root)
+    }
+    insight["systematic_analytics"] = {
+        "schema_version": 1,
+        "latest_result_version_id": result["analysis_result_version_id"],
+        "status": result["status"],
+        "as_of": result["as_of"],
+        "analysis_scope": result["analysis_scope"],
+        "method_types": result["method_types"],
+        "risk_factor_candidates": [
+            {
+                "label": risk_factor_names.get(
+                    str(candidate["risk_factor_id"]), "확인할 시장 변수"
+                ),
+                "contribution_score": candidate["contribution_score"],
+                "basis_count": candidate["basis_count"],
+            }
+            for candidate in candidates
+        ],
+        "limitations": result["limitations"],
+    }
+    insight["updated_at"] = timestamp()
+    write_json(insight_path, insight)
+    sync_obsidian_store(root)
+    append_log(
+        root,
+        "run-systematic-analysis",
+        f"{args.signal_id}: {result['analysis_result_version_id']} ({result['status']})",
+    )
+    return {
+        "action": "systematic_analysis_created",
+        "signal_id": args.signal_id,
+        "analysis_result_version_id": result["analysis_result_version_id"],
+        "status": result["status"],
+        "candidate_count": len(candidates),
+        "content_digest": result["content_digest"],
+    }
 
 
 def run_record_by_id(root: Path, run_id: str) -> tuple[Path, dict[str, Any]]:
@@ -4350,6 +4460,8 @@ def evaluate_research_coverage(
     candidates_by_id: dict[str, dict[str, Any]] = {}
     candidate_fingerprints: dict[tuple[str, str, str, str], str] = {}
     candidates_by_day: Counter[str] = Counter()
+    published_signal_ids_by_day: dict[str, set[str]] = defaultdict(set)
+    published_date_by_signal_id: dict[str, str] = {}
     signals_by_id = {
         str(signal.get("signal_id") or "").strip(): signal
         for signal in signals
@@ -4373,14 +4485,32 @@ def evaluate_research_coverage(
         candidates_by_id[candidate_id] = candidate
         if contract_version < 3:
             continue
+        # Historical backfills are dense by the date represented by the source.
+        # detected_at remains the honest first-known date and must not be backdated
+        # merely to pass the daily-density gate. Older v4 ledgers did not have
+        # candidate_date, so retain detected_at as a read-only fallback.
+        candidate_date_value = candidate.get("candidate_date") or candidate.get(
+            "detected_at"
+        )
         try:
-            detected_at = validate_date(candidate.get("detected_at"), "detected_at")
+            candidate_date = validate_date(candidate_date_value, "candidate_date")
         except ValueError:
-            detected_at = None
-        if not detected_at or not (str(run.get("date_from")) <= detected_at <= str(run.get("date_to"))):
-            findings.append(f"{run_id}/{candidate_id}: detected_at must be inside the run period")
+            candidate_date = None
+        if not candidate_date or not (
+            str(run.get("date_from")) <= candidate_date <= str(run.get("date_to"))
+        ):
+            findings.append(
+                f"{run_id}/{candidate_id}: candidate_date must be inside the run period"
+            )
         else:
-            candidates_by_day[detected_at] += 1
+            candidates_by_day[candidate_date] += 1
+        if candidate.get("detected_at") is not None:
+            try:
+                validate_date(candidate.get("detected_at"), "detected_at")
+            except ValueError:
+                findings.append(
+                    f"{run_id}/{candidate_id}: detected_at must be a valid first-known date"
+                )
         company_id = str(candidate.get("company_id") or "").strip()
         business_axis = str(candidate.get("business_axis") or "").strip()
         if not company_supports_business_axis(company_id, business_axis):
@@ -4431,11 +4561,25 @@ def evaluate_research_coverage(
                 findings.append(
                     f"{run_id}/{candidate_id}: published Signal company/business-axis does not match"
                 )
+            elif candidate_date:
+                previous_date = published_date_by_signal_id.get(signal_id)
+                if previous_date and previous_date != candidate_date:
+                    findings.append(
+                        f"{run_id}/{candidate_id}: active Signal {signal_id} is already "
+                        f"counted on {previous_date} and cannot satisfy another calendar day"
+                    )
+                else:
+                    published_date_by_signal_id[signal_id] = candidate_date
+                    published_signal_ids_by_day[candidate_date].add(signal_id)
 
     if contract_version >= 3:
         date_from = date.fromisoformat(str(run.get("date_from")))
         date_to = date.fromisoformat(str(run.get("date_to")))
-        minimum_per_day = int(contract.get("minimum_candidates_per_day") or 3)
+        minimum_per_day = int((
+            contract.get("minimum_published_signals_per_day")
+            if contract_version >= 5
+            else contract.get("minimum_candidates_per_day")
+        ) or 3)
         if contract_version == 3:
             minimum_candidates = ((date_to - date_from).days + 1) * minimum_per_day
             if len(candidates_by_id) < minimum_candidates:
@@ -4444,7 +4588,7 @@ def evaluate_research_coverage(
                     f"{len(candidates_by_id)}/{minimum_candidates}; time-bounded "
                     "research requires the period-level candidate minimum"
                 )
-        else:
+        elif contract_version == 4:
             cursor = date_from
             while cursor <= date_to:
                 day_text = cursor.isoformat()
@@ -4454,6 +4598,18 @@ def evaluate_research_coverage(
                         f"{run_id}/{day_text}: daily detection density is "
                         f"{actual}/{minimum_per_day}; time-bounded research requires "
                         "the minimum on every calendar day"
+                    )
+                cursor += timedelta(days=1)
+        else:
+            cursor = date_from
+            while cursor <= date_to:
+                day_text = cursor.isoformat()
+                actual = len(published_signal_ids_by_day.get(day_text, set()))
+                if actual < minimum_per_day:
+                    findings.append(
+                        f"{run_id}/{day_text}: daily published Signal availability is "
+                        f"{actual}/{minimum_per_day}; monthly and recurring research "
+                        "requires distinct active Signals visible in MyPIN on every calendar day"
                     )
                 cursor += timedelta(days=1)
 
@@ -4734,7 +4890,7 @@ def scout_run(args: argparse.Namespace) -> dict[str, Any]:
                 "required_company_axes": required_cells,
                 "minimum_independent_channels_per_cell": 2,
                 "candidate_target_per_cell": 8,
-                "minimum_candidates_per_day": 3,
+                "minimum_published_signals_per_day": 3,
                 "diminishing_yield_searches": 3,
                 **(
                     {"target_count": requested_target_count}
@@ -5277,6 +5433,12 @@ def validate_structured_analysis(
                     f"structured analysis {item_key} must contain at least "
                     f"{minimum_rows} rows"
                 )
+        quantification_status = structured_quantification_status(value)
+        if quantification_status not in QUANTIFICATION_DECISION_STATUSES:
+            raise ValueError(
+                "structured analysis quantification_decision status must be "
+                "modeled or not_applicable"
+            )
     return value
 
 
@@ -5586,6 +5748,28 @@ def validate_signal_copy(title: str, sentence: str, summary: str) -> None:
         )
 
 
+def validate_score_rationale(field_name: str, score: int, rationale: Any) -> str:
+    """Require a concise but decision-auditable explanation for each score."""
+    text = re.sub(r"\s+", " ", str(rationale or "")).strip()
+    if not SCORE_RATIONALE_MIN_LENGTH <= len(text) <= SCORE_RATIONALE_MAX_LENGTH:
+        raise ValueError(
+            f"{field_name} rationale must be between "
+            f"{SCORE_RATIONALE_MIN_LENGTH} and {SCORE_RATIONALE_MAX_LENGTH} characters"
+        )
+    sentence_count = len(re.findall(r"[.!?](?:\s|$)", text))
+    if sentence_count not in range(3, 5):
+        raise ValueError(
+            f"{field_name} rationale must use three or four clear sentences"
+        )
+    if f"{score}점" not in text:
+        raise ValueError(f"{field_name} rationale must explain why it is {score}점")
+    if not SCORE_RATIONALE_BOUNDARY_PATTERN.search(text):
+        raise ValueError(
+            f"{field_name} rationale must explain the adjacent-score boundary"
+        )
+    return text
+
+
 def validate_assumption_challenge(value: Any) -> dict[str, Any]:
     """Validate the decision-oriented record that makes a core Signal surprising."""
     if not isinstance(value, dict):
@@ -5615,6 +5799,11 @@ def validate_assumption_challenge(value: Any) -> dict[str, Any]:
 
 IMPACT_EXPRESSION_OPERATIONS = {"add", "subtract", "multiply", "divide", "negate"}
 IMPACT_INPUT_KINDS = {"verified", "derived", "assumption"}
+QUANTIFICATION_DECISION_STATUSES = {"modeled", "not_applicable"}
+QUANTIFICATION_NOT_APPLICABLE_REASONS = {
+    "subject_not_quantifiable",
+    "duplicate_impact_model",
+}
 
 
 def _validate_impact_expression(expression: Any, variable_ids: set[str], path: str) -> None:
@@ -5751,6 +5940,120 @@ def read_impact_estimate(path_value: str | None) -> dict[str, Any] | None:
     return validate_impact_estimate(read_json(Path(path_value)))
 
 
+def validate_quantification_decision(
+    value: dict[str, Any],
+    impact_estimate: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Validate the explicit model-or-exception decision stored on every Insight."""
+    if not isinstance(value, dict):
+        raise ValueError("quantification_decision must be a JSON object")
+    if value.get("schema_version") != 1:
+        raise ValueError("quantification_decision schema_version must be 1")
+    status = str(value.get("status") or "")
+    if status not in QUANTIFICATION_DECISION_STATUSES:
+        raise ValueError(
+            "quantification_decision status must be modeled or not_applicable"
+        )
+    assessed_at = str(value.get("assessed_at") or "")
+    validate_date(assessed_at, "quantification_decision assessed_at")
+    basis = str(value.get("basis") or "").strip()
+    if len(basis) < 40:
+        raise ValueError("quantification_decision basis must be at least 40 characters")
+
+    if status == "modeled":
+        if impact_estimate is None:
+            raise ValueError("modeled quantification_decision requires impact_estimate")
+        return value
+
+    if impact_estimate is not None:
+        raise ValueError("not_applicable quantification_decision cannot have impact_estimate")
+    reason_code = str(value.get("reason_code") or "")
+    if reason_code not in QUANTIFICATION_NOT_APPLICABLE_REASONS:
+        raise ValueError(
+            "not_applicable reason_code must be subject_not_quantifiable or "
+            "duplicate_impact_model"
+        )
+    required_inputs = value.get("required_inputs")
+    if not isinstance(required_inputs, list) or not required_inputs or any(
+        not str(item or "").strip() for item in required_inputs
+    ):
+        raise ValueError("not_applicable required_inputs must contain non-empty strings")
+    if not str(value.get("reconsider_when") or "").strip():
+        raise ValueError("not_applicable reconsider_when is required")
+    related_signal_ids = value.get("related_signal_ids", [])
+    if not isinstance(related_signal_ids, list) or any(
+        not str(signal_id or "").strip() for signal_id in related_signal_ids
+    ):
+        raise ValueError("not_applicable related_signal_ids must be a string list")
+    if reason_code == "duplicate_impact_model" and not related_signal_ids:
+        raise ValueError(
+            "duplicate_impact_model requires at least one related_signal_id"
+        )
+    return value
+
+
+def modeled_quantification_decision(estimate: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "schema_version": 1,
+        "status": "modeled",
+        "assessed_at": estimate["as_of"],
+        "basis": (
+            "공개 확인값·공개자료 역산·AI 가정을 구분한 검증된 What-if 모델을 "
+            "연결했으며, 범위와 신뢰도를 함께 표시합니다."
+        ),
+    }
+
+
+def read_quantification_decision(
+    path_value: str | None,
+    impact_estimate: dict[str, Any] | None = None,
+) -> dict[str, Any] | None:
+    if not path_value:
+        return None
+    return validate_quantification_decision(
+        read_json(Path(path_value)), impact_estimate
+    )
+
+
+def structured_quantification_status(value: Any) -> str | None:
+    if not isinstance(value, dict):
+        return None
+    for section in value.get("sections", []):
+        if not isinstance(section, dict):
+            continue
+        for item in section.get("items", []):
+            if not isinstance(item, dict) or item.get("key") != "quantification_decision":
+                continue
+            rows = item.get("rows")
+            if isinstance(rows, list) and rows and isinstance(rows[0], dict):
+                return str(rows[0].get("status") or "")
+    return None
+
+
+def sync_structured_quantification_decision(
+    value: Any, decision: dict[str, Any]
+) -> None:
+    if not isinstance(value, dict):
+        return
+    for section in value.get("sections", []):
+        if not isinstance(section, dict):
+            continue
+        for item in section.get("items", []):
+            if not isinstance(item, dict) or item.get("key") != "quantification_decision":
+                continue
+            rows = item.get("rows")
+            if not isinstance(rows, list) or not rows or not isinstance(rows[0], dict):
+                return
+            rows[0]["status"] = decision["status"]
+            rows[0]["basis"] = decision["basis"]
+            rows[0]["next_input"] = (
+                "내부 실제값으로 공개 대용변수와 가정 범위를 교체"
+                if decision["status"] == "modeled"
+                else str(decision.get("reconsider_when") or "재검토 조건 확인")
+            )
+            return
+
+
 def add_signal(args: argparse.Namespace) -> dict[str, Any]:
     """Create a governed Signal and Insight linked to evidence and a research run."""
     root = require_store(Path(args.root))
@@ -5767,6 +6070,12 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
         raise ValueError(
             f"business impact and urgency scores must be between 1 and {SIGNAL_SCORE_MAX}"
         )
+    business_impact_rationale = validate_score_rationale(
+        "business_impact", impact_score, args.business_impact_rationale
+    )
+    urgency_rationale = validate_score_rationale(
+        "urgency", urgency_score, args.urgency_rationale
+    )
     if args.assessment_confidence not in CLAIM_CONFIDENCE:
         raise ValueError(f"Invalid assessment confidence: {args.assessment_confidence}")
     validate_signal_copy(args.title, args.sentence, args.paragraph)
@@ -5841,6 +6150,20 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
         )
     analysis_structured = read_structured_analysis(structured_analysis_file)
     impact_estimate = read_impact_estimate(getattr(args, "impact_estimate_file", None))
+    quantification_decision = read_quantification_decision(
+        getattr(args, "quantification_decision_file", None), impact_estimate
+    )
+    if impact_estimate is not None and quantification_decision is None:
+        quantification_decision = modeled_quantification_decision(impact_estimate)
+    if quantification_decision is None:
+        raise ValueError(
+            "Signal publication requires impact_estimate_file or a "
+            "not_applicable quantification_decision_file"
+        )
+    if structured_quantification_status(analysis_structured) != quantification_decision["status"]:
+        raise ValueError(
+            "structured quantification_decision status must match the Insight decision"
+        )
     company_ids = list(dict.fromkeys(args.company_id))
     invalid_pairs = [
         f"{company_id}={args.business_axis}"
@@ -5888,9 +6211,9 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
     expected_values = {
         "business_axis": args.business_axis,
         "business_impact_score_1_to_10": str(impact_score),
-        "business_impact_rationale": args.business_impact_rationale,
+        "business_impact_rationale": business_impact_rationale,
         "urgency_score_1_to_10": str(urgency_score),
-        "urgency_rationale": args.urgency_rationale,
+        "urgency_rationale": urgency_rationale,
         "assessment_confidence": args.assessment_confidence,
         "assessed_at": assessed_at,
     }
@@ -5954,11 +6277,11 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
     )
     business_impact = {
         "score": impact_score,
-        "rationale": args.business_impact_rationale.strip(),
+        "rationale": business_impact_rationale,
     }
     urgency = {
         "score": urgency_score,
-        "rationale": args.urgency_rationale.strip(),
+        "rationale": urgency_rationale,
         "response_deadline": response_deadline,
     }
     existing_signal_versions = [
@@ -5966,6 +6289,12 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
         for _, value in signal_version_records(root)
         if value.get("canonical_key") == args.canonical_key
     ]
+    replaced_insight_ids = {
+        str(value.get("insight_id") or "")
+        for _, value in signal_records(root)
+        if value.get("canonical_key") == args.canonical_key
+        and value.get("insight_id")
+    }
     signal_version, company_impacts, scenarios = build_signal_bundle(
         canonical_key=args.canonical_key,
         title=args.title.strip(),
@@ -5997,6 +6326,7 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
         "summary": args.paragraph.strip(),
         "analysis_markdown": analysis_markdown,
         "analysis_structured": analysis_structured,
+        "quantification_decision": quantification_decision,
         "impact_estimate": impact_estimate,
         "document_path": document_path.as_posix() if document_path else None,
         "company_ids": company_ids,
@@ -6034,6 +6364,7 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
             "calibration": "rubric_v1",
         },
         "assessed_at": assessed_at,
+        "detected_at": now,
         "assessment_confidence": args.assessment_confidence,
         "claim_ids": claim_ids,
         "source_ids": source_ids,
@@ -6044,6 +6375,14 @@ def add_signal(args: argparse.Namespace) -> dict[str, Any]:
     }
     write_json(root / INSIGHTS_DIR / f"{insight_id}.json", insight)
     write_json(root / SIGNALS_DIR / f"{signal_id}.json", signal)
+    referenced_insight_ids = {
+        str(value.get("insight_id") or "")
+        for _, value in signal_records(root)
+        if value.get("insight_id")
+    }
+    for replaced_insight_id in replaced_insight_ids - {insight_id}:
+        if replaced_insight_id not in referenced_insight_ids:
+            delete_record(root, "insights", replaced_insight_id)
     write_json(
         root / SIGNAL_VERSIONS_DIR / f"{signal_version['signal_version_id']}.json",
         signal_version,
@@ -6417,7 +6756,12 @@ def set_impact_estimate(args: argparse.Namespace) -> dict[str, Any]:
     }
     verify_source_ids(root, sorted(referenced_sources))
     insight_path, insight = insight_paths[insight_id]
+    decision = modeled_quantification_decision(estimate)
     insight["impact_estimate"] = estimate
+    insight["quantification_decision"] = decision
+    sync_structured_quantification_decision(
+        insight.get("analysis_structured"), decision
+    )
     insight["updated_at"] = timestamp()
     write_json(insight_path, insight)
     sync_obsidian_store(root)
@@ -6426,6 +6770,57 @@ def set_impact_estimate(args: argparse.Namespace) -> dict[str, Any]:
         "action": "impact_estimate_updated",
         "signal_id": args.signal_id,
         "insight_id": insight_id,
+    }
+
+
+def set_quantification_decision(args: argparse.Namespace) -> dict[str, Any]:
+    """Record the narrow not-applicable exception for a Signal without a model."""
+    root = require_store(Path(args.root))
+    signals = _records_by_id(signal_records(root), "signal_id")
+    signal = signals.get(args.signal_id)
+    if signal is None:
+        raise ValueError(f"Unknown signal ID: {args.signal_id}")
+    insight_id = str(signal.get("insight_id") or "")
+    insight_paths = {
+        str(record.get("insight_id")): (path, record)
+        for path, record in insight_records(root)
+        if record.get("insight_id")
+    }
+    if insight_id not in insight_paths:
+        raise ValueError(f"Broken insight link: {insight_id}")
+    insight_path, insight = insight_paths[insight_id]
+    if insight.get("impact_estimate") is not None:
+        raise ValueError(
+            "Signal already has impact_estimate; replace the model instead of "
+            "marking it not_applicable"
+        )
+    decision = read_quantification_decision(args.decision_file)
+    if decision is None or decision.get("status") != "not_applicable":
+        raise ValueError("decision_file must use status not_applicable")
+    unknown_related = sorted(
+        set(decision.get("related_signal_ids", [])) - set(signals)
+    )
+    if unknown_related:
+        raise ValueError(
+            "Unknown related Signal IDs: " + ", ".join(unknown_related)
+        )
+    insight["quantification_decision"] = decision
+    sync_structured_quantification_decision(
+        insight.get("analysis_structured"), decision
+    )
+    insight["updated_at"] = timestamp()
+    write_json(insight_path, insight)
+    sync_obsidian_store(root)
+    append_log(
+        root,
+        "set-quantification-decision",
+        f"{args.signal_id}: {decision['reason_code']}",
+    )
+    return {
+        "action": "quantification_decision_updated",
+        "signal_id": args.signal_id,
+        "insight_id": insight_id,
+        "status": decision["status"],
     }
 
 
@@ -6451,6 +6846,12 @@ def set_signal_assessment(args: argparse.Namespace) -> dict[str, Any]:
         raise ValueError(f"business impact score must be between 1 and {SIGNAL_SCORE_MAX}")
     if urgency_score not in range(1, SIGNAL_SCORE_MAX + 1):
         raise ValueError(f"urgency score must be between 1 and {SIGNAL_SCORE_MAX}")
+    business_impact_rationale = validate_score_rationale(
+        "business_impact", impact_score, args.business_impact_rationale
+    )
+    urgency_rationale = validate_score_rationale(
+        "urgency", urgency_score, args.urgency_rationale
+    )
     assessed_at = validate_date(args.assessed_at, "assessed_at") or today()
 
     exceptional_basis = {
@@ -6474,9 +6875,9 @@ def set_signal_assessment(args: argparse.Namespace) -> dict[str, Any]:
     }
     updates = {
         "business_impact_score_1_to_10": str(impact_score),
-        "business_impact_rationale": str(args.business_impact_rationale).strip(),
+        "business_impact_rationale": business_impact_rationale,
         "urgency_score_1_to_10": str(urgency_score),
-        "urgency_rationale": str(args.urgency_rationale).strip(),
+        "urgency_rationale": urgency_rationale,
         "assessment_confidence": str(args.assessment_confidence),
         "assessed_at": assessed_at,
     }
@@ -6616,12 +7017,12 @@ def set_signal_assessment(args: argparse.Namespace) -> dict[str, Any]:
     signal["business_impact"] = {
         **(signal.get("business_impact") or {}),
         "score": impact_score,
-        "rationale": str(args.business_impact_rationale).strip(),
+        "rationale": business_impact_rationale,
     }
     signal["urgency"] = {
         **(signal.get("urgency") or {}),
         "score": urgency_score,
-        "rationale": str(args.urgency_rationale).strip(),
+        "rationale": urgency_rationale,
     }
     signal["assessment_confidence"] = args.assessment_confidence
     signal["assessed_at"] = assessed_at
@@ -7266,6 +7667,16 @@ def subject_display_name(subject_id: str, settings: dict[str, Any]) -> str:
         return PROJECT_DISPLAY_NAMES.get(subject_id, subject_id)
     if prefix.upper() != "COM" or not remainder:
         return subject_id
+    governed_name = next(
+        (
+            company_name
+            for company_name, company_id in COMPANY_NAME_TO_ID.items()
+            if company_id == subject_id
+        ),
+        None,
+    )
+    if governed_name:
+        return governed_name
     normalized_subject = re.sub(r"[^a-z0-9]+", "", remainder.casefold())
     companies = sorted(
         settings.get("companies", []),
@@ -9615,6 +10026,56 @@ def _structured_key_driver_lines(
     return lines
 
 
+def systematic_analytics_lines(value: Any) -> list[str]:
+    """Render the optional reproducible calculation projection without causal wording."""
+
+    if not isinstance(value, dict):
+        return []
+    status = str(value.get("status") or "")
+    as_of = markdown_cell(value.get("as_of") or "-")
+    lines = ["**재현 가능한 정량 점검**", ""]
+    if status != "completed":
+        lines.extend(
+            [
+                f"- 계산 기준일: {as_of}",
+                "- 현재 등록된 검증 관측치가 최소 계산 요건에 미달합니다.",
+                "- 자료가 충분해질 때까지 정량 결과를 원인이나 예측으로 사용하지 않습니다.",
+                "",
+            ]
+        )
+        return lines
+    candidates = value.get("risk_factor_candidates")
+    lines.extend(
+        [
+            f"- 계산 기준일: {as_of}",
+            "- 같은 관측 버전과 계산 규칙을 다시 적용해 결과를 확인할 수 있습니다.",
+            "",
+        ]
+    )
+    if isinstance(candidates, list) and candidates:
+        lines.extend(
+            [
+                "| 구조변화 기여 후보 | 상대 기여도 | 해석 범위 |",
+                "| --- | ---: | --- |",
+            ]
+        )
+        for candidate in candidates[:6]:
+            if not isinstance(candidate, dict):
+                continue
+            score = float(candidate.get("contribution_score") or 0)
+            lines.append(
+                f"| {markdown_cell(candidate.get('label') or '확인할 시장 변수')} "
+                f"| {score:.2f} | 원인 확정이 아닌 추가 검증 후보 |"
+            )
+        lines.append("")
+    limitations = value.get("limitations")
+    if isinstance(limitations, list) and limitations:
+        lines.extend(["**현재 계산으로 알 수 없는 범위**", ""])
+        lines.extend(f"- {markdown_cell(item)}" for item in limitations)
+        lines.append("")
+    return lines
+
+
 def structured_analysis_lines(
     value: Any,
     signal: dict[str, Any] | None = None,
@@ -9964,6 +10425,27 @@ def demote_markdown_headings(lines: list[str]) -> list[str]:
     return result
 
 
+def signal_classification_pills_markdown(
+    signal: dict[str, Any], settings: dict[str, Any] | None = None
+) -> str:
+    """Render the governed company, axis, and change type without raw HTML."""
+    effective_settings = settings or {}
+    companies = " · ".join(
+        subject_display_name(str(company_id), effective_settings)
+        for company_id in signal.get("company_ids", [])
+        if str(company_id).strip()
+    ) or "-"
+    values = (
+        (companies, "company"),
+        (str(signal.get("business_axis") or "-"), "axis"),
+        (str(signal.get("signal_type") or "-"), "type"),
+    )
+    return " ".join(
+        f"**{markdown_cell(value)}**{{: .signal-pill .signal-pill-{tone} }}"
+        for value, tone in values
+    )
+
+
 def signal_page_lines(
     signal: dict[str, Any],
     insight: dict[str, Any],
@@ -9978,15 +10460,17 @@ def signal_page_lines(
     lines = [
         GENERATED_MARKER,
         "",
+        signal_classification_pills_markdown(signal, settings),
+        '{: .signal-pills .signal-static-pills aria-label="회사, 사업축과 변화 유형" }',
+        "",
         f"# {markdown_cell(insight.get('title') or signal.get('sentence') or '마켓 시그널')}",
         "",
         '!!! abstract "한 문장 시그널"',
         "",
         f"    **{markdown_cell(signal.get('sentence') or '-')}**",
         "",
-        "| 사업축 | 사업영향도 | 긴급도 | 평가일 |",
-        "| --- | ---: | ---: | --- |",
-        f"| {markdown_cell(signal.get('business_axis') or '-')} "
+        "| 사업영향도 | 긴급도 | 평가일 |",
+        "| ---: | ---: | --- |",
         f"| **{_score_label(impact.get('score', '-'))}** "
         f"| **{_score_label(urgency.get('score', '-'))}** "
         f"| {markdown_cell(signal.get('assessed_at') or '-')} |",
@@ -10001,6 +10485,9 @@ def signal_page_lines(
         insight,
         claims_by_id,
         sources_by_id,
+    )
+    structured_lines.extend(
+        systematic_analytics_lines(insight.get("systematic_analytics"))
     )
     if "```impact-simulator" not in analysis_markdown:
         structured_lines.extend(
@@ -10077,7 +10564,7 @@ def signal_index_lines(
         "사업에 영향을 줄 가능성과 대응 시급성을 기준으로 선별한 관찰 항목입니다. "
         "관심 항목을 누르면 핵심 해석, 상세 분석, 원문 순서로 더 깊게 확인할 수 있습니다.",
         "",
-        "| 관심도 | 회사·사업축 | 한 문장 시그널 | 평가일 |",
+        "| 관심도 | 회사·사업축·변화 유형 | 한 문장 시그널 | 평가일 |",
         "| --- | --- | --- | --- |",
     ]
     ordered = sorted(
@@ -10093,15 +10580,11 @@ def signal_index_lines(
         insight = insights_by_id.get(str(signal.get("insight_id")), {})
         impact = (signal.get("business_impact") or {}).get("score", "-")
         urgency = (signal.get("urgency") or {}).get("score", "-")
-        companies = ", ".join(
-            subject_display_name(str(company_id), settings)
-            for company_id in signal.get("company_ids", [])
-        ) or "-"
         sentence = markdown_cell(signal.get("sentence") or "마켓 시그널")
         signal_path = Path("signals") / f"{signal.get('signal_id')}.md"
         lines.append(
             f"| 영향 **{impact}/{SIGNAL_SCORE_MAX}** · 긴급 **{urgency}/{SIGNAL_SCORE_MAX}** "
-            f"| {markdown_cell(companies)}<br>{markdown_cell(signal.get('business_axis') or '-')} "
+            f"| {signal_classification_pills_markdown(signal, settings)} "
             f"| {wikilink(signal_path, sentence)} "
             f"| {markdown_cell(signal.get('assessed_at') or '-')} |"
         )
@@ -10686,6 +11169,16 @@ def resolve_claim_review(
             }
         )
         write_json(proposed_path, proposed)
+        proposed_risk_factor_ids = [
+            str(item) for item in proposed.get("risk_factor_ids", []) if str(item)
+        ]
+        if proposed_risk_factor_ids:
+            put_risk_factor_links(
+                root,
+                subject_kind="claim",
+                subject_version_id=proposed["claim_version_id"],
+                risk_factor_ids=proposed_risk_factor_ids,
+            )
         changed.append(proposed["claim_id"])
 
     review["status"] = "resolved"
@@ -11113,6 +11606,30 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
     canonical_signal_versions = _records_by_id(
         signal_version_records(root), "signal_version_id"
     )
+    systematic_analyses = _records_by_id(
+        systematic_analysis_records(root), "analysis_result_version_id"
+    )
+    for result_id, result in systematic_analyses.items():
+        try:
+            validate_systematic_analysis_result(result, observation_versions)
+        except (TypeError, ValueError) as exc:
+            findings["systematic_analytics"].append(f"{result_id}: {exc}")
+        signal_version_id = str(result.get("signal_version_id") or "")
+        if signal_version_id not in canonical_signal_versions:
+            findings["systematic_analytics"].append(
+                f"{result_id}: unknown Signal version {signal_version_id or '-'}"
+            )
+        component_ids = set(
+            (result.get("analysis_scope") or {}).get(
+                "component_signal_version_ids", []
+            )
+        )
+        unknown_components = sorted(component_ids - set(canonical_signal_versions))
+        if unknown_components:
+            findings["systematic_analytics"].append(
+                f"{result_id}: unknown component Signal versions "
+                + ", ".join(unknown_components)
+            )
     # Immutable Signal history remains published evidence even after the active
     # Signal points to a newer analysis revision.  Do not reclassify historical
     # Claim and Source links as unpublished merely because a report was edited.
@@ -11133,6 +11650,11 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
     scenario_versions = _records_by_id(
         load_json_objects(root / SCENARIOS_DIR), "scenario_version_id"
     )
+    known_signal_ids = {
+        str(record.get("signal_id"))
+        for _, record in signal_records(root)
+        if record.get("signal_id")
+    }
     for path, signal in signal_records(root):
         signal_id = str(signal.get("signal_id") or path.stem)
         if signal.get("schema_version") != SIGNAL_SCHEMA_VERSION:
@@ -11194,6 +11716,27 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
             continue
         referenced_insights.add(insight_id)
         insight = insights[insight_id]
+        systematic_projection = insight.get("systematic_analytics")
+        if systematic_projection is not None:
+            if not isinstance(systematic_projection, dict):
+                findings["systematic_analytics"].append(
+                    f"{signal_id}: systematic_analytics projection must be an object"
+                )
+            else:
+                result_id = str(
+                    systematic_projection.get("latest_result_version_id") or ""
+                )
+                result = systematic_analyses.get(result_id)
+                if result is None:
+                    findings["systematic_analytics"].append(
+                        f"{signal_id}: unknown systematic analysis result {result_id or '-'}"
+                    )
+                elif str(result.get("signal_version_id")) != str(
+                    signal.get("signal_version_id")
+                ):
+                    findings["systematic_analytics"].append(
+                        f"{signal_id}: systematic analysis targets a different Signal version"
+                    )
         insight_schema_version = insight.get("schema_version")
         if insight_schema_version not in {
             LEGACY_INSIGHT_SCHEMA_VERSION,
@@ -11322,7 +11865,8 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
                 f"{signal_id}: unknown sources {', '.join(unknown_sources)}"
             )
         for field in ("business_impact", "urgency"):
-            score = (signal.get(field) or {}).get("score")
+            assessment = signal.get(field) or {}
+            score = assessment.get("score")
             if (
                 not isinstance(score, int)
                 or score not in range(1, SIGNAL_SCORE_MAX + 1)
@@ -11330,10 +11874,12 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
                 findings["signal_schema"].append(
                     f"{signal_id}: invalid {field} score {score!r}"
                 )
-            if not str((signal.get(field) or {}).get("rationale") or "").strip():
-                findings["signal_schema"].append(
-                    f"{signal_id}: missing {field} rationale"
+            try:
+                validate_score_rationale(
+                    field, int(score or 0), assessment.get("rationale")
                 )
+            except ValueError as exc:
+                findings["signal_quality"].append(f"{signal_id}: {exc}")
         if (signal.get("business_impact") or {}).get("score") == 10:
             exceptional_basis = signal.get("exceptional_score_basis")
             required_basis = (
@@ -11424,6 +11970,34 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
                 findings["signal_schema"].append(
                     f"{signal_id}: invalid impact estimate: {exc}"
                 )
+        quantification_decision = insight.get("quantification_decision")
+        try:
+            validate_quantification_decision(
+                quantification_decision, impact_estimate
+            )
+        except ValueError as exc:
+            findings["signal_quality"].append(
+                f"{signal_id}: invalid quantification decision: {exc}"
+            )
+        else:
+            structured_status = structured_quantification_status(
+                insight.get("analysis_structured")
+            )
+            if structured_status != quantification_decision["status"]:
+                findings["signal_quality"].append(
+                    f"{signal_id}: structured quantification status "
+                    f"{structured_status or '-'} disagrees with Insight "
+                    f"{quantification_decision['status']}"
+                )
+            unknown_related = sorted(
+                set(quantification_decision.get("related_signal_ids", []))
+                - known_signal_ids
+            )
+            if unknown_related:
+                findings["signal_integrity"].append(
+                    f"{signal_id}: unknown related quantification Signals "
+                    + ", ".join(unknown_related)
+                )
         analysis_by_insight[insight_id] = analysis
 
     normalized_contracts = {
@@ -11462,6 +12036,10 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
         "wiki_scenario_versions": (
             "scenario_version_id",
             set(scenario_versions),
+        ),
+        "wiki_systematic_analysis_versions": (
+            "analysis_result_version_id",
+            set(systematic_analyses),
         ),
     }
     with sqlite_connection_scope(root) as connection:
@@ -11503,6 +12081,28 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
         if expected_links != actual_links:
             findings["analytics_projection"].append(
                 "wiki_risk_factor_links: normalized link set disagrees with version payloads"
+            )
+        expected_inputs = {
+            (
+                result_id,
+                str(observation_version_id),
+                str(series.get("risk_factor_id")),
+                str(series.get("series_key")),
+            )
+            for result_id, result in systematic_analyses.items()
+            for series in result.get("input_series", [])
+            for observation_version_id in series.get("observation_version_ids", [])
+        }
+        actual_inputs = {
+            (str(row[0]), str(row[1]), str(row[2]), str(row[3]))
+            for row in connection.execute(
+                "SELECT analysis_result_version_id, observation_version_id, "
+                "risk_factor_id, series_key FROM wiki_systematic_analysis_inputs"
+            )
+        }
+        if expected_inputs != actual_inputs:
+            findings["analytics_projection"].append(
+                "wiki_systematic_analysis_inputs: normalized input set disagrees with result payloads"
             )
 
     active_signals = [
@@ -11600,12 +12200,19 @@ def audit_store(args: argparse.Namespace) -> dict[str, Any]:
         findings["unpublished_sources"].append(
             f"{source_id}: Source is not connected to a Signal"
         )
-    analysis_items = sorted(analysis_by_insight.items())
+    analysis_items = [
+        (insight_id, normalize_text(analysis))
+        for insight_id, analysis in sorted(analysis_by_insight.items())
+    ]
     for index, (insight_id, analysis) in enumerate(analysis_items):
         for other_id, other_analysis in analysis_items[index + 1 :]:
-            similarity = SequenceMatcher(
-                None, normalize_text(analysis), normalize_text(other_analysis)
-            ).ratio()
+            matcher = SequenceMatcher(None, analysis, other_analysis)
+            # real_quick_ratio() and quick_ratio() are upper bounds for ratio().
+            # They preserve the 90% finding contract while avoiding an expensive
+            # character-level comparison for clearly dissimilar long reports.
+            if matcher.real_quick_ratio() < 0.9 or matcher.quick_ratio() < 0.9:
+                continue
+            similarity = matcher.ratio()
             if similarity >= 0.9:
                 findings["signal_quality"].append(
                     f"{insight_id} / {other_id}: analyses are {similarity:.0%} similar"
@@ -12854,6 +13461,22 @@ def build_parser() -> argparse.ArgumentParser:
     )
     event_parser.set_defaults(func=add_event)
 
+    systematic_parser = subparsers.add_parser(
+        "run-systematic-analysis",
+        help=(
+            "Run version-pinned anomaly, relationship, network, entropy, and "
+            "Risk Factor candidate calculations for an existing Signal."
+        ),
+    )
+    systematic_parser.add_argument("root")
+    systematic_parser.add_argument("--signal-id", required=True)
+    systematic_parser.add_argument(
+        "--spec-file",
+        required=True,
+        help="JSON method bundle and Observation-version series; never unversioned values.",
+    )
+    systematic_parser.set_defaults(func=run_systematic_signal_analysis)
+
     claim_parser = subparsers.add_parser(
         "add-claim", help="Create or verify an atomic claim."
     )
@@ -12939,7 +13562,14 @@ def build_parser() -> argparse.ArgumentParser:
     )
     signal_parser.add_argument(
         "--impact-estimate-file",
-        help="Optional validated JSON model for an interactive financial-impact simulator.",
+        help="Validated JSON model for the default interactive What-if simulator.",
+    )
+    signal_parser.add_argument(
+        "--quantification-decision-file",
+        help=(
+            "Required not_applicable JSON only when no impact estimate can be "
+            "provided; modeled decisions are derived from the estimate."
+        ),
     )
     signal_parser.add_argument("--company-id", action="append", required=True)
     signal_parser.add_argument("--business-axis", required=True)
@@ -12992,6 +13622,18 @@ def build_parser() -> argparse.ArgumentParser:
     impact_parser.add_argument("--signal-id", required=True)
     impact_parser.add_argument("--estimate-file", required=True)
     impact_parser.set_defaults(func=set_impact_estimate)
+
+    quantification_parser = subparsers.add_parser(
+        "set-quantification-decision",
+        help=(
+            "Record the narrow not_applicable exception for a Signal without "
+            "an impact model."
+        ),
+    )
+    quantification_parser.add_argument("root")
+    quantification_parser.add_argument("--signal-id", required=True)
+    quantification_parser.add_argument("--decision-file", required=True)
+    quantification_parser.set_defaults(func=set_quantification_decision)
 
     structured_analysis_parser = subparsers.add_parser(
         "set-structured-analysis",

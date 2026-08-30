@@ -70,6 +70,92 @@ python skills/market-sensing-intelligence/scripts/market_sensing.py migrate-to-s
 `127.0.0.1:8201`에서만 열리므로 LAN에서 MkDocs를 읽는 사용자는 조사 실행 기능을 사용할
 수 없습니다.
 
+### 외부 프로그램 제어 API
+
+같은 PC의 다른 프로그램은 `wiki_run.bat`가 시작한 `http://127.0.0.1:8201` API로
+관심 범위와 운영 설정을 관리하고, 조사·발행·감사 작업을 실행하거나 완전한 SQLite
+스냅샷을 받을 수 있습니다. 서버는 loopback에만 바인딩되며 셸 명령·작업 디렉터리·임의
+파일 경로는 받지 않습니다.
+
+```text
+GET  /api/capabilities
+GET  /api/settings
+PATCH /api/settings
+GET|POST|PUT|DELETE /api/settings/company-axes
+POST /api/research/runs
+GET  /api/research/runs/{run_id}
+GET|POST|PUT|DELETE /api/research/schedules[/schedule_id]
+GET  /api/operations
+POST /api/operations
+GET  /api/operations/{operation_id}
+GET  /api/database/snapshot
+GET|PUT|DELETE /api/signal-favorites[/signal_id]
+GET|POST /api/signal-comments
+GET|DELETE /api/signal-comments/{comment_id}
+```
+
+`GET /api/operations`는 지원하는 모든 공용 Market Sensing 명령과 인자·선택값·임시 파일
+필드를 기계 판독 가능한 catalog로 반환합니다. `POST /api/operations`는 catalog에 있는
+명령만 기존 CLI 검증기로 실행하고 `operation_id`를 반환합니다. 모든 DB 쓰기는 조사와
+같은 직렬 큐를 사용합니다. 입력 파일은 `input_files`의 UTF-8 또는 base64 내용만 허용하고
+완료 뒤 삭제합니다. 마이그레이션과 실제 prune은 명령명과 동일한 `confirm` 값이 있어야
+하며 prune 백업 경로는 서버가 자동 생성합니다.
+
+```json
+{
+  "command": "audit",
+  "arguments": ["--stale-days", "180"],
+  "input_files": {}
+}
+```
+
+관심 회사·사업축은 다음처럼 등록합니다. `POST`는 추가, `PUT`은 전체 교체, `DELETE`는
+지정 조합 삭제입니다. 마지막 조합은 삭제할 수 없습니다. 변경 결과는
+`WIKI-SETTINGS.md`와 SQLite `watchlist` 캐시에 한 번에 동기화됩니다.
+
+```json
+{
+  "company_axes": [
+    {"company": "POSCO Holdings", "business_axis": "리튬"},
+    {"company": "POSCO Holdings", "business_axis": "전략광물"}
+  ]
+}
+```
+
+`PATCH /api/settings`로 기술·프로젝트·국가·출처 우선순위·리스크 신호·보고서 중점과 운영
+값도 부분 갱신할 수 있습니다. 조사 요청에 `company_axes`를 생략하면 등록된 관심 범위를
+기본값으로 사용합니다.
+
+브라우저 기반의 다른 로컬 프로그램이 호출할 때는 허용 origin을 쉼표로 등록한 뒤 서버를
+시작합니다. 네이티브 프로그램·백엔드 호출에는 CORS 설정이 필요하지 않습니다.
+
+```powershell
+$env:MARKET_API_ALLOWED_ORIGINS = "http://127.0.0.1:8000,http://localhost:8100"
+```
+
+조사 요청 예시는 다음과 같습니다. `publish`가 `true`이면 기존 Source → Claim → Signal →
+Insight 발행 계약을 따르며, 작업은 SQLite 경쟁 쓰기를 막기 위해 직렬 실행됩니다.
+
+```json
+{
+  "topic": "철강 수입규제 변화",
+  "topic_company": "POSCO",
+  "company_axes": [{"company": "POSCO", "business_axis": "철강"}],
+  "date_from": "2026-08-01",
+  "date_to": "2026-08-30",
+  "provider": "codex",
+  "codex_model": "gpt-5.6-luna",
+  "codex_effort": "medium",
+  "publish": true
+}
+```
+
+`POST /api/research/runs`는 `202 Accepted`와 `run_id`를 반환합니다. 완료 여부는 해당
+`run_id`로 조회합니다. `GET /api/database/snapshot`은 실행 중인 원본 DB 파일을 직접
+복사하지 않고 SQLite online backup으로 만든 일관된 `.db` 파일을 반환합니다. 응답의
+`X-Snapshot-SHA256`과 `X-Snapshot-Generated-At` 헤더로 파일 무결성과 생성 시각을
+확인할 수 있습니다.
+
 ## 동작 흐름
 
 ```text
